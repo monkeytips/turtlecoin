@@ -6,7 +6,10 @@
 #include "table/full_filter_block.h"
 
 #include "rocksdb/filter_policy.h"
+<<<<<<< HEAD
 #include "table/full_filter_bits_builder.h"
+=======
+>>>>>>> blood in blood out
 #include "util/coding.h"
 #include "util/hash.h"
 #include "util/string_util.h"
@@ -113,7 +116,11 @@ TEST_F(PluginFullFilterBlockTest, PluginEmptyBuilder) {
       nullptr, true, block,
       table_options_.filter_policy->GetFilterBitsReader(block), nullptr);
   // Remain same symantic with blockbased filter
+<<<<<<< HEAD
   ASSERT_TRUE(reader.KeyMayMatch("foo", nullptr));
+=======
+  ASSERT_TRUE(reader.KeyMayMatch("foo"));
+>>>>>>> blood in blood out
 }
 
 TEST_F(PluginFullFilterBlockTest, PluginSingleChunk) {
@@ -128,6 +135,7 @@ TEST_F(PluginFullFilterBlockTest, PluginSingleChunk) {
   FullFilterBlockReader reader(
       nullptr, true, block,
       table_options_.filter_policy->GetFilterBitsReader(block), nullptr);
+<<<<<<< HEAD
   ASSERT_TRUE(reader.KeyMayMatch("foo", nullptr));
   ASSERT_TRUE(reader.KeyMayMatch("bar", nullptr));
   ASSERT_TRUE(reader.KeyMayMatch("box", nullptr));
@@ -135,6 +143,15 @@ TEST_F(PluginFullFilterBlockTest, PluginSingleChunk) {
   ASSERT_TRUE(reader.KeyMayMatch("foo", nullptr));
   ASSERT_TRUE(!reader.KeyMayMatch("missing", nullptr));
   ASSERT_TRUE(!reader.KeyMayMatch("other", nullptr));
+=======
+  ASSERT_TRUE(reader.KeyMayMatch("foo"));
+  ASSERT_TRUE(reader.KeyMayMatch("bar"));
+  ASSERT_TRUE(reader.KeyMayMatch("box"));
+  ASSERT_TRUE(reader.KeyMayMatch("hello"));
+  ASSERT_TRUE(reader.KeyMayMatch("foo"));
+  ASSERT_TRUE(!reader.KeyMayMatch("missing"));
+  ASSERT_TRUE(!reader.KeyMayMatch("other"));
+>>>>>>> blood in blood out
 }
 
 class FullFilterBlockTest : public testing::Test {
@@ -158,6 +175,7 @@ TEST_F(FullFilterBlockTest, EmptyBuilder) {
       nullptr, true, block,
       table_options_.filter_policy->GetFilterBitsReader(block), nullptr);
   // Remain same symantic with blockbased filter
+<<<<<<< HEAD
   ASSERT_TRUE(reader.KeyMayMatch("foo", nullptr));
 }
 
@@ -192,22 +210,32 @@ TEST_F(FullFilterBlockTest, DuplicateEntries) {
   builder.Add("prefix2key4");
   // two prefix adn 4 keys
   ASSERT_EQ(1 + 2 + 4, bits_builder->hash_entries_.size());
+=======
+  ASSERT_TRUE(reader.KeyMayMatch("foo"));
+>>>>>>> blood in blood out
 }
 
 TEST_F(FullFilterBlockTest, SingleChunk) {
   FullFilterBlockBuilder builder(
       nullptr, true, table_options_.filter_policy->GetFilterBitsBuilder());
+<<<<<<< HEAD
   ASSERT_EQ(0, builder.NumAdded());
+=======
+>>>>>>> blood in blood out
   builder.Add("foo");
   builder.Add("bar");
   builder.Add("box");
   builder.Add("box");
   builder.Add("hello");
+<<<<<<< HEAD
   ASSERT_EQ(5, builder.NumAdded());
+=======
+>>>>>>> blood in blood out
   Slice block = builder.Finish();
   FullFilterBlockReader reader(
       nullptr, true, block,
       table_options_.filter_policy->GetFilterBitsReader(block), nullptr);
+<<<<<<< HEAD
   ASSERT_TRUE(reader.KeyMayMatch("foo", nullptr));
   ASSERT_TRUE(reader.KeyMayMatch("bar", nullptr));
   ASSERT_TRUE(reader.KeyMayMatch("box", nullptr));
@@ -215,6 +243,15 @@ TEST_F(FullFilterBlockTest, SingleChunk) {
   ASSERT_TRUE(reader.KeyMayMatch("foo", nullptr));
   ASSERT_TRUE(!reader.KeyMayMatch("missing", nullptr));
   ASSERT_TRUE(!reader.KeyMayMatch("other", nullptr));
+=======
+  ASSERT_TRUE(reader.KeyMayMatch("foo"));
+  ASSERT_TRUE(reader.KeyMayMatch("bar"));
+  ASSERT_TRUE(reader.KeyMayMatch("box"));
+  ASSERT_TRUE(reader.KeyMayMatch("hello"));
+  ASSERT_TRUE(reader.KeyMayMatch("foo"));
+  ASSERT_TRUE(!reader.KeyMayMatch("missing"));
+  ASSERT_TRUE(!reader.KeyMayMatch("other"));
+>>>>>>> blood in blood out
 }
 
 }  // namespace rocksdb

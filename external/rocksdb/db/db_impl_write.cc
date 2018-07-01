@@ -12,7 +12,10 @@
 #define __STDC_FORMAT_MACROS
 #endif
 #include <inttypes.h>
+<<<<<<< HEAD
 #include "db/error_handler.h"
+=======
+>>>>>>> blood in blood out
 #include "db/event_helpers.h"
 #include "monitoring/perf_context_imp.h"
 #include "options/options_helper.h"
@@ -46,11 +49,14 @@ Status DBImpl::SingleDelete(const WriteOptions& write_options,
   return DB::SingleDelete(write_options, column_family, key);
 }
 
+<<<<<<< HEAD
 void DBImpl::SetRecoverableStatePreReleaseCallback(
     PreReleaseCallback* callback) {
   recoverable_state_pre_release_callback_.reset(callback);
 }
 
+=======
+>>>>>>> blood in blood out
 Status DBImpl::Write(const WriteOptions& write_options, WriteBatch* my_batch) {
   return WriteImpl(write_options, my_batch, nullptr, nullptr);
 }
@@ -123,19 +129,28 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
   write_thread_.JoinBatchGroup(&w);
   if (w.state == WriteThread::STATE_PARALLEL_MEMTABLE_WRITER) {
     // we are a non-leader in a parallel group
+<<<<<<< HEAD
 
     if (w.ShouldWriteToMemtable()) {
       PERF_TIMER_STOP(write_pre_and_post_process_time);
       PERF_TIMER_GUARD(write_memtable_time);
 
+=======
+    PERF_TIMER_GUARD(write_memtable_time);
+
+    if (w.ShouldWriteToMemtable()) {
+>>>>>>> blood in blood out
       ColumnFamilyMemTablesImpl column_family_memtables(
           versions_->GetColumnFamilySet());
       w.status = WriteBatchInternal::InsertInto(
           &w, w.sequence, &column_family_memtables, &flush_scheduler_,
           write_options.ignore_missing_column_families, 0 /*log_number*/, this,
           true /*concurrent_memtable_writes*/, seq_per_batch_, w.batch_cnt);
+<<<<<<< HEAD
 
       PERF_TIMER_START(write_pre_and_post_process_time);
+=======
+>>>>>>> blood in blood out
     }
 
     if (write_thread_.CompleteParallelMemTableWriter(&w)) {
@@ -143,8 +158,12 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
       for (auto* writer : *(w.write_group)) {
         if (!writer->CallbackFailed() && writer->pre_release_callback) {
           assert(writer->sequence != kMaxSequenceNumber);
+<<<<<<< HEAD
           Status ws = writer->pre_release_callback->Callback(writer->sequence,
                                                              disable_memtable);
+=======
+          Status ws = writer->pre_release_callback->Callback(writer->sequence);
+>>>>>>> blood in blood out
           if (!ws.ok()) {
             status = ws;
             break;
@@ -195,6 +214,7 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
     // With concurrent writes we do preprocess only in the write thread that
     // also does write to memtable to avoid sync issue on shared data structure
     // with the other thread
+<<<<<<< HEAD
 
     // PreprocessWrite does its own perf timing.
     PERF_TIMER_STOP(write_pre_and_post_process_time);
@@ -202,6 +222,9 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
     status = PreprocessWrite(write_options, &need_log_sync, &write_context);
 
     PERF_TIMER_START(write_pre_and_post_process_time);
+=======
+    status = PreprocessWrite(write_options, &need_log_sync, &write_context);
+>>>>>>> blood in blood out
   }
   log::Writer* log_writer = logs_.back().writer;
 
@@ -212,7 +235,10 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
   // and protects against concurrent loggers and concurrent writes
   // into memtables
 
+<<<<<<< HEAD
   TEST_SYNC_POINT("DBImpl::WriteImpl:BeforeLeaderEnters");
+=======
+>>>>>>> blood in blood out
   last_batch_group_size_ =
       write_thread_.EnterAsBatchGroupLeader(&w, &write_group);
 
@@ -232,7 +258,11 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
                     write_group.size > 1;
     size_t total_count = 0;
     size_t valid_batches = 0;
+<<<<<<< HEAD
     size_t total_byte_size = 0;
+=======
+    uint64_t total_byte_size = 0;
+>>>>>>> blood in blood out
     for (auto* writer : write_group) {
       if (writer->CheckCallback(this)) {
         valid_batches += writer->batch_cnt;
@@ -357,7 +387,11 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
   PERF_TIMER_START(write_pre_and_post_process_time);
 
   if (!w.CallbackFailed()) {
+<<<<<<< HEAD
     WriteStatusCheck(status);
+=======
+    WriteCallbackStatusCheck(status);
+>>>>>>> blood in blood out
   }
 
   if (need_log_sync) {
@@ -365,7 +399,11 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
     MarkLogsSynced(logfile_number_, need_log_dir_sync, status);
     mutex_.Unlock();
     // Requesting sync with two_write_queues_ is expected to be very rare. We
+<<<<<<< HEAD
     // hence provide a simple implementation that is not necessarily efficient.
+=======
+    // hance provide a simple implementation that is not necessarily efficient.
+>>>>>>> blood in blood out
     if (two_write_queues_) {
       if (manual_wal_flush_) {
         status = FlushWAL(true);
@@ -386,8 +424,12 @@ Status DBImpl::WriteImpl(const WriteOptions& write_options,
       for (auto* writer : write_group) {
         if (!writer->CallbackFailed() && writer->pre_release_callback) {
           assert(writer->sequence != kMaxSequenceNumber);
+<<<<<<< HEAD
           Status ws = writer->pre_release_callback->Callback(writer->sequence,
                                                              disable_memtable);
+=======
+          Status ws = writer->pre_release_callback->Callback(writer->sequence);
+>>>>>>> blood in blood out
           if (!ws.ok()) {
             status = ws;
             break;
@@ -426,10 +468,14 @@ Status DBImpl::PipelinedWriteImpl(const WriteOptions& write_options,
     mutex_.Lock();
     bool need_log_sync = !write_options.disableWAL && write_options.sync;
     bool need_log_dir_sync = need_log_sync && !log_dir_synced_;
+<<<<<<< HEAD
     // PreprocessWrite does its own perf timing.
     PERF_TIMER_STOP(write_pre_and_post_process_time);
     w.status = PreprocessWrite(write_options, &need_log_sync, &write_context);
     PERF_TIMER_START(write_pre_and_post_process_time);
+=======
+    w.status = PreprocessWrite(write_options, &need_log_sync, &write_context);
+>>>>>>> blood in blood out
     log::Writer* log_writer = logs_.back().writer;
     mutex_.Unlock();
 
@@ -484,7 +530,11 @@ Status DBImpl::PipelinedWriteImpl(const WriteOptions& write_options,
     }
 
     if (!w.CallbackFailed()) {
+<<<<<<< HEAD
       WriteStatusCheck(w.status);
+=======
+      WriteCallbackStatusCheck(w.status);
+>>>>>>> blood in blood out
     }
 
     if (need_log_sync) {
@@ -572,7 +622,11 @@ Status DBImpl::WriteImplWALOnly(const WriteOptions& write_options,
   // Note: no need to update last_batch_group_size_ here since the batch writes
   // to WAL only
 
+<<<<<<< HEAD
   size_t total_byte_size = 0;
+=======
+  uint64_t total_byte_size = 0;
+>>>>>>> blood in blood out
   for (auto* writer : write_group) {
     if (writer->CheckCallback(this)) {
       total_byte_size = WriteBatchInternal::AppendedByteSize(
@@ -645,15 +699,23 @@ Status DBImpl::WriteImplWALOnly(const WriteOptions& write_options,
   PERF_TIMER_START(write_pre_and_post_process_time);
 
   if (!w.CallbackFailed()) {
+<<<<<<< HEAD
     WriteStatusCheck(status);
+=======
+    WriteCallbackStatusCheck(status);
+>>>>>>> blood in blood out
   }
   if (status.ok()) {
     for (auto* writer : write_group) {
       if (!writer->CallbackFailed() && writer->pre_release_callback) {
         assert(writer->sequence != kMaxSequenceNumber);
+<<<<<<< HEAD
         const bool DISABLE_MEMTABLE = true;
         Status ws = writer->pre_release_callback->Callback(writer->sequence,
                                                            DISABLE_MEMTABLE);
+=======
+        Status ws = writer->pre_release_callback->Callback(writer->sequence);
+>>>>>>> blood in blood out
         if (!ws.ok()) {
           status = ws;
           break;
@@ -671,13 +733,30 @@ Status DBImpl::WriteImplWALOnly(const WriteOptions& write_options,
   return status;
 }
 
+<<<<<<< HEAD
 void DBImpl::WriteStatusCheck(const Status& status) {
+=======
+void DBImpl::WriteCallbackStatusCheck(const Status& status) {
+>>>>>>> blood in blood out
   // Is setting bg_error_ enough here?  This will at least stop
   // compaction and fail any further writes.
   if (immutable_db_options_.paranoid_checks && !status.ok() &&
       !status.IsBusy() && !status.IsIncomplete()) {
     mutex_.Lock();
+<<<<<<< HEAD
     error_handler_.SetBGError(status, BackgroundErrorReason::kWriteCallback);
+=======
+    if (bg_error_.ok()) {
+      Status new_bg_error = status;
+      // may temporarily unlock and lock the mutex.
+      EventHelpers::NotifyOnBackgroundError(immutable_db_options_.listeners,
+                                            BackgroundErrorReason::kWriteCallback,
+                                            &new_bg_error, &mutex_);
+      if (!new_bg_error.ok()) {
+        bg_error_ = new_bg_error;  // stop compaction & fail any further writes
+      }
+    }
+>>>>>>> blood in blood out
     mutex_.Unlock();
   }
 }
@@ -690,8 +769,20 @@ void DBImpl::MemTableInsertStatusCheck(const Status& status) {
   // ignore_missing_column_families.
   if (!status.ok()) {
     mutex_.Lock();
+<<<<<<< HEAD
     assert(!error_handler_.IsBGWorkStopped());
     error_handler_.SetBGError(status, BackgroundErrorReason::kMemTable);
+=======
+    assert(bg_error_.ok());
+    Status new_bg_error = status;
+    // may temporarily unlock and lock the mutex.
+    EventHelpers::NotifyOnBackgroundError(immutable_db_options_.listeners,
+                                          BackgroundErrorReason::kMemTable,
+                                          &new_bg_error, &mutex_);
+    if (!new_bg_error.ok()) {
+      bg_error_ = new_bg_error;  // stop compaction & fail any further writes
+    }
+>>>>>>> blood in blood out
     mutex_.Unlock();
   }
 }
@@ -703,8 +794,11 @@ Status DBImpl::PreprocessWrite(const WriteOptions& write_options,
   assert(write_context != nullptr && need_log_sync != nullptr);
   Status status;
 
+<<<<<<< HEAD
   PERF_TIMER_GUARD(write_scheduling_flushes_compactions_time);
 
+=======
+>>>>>>> blood in blood out
   assert(!single_column_family_mode_ ||
          versions_->GetColumnFamilySet()->NumberOfColumnFamilies() == 1);
   if (UNLIKELY(status.ok() && !single_column_family_mode_ &&
@@ -721,27 +815,40 @@ Status DBImpl::PreprocessWrite(const WriteOptions& write_options,
     status = HandleWriteBufferFull(write_context);
   }
 
+<<<<<<< HEAD
   if (UNLIKELY(status.ok())) {
     status = error_handler_.GetBGError();
+=======
+  if (UNLIKELY(status.ok() && !bg_error_.ok())) {
+    status = bg_error_;
+>>>>>>> blood in blood out
   }
 
   if (UNLIKELY(status.ok() && !flush_scheduler_.Empty())) {
     status = ScheduleFlushes(write_context);
   }
 
+<<<<<<< HEAD
   PERF_TIMER_STOP(write_scheduling_flushes_compactions_time);
   PERF_TIMER_GUARD(write_pre_and_post_process_time);
 
   if (UNLIKELY(status.ok() && (write_controller_.IsStopped() ||
                                write_controller_.NeedsDelay()))) {
     PERF_TIMER_STOP(write_pre_and_post_process_time);
+=======
+  if (UNLIKELY(status.ok() && (write_controller_.IsStopped() ||
+                               write_controller_.NeedsDelay()))) {
+>>>>>>> blood in blood out
     PERF_TIMER_GUARD(write_delay_time);
     // We don't know size of curent batch so that we always use the size
     // for previous one. It might create a fairness issue that expiration
     // might happen for smaller writes but larger writes can go through.
     // Can optimize it if it is an issue.
     status = DelayWrite(last_batch_group_size_, write_options);
+<<<<<<< HEAD
     PERF_TIMER_START(write_pre_and_post_process_time);
+=======
+>>>>>>> blood in blood out
   }
 
   if (status.ok() && *need_log_sync) {
@@ -819,6 +926,7 @@ Status DBImpl::WriteToWAL(const WriteBatch& merged_batch,
   assert(log_size != nullptr);
   Slice log_entry = WriteBatchInternal::Contents(&merged_batch);
   *log_size = log_entry.size();
+<<<<<<< HEAD
   // When two_write_queues_ WriteToWAL has to be protected from concurretn calls
   // from the two queues anyway and log_write_mutex_ is already held. Otherwise
   // if manual_wal_flush_ is enabled we need to protect log_writer->AddRecord
@@ -834,6 +942,9 @@ Status DBImpl::WriteToWAL(const WriteBatch& merged_batch,
   if (UNLIKELY(needs_locking)) {
     log_write_mutex_.Unlock();
   }
+=======
+  Status status = log_writer->AddRecord(log_entry);
+>>>>>>> blood in blood out
   if (log_used != nullptr) {
     *log_used = logfile_number_;
   }
@@ -971,12 +1082,16 @@ Status DBImpl::WriteRecoverableState() {
     if (two_write_queues_) {
       log_write_mutex_.Lock();
     }
+<<<<<<< HEAD
     SequenceNumber seq;
     if (two_write_queues_) {
       seq = versions_->FetchAddLastAllocatedSequence(0);
     } else {
       seq = versions_->LastSequence();
     }
+=======
+    SequenceNumber seq = versions_->LastSequence();
+>>>>>>> blood in blood out
     WriteBatchInternal::SetSequence(&cached_recoverable_state_, seq + 1);
     auto status = WriteBatchInternal::InsertInto(
         &cached_recoverable_state_, column_family_memtables_.get(),
@@ -986,6 +1101,7 @@ Status DBImpl::WriteRecoverableState() {
     auto last_seq = next_seq - 1;
     if (two_write_queues_) {
       versions_->FetchAddLastAllocatedSequence(last_seq - seq);
+<<<<<<< HEAD
       versions_->SetLastPublishedSequence(last_seq);
     }
     versions_->SetLastSequence(last_seq);
@@ -1000,6 +1116,14 @@ Status DBImpl::WriteRecoverableState() {
             sub_batch_seq, !DISABLE_MEMTABLE);
       }
     }
+=======
+    }
+    versions_->SetLastSequence(last_seq);
+    versions_->SetLastPublishedSequence(last_seq);
+    if (two_write_queues_) {
+      log_write_mutex_.Unlock();
+    }
+>>>>>>> blood in blood out
     if (status.ok()) {
       cached_recoverable_state_.Clear();
       cached_recoverable_state_empty_ = true;
@@ -1019,6 +1143,7 @@ Status DBImpl::SwitchWAL(WriteContext* write_context) {
   }
 
   auto oldest_alive_log = alive_log_files_.begin()->number;
+<<<<<<< HEAD
   bool flush_wont_release_oldest_log = false;
   if (allow_2pc()) {
     auto oldest_log_with_uncommited_prep =
@@ -1047,6 +1172,30 @@ Status DBImpl::SwitchWAL(WriteContext* write_context) {
     // flushed all data in this log. If this log contains outstanding prepared
     // transactions then we cannot flush this log until those transactions are commited.
     unable_to_release_oldest_log_ = false;
+=======
+  auto oldest_log_with_uncommited_prep = FindMinLogContainingOutstandingPrep();
+
+  if (allow_2pc() &&
+      oldest_log_with_uncommited_prep > 0 &&
+      oldest_log_with_uncommited_prep <= oldest_alive_log) {
+    if (unable_to_flush_oldest_log_) {
+        // we already attempted to flush all column families dependent on
+        // the oldest alive log but the log still contained uncommited transactions.
+        // the oldest alive log STILL contains uncommited transaction so there
+        // is still nothing that we can do.
+        return status;
+    } else {
+      ROCKS_LOG_WARN(
+          immutable_db_options_.info_log,
+          "Unable to release oldest log due to uncommited transaction");
+      unable_to_flush_oldest_log_ = true;
+    }
+  } else {
+    // we only mark this log as getting flushed if we have successfully
+    // flushed all data in this log. If this log contains outstanding prepared
+    // transactions then we cannot flush this log until those transactions are commited.
+    unable_to_flush_oldest_log_ = false;
+>>>>>>> blood in blood out
     alive_log_files_.begin()->getting_flushed = true;
   }
 
@@ -1110,8 +1259,12 @@ Status DBImpl::HandleWriteBufferFull(WriteContext* write_context) {
     }
   }
   if (cfd_picked != nullptr) {
+<<<<<<< HEAD
     status = SwitchMemtable(cfd_picked, write_context,
                             FlushReason::kWriteBufferFull);
+=======
+    status = SwitchMemtable(cfd_picked, write_context);
+>>>>>>> blood in blood out
     if (status.ok()) {
       cfd_picked->imm()->FlushRequested();
       SchedulePendingFlush(cfd_picked, FlushReason::kWriteBufferFull);
@@ -1161,7 +1314,11 @@ Status DBImpl::DelayWrite(uint64_t num_bytes,
       mutex_.Lock();
     }
 
+<<<<<<< HEAD
     while (!error_handler_.IsDBStopped() && write_controller_.IsStopped()) {
+=======
+    while (bg_error_.ok() && write_controller_.IsStopped()) {
+>>>>>>> blood in blood out
       if (write_options.no_slowdown) {
         return Status::Incomplete();
       }
@@ -1177,7 +1334,11 @@ Status DBImpl::DelayWrite(uint64_t num_bytes,
     RecordTick(stats_, STALL_MICROS, time_delayed);
   }
 
+<<<<<<< HEAD
   return error_handler_.GetBGError();
+=======
+  return bg_error_;
+>>>>>>> blood in blood out
 }
 
 Status DBImpl::ThrottleLowPriWritesIfNeeded(const WriteOptions& write_options,
@@ -1201,7 +1362,10 @@ Status DBImpl::ThrottleLowPriWritesIfNeeded(const WriteOptions& write_options,
       // is that in case the write is heavy, low pri writes may never have
       // a chance to run. Now we guarantee we are still slowly making
       // progress.
+<<<<<<< HEAD
       PERF_TIMER_GUARD(write_delay_time);
+=======
+>>>>>>> blood in blood out
       write_controller_.low_pri_rate_limiter()->Request(
           my_batch->GetDataSize(), Env::IO_HIGH, nullptr /* stats */,
           RateLimiter::OpType::kWrite);
@@ -1213,7 +1377,11 @@ Status DBImpl::ThrottleLowPriWritesIfNeeded(const WriteOptions& write_options,
 Status DBImpl::ScheduleFlushes(WriteContext* context) {
   ColumnFamilyData* cfd;
   while ((cfd = flush_scheduler_.TakeNextColumnFamily()) != nullptr) {
+<<<<<<< HEAD
     auto status = SwitchMemtable(cfd, context, FlushReason::kWriteBufferFull);
+=======
+    auto status = SwitchMemtable(cfd, context);
+>>>>>>> blood in blood out
     if (cfd->Unref()) {
       delete cfd;
     }
@@ -1225,7 +1393,11 @@ Status DBImpl::ScheduleFlushes(WriteContext* context) {
 }
 
 #ifndef ROCKSDB_LITE
+<<<<<<< HEAD
 void DBImpl::NotifyOnMemTableSealed(ColumnFamilyData* /*cfd*/,
+=======
+void DBImpl::NotifyOnMemTableSealed(ColumnFamilyData* cfd,
+>>>>>>> blood in blood out
                                     const MemTableInfo& mem_table_info) {
   if (immutable_db_options_.listeners.size() == 0U) {
     return;
@@ -1242,8 +1414,12 @@ void DBImpl::NotifyOnMemTableSealed(ColumnFamilyData* /*cfd*/,
 
 // REQUIRES: mutex_ is held
 // REQUIRES: this thread is currently at the front of the writer queue
+<<<<<<< HEAD
 Status DBImpl::SwitchMemtable(ColumnFamilyData* cfd, WriteContext* context,
                               FlushReason flush_reason) {
+=======
+Status DBImpl::SwitchMemtable(ColumnFamilyData* cfd, WriteContext* context) {
+>>>>>>> blood in blood out
   mutex_.AssertHeld();
   WriteThread::Writer nonmem_w;
   if (two_write_queues_) {
@@ -1266,11 +1442,15 @@ Status DBImpl::SwitchMemtable(ColumnFamilyData* cfd, WriteContext* context,
   // In case of pipelined write is enabled, wait for all pending memtable
   // writers.
   if (immutable_db_options_.enable_pipelined_write) {
+<<<<<<< HEAD
     // Memtable writers may call DB::Get in case max_successive_merges > 0,
     // which may lock mutex. Unlocking mutex here to avoid deadlock.
     mutex_.Unlock();
     write_thread_.WaitForMemTableWriters();
     mutex_.Lock();
+=======
+    write_thread_.WaitForMemTableWriters();
+>>>>>>> blood in blood out
   }
 
   // Attempt to switch to a new memtable and trigger flush of old.
@@ -1415,7 +1595,11 @@ Status DBImpl::SwitchMemtable(ColumnFamilyData* cfd, WriteContext* context,
   new_mem->Ref();
   cfd->SetMemtable(new_mem);
   InstallSuperVersionAndScheduleWork(cfd, &context->superversion_context,
+<<<<<<< HEAD
                                      mutable_cf_options, flush_reason);
+=======
+                                     mutable_cf_options);
+>>>>>>> blood in blood out
   if (two_write_queues_) {
     nonmem_write_thread_.ExitUnbatched(&nonmem_w);
   }
@@ -1424,6 +1608,7 @@ Status DBImpl::SwitchMemtable(ColumnFamilyData* cfd, WriteContext* context,
 
 size_t DBImpl::GetWalPreallocateBlockSize(uint64_t write_buffer_size) const {
   mutex_.AssertHeld();
+<<<<<<< HEAD
   size_t bsize = static_cast<size_t>(
     write_buffer_size / 10 + write_buffer_size);
   // Some users might set very high write_buffer_size and rely on
@@ -1431,6 +1616,13 @@ size_t DBImpl::GetWalPreallocateBlockSize(uint64_t write_buffer_size) const {
   if (mutable_db_options_.max_total_wal_size > 0) {
     bsize = std::min<size_t>(bsize, static_cast<size_t>(
       mutable_db_options_.max_total_wal_size));
+=======
+  size_t bsize = write_buffer_size / 10 + write_buffer_size;
+  // Some users might set very high write_buffer_size and rely on
+  // max_total_wal_size or other parameters to control the WAL size.
+  if (mutable_db_options_.max_total_wal_size > 0) {
+    bsize = std::min<size_t>(bsize, mutable_db_options_.max_total_wal_size);
+>>>>>>> blood in blood out
   }
   if (immutable_db_options_.db_write_buffer_size > 0) {
     bsize = std::min<size_t>(bsize, immutable_db_options_.db_write_buffer_size);

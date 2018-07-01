@@ -19,8 +19,13 @@ class SnapshotChecker {
 class DisableGCSnapshotChecker : public SnapshotChecker {
  public:
   virtual ~DisableGCSnapshotChecker() {}
+<<<<<<< HEAD
   virtual bool IsInSnapshot(SequenceNumber /*sequence*/,
                             SequenceNumber /*snapshot_sequence*/) const override {
+=======
+  virtual bool IsInSnapshot(SequenceNumber sequence,
+                            SequenceNumber snapshot_sequence) const {
+>>>>>>> blood in blood out
     // By returning false, we prevent all the values from being GCed
     return false;
   }

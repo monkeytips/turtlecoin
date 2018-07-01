@@ -20,7 +20,11 @@ namespace rocksdb {
 
 // Tag numbers for serialized VersionEdit.  These numbers are written to
 // disk and should not be changed.
+<<<<<<< HEAD
 enum Tag : uint32_t {
+=======
+enum Tag {
+>>>>>>> blood in blood out
   kComparator = 1,
   kLogNumber = 2,
   kNextFileNumber = 3,
@@ -30,7 +34,10 @@ enum Tag : uint32_t {
   kNewFile = 7,
   // 8 was used for large value refs
   kPrevLogNumber = 9,
+<<<<<<< HEAD
   kMinLogNumberToKeep = 10,
+=======
+>>>>>>> blood in blood out
 
   // these are new formats divergent from open source leveldb
   kNewFile2 = 100,
@@ -42,6 +49,7 @@ enum Tag : uint32_t {
   kMaxColumnFamily = 203,
 };
 
+<<<<<<< HEAD
 enum CustomTag : uint32_t {
   kTerminate = 1,  // The end of customized fields
   kNeedCompaction = 2,
@@ -50,6 +58,11 @@ enum CustomTag : uint32_t {
   // kMinLogNumberToKeep as part of a CustomTag as a hack. This should be
   // removed when manifest becomes forward-comptabile.
   kMinLogNumberToKeepHack = 3,
+=======
+enum CustomTag {
+  kTerminate = 1,  // The end of customized fields
+  kNeedCompaction = 2,
+>>>>>>> blood in blood out
   kPathId = 65,
 };
 // If this bit for the custom tag is set, opening DB should fail if
@@ -69,14 +82,20 @@ void VersionEdit::Clear() {
   last_sequence_ = 0;
   next_file_number_ = 0;
   max_column_family_ = 0;
+<<<<<<< HEAD
   min_log_number_to_keep_ = 0;
+=======
+>>>>>>> blood in blood out
   has_comparator_ = false;
   has_log_number_ = false;
   has_prev_log_number_ = false;
   has_next_file_number_ = false;
   has_last_sequence_ = false;
   has_max_column_family_ = false;
+<<<<<<< HEAD
   has_min_log_number_to_keep_ = false;
+=======
+>>>>>>> blood in blood out
   deleted_files_.clear();
   new_files_.clear();
   column_family_ = 0;
@@ -105,19 +124,30 @@ bool VersionEdit::EncodeTo(std::string* dst) const {
   if (has_max_column_family_) {
     PutVarint32Varint32(dst, kMaxColumnFamily, max_column_family_);
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> blood in blood out
   for (const auto& deleted : deleted_files_) {
     PutVarint32Varint32Varint64(dst, kDeletedFile, deleted.first /* level */,
                                 deleted.second /* file number */);
   }
 
+<<<<<<< HEAD
   bool min_log_num_written = false;
+=======
+>>>>>>> blood in blood out
   for (size_t i = 0; i < new_files_.size(); i++) {
     const FileMetaData& f = new_files_[i].second;
     if (!f.smallest.Valid() || !f.largest.Valid()) {
       return false;
     }
     bool has_customized_fields = false;
+<<<<<<< HEAD
     if (f.marked_for_compaction || has_min_log_number_to_keep_) {
+=======
+    if (f.marked_for_compaction) {
+>>>>>>> blood in blood out
       PutVarint32(dst, kNewFile4);
       has_customized_fields = true;
     } else if (f.fd.GetPathId() == 0) {
@@ -173,6 +203,7 @@ bool VersionEdit::EncodeTo(std::string* dst) const {
         char p = static_cast<char>(1);
         PutLengthPrefixedSlice(dst, Slice(&p, 1));
       }
+<<<<<<< HEAD
       if (has_min_log_number_to_keep_ && !min_log_num_written) {
         PutVarint32(dst, CustomTag::kMinLogNumberToKeepHack);
         std::string varint_log_number;
@@ -180,6 +211,8 @@ bool VersionEdit::EncodeTo(std::string* dst) const {
         PutLengthPrefixedSlice(dst, Slice(varint_log_number));
         min_log_num_written = true;
       }
+=======
+>>>>>>> blood in blood out
       TEST_SYNC_POINT_CALLBACK("VersionEdit::EncodeTo:NewFile4:CustomizeFields",
                                dst);
 
@@ -213,7 +246,11 @@ static bool GetInternalKey(Slice* input, InternalKey* dst) {
   }
 }
 
+<<<<<<< HEAD
 bool VersionEdit::GetLevel(Slice* input, int* level, const char** /*msg*/) {
+=======
+bool VersionEdit::GetLevel(Slice* input, int* level, const char** msg) {
+>>>>>>> blood in blood out
   uint32_t v;
   if (GetVarint32(input, &v)) {
     *level = v;
@@ -233,9 +270,12 @@ const char* VersionEdit::DecodeNewFile4From(Slice* input) {
   uint64_t number;
   uint32_t path_id = 0;
   uint64_t file_size;
+<<<<<<< HEAD
   // Since this is the only forward-compatible part of the code, we hack new
   // extension into this record. When we do, we set this boolean to distinguish
   // the record from the normal NewFile records.
+=======
+>>>>>>> blood in blood out
   if (GetLevel(input, &level, &msg) && GetVarint64(input, &number) &&
       GetVarint64(input, &file_size) && GetInternalKey(input, &f.smallest) &&
       GetInternalKey(input, &f.largest) &&
@@ -270,6 +310,7 @@ const char* VersionEdit::DecodeNewFile4From(Slice* input) {
           }
           f.marked_for_compaction = (field[0] == 1);
           break;
+<<<<<<< HEAD
         case kMinLogNumberToKeepHack:
           // This is a hack to encode kMinLogNumberToKeep in a
           // forward-compatbile fashion.
@@ -278,6 +319,8 @@ const char* VersionEdit::DecodeNewFile4From(Slice* input) {
           }
           has_min_log_number_to_keep_ = true;
           break;
+=======
+>>>>>>> blood in blood out
         default:
           if ((custom_tag & kCustomTagNonSafeIgnoreMask) != 0) {
             // Should not proceed if cannot understand it
@@ -357,6 +400,7 @@ Status VersionEdit::DecodeFrom(const Slice& src) {
         }
         break;
 
+<<<<<<< HEAD
       case kMinLogNumberToKeep:
         if (GetVarint64(&input, &min_log_number_to_keep_)) {
           has_min_log_number_to_keep_ = true;
@@ -365,6 +409,8 @@ Status VersionEdit::DecodeFrom(const Slice& src) {
         }
         break;
 
+=======
+>>>>>>> blood in blood out
       case kCompactPointer:
         if (GetLevel(&input, &level, &msg) &&
             GetInternalKey(&input, &key)) {
@@ -509,10 +555,13 @@ std::string VersionEdit::DebugString(bool hex_key) const {
     r.append("\n  NextFileNumber: ");
     AppendNumberTo(&r, next_file_number_);
   }
+<<<<<<< HEAD
   if (has_min_log_number_to_keep_) {
     r.append("\n  MinLogNumberToKeep: ");
     AppendNumberTo(&r, min_log_number_to_keep_);
   }
+=======
+>>>>>>> blood in blood out
   if (has_last_sequence_) {
     r.append("\n  LastSeq: ");
     AppendNumberTo(&r, last_sequence_);
@@ -620,9 +669,12 @@ std::string VersionEdit::DebugJSON(int edit_num, bool hex_key) const {
   if (has_max_column_family_) {
     jw << "MaxColumnFamily" << max_column_family_;
   }
+<<<<<<< HEAD
   if (has_min_log_number_to_keep_) {
     jw << "MinLogNumberToKeep" << min_log_number_to_keep_;
   }
+=======
+>>>>>>> blood in blood out
 
   jw.EndObject();
 

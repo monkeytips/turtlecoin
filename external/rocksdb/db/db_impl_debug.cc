@@ -10,7 +10,10 @@
 #ifndef NDEBUG
 
 #include "db/db_impl.h"
+<<<<<<< HEAD
 #include "db/error_handler.h"
+=======
+>>>>>>> blood in blood out
 #include "monitoring/thread_status_updater.h"
 
 namespace rocksdb {
@@ -26,12 +29,15 @@ void DBImpl::TEST_SwitchWAL() {
   SwitchWAL(&write_context);
 }
 
+<<<<<<< HEAD
 bool DBImpl::TEST_WALBufferIsEmpty() {
   InstrumentedMutexLock wl(&log_write_mutex_);
   log::Writer* cur_log_writer = logs_.back().writer;
   return cur_log_writer->TEST_BufferIsEmpty();
 }
 
+=======
+>>>>>>> blood in blood out
 int64_t DBImpl::TEST_MaxNextLevelOverlappingBytes(
     ColumnFamilyHandle* column_family) {
   ColumnFamilyData* cfd;
@@ -87,7 +93,11 @@ Status DBImpl::TEST_CompactRange(int level, const Slice* begin,
        cfd->ioptions()->compaction_style == kCompactionStyleFIFO)
           ? level
           : level + 1;
+<<<<<<< HEAD
   return RunManualCompaction(cfd, level, output_level, 0, 0, begin, end, true,
+=======
+  return RunManualCompaction(cfd, level, output_level, 0, begin, end, true,
+>>>>>>> blood in blood out
                              disallow_trivial_move);
 }
 
@@ -124,7 +134,11 @@ Status DBImpl::TEST_WaitForFlushMemTable(ColumnFamilyHandle* column_family) {
   return WaitForFlushMemTable(cfd);
 }
 
+<<<<<<< HEAD
 Status DBImpl::TEST_WaitForCompact(bool wait_unscheduled) {
+=======
+Status DBImpl::TEST_WaitForCompact() {
+>>>>>>> blood in blood out
   // Wait until the compaction completes
 
   // TODO: a bug here. This function actually does not necessarily
@@ -133,12 +147,20 @@ Status DBImpl::TEST_WaitForCompact(bool wait_unscheduled) {
 
   InstrumentedMutexLock l(&mutex_);
   while ((bg_bottom_compaction_scheduled_ || bg_compaction_scheduled_ ||
+<<<<<<< HEAD
           bg_flush_scheduled_ ||
           (wait_unscheduled && unscheduled_compactions_)) &&
          !error_handler_.IsDBStopped()) {
     bg_cv_.Wait();
   }
   return error_handler_.GetBGError();
+=======
+          bg_flush_scheduled_) &&
+         bg_error_.ok()) {
+    bg_cv_.Wait();
+  }
+  return bg_error_;
+>>>>>>> blood in blood out
 }
 
 void DBImpl::TEST_LockMutex() {
@@ -191,6 +213,7 @@ Status DBImpl::TEST_GetAllImmutableCFOptions(
 }
 
 uint64_t DBImpl::TEST_FindMinLogContainingOutstandingPrep() {
+<<<<<<< HEAD
   return logs_with_prep_tracker_.FindMinLogContainingOutstandingPrep();
 }
 
@@ -206,6 +229,13 @@ uint64_t DBImpl::TEST_FindMinPrepLogReferencedByMemTable() {
   autovector<MemTable*> empty_list;
   return FindMinPrepLogReferencedByMemTable(versions_.get(), nullptr,
                                             empty_list);
+=======
+  return FindMinLogContainingOutstandingPrep();
+}
+
+uint64_t DBImpl::TEST_FindMinPrepLogReferencedByMemTable() {
+  return FindMinPrepLogReferencedByMemTable();
+>>>>>>> blood in blood out
 }
 
 Status DBImpl::TEST_GetLatestMutableCFOptions(

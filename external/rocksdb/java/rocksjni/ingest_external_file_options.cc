@@ -17,7 +17,11 @@
  * Signature: ()J
  */
 jlong Java_org_rocksdb_IngestExternalFileOptions_newIngestExternalFileOptions__(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jclass /*jclazz*/) {
+=======
+    JNIEnv* env, jclass jclazz) {
+>>>>>>> blood in blood out
   auto* options = new rocksdb::IngestExternalFileOptions();
   return reinterpret_cast<jlong>(options);
 }
@@ -28,7 +32,11 @@ jlong Java_org_rocksdb_IngestExternalFileOptions_newIngestExternalFileOptions__(
  * Signature: (ZZZZ)J
  */
 jlong Java_org_rocksdb_IngestExternalFileOptions_newIngestExternalFileOptions__ZZZZ(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jclass /*jcls*/, jboolean jmove_files,
+=======
+    JNIEnv* env, jclass jcls, jboolean jmove_files,
+>>>>>>> blood in blood out
     jboolean jsnapshot_consistency, jboolean jallow_global_seqno,
     jboolean jallow_blocking_flush) {
   auto* options = new rocksdb::IngestExternalFileOptions();
@@ -44,9 +52,14 @@ jlong Java_org_rocksdb_IngestExternalFileOptions_newIngestExternalFileOptions__Z
  * Method:    moveFiles
  * Signature: (J)Z
  */
+<<<<<<< HEAD
 jboolean Java_org_rocksdb_IngestExternalFileOptions_moveFiles(JNIEnv* /*env*/,
                                                               jobject /*jobj*/,
                                                               jlong jhandle) {
+=======
+jboolean Java_org_rocksdb_IngestExternalFileOptions_moveFiles(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   return static_cast<jboolean>(options->move_files);
@@ -58,7 +71,11 @@ jboolean Java_org_rocksdb_IngestExternalFileOptions_moveFiles(JNIEnv* /*env*/,
  * Signature: (JZ)V
  */
 void Java_org_rocksdb_IngestExternalFileOptions_setMoveFiles(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle, jboolean jmove_files) {
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle, jboolean jmove_files) {
+>>>>>>> blood in blood out
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   options->move_files = static_cast<bool>(jmove_files);
@@ -70,7 +87,11 @@ void Java_org_rocksdb_IngestExternalFileOptions_setMoveFiles(
  * Signature: (J)Z
  */
 jboolean Java_org_rocksdb_IngestExternalFileOptions_snapshotConsistency(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle) {
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   return static_cast<jboolean>(options->snapshot_consistency);
@@ -82,7 +103,11 @@ jboolean Java_org_rocksdb_IngestExternalFileOptions_snapshotConsistency(
  * Signature: (JZ)V
  */
 void Java_org_rocksdb_IngestExternalFileOptions_setSnapshotConsistency(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle,
+>>>>>>> blood in blood out
     jboolean jsnapshot_consistency) {
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
@@ -95,7 +120,11 @@ void Java_org_rocksdb_IngestExternalFileOptions_setSnapshotConsistency(
  * Signature: (J)Z
  */
 jboolean Java_org_rocksdb_IngestExternalFileOptions_allowGlobalSeqNo(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle) {
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   return static_cast<jboolean>(options->allow_global_seqno);
@@ -107,8 +136,12 @@ jboolean Java_org_rocksdb_IngestExternalFileOptions_allowGlobalSeqNo(
  * Signature: (JZ)V
  */
 void Java_org_rocksdb_IngestExternalFileOptions_setAllowGlobalSeqNo(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jboolean jallow_global_seqno) {
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle, jboolean jallow_global_seqno) {
+>>>>>>> blood in blood out
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   options->allow_global_seqno = static_cast<bool>(jallow_global_seqno);
@@ -120,7 +153,11 @@ void Java_org_rocksdb_IngestExternalFileOptions_setAllowGlobalSeqNo(
  * Signature: (J)Z
  */
 jboolean Java_org_rocksdb_IngestExternalFileOptions_allowBlockingFlush(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle) {
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   return static_cast<jboolean>(options->allow_blocking_flush);
@@ -132,8 +169,12 @@ jboolean Java_org_rocksdb_IngestExternalFileOptions_allowBlockingFlush(
  * Signature: (JZ)V
  */
 void Java_org_rocksdb_IngestExternalFileOptions_setAllowBlockingFlush(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jboolean jallow_blocking_flush) {
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle, jboolean jallow_blocking_flush) {
+>>>>>>> blood in blood out
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   options->allow_blocking_flush = static_cast<bool>(jallow_blocking_flush);
@@ -145,9 +186,17 @@ void Java_org_rocksdb_IngestExternalFileOptions_setAllowBlockingFlush(
  * Signature: (J)V
  */
 void Java_org_rocksdb_IngestExternalFileOptions_disposeInternal(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle) {
   auto* options =
       reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
   delete options;
   // @lint-ignore TXT4 T25377293 Grandfathered in
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+  auto* options =
+      reinterpret_cast<rocksdb::IngestExternalFileOptions*>(jhandle);
+  delete options;
+// @lint-ignore TXT4 T25377293 Grandfathered in
+>>>>>>> blood in blood out
 }

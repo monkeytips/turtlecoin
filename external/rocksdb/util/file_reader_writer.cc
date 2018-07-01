@@ -75,8 +75,12 @@ Status RandomAccessFileReader::Read(uint64_t offset, size_t n, Slice* result,
   uint64_t elapsed = 0;
   {
     StopWatch sw(env_, stats_, hist_type_,
+<<<<<<< HEAD
                  (stats_ != nullptr) ? &elapsed : nullptr, true /*overwrite*/,
                 true /*delay_enabled*/);
+=======
+                 (stats_ != nullptr) ? &elapsed : nullptr);
+>>>>>>> blood in blood out
     IOSTATS_TIMER_GUARD(read_nanos);
     if (use_direct_io()) {
 #ifndef ROCKSDB_LITE
@@ -89,7 +93,11 @@ Status RandomAccessFileReader::Read(uint64_t offset, size_t n, Slice* result,
       buf.AllocateNewBuffer(read_size);
       while (buf.CurrentSize() < read_size) {
         size_t allowed;
+<<<<<<< HEAD
         if (for_compaction_ && rate_limiter_ != nullptr) {
+=======
+        if (rate_limiter_ != nullptr) {
+>>>>>>> blood in blood out
           allowed = rate_limiter_->RequestToken(
               buf.Capacity() - buf.CurrentSize(), buf.Alignment(),
               Env::IOPriority::IO_LOW, stats_, RateLimiter::OpType::kRead);
@@ -118,6 +126,7 @@ Status RandomAccessFileReader::Read(uint64_t offset, size_t n, Slice* result,
       while (pos < n) {
         size_t allowed;
         if (for_compaction_ && rate_limiter_ != nullptr) {
+<<<<<<< HEAD
           if (rate_limiter_->IsRateLimited(RateLimiter::OpType::kRead)) {
             sw.DelayStart();
           }
@@ -127,6 +136,11 @@ Status RandomAccessFileReader::Read(uint64_t offset, size_t n, Slice* result,
           if (rate_limiter_->IsRateLimited(RateLimiter::OpType::kRead)) {
             sw.DelayStop();
           }
+=======
+          allowed = rate_limiter_->RequestToken(n - pos, 0 /* alignment */,
+                                                Env::IOPriority::IO_LOW, stats_,
+                                                RateLimiter::OpType::kRead);
+>>>>>>> blood in blood out
         } else {
           allowed = n;
         }
@@ -226,6 +240,7 @@ Status WritableFileWriter::Append(const Slice& data) {
   return s;
 }
 
+<<<<<<< HEAD
 Status WritableFileWriter::Pad(const size_t pad_bytes) {
   assert(pad_bytes < kDefaultPageSize);
   size_t left = pad_bytes;
@@ -251,6 +266,8 @@ Status WritableFileWriter::Pad(const size_t pad_bytes) {
   return Status::OK();
 }
 
+=======
+>>>>>>> blood in blood out
 Status WritableFileWriter::Close() {
 
   // Do not quit immediately on failure the file MUST be closed
@@ -516,7 +533,13 @@ class ReadaheadRandomAccessFile : public RandomAccessFile {
         alignment_(file_->GetRequiredBufferAlignment()),
         readahead_size_(Roundup(readahead_size, alignment_)),
         buffer_(),
+<<<<<<< HEAD
         buffer_offset_(0) {
+=======
+        buffer_offset_(0),
+        buffer_len_(0) {
+
+>>>>>>> blood in blood out
     buffer_.Alignment(alignment_);
     buffer_.AllocateNewBuffer(readahead_size_);
   }
@@ -542,11 +565,19 @@ class ReadaheadRandomAccessFile : public RandomAccessFile {
     if (TryReadFromCache(offset, n, &cached_len, scratch) &&
         (cached_len == n ||
          // End of file
+<<<<<<< HEAD
          buffer_.CurrentSize() < readahead_size_)) {
       *result = Slice(scratch, cached_len);
       return Status::OK();
     }
     size_t advanced_offset = static_cast<size_t>(offset + cached_len);
+=======
+         buffer_len_ < readahead_size_)) {
+      *result = Slice(scratch, cached_len);
+      return Status::OK();
+    }
+    size_t advanced_offset = offset + cached_len;
+>>>>>>> blood in blood out
     // In the case of cache hit advanced_offset is already aligned, means that
     // chunk_offset equals to advanced_offset
     size_t chunk_offset = TruncateToPageBoundary(alignment_, advanced_offset);
@@ -556,13 +587,21 @@ class ReadaheadRandomAccessFile : public RandomAccessFile {
     if (s.ok()) {
       // In the case of cache miss, i.e. when cached_len equals 0, an offset can
       // exceed the file end position, so the following check is required
+<<<<<<< HEAD
       if (advanced_offset < chunk_offset + buffer_.CurrentSize()) {
+=======
+      if (advanced_offset < chunk_offset + buffer_len_) {
+>>>>>>> blood in blood out
         // In the case of cache miss, the first chunk_padding bytes in buffer_
         // are
         // stored for alignment only and must be skipped
         size_t chunk_padding = advanced_offset - chunk_offset;
         auto remaining_len =
+<<<<<<< HEAD
             std::min(buffer_.CurrentSize() - chunk_padding, n - cached_len);
+=======
+            std::min(buffer_len_ - chunk_padding, n - cached_len);
+>>>>>>> blood in blood out
         memcpy(scratch + cached_len, buffer_.BufferStart() + chunk_padding,
                remaining_len);
         *result = Slice(scratch, cached_len + remaining_len);
@@ -579,13 +618,21 @@ class ReadaheadRandomAccessFile : public RandomAccessFile {
       // `Read()` assumes a smaller prefetch buffer indicates EOF was reached.
       return Status::OK();
     }
+<<<<<<< HEAD
     size_t offset_ = static_cast<size_t>(offset);
     size_t prefetch_offset = TruncateToPageBoundary(alignment_, offset_);
+=======
+    size_t prefetch_offset = TruncateToPageBoundary(alignment_, offset);
+>>>>>>> blood in blood out
     if (prefetch_offset == buffer_offset_) {
       return Status::OK();
     }
     return ReadIntoBuffer(prefetch_offset,
+<<<<<<< HEAD
                           Roundup(offset_ + n, alignment_) - prefetch_offset);
+=======
+                          Roundup(offset + n, alignment_) - prefetch_offset);
+>>>>>>> blood in blood out
   }
 
   virtual size_t GetUniqueId(char* id, size_t max_size) const override {
@@ -605,14 +652,23 @@ class ReadaheadRandomAccessFile : public RandomAccessFile {
  private:
   bool TryReadFromCache(uint64_t offset, size_t n, size_t* cached_len,
                          char* scratch) const {
+<<<<<<< HEAD
     if (offset < buffer_offset_ ||
         offset >= buffer_offset_ + buffer_.CurrentSize()) {
+=======
+    if (offset < buffer_offset_ || offset >= buffer_offset_ + buffer_len_) {
+>>>>>>> blood in blood out
       *cached_len = 0;
       return false;
     }
     uint64_t offset_in_buffer = offset - buffer_offset_;
+<<<<<<< HEAD
     *cached_len = std::min(
         buffer_.CurrentSize() - static_cast<size_t>(offset_in_buffer), n);
+=======
+    *cached_len =
+        std::min(buffer_len_ - static_cast<size_t>(offset_in_buffer), n);
+>>>>>>> blood in blood out
     memcpy(scratch, buffer_.BufferStart() + offset_in_buffer, *cached_len);
     return true;
   }
@@ -627,8 +683,12 @@ class ReadaheadRandomAccessFile : public RandomAccessFile {
     Status s = file_->Read(offset, n, &result, buffer_.BufferStart());
     if (s.ok()) {
       buffer_offset_ = offset;
+<<<<<<< HEAD
       buffer_.Size(result.size());
       assert(buffer_.BufferStart() == result.data());
+=======
+      buffer_len_ = result.size();
+>>>>>>> blood in blood out
     }
     return s;
   }
@@ -640,12 +700,17 @@ class ReadaheadRandomAccessFile : public RandomAccessFile {
   mutable std::mutex lock_;
   mutable AlignedBuffer buffer_;
   mutable uint64_t buffer_offset_;
+<<<<<<< HEAD
+=======
+  mutable size_t buffer_len_;
+>>>>>>> blood in blood out
 };
 }  // namespace
 
 Status FilePrefetchBuffer::Prefetch(RandomAccessFileReader* reader,
                                     uint64_t offset, size_t n) {
   size_t alignment = reader->file()->GetRequiredBufferAlignment();
+<<<<<<< HEAD
   size_t offset_ = static_cast<size_t>(offset);
   uint64_t rounddown_offset = Rounddown(offset_, alignment);
   uint64_t roundup_end = Roundup(offset_ + n, alignment);
@@ -708,11 +773,28 @@ Status FilePrefetchBuffer::Prefetch(RandomAccessFileReader* reader,
   if (s.ok()) {
     buffer_offset_ = rounddown_offset;
     buffer_.Size(chunk_len + result.size());
+=======
+  uint64_t rounddown_offset = Rounddown(offset, alignment);
+  uint64_t roundup_end = Roundup(offset + n, alignment);
+  uint64_t roundup_len = roundup_end - rounddown_offset;
+  assert(roundup_len >= alignment);
+  assert(roundup_len % alignment == 0);
+  buffer_.Alignment(alignment);
+  buffer_.AllocateNewBuffer(roundup_len);
+
+  Slice result;
+  Status s = reader->Read(rounddown_offset, roundup_len, &result,
+                          buffer_.BufferStart());
+  if (s.ok()) {
+    buffer_offset_ = rounddown_offset;
+    buffer_len_ = result.size();
+>>>>>>> blood in blood out
   }
   return s;
 }
 
 bool FilePrefetchBuffer::TryReadFromCache(uint64_t offset, size_t n,
+<<<<<<< HEAD
                                           Slice* result) {
   if (offset < buffer_offset_) {
     return false;
@@ -737,6 +819,12 @@ bool FilePrefetchBuffer::TryReadFromCache(uint64_t offset, size_t n,
     }
   }
 
+=======
+                                          Slice* result) const {
+  if (offset < buffer_offset_ || offset + n > buffer_offset_ + buffer_len_) {
+    return false;
+  }
+>>>>>>> blood in blood out
   uint64_t offset_in_buffer = offset - buffer_offset_;
   *result = Slice(buffer_.BufferStart() + offset_in_buffer, n);
   return true;

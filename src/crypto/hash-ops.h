@@ -24,6 +24,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+<<<<<<< HEAD
+=======
+#include "../Common/static_assert.h"
+>>>>>>> blood in blood out
 #include "Common/int-util.h"
 
 static inline void *padd(void *p, size_t i) {
@@ -60,11 +64,20 @@ enum {
   HASH_SIZE = 32,
   HASH_DATA_AREA = 136,
   SLOW_HASH_CONTEXT_SIZE = 2097552,
+<<<<<<< HEAD
   SLOW_HASH_CONTEXT_LITE_SIZE = 1048976  // Suml: Unused for now but this is the right size for 1MB scratchpads.
 };
 
 void cn_fast_hash(const void *data, size_t length, char *hash);
 void cn_slow_hash(const void *data, size_t length, char *hash, int light, int variant, int prehashed, uint32_t page_size, uint32_t scratchpad, uint32_t iterations);
+=======
+  SLOW_HASH_CONTEXT_LITE_SIZE = 1048976   // Suml: Unused for now but this is the right size for 1MB scratchpads.
+};
+
+void cn_fast_hash(const void *data, size_t length, char *hash);
+
+void cn_slow_hash_f(void *, const void *, size_t, void *, int, int);
+>>>>>>> blood in blood out
 
 void hash_extra_blake(const void *data, size_t length, char *hash);
 void hash_extra_groestl(const void *data, size_t length, char *hash);

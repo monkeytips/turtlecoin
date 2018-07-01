@@ -46,36 +46,52 @@ class BlobDBIterator : public Iterator {
     StopWatch seek_sw(env_, statistics_, BLOB_DB_SEEK_MICROS);
     RecordTick(statistics_, BLOB_DB_NUM_SEEK);
     iter_->SeekToFirst();
+<<<<<<< HEAD
     while (UpdateBlobValue()) {
       iter_->Next();
     }
+=======
+    UpdateBlobValue();
+>>>>>>> blood in blood out
   }
 
   void SeekToLast() override {
     StopWatch seek_sw(env_, statistics_, BLOB_DB_SEEK_MICROS);
     RecordTick(statistics_, BLOB_DB_NUM_SEEK);
     iter_->SeekToLast();
+<<<<<<< HEAD
     while (UpdateBlobValue()) {
       iter_->Prev();
     }
+=======
+    UpdateBlobValue();
+>>>>>>> blood in blood out
   }
 
   void Seek(const Slice& target) override {
     StopWatch seek_sw(env_, statistics_, BLOB_DB_SEEK_MICROS);
     RecordTick(statistics_, BLOB_DB_NUM_SEEK);
     iter_->Seek(target);
+<<<<<<< HEAD
     while (UpdateBlobValue()) {
       iter_->Next();
     }
+=======
+    UpdateBlobValue();
+>>>>>>> blood in blood out
   }
 
   void SeekForPrev(const Slice& target) override {
     StopWatch seek_sw(env_, statistics_, BLOB_DB_SEEK_MICROS);
     RecordTick(statistics_, BLOB_DB_NUM_SEEK);
     iter_->SeekForPrev(target);
+<<<<<<< HEAD
     while (UpdateBlobValue()) {
       iter_->Prev();
     }
+=======
+    UpdateBlobValue();
+>>>>>>> blood in blood out
   }
 
   void Next() override {
@@ -83,9 +99,13 @@ class BlobDBIterator : public Iterator {
     StopWatch next_sw(env_, statistics_, BLOB_DB_NEXT_MICROS);
     RecordTick(statistics_, BLOB_DB_NUM_NEXT);
     iter_->Next();
+<<<<<<< HEAD
     while (UpdateBlobValue()) {
       iter_->Next();
     }
+=======
+    UpdateBlobValue();
+>>>>>>> blood in blood out
   }
 
   void Prev() override {
@@ -93,9 +113,13 @@ class BlobDBIterator : public Iterator {
     StopWatch prev_sw(env_, statistics_, BLOB_DB_PREV_MICROS);
     RecordTick(statistics_, BLOB_DB_NUM_PREV);
     iter_->Prev();
+<<<<<<< HEAD
     while (UpdateBlobValue()) {
       iter_->Prev();
     }
+=======
+    UpdateBlobValue();
+>>>>>>> blood in blood out
   }
 
   Slice key() const override {
@@ -114,6 +138,7 @@ class BlobDBIterator : public Iterator {
   // Iterator::Refresh() not supported.
 
  private:
+<<<<<<< HEAD
   // Return true if caller should continue to next value.
   bool UpdateBlobValue() {
     TEST_SYNC_POINT("BlobDBIterator::UpdateBlobValue:Start:1");
@@ -132,6 +157,14 @@ class BlobDBIterator : public Iterator {
       }
     } else {
       return false;
+=======
+  void UpdateBlobValue() {
+    TEST_SYNC_POINT("BlobDBIterator::UpdateBlobValue:Start:1");
+    TEST_SYNC_POINT("BlobDBIterator::UpdateBlobValue:Start:2");
+    value_.Reset();
+    if (iter_->Valid() && iter_->IsBlob()) {
+      status_ = blob_db_->GetBlobValue(iter_->key(), iter_->value(), &value_);
+>>>>>>> blood in blood out
     }
   }
 

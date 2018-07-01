@@ -25,7 +25,10 @@
 
 namespace CryptoNote {
 
+<<<<<<< HEAD
 uint64_t getDefaultMixinByHeight(const uint64_t height);
+=======
+>>>>>>> blood in blood out
 void throwIfKeysMismatch(const Crypto::SecretKey& secretKey, const Crypto::PublicKey& expectedPublicKey, const std::string& message = "");
 bool validateAddress(const std::string& address, const CryptoNote::Currency& currency);
 

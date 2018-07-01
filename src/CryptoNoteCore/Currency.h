@@ -1,7 +1,11 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018, The TurtleCoin Developers
+<<<<<<< HEAD
 //
+=======
+// 
+>>>>>>> blood in blood out
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -10,11 +14,20 @@
 #include <string>
 #include <vector>
 #include <boost/utility.hpp>
+<<<<<<< HEAD
 #include <config/CryptoNoteConfig.h>
 #include "crypto/hash.h"
 #include "Logging/LoggerRef.h"
 #include "CachedBlock.h"
 #include "CryptoNoteBasic.h"
+=======
+#include "../CryptoNoteConfig.h"
+#include "../crypto/hash.h"
+#include "../Logging/LoggerRef.h"
+#include "CachedBlock.h"
+#include "CryptoNoteBasic.h"
+#include "Difficulty.h"
+>>>>>>> blood in blood out
 
 namespace CryptoNote {
 
@@ -28,6 +41,7 @@ public:
   uint64_t publicAddressBase58Prefix() const { return m_publicAddressBase58Prefix; }
   uint32_t minedMoneyUnlockWindow() const { return m_minedMoneyUnlockWindow; }
 
+<<<<<<< HEAD
   size_t timestampCheckWindow(uint32_t blockHeight) const
   {
       if (blockHeight >= CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX_V3)
@@ -47,6 +61,13 @@ public:
           return CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V4;
       }
       else if (blockHeight >= CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX)
+=======
+  size_t timestampCheckWindow() const { return m_timestampCheckWindow; }
+  uint64_t blockFutureTimeLimit() const { return m_blockFutureTimeLimit; }
+  uint64_t blockFutureTimeLimit(uint32_t blockHeight) const
+  {
+      if (blockHeight >= CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX)
+>>>>>>> blood in blood out
       {
           return CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
       }
@@ -80,6 +101,7 @@ public:
 
       return m_defaultDustThreshold;
   }
+<<<<<<< HEAD
   uint64_t defaultFusionDustThreshold(uint32_t height) const {
       if (height >= CryptoNote::parameters::FUSION_DUST_THRESHOLD_HEIGHT_V2)
       {
@@ -88,6 +110,8 @@ public:
 
       return m_defaultDustThreshold;
   }
+=======
+>>>>>>> blood in blood out
 
   uint64_t difficultyTarget() const { return m_difficultyTarget; }
   size_t difficultyWindow() const { return m_difficultyWindow; }
@@ -153,6 +177,7 @@ size_t difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion, uint32_t h
   std::string formatAmount(int64_t amount) const;
   bool parseAmount(const std::string& str, uint64_t& amount) const;
 
+<<<<<<< HEAD
   uint64_t getNextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<uint64_t> cumulativeDifficulties) const;
   uint64_t nextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<uint64_t> cumulativeDifficulties) const;
 
@@ -165,6 +190,23 @@ size_t difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion, uint32_t h
 
 private:
   Currency(std::shared_ptr<Logging::ILogger> log) : logger(log, "currency") {
+=======
+  Difficulty getNextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
+  Difficulty nextDifficulty(std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
+Difficulty nextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
+  Difficulty nextDifficultyV3(std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulative_difficulties) const;
+
+  bool checkProofOfWorkV1(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const;
+  bool checkProofOfWorkV2(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const;
+  bool checkProofOfWork(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const;
+
+  Currency(Currency&& currency);
+
+  size_t getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const;
+
+private:
+  Currency(Logging::ILogger& log) : logger(log, "currency") {
+>>>>>>> blood in blood out
   }
 
   bool init();
@@ -221,7 +263,10 @@ private:
   uint32_t m_upgradeHeightV2;
   uint32_t m_upgradeHeightV3;
   uint32_t m_upgradeHeightV4;
+<<<<<<< HEAD
   uint32_t m_upgradeHeightV5;
+=======
+>>>>>>> blood in blood out
   unsigned int m_upgradeVotingThreshold;
   uint32_t m_upgradeVotingWindow;
   uint32_t m_upgradeWindow;
@@ -230,7 +275,11 @@ private:
   std::string m_blockIndexesFileName;
   std::string m_txPoolFileName;
 
+<<<<<<< HEAD
 
+=======
+  static const std::vector<uint64_t> PRETTY_AMOUNTS;
+>>>>>>> blood in blood out
 
   bool m_testnet;
   bool m_isBlockexplorer;
@@ -245,7 +294,11 @@ private:
 
 class CurrencyBuilder : boost::noncopyable {
 public:
+<<<<<<< HEAD
   CurrencyBuilder(std::shared_ptr<Logging::ILogger> log);
+=======
+  CurrencyBuilder(Logging::ILogger& log);
+>>>>>>> blood in blood out
 
   Currency currency() {
     if (!m_currency.init()) {
@@ -305,7 +358,10 @@ public:
   CurrencyBuilder& upgradeHeightV2(uint32_t val) { m_currency.m_upgradeHeightV2 = val; return *this; }
   CurrencyBuilder& upgradeHeightV3(uint32_t val) { m_currency.m_upgradeHeightV3 = val; return *this; }
   CurrencyBuilder& upgradeHeightV4(uint32_t val) { m_currency.m_upgradeHeightV4 = val; return *this; }
+<<<<<<< HEAD
   CurrencyBuilder& upgradeHeightV5(uint32_t val) { m_currency.m_upgradeHeightV5 = val; return *this; }
+=======
+>>>>>>> blood in blood out
   CurrencyBuilder& upgradeVotingThreshold(unsigned int val);
   CurrencyBuilder& upgradeVotingWindow(uint32_t val) { m_currency.m_upgradeVotingWindow = val; return *this; }
   CurrencyBuilder& upgradeWindow(uint32_t val);
@@ -313,7 +369,11 @@ public:
   CurrencyBuilder& blocksFileName(const std::string& val) { m_currency.m_blocksFileName = val; return *this; }
   CurrencyBuilder& blockIndexesFileName(const std::string& val) { m_currency.m_blockIndexesFileName = val; return *this; }
   CurrencyBuilder& txPoolFileName(const std::string& val) { m_currency.m_txPoolFileName = val; return *this; }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> blood in blood out
   CurrencyBuilder& isBlockexplorer(const bool val) { m_currency.m_isBlockexplorer = val; return *this; }
   CurrencyBuilder& testnet(bool val) { m_currency.m_testnet = val; return *this; }
 

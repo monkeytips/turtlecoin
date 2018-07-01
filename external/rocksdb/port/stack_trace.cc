@@ -13,7 +13,11 @@
 namespace rocksdb {
 namespace port {
 void InstallStackTraceHandler() {}
+<<<<<<< HEAD
 void PrintStack(int /*first_frames_to_skip*/) {}
+=======
+void PrintStack(int first_frames_to_skip) {}
+>>>>>>> blood in blood out
 }  // namespace port
 }  // namespace rocksdb
 

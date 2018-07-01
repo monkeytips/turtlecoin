@@ -14,11 +14,19 @@ std::shared_ptr<MergeOperator> MergeOperators::CreateBytesXOROperator() {
   return std::make_shared<BytesXOROperator>();
 }
 
+<<<<<<< HEAD
 bool BytesXOROperator::Merge(const Slice& /*key*/,
                             const Slice* existing_value,
                             const Slice& value,
                             std::string* new_value,
                             Logger* /*logger*/) const {
+=======
+bool BytesXOROperator::Merge(const Slice& key,
+                            const Slice* existing_value,
+                            const Slice& value,
+                            std::string* new_value,
+                            Logger* logger) const {
+>>>>>>> blood in blood out
   XOR(existing_value, value, new_value);
   return true;
 }

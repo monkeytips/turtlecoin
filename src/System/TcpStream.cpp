@@ -33,11 +33,19 @@ std::streambuf::int_type TcpStreambuf::overflow(std::streambuf::int_type ch) {
   if (ch == traits_type::eof()) {
     return traits_type::eof();
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> blood in blood out
   if (pptr() == epptr()) {
     if (!dumpBuffer(false)) {
       return traits_type::eof();
     }
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> blood in blood out
   *pptr() = static_cast<char>(ch);
   pbump(1);
   return ch;
@@ -51,15 +59,27 @@ std::streambuf::int_type TcpStreambuf::underflow() {
   if (gptr() < egptr()) {
     return traits_type::to_int_type(*gptr());
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> blood in blood out
   size_t bytesRead;
   try {
     bytesRead = connection.read(reinterpret_cast<uint8_t*>(&readBuf.front()), readBuf.max_size());
   } catch (std::exception&) {
     return traits_type::eof();
   }
+<<<<<<< HEAD
   if (bytesRead == 0) {
     return traits_type::eof();
   }
+=======
+
+  if (bytesRead == 0) {
+    return traits_type::eof();
+  }
+
+>>>>>>> blood in blood out
   setg(&readBuf.front(), &readBuf.front(), &readBuf.front() + bytesRead);
   return traits_type::to_int_type(*gptr());
 }

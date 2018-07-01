@@ -484,7 +484,11 @@ class StatusJni : public RocksDBNativeClass<rocksdb::Status*, StatusJni> {
       // exception occurred
       return nullptr;
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> blood in blood out
     jmethodID mid_code_value = rocksdb::CodeJni::getValueMethod(env);
     if (mid_code_value == nullptr) {
       // exception occurred
@@ -2364,27 +2368,39 @@ class BackupInfoJni : public JavaClass {
    * @param timestamp timestamp of the backup
    * @param size size of the backup
    * @param number_files number of files related to the backup
+<<<<<<< HEAD
    * @param app_metadata application specific metadata
+=======
+>>>>>>> blood in blood out
    *
    * @return A reference to a Java BackupInfo object, or a nullptr if an
    *     exception occurs
    */
   static jobject construct0(JNIEnv* env, uint32_t backup_id, int64_t timestamp,
+<<<<<<< HEAD
                             uint64_t size, uint32_t number_files,
                             const std::string& app_metadata) {
+=======
+      uint64_t size, uint32_t number_files) {
+>>>>>>> blood in blood out
     jclass jclazz = getJClass(env);
     if(jclazz == nullptr) {
       // exception occurred accessing class
       return nullptr;
     }
 
+<<<<<<< HEAD
     static jmethodID mid =
         env->GetMethodID(jclazz, "<init>", "(IJJILjava/lang/String;)V");
+=======
+    static jmethodID mid = env->GetMethodID(jclazz, "<init>", "(IJJI)V");
+>>>>>>> blood in blood out
     if(mid == nullptr) {
       // exception occurred accessing method
       return nullptr;
     }
 
+<<<<<<< HEAD
     jstring japp_metadata = nullptr;
     if (app_metadata != nullptr) {
       japp_metadata = env->NewStringUTF(app_metadata.c_str());
@@ -2398,6 +2414,11 @@ class BackupInfoJni : public JavaClass {
                                           size, number_files, japp_metadata);
     if(env->ExceptionCheck()) {
       env->DeleteLocalRef(japp_metadata);
+=======
+    jobject jbackup_info =
+        env->NewObject(jclazz, mid, backup_id, timestamp, size, number_files);
+    if(env->ExceptionCheck()) {
+>>>>>>> blood in blood out
       return nullptr;
     }
 
@@ -2450,9 +2471,17 @@ class BackupInfoListJni {
     for (auto it = backup_infos.begin(); it != end; ++it) {
       auto backup_info = *it;
 
+<<<<<<< HEAD
       jobject obj = rocksdb::BackupInfoJni::construct0(
           env, backup_info.backup_id, backup_info.timestamp, backup_info.size,
           backup_info.number_files, backup_info.app_metadata);
+=======
+      jobject obj = rocksdb::BackupInfoJni::construct0(env,
+          backup_info.backup_id,
+          backup_info.timestamp,
+          backup_info.size,
+          backup_info.number_files);
+>>>>>>> blood in blood out
       if(env->ExceptionCheck()) {
         // exception occurred constructing object
         if(obj != nullptr) {
@@ -2594,7 +2623,11 @@ class WriteTypeJni : public JavaClass {
   static jobject LOG(JNIEnv* env) {
     return getEnum(env, "LOG");
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> blood in blood out
   // Returns the equivalent org.rocksdb.WBWIRocksIterator.WriteType for the
   // provided C++ rocksdb::WriteType enum
   static jbyte toJavaWriteType(const rocksdb::WriteType& writeType) {
@@ -3306,10 +3339,15 @@ class TickerTypeJni {
         return 0x5C;
       case rocksdb::Tickers::NUMBER_ITER_SKIP:
         return 0x5D;
+<<<<<<< HEAD
       case rocksdb::Tickers::NUMBER_MULTIGET_KEYS_FOUND:
         return 0x5E;
       case rocksdb::Tickers::TICKER_ENUM_MAX:
         return 0x5F;
+=======
+      case rocksdb::Tickers::TICKER_ENUM_MAX:
+        return 0x5E;
+>>>>>>> blood in blood out
 
       default:
         // undefined/default
@@ -3510,8 +3548,11 @@ class TickerTypeJni {
       case 0x5D:
         return rocksdb::Tickers::NUMBER_ITER_SKIP;
       case 0x5E:
+<<<<<<< HEAD
         return rocksdb::Tickers::NUMBER_MULTIGET_KEYS_FOUND;
       case 0x5F:
+=======
+>>>>>>> blood in blood out
         return rocksdb::Tickers::TICKER_ENUM_MAX;
 
       default:
@@ -4303,12 +4344,34 @@ class JniUtil {
      * @param bytes The bytes to copy
      *
      * @return the Java byte[] or nullptr if an exception occurs
+<<<<<<< HEAD
      * 
      * @throws RocksDBException thrown 
      *   if memory size to copy exceeds general java specific array size limitation.
      */
     static jbyteArray copyBytes(JNIEnv* env, std::string bytes) {
       return createJavaByteArrayWithSizeCheck(env, bytes.c_str(), bytes.size());
+=======
+     */
+    static jbyteArray copyBytes(JNIEnv* env, std::string bytes) {
+      const jsize jlen = static_cast<jsize>(bytes.size());
+
+      jbyteArray jbytes = env->NewByteArray(jlen);
+      if(jbytes == nullptr) {
+        // exception thrown: OutOfMemoryError
+        return nullptr;
+      }
+
+      env->SetByteArrayRegion(jbytes, 0, jlen,
+        const_cast<jbyte*>(reinterpret_cast<const jbyte*>(bytes.c_str())));
+      if(env->ExceptionCheck()) {
+        // exception thrown: ArrayIndexOutOfBoundsException
+        env->DeleteLocalRef(jbytes);
+        return nullptr;
+      }
+
+      return jbytes;
+>>>>>>> blood in blood out
     }
 
     /**
@@ -4471,6 +4534,7 @@ class JniUtil {
 
       return jbyte_strings;
     }
+<<<<<<< HEAD
     
     /**
       * Copies bytes to a new jByteArray with the check of java array size limitation.
@@ -4504,6 +4568,28 @@ class JniUtil {
       
       env->SetByteArrayRegion(jbytes, 0, jlen,
         const_cast<jbyte*>(reinterpret_cast<const jbyte*>(bytes)));
+=======
+
+    /**
+     * Copies bytes from a rocksdb::Slice to a jByteArray
+     *
+     * @param env A pointer to the java environment
+     * @param bytes The bytes to copy
+     *
+     * @return the Java byte[] or nullptr if an exception occurs
+     */
+    static jbyteArray copyBytes(JNIEnv* env, const Slice& bytes) {
+      const jsize jlen = static_cast<jsize>(bytes.size());
+
+      jbyteArray jbytes = env->NewByteArray(jlen);
+      if(jbytes == nullptr) {
+        // exception thrown: OutOfMemoryError
+        return nullptr;
+      }
+
+      env->SetByteArrayRegion(jbytes, 0, jlen,
+        const_cast<jbyte*>(reinterpret_cast<const jbyte*>(bytes.data())));
+>>>>>>> blood in blood out
       if(env->ExceptionCheck()) {
         // exception thrown: ArrayIndexOutOfBoundsException
         env->DeleteLocalRef(jbytes);
@@ -4513,6 +4599,7 @@ class JniUtil {
       return jbytes;
     }
 
+<<<<<<< HEAD
     /**
      * Copies bytes from a rocksdb::Slice to a jByteArray
      *
@@ -4528,6 +4615,8 @@ class JniUtil {
       return createJavaByteArrayWithSizeCheck(env, bytes.data(), bytes.size());
     }
 
+=======
+>>>>>>> blood in blood out
     /*
      * Helper for operations on a key and value
      * for example WriteBatch->Put
@@ -4536,7 +4625,11 @@ class JniUtil {
      */
     static std::unique_ptr<rocksdb::Status> kv_op(
         std::function<rocksdb::Status(rocksdb::Slice, rocksdb::Slice)> op,
+<<<<<<< HEAD
         JNIEnv* env, jobject /*jobj*/,
+=======
+        JNIEnv* env, jobject jobj,
+>>>>>>> blood in blood out
         jbyteArray jkey, jint jkey_len,
         jbyteArray jvalue, jint jvalue_len) {
       jbyte* key = env->GetByteArrayElements(jkey, nullptr);
@@ -4578,7 +4671,11 @@ class JniUtil {
      */
     static std::unique_ptr<rocksdb::Status> k_op(
         std::function<rocksdb::Status(rocksdb::Slice)> op,
+<<<<<<< HEAD
         JNIEnv* env, jobject /*jobj*/,
+=======
+        JNIEnv* env, jobject jobj,
+>>>>>>> blood in blood out
         jbyteArray jkey, jint jkey_len) {
       jbyte* key = env->GetByteArrayElements(jkey, nullptr);
       if(env->ExceptionCheck()) {
@@ -4826,7 +4923,11 @@ class HashMapJni : public JavaClass {
 
   /**
    * A function which maps a std::pair<K,V> to a std::pair<jobject, jobject>
+<<<<<<< HEAD
    *
+=======
+   * 
+>>>>>>> blood in blood out
    * @return Either a pointer to a std::pair<jobject, jobject>, or nullptr
    *     if an error occurs during the mapping
    */

@@ -40,6 +40,7 @@ inline Status IOError(const std::string& context, int err_number) {
              : Status::IOError(context, strerror(err_number));
 }
 
+<<<<<<< HEAD
 class WinFileData;
 
 Status pwrite(const WinFileData* file_data, const Slice& data,
@@ -47,6 +48,24 @@ Status pwrite(const WinFileData* file_data, const Slice& data,
 
 Status pread(const WinFileData* file_data, char* src, size_t num_bytes,
   uint64_t offset, size_t& bytes_read);
+=======
+// Note the below two do not set errno because they are used only here in this
+// file
+// on a Windows handle and, therefore, not necessary. Translating GetLastError()
+// to errno
+// is a sad business
+inline int fsync(HANDLE hFile) {
+  if (!FlushFileBuffers(hFile)) {
+    return -1;
+  }
+
+  return 0;
+}
+
+SSIZE_T pwrite(HANDLE hFile, const char* src, size_t numBytes, uint64_t offset);
+
+SSIZE_T pread(HANDLE hFile, char* src, size_t numBytes, uint64_t offset);
+>>>>>>> blood in blood out
 
 Status fallocate(const std::string& filename, HANDLE hFile, uint64_t to_size);
 
@@ -95,8 +114,13 @@ class WinFileData {
 class WinSequentialFile : protected WinFileData, public SequentialFile {
 
   // Override for behavior change when creating a custom env
+<<<<<<< HEAD
   virtual Status PositionedReadInternal(char* src, size_t numBytes,
     uint64_t offset, size_t& bytes_read) const;
+=======
+  virtual SSIZE_T PositionedReadInternal(char* src, size_t numBytes,
+    uint64_t offset) const;
+>>>>>>> blood in blood out
 
 public:
   WinSequentialFile(const std::string& fname, HANDLE f,
@@ -231,8 +255,13 @@ class WinRandomAccessImpl {
   size_t       alignment_;
 
   // Override for behavior change when creating a custom env
+<<<<<<< HEAD
   virtual Status PositionedReadInternal(char* src, size_t numBytes,
                                         uint64_t offset, size_t& bytes_read) const;
+=======
+  virtual SSIZE_T PositionedReadInternal(char* src, size_t numBytes,
+                                         uint64_t offset) const;
+>>>>>>> blood in blood out
 
   WinRandomAccessImpl(WinFileData* file_base, size_t alignment,
                       const EnvOptions& options);
@@ -411,6 +440,7 @@ class WinRandomRWFile : private WinFileData,
   virtual Status Close() override;
 };
 
+<<<<<<< HEAD
 class WinMemoryMappedBuffer : public MemoryMappedFileBuffer {
 private:
   HANDLE  file_handle_;
@@ -437,6 +467,13 @@ class WinDirectory : public Directory {
   virtual Status Fsync() override;
 
   size_t GetUniqueId(char* id, size_t max_size) const override;
+=======
+class WinDirectory : public Directory {
+ public:
+  WinDirectory() {}
+
+  virtual Status Fsync() override;
+>>>>>>> blood in blood out
 };
 
 class WinFileLock : public FileLock {

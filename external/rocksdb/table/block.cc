@@ -56,6 +56,7 @@ static inline const char* DecodeEntry(const char* p, const char* limit,
   return p;
 }
 
+<<<<<<< HEAD
 void DataBlockIter::Next() {
   assert(Valid());
   ParseNextDataKey();
@@ -90,6 +91,14 @@ void IndexBlockIter::Prev() {
 
 // Similar to IndexBlockIter::Prev but also caches the prev entries
 void DataBlockIter::Prev() {
+=======
+void BlockIter::Next() {
+  assert(Valid());
+  ParseNextKey();
+}
+
+void BlockIter::Prev() {
+>>>>>>> blood in blood out
   assert(Valid());
 
   assert(prev_entries_idx_ == -1 ||
@@ -115,7 +124,11 @@ void DataBlockIter::Prev() {
     const Slice current_key(key_ptr, current_prev_entry.key_size);
 
     current_ = current_prev_entry.offset;
+<<<<<<< HEAD
     key_.SetKey(current_key, false /* copy */);
+=======
+    key_.SetInternalKey(current_key, false /* copy */);
+>>>>>>> blood in blood out
     value_ = current_prev_entry.value;
 
     return;
@@ -141,7 +154,11 @@ void DataBlockIter::Prev() {
   SeekToRestartPoint(restart_index_);
 
   do {
+<<<<<<< HEAD
     if (!ParseNextDataKey()) {
+=======
+    if (!ParseNextKey()) {
+>>>>>>> blood in blood out
       break;
     }
     Slice current_key = key();
@@ -163,6 +180,7 @@ void DataBlockIter::Prev() {
   prev_entries_idx_ = static_cast<int32_t>(prev_entries_.size()) - 1;
 }
 
+<<<<<<< HEAD
 void DataBlockIter::Seek(const Slice& target) {
   Slice seek_key = target;
   PERF_TIMER_GUARD(block_seek_nanos);
@@ -190,6 +208,9 @@ void IndexBlockIter::Seek(const Slice& target) {
   if (!key_includes_seq_) {
     seek_key = ExtractUserKey(target);
   }
+=======
+void BlockIter::Seek(const Slice& target) {
+>>>>>>> blood in blood out
   PERF_TIMER_GUARD(block_seek_nanos);
   if (data_ == nullptr) {  // Not init yet
     return;
@@ -199,7 +220,11 @@ void IndexBlockIter::Seek(const Slice& target) {
   if (prefix_index_) {
     ok = PrefixSeek(target, &index);
   } else {
+<<<<<<< HEAD
     ok = BinarySeek(seek_key, 0, num_restarts_ - 1, &index, active_comparator_);
+=======
+    ok = BinarySeek(target, 0, num_restarts_ - 1, &index);
+>>>>>>> blood in blood out
   }
 
   if (!ok) {
@@ -209,38 +234,62 @@ void IndexBlockIter::Seek(const Slice& target) {
   // Linear search (within restart block) for first key >= target
 
   while (true) {
+<<<<<<< HEAD
     if (!ParseNextIndexKey() || Compare(key_, seek_key) >= 0) {
+=======
+    if (!ParseNextKey() || Compare(key_.GetInternalKey(), target) >= 0) {
+>>>>>>> blood in blood out
       return;
     }
   }
 }
 
+<<<<<<< HEAD
 void DataBlockIter::SeekForPrev(const Slice& target) {
   PERF_TIMER_GUARD(block_seek_nanos);
   Slice seek_key = target;
+=======
+void BlockIter::SeekForPrev(const Slice& target) {
+  PERF_TIMER_GUARD(block_seek_nanos);
+>>>>>>> blood in blood out
   if (data_ == nullptr) {  // Not init yet
     return;
   }
   uint32_t index = 0;
+<<<<<<< HEAD
   bool ok = BinarySeek(seek_key, 0, num_restarts_ - 1, &index, comparator_);
+=======
+  bool ok = BinarySeek(target, 0, num_restarts_ - 1, &index);
+>>>>>>> blood in blood out
 
   if (!ok) {
     return;
   }
   SeekToRestartPoint(index);
+<<<<<<< HEAD
   // Linear search (within restart block) for first key >= seek_key
 
   while (ParseNextDataKey() && Compare(key_, seek_key) < 0) {
+=======
+  // Linear search (within restart block) for first key >= target
+
+  while (ParseNextKey() && Compare(key_.GetInternalKey(), target) < 0) {
+>>>>>>> blood in blood out
   }
   if (!Valid()) {
     SeekToLast();
   } else {
+<<<<<<< HEAD
     while (Valid() && Compare(key_, seek_key) > 0) {
+=======
+    while (Valid() && Compare(key_.GetInternalKey(), target) > 0) {
+>>>>>>> blood in blood out
       Prev();
     }
   }
 }
 
+<<<<<<< HEAD
 void DataBlockIter::SeekToFirst() {
   if (data_ == nullptr) {  // Not init yet
     return;
@@ -250,18 +299,29 @@ void DataBlockIter::SeekToFirst() {
 }
 
 void IndexBlockIter::SeekToFirst() {
+=======
+void BlockIter::SeekToFirst() {
+>>>>>>> blood in blood out
   if (data_ == nullptr) {  // Not init yet
     return;
   }
   SeekToRestartPoint(0);
+<<<<<<< HEAD
   ParseNextIndexKey();
 }
 
 void DataBlockIter::SeekToLast() {
+=======
+  ParseNextKey();
+}
+
+void BlockIter::SeekToLast() {
+>>>>>>> blood in blood out
   if (data_ == nullptr) {  // Not init yet
     return;
   }
   SeekToRestartPoint(num_restarts_ - 1);
+<<<<<<< HEAD
   while (ParseNextDataKey() && NextEntryOffset() < restarts_) {
     // Keep skipping
   }
@@ -273,6 +333,9 @@ void IndexBlockIter::SeekToLast() {
   }
   SeekToRestartPoint(num_restarts_ - 1);
   while (ParseNextIndexKey() && NextEntryOffset() < restarts_) {
+=======
+  while (ParseNextKey() && NextEntryOffset() < restarts_) {
+>>>>>>> blood in blood out
     // Keep skipping
   }
 }
@@ -285,7 +348,11 @@ void BlockIter::CorruptionError() {
   value_.clear();
 }
 
+<<<<<<< HEAD
 bool DataBlockIter::ParseNextDataKey() {
+=======
+bool BlockIter::ParseNextKey() {
+>>>>>>> blood in blood out
   current_ = NextEntryOffset();
   const char* p = data_ + current_;
   const char* limit = data_ + restarts_;  // Restarts come right after data
@@ -306,7 +373,11 @@ bool DataBlockIter::ParseNextDataKey() {
     if (shared == 0) {
       // If this key dont share any bytes with prev key then we dont need
       // to decode it and can use it's address in the block directly.
+<<<<<<< HEAD
       key_.SetKey(Slice(p, non_shared), false /* copy */);
+=======
+      key_.SetInternalKey(Slice(p, non_shared), false /* copy */);
+>>>>>>> blood in blood out
       key_pinned_ = true;
     } else {
       // This key share `shared` bytes with prev key, we need to decode it
@@ -317,6 +388,7 @@ bool DataBlockIter::ParseNextDataKey() {
     if (global_seqno_ != kDisableGlobalSequenceNumber) {
       // If we are reading a file with a global sequence number we should
       // expect that all encoded sequence numbers are zeros and any value
+<<<<<<< HEAD
       // type is kTypeValue, kTypeMerge, kTypeDeletion, or kTypeRangeDeletion.
       assert(GetInternalKeySeqno(key_.GetInternalKey()) == 0);
 
@@ -325,6 +397,15 @@ bool DataBlockIter::ParseNextDataKey() {
              value_type == ValueType::kTypeMerge ||
              value_type == ValueType::kTypeDeletion ||
              value_type == ValueType::kTypeRangeDeletion);
+=======
+      // type is kTypeValue, kTypeMerge or kTypeDeletion
+      assert(GetInternalKeySeqno(key_.GetInternalKey()) == 0);
+
+      ValueType value_type = ExtractValueType(key_.GetInternalKey());
+      assert(value_type == ValueType::kTypeValue ||
+             value_type == ValueType::kTypeMerge ||
+             value_type == ValueType::kTypeDeletion);
+>>>>>>> blood in blood out
 
       if (key_pinned_) {
         // TODO(tec): Investigate updating the seqno in the loaded block
@@ -348,6 +429,7 @@ bool DataBlockIter::ParseNextDataKey() {
   }
 }
 
+<<<<<<< HEAD
 bool IndexBlockIter::ParseNextIndexKey() {
   current_ = NextEntryOffset();
   const char* p = data_ + current_;
@@ -384,12 +466,18 @@ bool IndexBlockIter::ParseNextIndexKey() {
   return true;
 }
 
+=======
+>>>>>>> blood in blood out
 // Binary search in restart array to find the first restart point that
 // is either the last restart point with a key less than target,
 // which means the key of next restart point is larger than target, or
 // the first restart point with a key = target
 bool BlockIter::BinarySeek(const Slice& target, uint32_t left, uint32_t right,
+<<<<<<< HEAD
                            uint32_t* index, const Comparator* comp) {
+=======
+                           uint32_t* index) {
+>>>>>>> blood in blood out
   assert(left <= right);
 
   while (left < right) {
@@ -403,7 +491,11 @@ bool BlockIter::BinarySeek(const Slice& target, uint32_t left, uint32_t right,
       return false;
     }
     Slice mid_key(key_ptr, non_shared);
+<<<<<<< HEAD
     int cmp = comp->Compare(mid_key, target);
+=======
+    int cmp = Compare(mid_key, target);
+>>>>>>> blood in blood out
     if (cmp < 0) {
       // Key at "mid" is smaller than "target". Therefore all
       // blocks before "mid" are uninteresting.
@@ -423,7 +515,11 @@ bool BlockIter::BinarySeek(const Slice& target, uint32_t left, uint32_t right,
 
 // Compare target key and the block key of the block of `block_index`.
 // Return -1 if error.
+<<<<<<< HEAD
 int IndexBlockIter::CompareBlockKey(uint32_t block_index, const Slice& target) {
+=======
+int BlockIter::CompareBlockKey(uint32_t block_index, const Slice& target) {
+>>>>>>> blood in blood out
   uint32_t region_offset = GetRestartPoint(block_index);
   uint32_t shared, non_shared, value_length;
   const char* key_ptr = DecodeEntry(data_ + region_offset, data_ + restarts_,
@@ -438,9 +534,15 @@ int IndexBlockIter::CompareBlockKey(uint32_t block_index, const Slice& target) {
 
 // Binary search in block_ids to find the first block
 // with a key >= target
+<<<<<<< HEAD
 bool IndexBlockIter::BinaryBlockIndexSeek(const Slice& target,
                                           uint32_t* block_ids, uint32_t left,
                                           uint32_t right, uint32_t* index) {
+=======
+bool BlockIter::BinaryBlockIndexSeek(const Slice& target, uint32_t* block_ids,
+                                     uint32_t left, uint32_t right,
+                                     uint32_t* index) {
+>>>>>>> blood in blood out
   assert(left <= right);
   uint32_t left_bound = left;
 
@@ -488,12 +590,17 @@ bool IndexBlockIter::BinaryBlockIndexSeek(const Slice& target,
   }
 }
 
+<<<<<<< HEAD
 bool IndexBlockIter::PrefixSeek(const Slice& target, uint32_t* index) {
   assert(prefix_index_);
   Slice seek_key = target;
   if (!key_includes_seq_) {
     seek_key = ExtractUserKey(target);
   }
+=======
+bool BlockIter::PrefixSeek(const Slice& target, uint32_t* index) {
+  assert(prefix_index_);
+>>>>>>> blood in blood out
   uint32_t* block_ids = nullptr;
   uint32_t num_blocks = prefix_index_->GetBlocks(target, &block_ids);
 
@@ -501,7 +608,11 @@ bool IndexBlockIter::PrefixSeek(const Slice& target, uint32_t* index) {
     current_ = restarts_;
     return false;
   } else  {
+<<<<<<< HEAD
     return BinaryBlockIndexSeek(seek_key, block_ids, 0, num_blocks - 1, index);
+=======
+    return BinaryBlockIndexSeek(target, block_ids, 0, num_blocks - 1, index);
+>>>>>>> blood in blood out
   }
 }
 
@@ -516,11 +627,15 @@ Block::Block(BlockContents&& contents, SequenceNumber _global_seqno,
       data_(contents_.data.data()),
       size_(contents_.data.size()),
       restart_offset_(0),
+<<<<<<< HEAD
       num_restarts_(0),
+=======
+>>>>>>> blood in blood out
       global_seqno_(_global_seqno) {
   if (size_ < sizeof(uint32_t)) {
     size_ = 0;  // Error marker
   } else {
+<<<<<<< HEAD
     // Should only decode restart points for uncompressed blocks
     if (compression_type() == kNoCompression) {
       num_restarts_ = NumRestarts();
@@ -531,6 +646,14 @@ Block::Block(BlockContents&& contents, SequenceNumber _global_seqno,
         // restart_offset_ wrapped around.
         size_ = 0;
       }
+=======
+    restart_offset_ =
+        static_cast<uint32_t>(size_) - (1 + NumRestarts()) * sizeof(uint32_t);
+    if (restart_offset_ > size_ - sizeof(uint32_t)) {
+      // The size is too small for NumRestarts() and therefore
+      // restart_offset_ wrapped around.
+      size_ = 0;
+>>>>>>> blood in blood out
     }
   }
   if (read_amp_bytes_per_bit != 0 && statistics && size_ != 0) {
@@ -539,6 +662,7 @@ Block::Block(BlockContents&& contents, SequenceNumber _global_seqno,
   }
 }
 
+<<<<<<< HEAD
 template <>
 DataBlockIter* Block::NewIterator(const Comparator* cmp, const Comparator* ucmp,
                                   DataBlockIter* iter, Statistics* stats,
@@ -562,6 +686,31 @@ DataBlockIter* Block::NewIterator(const Comparator* cmp, const Comparator* ucmp,
   } else {
     ret_iter->Initialize(cmp, ucmp, data_, restart_offset_, num_restarts_,
                          global_seqno_, read_amp_bitmap_.get(), cachable());
+=======
+BlockIter* Block::NewIterator(const Comparator* cmp, BlockIter* iter,
+                              bool total_order_seek, Statistics* stats) {
+  BlockIter* ret_iter;
+  if (iter != nullptr) {
+    ret_iter = iter;
+  } else {
+    ret_iter = new BlockIter;
+  }
+  if (size_ < 2*sizeof(uint32_t)) {
+    ret_iter->SetStatus(Status::Corruption("bad block contents"));
+    return ret_iter;
+  }
+  const uint32_t num_restarts = NumRestarts();
+  if (num_restarts == 0) {
+    ret_iter->SetStatus(Status::OK());
+    return ret_iter;
+  } else {
+    BlockPrefixIndex* prefix_index_ptr =
+        total_order_seek ? nullptr : prefix_index_.get();
+    ret_iter->Initialize(cmp, data_, restart_offset_, num_restarts,
+                         prefix_index_ptr, global_seqno_,
+                         read_amp_bitmap_.get());
+
+>>>>>>> blood in blood out
     if (read_amp_bitmap_) {
       if (read_amp_bitmap_->GetStatistics() != stats) {
         // DB changed the Statistics pointer, we need to notify read_amp_bitmap_
@@ -573,6 +722,7 @@ DataBlockIter* Block::NewIterator(const Comparator* cmp, const Comparator* ucmp,
   return ret_iter;
 }
 
+<<<<<<< HEAD
 template <>
 IndexBlockIter* Block::NewIterator(const Comparator* cmp,
                                    const Comparator* ucmp, IndexBlockIter* iter,
@@ -601,10 +751,15 @@ IndexBlockIter* Block::NewIterator(const Comparator* cmp,
   }
 
   return ret_iter;
+=======
+void Block::SetBlockPrefixIndex(BlockPrefixIndex* prefix_index) {
+  prefix_index_.reset(prefix_index);
+>>>>>>> blood in blood out
 }
 
 size_t Block::ApproximateMemoryUsage() const {
   size_t usage = usable_size();
+<<<<<<< HEAD
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
   usage += malloc_usable_size((void*)this);
 #else
@@ -612,6 +767,10 @@ size_t Block::ApproximateMemoryUsage() const {
 #endif  // ROCKSDB_MALLOC_USABLE_SIZE
   if (read_amp_bitmap_) {
     usage += read_amp_bitmap_->ApproximateMemoryUsage();
+=======
+  if (prefix_index_) {
+    usage += prefix_index_->ApproximateMemoryUsage();
+>>>>>>> blood in blood out
   }
   return usage;
 }

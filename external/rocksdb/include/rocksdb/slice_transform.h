@@ -22,7 +22,11 @@ namespace rocksdb {
 class Slice;
 
 /*
+<<<<<<< HEAD
  * A SliceTransform is a generic pluggable way of transforming one string
+=======
+ * A SliceTranform is a generic pluggable way of transforming one string
+>>>>>>> blood in blood out
  * to another. Its primary use-case is in configuring rocksdb
  * to store prefix blooms by setting prefix_extractor in
  * ColumnFamilyOptions.
@@ -58,12 +62,16 @@ class SliceTransform {
   virtual bool InDomain(const Slice& key) const = 0;
 
   // This is currently not used and remains here for backward compatibility.
+<<<<<<< HEAD
   virtual bool InRange(const Slice& /*dst*/) const { return false; }
 
   // Some SliceTransform will have a full length which can be used to
   // determine if two keys are consecuitive. Can be disabled by always
   // returning 0
   virtual bool FullLengthEnabled(size_t* /*len*/) const { return false; }
+=======
+  virtual bool InRange(const Slice& dst) const { return false; }
+>>>>>>> blood in blood out
 
   // Transform(s)=Transform(`prefix`) for any s with `prefix` as a prefix.
   //
@@ -77,7 +85,11 @@ class SliceTransform {
   // by setting ReadOptions.total_order_seek = true.
   //
   // Here is an example: Suppose we implement a slice transform that returns
+<<<<<<< HEAD
   // the first part of the string after splitting it using delimiter ",":
+=======
+  // the first part of the string after spliting it using delimiter ",":
+>>>>>>> blood in blood out
   // 1. SameResultWhenAppended("abc,") should return true. If applying prefix
   //    bloom filter using it, all slices matching "abc:.*" will be extracted
   //    to "abc,", so any SST file or memtable containing any of those key
@@ -88,7 +100,11 @@ class SliceTransform {
   //    "abcd,e", the file can be filtered out and the key will be invisible.
   //
   // i.e., an implementation always returning false is safe.
+<<<<<<< HEAD
   virtual bool SameResultWhenAppended(const Slice& /*prefix*/) const {
+=======
+  virtual bool SameResultWhenAppended(const Slice& prefix) const {
+>>>>>>> blood in blood out
     return false;
   }
 };

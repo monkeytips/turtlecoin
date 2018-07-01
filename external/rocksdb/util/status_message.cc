@@ -15,8 +15,12 @@ const char* Status::msgs[] = {
     "No space left on device",                            // kNoSpace
     "Deadlock",                                           // kDeadlock
     "Stale file handle",                                  // kStaleFile
+<<<<<<< HEAD
     "Memory limit reached",                               // kMemoryLimit
     "Space limit reached"                                 // kSpaceLimit
+=======
+    "Memory limit reached"                                // kMemoryLimit
+>>>>>>> blood in blood out
 };
 
 }  // namespace rocksdb

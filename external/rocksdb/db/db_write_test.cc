@@ -50,7 +50,10 @@ TEST_P(DBWriteTest, IOErrorOnWALWritePropagateToWriteThreadFollower) {
   std::atomic<int> leader_count{0};
   std::vector<port::Thread> threads;
   mock_env->SetFilesystemActive(false);
+<<<<<<< HEAD
 
+=======
+>>>>>>> blood in blood out
   // Wait until all threads linked to write threads, to make sure
   // all threads join the same batch group.
   SyncPoint::GetInstance()->SetCallBack(
@@ -69,6 +72,7 @@ TEST_P(DBWriteTest, IOErrorOnWALWritePropagateToWriteThreadFollower) {
     threads.push_back(port::Thread(
         [&](int index) {
           // All threads should fail.
+<<<<<<< HEAD
           auto res = Put("key" + ToString(index), "value");
           if (options.manual_wal_flush) {
             ASSERT_TRUE(res.ok());
@@ -82,6 +86,9 @@ TEST_P(DBWriteTest, IOErrorOnWALWritePropagateToWriteThreadFollower) {
           } else {
             ASSERT_FALSE(res.ok());
           }
+=======
+          ASSERT_FALSE(Put("key" + ToString(index), "value").ok());
+>>>>>>> blood in blood out
         },
         i));
   }
@@ -93,6 +100,7 @@ TEST_P(DBWriteTest, IOErrorOnWALWritePropagateToWriteThreadFollower) {
   Close();
 }
 
+<<<<<<< HEAD
 TEST_P(DBWriteTest, ManualWalFlushInEffect) {
   Options options = GetOptions();
   Reopen(options);
@@ -140,6 +148,8 @@ TEST_P(DBWriteTest, IOErrorOnWALWriteTriggersReadOnlyMode) {
   Close();
 }
 
+=======
+>>>>>>> blood in blood out
 INSTANTIATE_TEST_CASE_P(DBWriteTestInstance, DBWriteTest,
                         testing::Values(DBTestBase::kDefault,
                                         DBTestBase::kConcurrentWALWrites,

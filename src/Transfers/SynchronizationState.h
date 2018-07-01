@@ -28,8 +28,11 @@ namespace CryptoNote {
 class SynchronizationState : public IStreamSerializable {
 public:
 
+<<<<<<< HEAD
   virtual ~SynchronizationState() {};
 
+=======
+>>>>>>> blood in blood out
   struct CheckResult {
     bool detachRequired;
     uint32_t detachHeight;

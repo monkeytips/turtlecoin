@@ -82,7 +82,11 @@ const char* LDBCommand::DELIM = " ==> ";
 namespace {
 
 void DumpWalFile(std::string wal_file, bool print_header, bool print_values,
+<<<<<<< HEAD
                  bool is_write_committed, LDBCommandExecuteResult* exec_state);
+=======
+                 LDBCommandExecuteResult* exec_state);
+>>>>>>> blood in blood out
 
 void DumpSstFile(std::string filename, bool output_hex, bool show_properties);
 };
@@ -112,7 +116,11 @@ LDBCommand* LDBCommand::InitFromCmdLineArgs(
 LDBCommand* LDBCommand::InitFromCmdLineArgs(
     const std::vector<std::string>& args, const Options& options,
     const LDBOptions& ldb_options,
+<<<<<<< HEAD
     const std::vector<ColumnFamilyDescriptor>* /*column_families*/,
+=======
+    const std::vector<ColumnFamilyDescriptor>* column_families,
+>>>>>>> blood in blood out
     const std::function<LDBCommand*(const ParsedParams&)>& selector) {
   // --x=y command line arguments are added as x->y map entries in
   // parsed_params.option_map.
@@ -242,6 +250,7 @@ LDBCommand* LDBCommand::SelectCommand(const ParsedParams& parsed_params) {
   } else if (parsed_params.cmd == RestoreCommand::Name()) {
     return new RestoreCommand(parsed_params.cmd_params,
                               parsed_params.option_map, parsed_params.flags);
+<<<<<<< HEAD
   } else if (parsed_params.cmd == WriteExternalSstFilesCommand::Name()) {
     return new WriteExternalSstFilesCommand(parsed_params.cmd_params,
                                             parsed_params.option_map,
@@ -250,6 +259,8 @@ LDBCommand* LDBCommand::SelectCommand(const ParsedParams& parsed_params) {
     return new IngestExternalSstFilesCommand(parsed_params.cmd_params,
                                              parsed_params.option_map,
                                              parsed_params.flags);
+=======
+>>>>>>> blood in blood out
   }
   return nullptr;
 }
@@ -459,7 +470,11 @@ std::vector<std::string> LDBCommand::BuildCmdLineOptions(
  * updated.
  */
 bool LDBCommand::ParseIntOption(
+<<<<<<< HEAD
     const std::map<std::string, std::string>& /*options*/,
+=======
+    const std::map<std::string, std::string>& options,
+>>>>>>> blood in blood out
     const std::string& option, int& value,
     LDBCommandExecuteResult& exec_state) {
   std::map<std::string, std::string>::const_iterator itr =
@@ -489,7 +504,11 @@ bool LDBCommand::ParseIntOption(
  * Returns false otherwise.
  */
 bool LDBCommand::ParseStringOption(
+<<<<<<< HEAD
     const std::map<std::string, std::string>& /*options*/,
+=======
+    const std::map<std::string, std::string>& options,
+>>>>>>> blood in blood out
     const std::string& option, std::string* value) {
   auto itr = option_map_.find(option);
   if (itr != option_map_.end()) {
@@ -780,7 +799,11 @@ bool LDBCommand::StringToBool(std::string val) {
 }
 
 CompactorCommand::CompactorCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, false,
@@ -850,7 +873,11 @@ const std::string DBLoaderCommand::ARG_BULK_LOAD = "bulk_load";
 const std::string DBLoaderCommand::ARG_COMPACT = "compact";
 
 DBLoaderCommand::DBLoaderCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(
@@ -966,7 +993,11 @@ void ManifestDumpCommand::Help(std::string& ret) {
 }
 
 ManifestDumpCommand::ManifestDumpCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(
@@ -1131,10 +1162,13 @@ std::string ReadableTime(int unixtime) {
 void IncBucketCounts(std::vector<uint64_t>& bucket_counts, int ttl_start,
                      int time_range, int bucket_size, int timekv,
                      int num_buckets) {
+<<<<<<< HEAD
 #ifdef NDEBUG
   (void)time_range;
   (void)num_buckets;
 #endif
+=======
+>>>>>>> blood in blood out
   assert(time_range > 0 && timekv >= ttl_start && bucket_size > 0 &&
     timekv < (ttl_start + time_range) && num_buckets > 1);
   int bucket = (timekv - ttl_start) / bucket_size;
@@ -1165,7 +1199,11 @@ const std::string InternalDumpCommand::ARG_STATS = "stats";
 const std::string InternalDumpCommand::ARG_INPUT_KEY_HEX = "input_key_hex";
 
 InternalDumpCommand::InternalDumpCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(
@@ -1270,8 +1308,13 @@ void InternalDumpCommand::DoCommand() {
       for(int j=0;row[j]!=delim_[0] && row[j]!='\0' && row[j]!='\x01';j++)
         rtype1+=row[j];
       if(rtype2.compare("") && rtype2.compare(rtype1)!=0) {
+<<<<<<< HEAD
         fprintf(stdout, "%s => count:%" PRIu64 "\tsize:%" PRIu64 "\n",
                 rtype2.c_str(), c, s2);
+=======
+        fprintf(stdout,"%s => count:%lld\tsize:%lld\n",rtype2.c_str(),
+            (long long)c,(long long)s2);
+>>>>>>> blood in blood out
         c=1;
         s2=s1;
         rtype2 = rtype1;
@@ -1292,11 +1335,18 @@ void InternalDumpCommand::DoCommand() {
     if (max_keys_ > 0 && count >= max_keys_) break;
   }
   if(count_delim_) {
+<<<<<<< HEAD
     fprintf(stdout, "%s => count:%" PRIu64 "\tsize:%" PRIu64 "\n",
             rtype2.c_str(), c, s2);
   } else {
     fprintf(stdout, "Internal keys in range: %lld\n", count);
   }
+=======
+    fprintf(stdout,"%s => count:%lld\tsize:%lld\n", rtype2.c_str(),
+        (long long)c,(long long)s2);
+  } else
+  fprintf(stdout, "Internal keys in range: %lld\n", (long long) count);
+>>>>>>> blood in blood out
 }
 
 const std::string DBDumperCommand::ARG_COUNT_ONLY = "count_only";
@@ -1305,7 +1355,11 @@ const std::string DBDumperCommand::ARG_STATS = "stats";
 const std::string DBDumperCommand::ARG_TTL_BUCKET = "bucket";
 
 DBDumperCommand::DBDumperCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, true,
@@ -1424,9 +1478,14 @@ void DBDumperCommand::DoCommand() {
 
     switch (type) {
       case kLogFile:
+<<<<<<< HEAD
         // TODO(myabandeh): allow configuring is_write_commited
         DumpWalFile(path_, /* print_header_ */ true, /* print_values_ */ true,
                     true /* is_write_commited */, &exec_state_);
+=======
+        DumpWalFile(path_, /* print_header_ */ true, /* print_values_ */ true,
+                    &exec_state_);
+>>>>>>> blood in blood out
         break;
       case kTableFile:
         DumpSstFile(path_, is_key_hex_, /* show_properties */ true);
@@ -1542,8 +1601,13 @@ void DBDumperCommand::DoDumpCommand() {
       for(int j=0;row[j]!=delim_[0] && row[j]!='\0';j++)
         rtype1+=row[j];
       if(rtype2.compare("") && rtype2.compare(rtype1)!=0) {
+<<<<<<< HEAD
         fprintf(stdout, "%s => count:%" PRIu64 "\tsize:%" PRIu64 "\n",
                 rtype2.c_str(), c, s2);
+=======
+        fprintf(stdout,"%s => count:%lld\tsize:%lld\n",rtype2.c_str(),
+            (long long )c,(long long)s2);
+>>>>>>> blood in blood out
         c=1;
         s2=s1;
         rtype2 = rtype1;
@@ -1574,10 +1638,17 @@ void DBDumperCommand::DoDumpCommand() {
     PrintBucketCounts(bucket_counts, ttl_start, ttl_end, bucket_size,
                       num_buckets);
   } else if(count_delim_) {
+<<<<<<< HEAD
     fprintf(stdout, "%s => count:%" PRIu64 "\tsize:%" PRIu64 "\n",
             rtype2.c_str(), c, s2);
   } else {
     fprintf(stdout, "Keys in range: %" PRIu64 "\n", count);
+=======
+    fprintf(stdout,"%s => count:%lld\tsize:%lld\n",rtype2.c_str(),
+        (long long )c,(long long)s2);
+  } else {
+    fprintf(stdout, "Keys in range: %lld\n", (long long) count);
+>>>>>>> blood in blood out
   }
 
   if (count_only_) {
@@ -1593,7 +1664,11 @@ const std::string ReduceDBLevelsCommand::ARG_PRINT_OLD_LEVELS =
     "print_old_levels";
 
 ReduceDBLevelsCommand::ReduceDBLevelsCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, false,
@@ -1723,7 +1798,11 @@ const std::string ChangeCompactionStyleCommand::ARG_NEW_COMPACTION_STYLE =
     "new_compaction_style";
 
 ChangeCompactionStyleCommand::ChangeCompactionStyleCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, false,
@@ -1860,19 +1939,30 @@ void ChangeCompactionStyleCommand::DoCommand() {
 namespace {
 
 struct StdErrReporter : public log::Reader::Reporter {
+<<<<<<< HEAD
   virtual void Corruption(size_t /*bytes*/, const Status& s) override {
+=======
+  virtual void Corruption(size_t bytes, const Status& s) override {
+>>>>>>> blood in blood out
     std::cerr << "Corruption detected in log file " << s.ToString() << "\n";
   }
 };
 
 class InMemoryHandler : public WriteBatch::Handler {
  public:
+<<<<<<< HEAD
   InMemoryHandler(std::stringstream& row, bool print_values,
                   bool write_after_commit = false)
       : Handler(),
         row_(row),
         print_values_(print_values),
         write_after_commit_(write_after_commit) {}
+=======
+  InMemoryHandler(std::stringstream& row, bool print_values)
+      : Handler(), row_(row) {
+    print_values_ = print_values;
+  }
+>>>>>>> blood in blood out
 
   void commonPutMerge(const Slice& key, const Slice& value) {
     std::string k = LDBCommand::StringToHex(key.ToString());
@@ -1925,9 +2015,14 @@ class InMemoryHandler : public WriteBatch::Handler {
     return Status::OK();
   }
 
+<<<<<<< HEAD
   virtual Status MarkBeginPrepare(bool unprepare) override {
     row_ << "BEGIN_PREPARE(";
     row_ << (unprepare ? "true" : "false") << ") ";
+=======
+  virtual Status MarkBeginPrepare() override {
+    row_ << "BEGIN_PREARE ";
+>>>>>>> blood in blood out
     return Status::OK();
   }
 
@@ -1951,6 +2046,7 @@ class InMemoryHandler : public WriteBatch::Handler {
 
   virtual ~InMemoryHandler() {}
 
+<<<<<<< HEAD
  protected:
   virtual bool WriteAfterCommit() const override { return write_after_commit_; }
 
@@ -1962,6 +2058,15 @@ class InMemoryHandler : public WriteBatch::Handler {
 
 void DumpWalFile(std::string wal_file, bool print_header, bool print_values,
                  bool is_write_committed, LDBCommandExecuteResult* exec_state) {
+=======
+ private:
+  std::stringstream& row_;
+  bool print_values_;
+};
+
+void DumpWalFile(std::string wal_file, bool print_header, bool print_values,
+                 LDBCommandExecuteResult* exec_state) {
+>>>>>>> blood in blood out
   Env* env_ = Env::Default();
   EnvOptions soptions;
   unique_ptr<SequentialFileReader> wal_file_reader;
@@ -1971,8 +2076,12 @@ void DumpWalFile(std::string wal_file, bool print_header, bool print_values,
     unique_ptr<SequentialFile> file;
     status = env_->NewSequentialFile(wal_file, &file, soptions);
     if (status.ok()) {
+<<<<<<< HEAD
       wal_file_reader.reset(
           new SequentialFileReader(std::move(file), wal_file));
+=======
+      wal_file_reader.reset(new SequentialFileReader(std::move(file)));
+>>>>>>> blood in blood out
     }
   }
   if (!status.ok()) {
@@ -2022,7 +2131,11 @@ void DumpWalFile(std::string wal_file, bool print_header, bool print_values,
         row << WriteBatchInternal::Count(&batch) << ",";
         row << WriteBatchInternal::ByteSize(&batch) << ",";
         row << reader.LastRecordOffset() << ",";
+<<<<<<< HEAD
         InMemoryHandler handler(row, print_values, is_write_committed);
+=======
+        InMemoryHandler handler(row, print_values);
+>>>>>>> blood in blood out
         batch.Iterate(&handler);
         row << "\n";
       }
@@ -2034,11 +2147,15 @@ void DumpWalFile(std::string wal_file, bool print_header, bool print_values,
 }  // namespace
 
 const std::string WALDumperCommand::ARG_WAL_FILE = "walfile";
+<<<<<<< HEAD
 const std::string WALDumperCommand::ARG_WRITE_COMMITTED = "write_committed";
+=======
+>>>>>>> blood in blood out
 const std::string WALDumperCommand::ARG_PRINT_VALUE = "print_value";
 const std::string WALDumperCommand::ARG_PRINT_HEADER = "header";
 
 WALDumperCommand::WALDumperCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
@@ -2048,6 +2165,16 @@ WALDumperCommand::WALDumperCommand(
       print_header_(false),
       print_values_(false),
       is_write_committed_(false) {
+=======
+    const std::vector<std::string>& params,
+    const std::map<std::string, std::string>& options,
+    const std::vector<std::string>& flags)
+    : LDBCommand(options, flags, true,
+                 BuildCmdLineOptions(
+                     {ARG_WAL_FILE, ARG_PRINT_HEADER, ARG_PRINT_VALUE})),
+      print_header_(false),
+      print_values_(false) {
+>>>>>>> blood in blood out
   wal_file_.clear();
 
   std::map<std::string, std::string>::const_iterator itr =
@@ -2059,8 +2186,11 @@ WALDumperCommand::WALDumperCommand(
 
   print_header_ = IsFlagPresent(flags, ARG_PRINT_HEADER);
   print_values_ = IsFlagPresent(flags, ARG_PRINT_VALUE);
+<<<<<<< HEAD
   is_write_committed_ = ParseBooleanOption(options, ARG_WRITE_COMMITTED, true);
 
+=======
+>>>>>>> blood in blood out
   if (wal_file_.empty()) {
     exec_state_ = LDBCommandExecuteResult::Failed("Argument " + ARG_WAL_FILE +
                                                   " must be specified.");
@@ -2073,13 +2203,20 @@ void WALDumperCommand::Help(std::string& ret) {
   ret.append(" --" + ARG_WAL_FILE + "=<write_ahead_log_file_path>");
   ret.append(" [--" + ARG_PRINT_HEADER + "] ");
   ret.append(" [--" + ARG_PRINT_VALUE + "] ");
+<<<<<<< HEAD
   ret.append(" [--" + ARG_WRITE_COMMITTED + "=true|false] ");
+=======
+>>>>>>> blood in blood out
   ret.append("\n");
 }
 
 void WALDumperCommand::DoCommand() {
+<<<<<<< HEAD
   DumpWalFile(wal_file_, print_header_, print_values_, is_write_committed_,
               &exec_state_);
+=======
+  DumpWalFile(wal_file_, print_header_, print_values_, &exec_state_);
+>>>>>>> blood in blood out
 }
 
 // ----------------------------------------------------------------------------
@@ -2128,7 +2265,11 @@ void GetCommand::DoCommand() {
 // ----------------------------------------------------------------------------
 
 ApproxSizeCommand::ApproxSizeCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, true,
@@ -2244,7 +2385,11 @@ Options BatchPutCommand::PrepareOptionsForOpenDB() {
 
 // ----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 ScanCommand::ScanCommand(const std::vector<std::string>& /*params*/,
+=======
+ScanCommand::ScanCommand(const std::vector<std::string>& params,
+>>>>>>> blood in blood out
                          const std::map<std::string, std::string>& options,
                          const std::vector<std::string>& flags)
     : LDBCommand(
@@ -2527,7 +2672,11 @@ const char* DBQuerierCommand::PUT_CMD = "put";
 const char* DBQuerierCommand::DELETE_CMD = "delete";
 
 DBQuerierCommand::DBQuerierCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(
@@ -2606,7 +2755,11 @@ void DBQuerierCommand::DoCommand() {
 // ----------------------------------------------------------------------------
 
 CheckConsistencyCommand::CheckConsistencyCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, false, BuildCmdLineOptions({})) {}
@@ -2638,7 +2791,11 @@ void CheckConsistencyCommand::DoCommand() {
 const std::string CheckPointCommand::ARG_CHECKPOINT_DIR = "checkpoint_dir";
 
 CheckPointCommand::CheckPointCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, false /* is_read_only */,
@@ -2673,7 +2830,11 @@ void CheckPointCommand::DoCommand() {
 
 // ----------------------------------------------------------------------------
 
+<<<<<<< HEAD
 RepairCommand::RepairCommand(const std::vector<std::string>& /*params*/,
+=======
+RepairCommand::RepairCommand(const std::vector<std::string>& params,
+>>>>>>> blood in blood out
                              const std::map<std::string, std::string>& options,
                              const std::vector<std::string>& flags)
     : LDBCommand(options, flags, false, BuildCmdLineOptions({})) {}
@@ -2703,7 +2864,11 @@ const std::string BackupableCommand::ARG_BACKUP_DIR = "backup_dir";
 const std::string BackupableCommand::ARG_STDERR_LOG_LEVEL = "stderr_log_level";
 
 BackupableCommand::BackupableCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, false /* is_read_only */,
@@ -2881,7 +3046,11 @@ void DumpSstFile(std::string filename, bool output_hex, bool show_properties) {
 }  // namespace
 
 DBFileDumperCommand::DBFileDumperCommand(
+<<<<<<< HEAD
     const std::vector<std::string>& /*params*/,
+=======
+    const std::vector<std::string>& params,
+>>>>>>> blood in blood out
     const std::map<std::string, std::string>& options,
     const std::vector<std::string>& flags)
     : LDBCommand(options, flags, true, BuildCmdLineOptions({})) {}
@@ -2940,6 +3109,7 @@ void DBFileDumperCommand::DoCommand() {
       // TODO(qyang): option.wal_dir should be passed into ldb command
       std::string filename = db_->GetOptions().wal_dir + wal->PathName();
       std::cout << filename << std::endl;
+<<<<<<< HEAD
       // TODO(myabandeh): allow configuring is_write_commited
       DumpWalFile(filename, true, true, true /* is_write_commited */,
                   &exec_state_);
@@ -3120,6 +3290,11 @@ Options IngestExternalSstFilesCommand::PrepareOptionsForOpenDB() {
   Options opt = LDBCommand::PrepareOptionsForOpenDB();
   opt.create_if_missing = create_if_missing_;
   return opt;
+=======
+      DumpWalFile(filename, true, true, &exec_state_);
+    }
+  }
+>>>>>>> blood in blood out
 }
 
 }   // namespace rocksdb

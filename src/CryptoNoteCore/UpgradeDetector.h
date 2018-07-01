@@ -25,7 +25,11 @@
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
 #include "CryptoNoteCore/Currency.h"
+<<<<<<< HEAD
 #include <config/CryptoNoteConfig.h>
+=======
+#include "CryptoNoteConfig.h"
+>>>>>>> blood in blood out
 #include <Logging/LoggerRef.h>
 
 namespace CryptoNote {
@@ -41,7 +45,11 @@ namespace CryptoNote {
   template <typename BC>
   class BasicUpgradeDetector : public UpgradeDetectorBase {
   public:
+<<<<<<< HEAD
     BasicUpgradeDetector(const Currency& currency, BC& blockchain, uint8_t targetVersion, std::shared_ptr<Logging::ILogger> log) :
+=======
+    BasicUpgradeDetector(const Currency& currency, BC& blockchain, uint8_t targetVersion, Logging::ILogger& log) :
+>>>>>>> blood in blood out
       m_currency(currency),
       m_blockchain(blockchain),
       m_targetVersion(targetVersion),

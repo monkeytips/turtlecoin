@@ -3,6 +3,7 @@
 // 
 // Please see the included LICENSE file for more information.
 
+<<<<<<< HEAD
 #include <boost/format.hpp>
 
 #include <ctime>
@@ -26,6 +27,24 @@
 
 #include "version.h"
 
+=======
+#include "DaemonCommandsHandler.h"
+
+#include <ctime>
+#include "P2p/NetNode.h"
+#include "CryptoNoteCore/Miner.h"
+#include "CryptoNoteCore/Core.h"
+#include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
+#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
+#include "Serialization/SerializationTools.h"
+#include "version.h"
+
+#include "Rpc/JsonRpc.h"
+#include "CryptoNoteCore/Currency.h"
+#include <boost/format.hpp>
+#include "Common/FormatTools.h"
+
+>>>>>>> blood in blood out
 namespace {
 template <typename T>
 static bool print_as_json(const T& obj) {
@@ -53,13 +72,22 @@ std::string printTransactionFullInfo(const CryptoNote::CachedTransaction& transa
 
 }
 
+<<<<<<< HEAD
 DaemonCommandsHandler::DaemonCommandsHandler(CryptoNote::Core& core, CryptoNote::NodeServer& srv, std::shared_ptr<Logging::LoggerManager> log, CryptoNote::RpcServer* prpc_server) :
+=======
+DaemonCommandsHandler::DaemonCommandsHandler(CryptoNote::Core& core, CryptoNote::NodeServer& srv, Logging::LoggerManager& log, CryptoNote::RpcServer* prpc_server) :
+>>>>>>> blood in blood out
   m_core(core), m_srv(srv), logger(log, "daemon"), m_logManager(log), m_prpc_server(prpc_server) {
   m_consoleHandler.setHandler("exit", boost::bind(&DaemonCommandsHandler::exit, this, _1), "Shutdown the daemon");
   m_consoleHandler.setHandler("help", boost::bind(&DaemonCommandsHandler::help, this, _1), "Show this help");
   m_consoleHandler.setHandler("print_pl", boost::bind(&DaemonCommandsHandler::print_pl, this, _1), "Print peer list");
   m_consoleHandler.setHandler("print_cn", boost::bind(&DaemonCommandsHandler::print_cn, this, _1), "Print connections");
   m_consoleHandler.setHandler("print_bc", boost::bind(&DaemonCommandsHandler::print_bc, this, _1), "Print blockchain info in a given blocks range, print_bc <begin_height> [<end_height>]");
+<<<<<<< HEAD
+=======
+  //m_consoleHandler.setHandler("print_bci", boost::bind(&DaemonCommandsHandler::print_bci, this, _1));
+  //m_consoleHandler.setHandler("print_bc_outs", boost::bind(&DaemonCommandsHandler::print_bc_outs, this, _1));
+>>>>>>> blood in blood out
   m_consoleHandler.setHandler("print_block", boost::bind(&DaemonCommandsHandler::print_block, this, _1), "Print block, print_block <block_hash> | <block_height>");
   m_consoleHandler.setHandler("print_tx", boost::bind(&DaemonCommandsHandler::print_tx, this, _1), "Print transaction, print_tx <transaction_hash>");
   m_consoleHandler.setHandler("print_pool", boost::bind(&DaemonCommandsHandler::print_pool, this, _1), "Print transaction pool (long format)");
@@ -83,6 +111,7 @@ std::string DaemonCommandsHandler::get_commands_str()
 
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::exit(const std::vector<std::string>& args) {
+<<<<<<< HEAD
   std::cout << InformationMsg("================= EXITING ==================\n"
                               "== PLEASE WAIT, THIS MAY TAKE A LONG TIME ==\n"
                               "============================================\n");
@@ -90,6 +119,8 @@ bool DaemonCommandsHandler::exit(const std::vector<std::string>& args) {
   /* Set log to max when exiting. Sometimes this takes a while, and it helps
      to let users know the daemon is still doing stuff */
   m_logManager->setMaxLevel(Logging::TRACE);
+=======
+>>>>>>> blood in blood out
   m_consoleHandler.requestStop();
   m_srv.sendStopSignal();
   return true;
@@ -106,6 +137,20 @@ bool DaemonCommandsHandler::print_pl(const std::vector<std::string>& args) {
   return true;
 }
 //--------------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+bool DaemonCommandsHandler::print_bc_outs(const std::vector<std::string>& args)
+{
+  if (args.size() != 1) {
+    std::cout << "need file path as parameter" << ENDL;
+    return true;
+  }
+
+  //TODO m_core.print_blockchain_outs(args[0]);
+  return true;
+}
+//--------------------------------------------------------------------------------
+>>>>>>> blood in blood out
 bool DaemonCommandsHandler::print_cn(const std::vector<std::string>& args)
 {
   m_srv.get_payload_object().log_connections();
@@ -179,6 +224,15 @@ bool DaemonCommandsHandler::print_bc(const std::vector<std::string> &args) {
 	return true;
 }
 //--------------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+bool DaemonCommandsHandler::print_bci(const std::vector<std::string>& args)
+{
+  //TODO m_core.print_blockchain_index();
+  return true;
+}
+
+>>>>>>> blood in blood out
 bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
 {
   if (args.size() != 1) {
@@ -199,7 +253,11 @@ bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
     return true;
   }
 
+<<<<<<< HEAD
   m_logManager->setMaxLevel(static_cast<Logging::Level>(l));
+=======
+  m_logManager.setMaxLevel(static_cast<Logging::Level>(l));
+>>>>>>> blood in blood out
   return true;
 }
 
@@ -320,7 +378,11 @@ bool DaemonCommandsHandler::status(const std::vector<std::string>& args)
     return false;
   } 
 
+<<<<<<< HEAD
   std::cout << Utilities::get_status_string(iresp) << std::endl;
+=======
+  std::cout << Common::get_status_string(iresp) << std::endl;
+>>>>>>> blood in blood out
   
   return true;
 }

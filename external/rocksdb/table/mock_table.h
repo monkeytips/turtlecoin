@@ -39,6 +39,7 @@ class MockTableReader : public TableReader {
   explicit MockTableReader(const stl_wrappers::KVMap& table) : table_(table) {}
 
   InternalIterator* NewIterator(const ReadOptions&,
+<<<<<<< HEAD
                                 const SliceTransform* prefix_extractor,
                                 Arena* arena = nullptr,
                                 bool skip_filters = false,
@@ -49,6 +50,15 @@ class MockTableReader : public TableReader {
              bool skip_filters = false) override;
 
   uint64_t ApproximateOffsetOf(const Slice& /*key*/) override { return 0; }
+=======
+                                Arena* arena,
+                                bool skip_filters = false) override;
+
+  Status Get(const ReadOptions&, const Slice& key, GetContext* get_context,
+             bool skip_filters = false) override;
+
+  uint64_t ApproximateOffsetOf(const Slice& key) override { return 0; }
+>>>>>>> blood in blood out
 
   virtual size_t ApproximateMemoryUsage() const override { return 0; }
 
@@ -171,8 +181,13 @@ class MockTableFactory : public TableFactory {
                          stl_wrappers::KVMap file_contents);
 
   virtual Status SanitizeOptions(
+<<<<<<< HEAD
       const DBOptions& /*db_opts*/,
       const ColumnFamilyOptions& /*cf_opts*/) const override {
+=======
+      const DBOptions& db_opts,
+      const ColumnFamilyOptions& cf_opts) const override {
+>>>>>>> blood in blood out
     return Status::OK();
   }
 

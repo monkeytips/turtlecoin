@@ -9,7 +9,10 @@
 
 #include "util/testharness.h"
 #include <string>
+<<<<<<< HEAD
 #include <thread>
+=======
+>>>>>>> blood in blood out
 
 namespace rocksdb {
 namespace test {
@@ -30,6 +33,7 @@ std::string TmpDir(Env* env) {
   return dir;
 }
 
+<<<<<<< HEAD
 std::string PerThreadDBPath(std::string dir, std::string name) {
   size_t tid = std::hash<std::thread::id>()(std::this_thread::get_id());
   return dir + "/" + name + "_" + std::to_string(tid);
@@ -43,6 +47,8 @@ std::string PerThreadDBPath(Env* env, std::string name) {
   return PerThreadDBPath(test::TmpDir(env), name);
 }
 
+=======
+>>>>>>> blood in blood out
 int RandomSeed() {
   const char* env = getenv("TEST_RANDOM_SEED");
   int result = (env != nullptr ? atoi(env) : 301);

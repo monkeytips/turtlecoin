@@ -101,7 +101,11 @@ TEST_F(RocksLuaTest, Default) {
   // If nothing is set in the LuaCompactionFilterOptions, then
   // RocksDB will keep all the key / value pairs, but it will also
   // print our error log indicating failure.
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
 
@@ -116,7 +120,11 @@ TEST_F(RocksLuaTest, Default) {
 }
 
 TEST_F(RocksLuaTest, KeepsAll) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -145,7 +153,11 @@ TEST_F(RocksLuaTest, KeepsAll) {
 }
 
 TEST_F(RocksLuaTest, GetName) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -171,7 +183,11 @@ TEST_F(RocksLuaTest, GetName) {
 }
 
 TEST_F(RocksLuaTest, RemovesAll) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -202,7 +218,11 @@ TEST_F(RocksLuaTest, RemovesAll) {
 }
 
 TEST_F(RocksLuaTest, FilterByKey) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -240,7 +260,11 @@ TEST_F(RocksLuaTest, FilterByKey) {
 }
 
 TEST_F(RocksLuaTest, FilterByValue) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -279,7 +303,11 @@ TEST_F(RocksLuaTest, FilterByValue) {
 }
 
 TEST_F(RocksLuaTest, ChangeValue) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -312,7 +340,11 @@ TEST_F(RocksLuaTest, ChangeValue) {
 }
 
 TEST_F(RocksLuaTest, ConditionallyChangeAndFilterValue) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -357,7 +389,11 @@ TEST_F(RocksLuaTest, ConditionallyChangeAndFilterValue) {
 }
 
 TEST_F(RocksLuaTest, DynamicChangeScript) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   lua_opt.error_log = std::make_shared<StopOnErrorLogger>();
@@ -433,7 +469,11 @@ TEST_F(RocksLuaTest, DynamicChangeScript) {
 }
 
 TEST_F(RocksLuaTest, LuaConditionalTypeError) {
+<<<<<<< HEAD
   std::string db_path = test::PerThreadDBPath(temp_dir_, "rocks_lua_test");
+=======
+  std::string db_path = temp_dir_ + "/rocks_lua_test";
+>>>>>>> blood in blood out
 
   lua::RocksLuaCompactionFilterOptions lua_opt;
   // Filter() error when input key's initial >= 'r'
@@ -483,7 +523,11 @@ int main(int argc, char** argv) {
 
 #else
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   printf("LUA_PATH is not set.  Ignoring the test.\n");
 }
 
@@ -491,7 +535,11 @@ int main(int /*argc*/, char** /*argv*/) {
 
 #else
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   printf("Lua is not supported in RocksDBLite.  Ignoring the test.\n");
 }
 

@@ -42,8 +42,11 @@ public class WriteBatch extends AbstractWriteBatch {
   /**
    * Constructs a WriteBatch instance from a serialized representation
    * as returned by {@link #data()}.
+<<<<<<< HEAD
    *
    * @param serialized the serialized representation.
+=======
+>>>>>>> blood in blood out
    */
   public WriteBatch(final byte[] serialized) {
     super(newWriteBatch(serialized, serialized.length));
@@ -65,11 +68,16 @@ public class WriteBatch extends AbstractWriteBatch {
    * Retrieve the serialized version of this batch.
    *
    * @return the serialized representation of this write batch.
+<<<<<<< HEAD
    *
    * @throws RocksDBException if an error occurs whilst retrieving
    *   the serialized batch data.
    */
   public byte[] data() throws RocksDBException {
+=======
+   */
+  public byte[] data() {
+>>>>>>> blood in blood out
     return data(nativeHandle_);
   }
 
@@ -83,45 +91,75 @@ public class WriteBatch extends AbstractWriteBatch {
   }
 
   /**
+<<<<<<< HEAD
    * Returns true if Put will be called during Iterate.
    *
    * @return true if Put will be called during Iterate.
+=======
+   * Returns true if PutCF will be called during Iterate.
+   *
+   * Return true if PutCF will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasPut() {
     return hasPut(nativeHandle_);
   }
 
   /**
+<<<<<<< HEAD
    * Returns true if Delete will be called during Iterate.
    *
    * @return true if Delete will be called during Iterate.
+=======
+   * Returns true if DeleteCF will be called during Iterate.
+   *
+   * Return true if DeleteCF will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasDelete() {
     return hasDelete(nativeHandle_);
   }
 
   /**
+<<<<<<< HEAD
    * Returns true if SingleDelete will be called during Iterate.
    *
    * @return true if SingleDelete will be called during Iterate.
+=======
+   * Returns true if SingleDeleteCF will be called during Iterate.
+   *
+   * Return true if SingleDeleteCF will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasSingleDelete() {
     return hasSingleDelete(nativeHandle_);
   }
 
   /**
+<<<<<<< HEAD
    * Returns true if DeleteRange will be called during Iterate.
    *
    * @return true if DeleteRange will be called during Iterate.
+=======
+   * Returns true if DeleteRangeCF will be called during Iterate.
+   *
+   * Return true if DeleteRangeCF will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasDeleteRange() {
     return hasDeleteRange(nativeHandle_);
   }
 
   /**
+<<<<<<< HEAD
    * Returns true if Merge will be called during Iterate.
    *
    * @return true if Merge will be called during Iterate.
+=======
+   * Returns true if MergeCF will be called during Iterate.
+   *
+   * Return true if MergeCF will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasMerge() {
     return hasMerge(nativeHandle_);
@@ -130,7 +168,11 @@ public class WriteBatch extends AbstractWriteBatch {
   /**
    * Returns true if MarkBeginPrepare will be called during Iterate.
    *
+<<<<<<< HEAD
    * @return true if MarkBeginPrepare will be called during Iterate.
+=======
+   * Return true if MarkBeginPrepare will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasBeginPrepare() {
     return hasBeginPrepare(nativeHandle_);
@@ -139,7 +181,11 @@ public class WriteBatch extends AbstractWriteBatch {
   /**
    * Returns true if MarkEndPrepare will be called during Iterate.
    *
+<<<<<<< HEAD
    * @return true if MarkEndPrepare will be called during Iterate.
+=======
+   * Return true if MarkEndPrepare will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasEndPrepare() {
     return hasEndPrepare(nativeHandle_);
@@ -148,7 +194,11 @@ public class WriteBatch extends AbstractWriteBatch {
   /**
    * Returns true if MarkCommit will be called during Iterate.
    *
+<<<<<<< HEAD
    * @return true if MarkCommit will be called during Iterate.
+=======
+   * Return true if MarkCommit will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasCommit() {
     return hasCommit(nativeHandle_);
@@ -157,7 +207,11 @@ public class WriteBatch extends AbstractWriteBatch {
   /**
    * Returns true if MarkRollback will be called during Iterate.
    *
+<<<<<<< HEAD
    * @return true if MarkRollback will be called during Iterate.
+=======
+   * Return true if MarkRollback will be called during Iterate.
+>>>>>>> blood in blood out
    */
   public boolean hasRollback() {
     return hasRollback(nativeHandle_);
@@ -256,7 +310,11 @@ public class WriteBatch extends AbstractWriteBatch {
       final int serializedLength);
   private native void iterate(final long handle, final long handlerHandle)
       throws RocksDBException;
+<<<<<<< HEAD
   private native byte[] data(final long nativeHandle) throws RocksDBException;
+=======
+  private native byte[] data(final long nativeHandle);
+>>>>>>> blood in blood out
   private native long getDataSize(final long nativeHandle);
   private native boolean hasPut(final long nativeHandle);
   private native boolean hasDelete(final long nativeHandle);

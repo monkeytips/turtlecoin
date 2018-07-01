@@ -121,7 +121,11 @@ TestWritableFile::~TestWritableFile() {
 
 Status TestWritableFile::Append(const Slice& data) {
   if (!env_->IsFilesystemActive()) {
+<<<<<<< HEAD
     return env_->GetError();
+=======
+    return Status::Corruption("Not Active");
+>>>>>>> blood in blood out
   }
   Status s = target_->Append(data);
   if (s.ok()) {
@@ -172,7 +176,11 @@ Status FaultInjectionTestEnv::NewWritableFile(const std::string& fname,
                                               unique_ptr<WritableFile>* result,
                                               const EnvOptions& soptions) {
   if (!IsFilesystemActive()) {
+<<<<<<< HEAD
     return GetError();
+=======
+    return Status::Corruption("Not Active");
+>>>>>>> blood in blood out
   }
   // Not allow overwriting files
   Status s = target()->FileExists(fname);
@@ -199,7 +207,11 @@ Status FaultInjectionTestEnv::NewWritableFile(const std::string& fname,
 
 Status FaultInjectionTestEnv::DeleteFile(const std::string& f) {
   if (!IsFilesystemActive()) {
+<<<<<<< HEAD
     return GetError();
+=======
+    return Status::Corruption("Not Active");
+>>>>>>> blood in blood out
   }
   Status s = EnvWrapper::DeleteFile(f);
   if (!s.ok()) {
@@ -216,7 +228,11 @@ Status FaultInjectionTestEnv::DeleteFile(const std::string& f) {
 Status FaultInjectionTestEnv::RenameFile(const std::string& s,
                                          const std::string& t) {
   if (!IsFilesystemActive()) {
+<<<<<<< HEAD
     return GetError();
+=======
+    return Status::Corruption("Not Active");
+>>>>>>> blood in blood out
   }
   Status ret = EnvWrapper::RenameFile(s, t);
 

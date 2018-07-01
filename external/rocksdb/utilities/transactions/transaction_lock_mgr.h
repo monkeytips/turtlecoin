@@ -143,7 +143,11 @@ class TransactionLockMgr {
   bool IncrementWaiters(const PessimisticTransaction* txn,
                         const autovector<TransactionID>& wait_ids,
                         const std::string& key, const uint32_t& cf_id,
+<<<<<<< HEAD
                         const bool& exclusive, Env* const env);
+=======
+                        const bool& exclusive);
+>>>>>>> blood in blood out
   void DecrementWaiters(const PessimisticTransaction* txn,
                         const autovector<TransactionID>& wait_ids);
   void DecrementWaitersImpl(const PessimisticTransaction* txn,

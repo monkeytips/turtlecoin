@@ -45,7 +45,11 @@ DynamicBloom::DynamicBloom(uint32_t num_probes,
       kNumBlocks(0),
       kNumProbes(num_probes),
       hash_func_(hash_func == nullptr ? &BloomHash : hash_func),
+<<<<<<< HEAD
       data_(nullptr) {}
+=======
+      data_(0) {}
+>>>>>>> blood in blood out
 
 void DynamicBloom::SetRawData(unsigned char* raw_data, uint32_t total_bits,
                               uint32_t num_blocks) {

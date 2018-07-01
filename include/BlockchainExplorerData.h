@@ -41,7 +41,7 @@ struct TransactionOutputDetails {
 
 struct TransactionOutputReferenceDetails {
   Crypto::Hash transactionHash;
-  uint64_t number;
+  size_t number;
 };
 
 struct BaseInputDetails {

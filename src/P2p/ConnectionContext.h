@@ -20,14 +20,20 @@
 #include <list>
 #include <ostream>
 #include <unordered_set>
+<<<<<<< HEAD
 #include <optional>
+=======
+>>>>>>> blood in blood out
 
 #include <boost/uuid/uuid.hpp>
 #include "Common/StringTools.h"
 #include "crypto/hash.h"
 
+<<<<<<< HEAD
 #include "P2p/PendingLiteBlock.h"
 
+=======
+>>>>>>> blood in blood out
 namespace CryptoNote {
 
 struct CryptoNoteConnectionContext {
@@ -49,7 +55,10 @@ struct CryptoNoteConnectionContext {
   };
 
   state m_state = state_befor_handshake;
+<<<<<<< HEAD
   std::optional<PendingLiteBlock> m_pending_lite_block;
+=======
+>>>>>>> blood in blood out
   std::list<Crypto::Hash> m_needed_objects;
   std::unordered_set<Crypto::Hash> m_requested_objects;
   uint32_t m_remote_blockchain_height = 0;

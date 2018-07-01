@@ -19,7 +19,11 @@
 
 #include <boost/filesystem.hpp>
 
+<<<<<<< HEAD
 #include "Common/CryptoNoteTools.h"
+=======
+#include "CryptoNoteTools.h"
+>>>>>>> blood in blood out
 
 namespace CryptoNote {
 
@@ -43,6 +47,7 @@ void MainChainStorage::popBlock() {
   storage.pop_back();
 }
 
+<<<<<<< HEAD
 void MainChainStorage::rewindTo(const uint32_t index) const
 {
   while(getBlockCount() >= index) {
@@ -50,6 +55,8 @@ void MainChainStorage::rewindTo(const uint32_t index) const
   }
 }
 
+=======
+>>>>>>> blood in blood out
 RawBlock MainChainStorage::getBlockByIndex(uint32_t index) const {
   if (index >= storage.size()) {
     throw std::out_of_range("Block index " + std::to_string(index) + " is out of range. Blocks count: " + std::to_string(storage.size()));

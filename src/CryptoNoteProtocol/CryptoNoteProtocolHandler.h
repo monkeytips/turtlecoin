@@ -1,8 +1,26 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+<<<<<<< HEAD
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
+=======
+//
+// This file is part of Bytecoin.
+//
+// Bytecoin is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Bytecoin is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+>>>>>>> blood in blood out
 
 #pragma once
 
@@ -35,7 +53,11 @@ namespace CryptoNote
   {
   public:
 
+<<<<<<< HEAD
     CryptoNoteProtocolHandler(const Currency& currency, System::Dispatcher& dispatcher, ICore& rcore, IP2pEndpoint* p_net_layout, std::shared_ptr<Logging::ILogger> log);
+=======
+    CryptoNoteProtocolHandler(const Currency& currency, System::Dispatcher& dispatcher, ICore& rcore, IP2pEndpoint* p_net_layout, Logging::ILogger& log);
+>>>>>>> blood in blood out
 
     virtual bool addObserver(ICryptoNoteProtocolObserver* observer) override;
     virtual bool removeObserver(ICryptoNoteProtocolObserver* observer) override;
@@ -68,8 +90,11 @@ namespace CryptoNote
     int handle_request_chain(int command, NOTIFY_REQUEST_CHAIN::request& arg, CryptoNoteConnectionContext& context);
     int handle_response_chain_entry(int command, NOTIFY_RESPONSE_CHAIN_ENTRY::request& arg, CryptoNoteConnectionContext& context);
     int handleRequestTxPool(int command, NOTIFY_REQUEST_TX_POOL::request& arg, CryptoNoteConnectionContext& context);
+<<<<<<< HEAD
     int handle_notify_new_lite_block(int command, NOTIFY_NEW_LITE_BLOCK::request& arg, CryptoNoteConnectionContext& context);
     int handle_notify_missing_txs(int command, NOTIFY_MISSING_TXS::request& arg, CryptoNoteConnectionContext& context);
+=======
+>>>>>>> blood in blood out
 
     //----------------- i_cryptonote_protocol ----------------------------------
     virtual void relayBlock(NOTIFY_NEW_BLOCK::request& arg) override;
@@ -84,9 +109,12 @@ namespace CryptoNote
     int processObjects(CryptoNoteConnectionContext& context, std::vector<RawBlock>&& rawBlocks, const std::vector<CachedBlock>& cachedBlocks);
     Logging::LoggerRef logger;
 
+<<<<<<< HEAD
 private:
     int doPushLiteBlock(NOTIFY_NEW_LITE_BLOCK::request block, CryptoNoteConnectionContext& context, std::vector<BinaryArray> missingTxs);
 
+=======
+>>>>>>> blood in blood out
   private:
 
     System::Dispatcher& m_dispatcher;

@@ -87,6 +87,7 @@ struct CompactionOptionsFIFO {
 
 // Compression options for different compression algorithms like Zlib
 struct CompressionOptions {
+<<<<<<< HEAD
   // RocksDB's generic default compression level. Internally it'll be translated
   // to the default compression level specific to the library being used (see
   // comment above `ColumnFamilyOptions::compression`).
@@ -95,6 +96,8 @@ struct CompressionOptions {
   // file, which should be portable.
   const static int kDefaultCompressionLevel = 32767;
 
+=======
+>>>>>>> blood in blood out
   int window_bits;
   int level;
   int strategy;
@@ -126,6 +129,7 @@ struct CompressionOptions {
   // Default: 0.
   uint32_t zstd_max_train_bytes;
 
+<<<<<<< HEAD
   // When the compression options are set by the user, it will be set to "true".
   // For bottommost_compression_opts, to enable it, user must set enabled=true.
   // Otherwise, bottommost compression will use compression_opts as default
@@ -146,12 +150,26 @@ struct CompressionOptions {
         enabled(false) {}
   CompressionOptions(int wbits, int _lev, int _strategy, int _max_dict_bytes,
                      int _zstd_max_train_bytes, bool _enabled)
+=======
+  CompressionOptions()
+      : window_bits(-14),
+        level(-1),
+        strategy(0),
+        max_dict_bytes(0),
+        zstd_max_train_bytes(0) {}
+  CompressionOptions(int wbits, int _lev, int _strategy, int _max_dict_bytes,
+                     int _zstd_max_train_bytes)
+>>>>>>> blood in blood out
       : window_bits(wbits),
         level(_lev),
         strategy(_strategy),
         max_dict_bytes(_max_dict_bytes),
+<<<<<<< HEAD
         zstd_max_train_bytes(_zstd_max_train_bytes),
         enabled(_enabled) {}
+=======
+        zstd_max_train_bytes(_zstd_max_train_bytes) {}
+>>>>>>> blood in blood out
 };
 
 enum UpdateStatus {    // Return status For inplace update callback
@@ -274,7 +292,11 @@ struct AdvancedColumnFamilyOptions {
   // if prefix_extractor is set and memtable_prefix_bloom_size_ratio is not 0,
   // create prefix bloom for memtable with the size of
   // write_buffer_size * memtable_prefix_bloom_size_ratio.
+<<<<<<< HEAD
   // If it is larger than 0.25, it is sanitized to 0.25.
+=======
+  // If it is larger than 0.25, it is santinized to 0.25.
+>>>>>>> blood in blood out
   //
   // Default: 0 (disable)
   //
@@ -581,7 +603,11 @@ struct AdvancedColumnFamilyOptions {
   // Default: false
   bool paranoid_file_checks = false;
 
+<<<<<<< HEAD
   // In debug mode, RocksDB run consistency checks on the LSM every time the LSM
+=======
+  // In debug mode, RocksDB run consistency checks on the LSM everytime the LSM
+>>>>>>> blood in blood out
   // change (Flush, Compaction, AddFile). These checks are disabled in release
   // mode, use this option to enable them in release mode as well.
   // Default: false
@@ -591,6 +617,7 @@ struct AdvancedColumnFamilyOptions {
   // Default: false
   bool report_bg_io_stats = false;
 
+<<<<<<< HEAD
   // Non-bottom-level files older than TTL will go through the compaction
   // process. This needs max_open_files to be set to -1.
   // Enabled only for level compaction for now.
@@ -600,6 +627,8 @@ struct AdvancedColumnFamilyOptions {
   // Dynamically changeable through SetOptions() API
   uint64_t ttl = 0;
 
+=======
+>>>>>>> blood in blood out
   // Create ColumnFamilyOptions with default values for all fields
   AdvancedColumnFamilyOptions();
   // Create ColumnFamilyOptions from Options

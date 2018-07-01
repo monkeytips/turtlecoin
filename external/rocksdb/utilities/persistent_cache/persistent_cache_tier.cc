@@ -75,12 +75,20 @@ Status PersistentCacheTier::Close() {
   return Status::OK();
 }
 
+<<<<<<< HEAD
 bool PersistentCacheTier::Reserve(const size_t /*size*/) {
+=======
+bool PersistentCacheTier::Reserve(const size_t size) {
+>>>>>>> blood in blood out
   // default implementation is a pass through
   return true;
 }
 
+<<<<<<< HEAD
 bool PersistentCacheTier::Erase(const Slice& /*key*/) {
+=======
+bool PersistentCacheTier::Erase(const Slice& key) {
+>>>>>>> blood in blood out
   // default implementation is a pass through since not all cache tiers might
   // support erase
   return true;

@@ -109,9 +109,15 @@ typedef boost::multi_index_container <
 > WalletTransactions;
 
 typedef Common::FileMappedVector<EncryptedWalletRecord> ContainerStorage;
+<<<<<<< HEAD
 typedef std::pair<uint64_t, CryptoNote::WalletTransfer> TransactionTransferPair;
 typedef std::vector<TransactionTransferPair> WalletTransfers;
 typedef std::map<uint64_t, CryptoNote::Transaction> UncommitedTransactions;
+=======
+typedef std::pair<size_t, CryptoNote::WalletTransfer> TransactionTransferPair;
+typedef std::vector<TransactionTransferPair> WalletTransfers;
+typedef std::map<size_t, CryptoNote::Transaction> UncommitedTransactions;
+>>>>>>> blood in blood out
 
 typedef boost::multi_index_container<
   Crypto::Hash,

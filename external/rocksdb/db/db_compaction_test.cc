@@ -53,7 +53,11 @@ class FlushedFileCollector : public EventListener {
   FlushedFileCollector() {}
   ~FlushedFileCollector() {}
 
+<<<<<<< HEAD
   virtual void OnFlushCompleted(DB* /*db*/, const FlushJobInfo& info) override {
+=======
+  virtual void OnFlushCompleted(DB* db, const FlushJobInfo& info) override {
+>>>>>>> blood in blood out
     std::lock_guard<std::mutex> lock(mutex_);
     flushed_files_.push_back(info.file_path);
   }
@@ -74,6 +78,7 @@ class FlushedFileCollector : public EventListener {
   std::mutex mutex_;
 };
 
+<<<<<<< HEAD
 class CompactionStatsCollector : public EventListener {
 public:
   CompactionStatsCollector()
@@ -132,6 +137,8 @@ class SstStatsCollector : public EventListener {
   std::atomic<int> num_ssts_creation_started_;
 };
 
+=======
+>>>>>>> blood in blood out
 static const int kCDTValueSize = 1000;
 static const int kCDTKeysPerBuffer = 4;
 static const int kCDTNumLevels = 8;
@@ -212,6 +219,7 @@ void VerifyCompactionResult(
 #endif
 }
 
+<<<<<<< HEAD
 /*
  * Verifies compaction stats of cfd are valid.
  *
@@ -246,6 +254,8 @@ void VerifyCompactionStats(ColumnFamilyData& cfd,
 #endif /* NDEBUG */
 }
 
+=======
+>>>>>>> blood in blood out
 const SstFileMetaData* PickFileRandomly(
     const ColumnFamilyMetaData& cf_meta,
     Random* rand,
@@ -267,7 +277,10 @@ const SstFileMetaData* PickFileRandomly(
 }
 }  // anonymous namespace
 
+<<<<<<< HEAD
 #ifndef ROCKSDB_VALGRIND_RUN
+=======
+>>>>>>> blood in blood out
 // All the TEST_P tests run once with sub_compactions disabled (i.e.
 // options.max_subcompactions = 1) and once with it enabled
 TEST_P(DBCompactionTestWithParam, CompactionDeletionTrigger) {
@@ -310,7 +323,10 @@ TEST_P(DBCompactionTestWithParam, CompactionDeletionTrigger) {
     ASSERT_GT(db_size[0] / 3, db_size[1]);
   }
 }
+<<<<<<< HEAD
 #endif  // ROCKSDB_VALGRIND_RUN
+=======
+>>>>>>> blood in blood out
 
 TEST_P(DBCompactionTestWithParam, CompactionsPreserveDeletes) {
   //  For each options type we test following
@@ -454,7 +470,11 @@ TEST_F(DBCompactionTest, TestTableReaderForCompaction) {
       });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "TableCache::GetTableReader:0",
+<<<<<<< HEAD
       [&](void* /*arg*/) { num_new_table_reader++; });
+=======
+      [&](void* arg) { num_new_table_reader++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   for (int k = 0; k < options.level0_file_num_compaction_trigger; ++k) {
@@ -1010,7 +1030,11 @@ TEST_P(DBCompactionTestWithParam, TrivialMoveOneFile) {
   int32_t trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
+=======
+      [&](void* arg) { trivial_move++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Options options = CurrentOptions();
@@ -1067,10 +1091,17 @@ TEST_P(DBCompactionTestWithParam, TrivialMoveNonOverlappingFiles) {
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial",
       [&](void* /*arg*/) { non_trivial_move++; });
+=======
+      [&](void* arg) { trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial_move++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Options options = CurrentOptions();
@@ -1166,10 +1197,17 @@ TEST_P(DBCompactionTestWithParam, TrivialMoveTargetLevel) {
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial",
       [&](void* /*arg*/) { non_trivial_move++; });
+=======
+      [&](void* arg) { trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial_move++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Options options = CurrentOptions();
@@ -1225,10 +1263,17 @@ TEST_P(DBCompactionTestWithParam, ManualCompactionPartial) {
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial",
       [&](void* /*arg*/) { non_trivial_move++; });
+=======
+      [&](void* arg) { trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial_move++; });
+>>>>>>> blood in blood out
   bool first = true;
   // Purpose of dependencies:
   // 4 -> 1: ensure the order of two non-trivial compactions
@@ -1239,7 +1284,11 @@ TEST_P(DBCompactionTestWithParam, ManualCompactionPartial) {
        {"DBCompaction::ManualPartial:5", "DBCompaction::ManualPartial:2"},
        {"DBCompaction::ManualPartial:5", "DBCompaction::ManualPartial:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
+=======
+      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
+>>>>>>> blood in blood out
         if (first) {
           first = false;
           TEST_SYNC_POINT("DBCompaction::ManualPartial:4");
@@ -1370,17 +1419,28 @@ TEST_F(DBCompactionTest, DISABLED_ManualPartialFill) {
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial",
       [&](void* /*arg*/) { non_trivial_move++; });
+=======
+      [&](void* arg) { trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial_move++; });
+>>>>>>> blood in blood out
   bool first = true;
   bool second = true;
   rocksdb::SyncPoint::GetInstance()->LoadDependency(
       {{"DBCompaction::PartialFill:4", "DBCompaction::PartialFill:1"},
        {"DBCompaction::PartialFill:2", "DBCompaction::PartialFill:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
+=======
+      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
+>>>>>>> blood in blood out
         if (first) {
           TEST_SYNC_POINT("DBCompaction::PartialFill:4");
           first = false;
@@ -1786,10 +1846,17 @@ TEST_P(DBCompactionTestWithParam, TrivialMoveToLastLevelWithFiles) {
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial",
       [&](void* /*arg*/) { non_trivial_move++; });
+=======
+      [&](void* arg) { trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial_move++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Options options = CurrentOptions();
@@ -2077,6 +2144,7 @@ TEST_P(DBCompactionTestWithParam, LevelCompactionPathUse) {
   Destroy(options);
 }
 
+<<<<<<< HEAD
 TEST_P(DBCompactionTestWithParam, LevelCompactionCFPathUse) {
   Options options = CurrentOptions();
   options.db_paths.emplace_back(dbname_, 500 * 1024);
@@ -2196,6 +2264,8 @@ TEST_P(DBCompactionTestWithParam, LevelCompactionCFPathUse) {
   Destroy(options, true);
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_P(DBCompactionTestWithParam, ConvertCompactionStyle) {
   Random rnd(301);
   int max_key_level_insert = 200;
@@ -2786,6 +2856,7 @@ TEST_P(DBCompactionTestWithParam, CompressLevelCompaction) {
 
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "Compaction::InputCompressionMatchesOutput:Matches",
+<<<<<<< HEAD
       [&](void* /*arg*/) { matches++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "Compaction::InputCompressionMatchesOutput:DidntMatch",
@@ -2796,6 +2867,18 @@ TEST_P(DBCompactionTestWithParam, CompressLevelCompaction) {
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
       [&](void* /*arg*/) { trivial_move++; });
+=======
+      [&](void* arg) { matches++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "Compaction::InputCompressionMatchesOutput:DidntMatch",
+      [&](void* arg) { didnt_match++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:TrivialMove",
+      [&](void* arg) { trivial_move++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Reopen(options);
@@ -2957,6 +3040,7 @@ TEST_P(DBCompactionTestWithParam, ForceBottommostLevelCompaction) {
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial",
@@ -2965,6 +3049,15 @@ TEST_P(DBCompactionTestWithParam, ForceBottommostLevelCompaction) {
 
   Options options = CurrentOptions();
   options.target_file_size_base = 100000000;
+=======
+      [&](void* arg) { trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->EnableProcessing();
+
+  Options options = CurrentOptions();
+>>>>>>> blood in blood out
   options.write_buffer_size = 100000000;
   options.max_subcompactions = max_subcompactions_;
   DestroyAndReopen(options);
@@ -3146,6 +3239,7 @@ TEST_P(DBCompactionTestWithParam, IntraL0CompactionDoesNotObsoleteDeletions) {
   ASSERT_TRUE(db_->Get(roptions, Key(0), &result).IsNotFound());
 }
 
+<<<<<<< HEAD
 TEST_P(DBCompactionTestWithParam, FullCompactionInBottomPriThreadPool) {
   const int kNumFilesTrigger = 3;
   Env::Default()->SetBackgroundThreads(1, Env::Priority::BOTTOM);
@@ -3188,6 +3282,8 @@ TEST_P(DBCompactionTestWithParam, FullCompactionInBottomPriThreadPool) {
   Env::Default()->SetBackgroundThreads(0, Env::Priority::BOTTOM);
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_F(DBCompactionTest, OptimizedDeletionObsoleting) {
   // Deletions can be dropped when compacted to non-last level if they fall
   // outside the lower-level files' key-ranges.
@@ -3346,6 +3442,7 @@ TEST_F(DBCompactionTest, CompactBottomLevelFilesWithDeletions) {
   // compactions should be triggered, which reduce the size of each bottom-level
   // file without changing file count.
   db_->ReleaseSnapshot(snapshot);
+<<<<<<< HEAD
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "LevelCompactionPicker::PickCompaction:Return", [&](void* arg) {
         Compaction* compaction = reinterpret_cast<Compaction*>(arg);
@@ -3353,6 +3450,8 @@ TEST_F(DBCompactionTest, CompactBottomLevelFilesWithDeletions) {
                     CompactionReason::kBottommostFiles);
       });
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
+=======
+>>>>>>> blood in blood out
   dbfull()->TEST_WaitForCompact();
   db_->GetLiveFilesMetaData(&post_release_metadata);
   ASSERT_EQ(pre_release_metadata.size(), post_release_metadata.size());
@@ -3366,6 +3465,7 @@ TEST_F(DBCompactionTest, CompactBottomLevelFilesWithDeletions) {
     // deletion markers/deleted keys.
     ASSERT_LT(post_file.size, pre_file.size);
   }
+<<<<<<< HEAD
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
 }
 
@@ -3476,6 +3576,8 @@ TEST_F(DBCompactionTest, LevelCompactExpiredTtlFiles) {
   // All non-L0 files are deleted, as they contained only deleted data.
   ASSERT_EQ("1", FilesPerLevel());
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
+=======
+>>>>>>> blood in blood out
 }
 
 TEST_F(DBCompactionTest, CompactRangeDelayedByL0FileCount) {
@@ -3748,6 +3850,7 @@ TEST_F(DBCompactionTest, CompactRangeFlushOverlappingMemtable) {
   }
 }
 
+<<<<<<< HEAD
 TEST_F(DBCompactionTest, CompactionStatsTest) {
   Options options = CurrentOptions();
   options.level0_file_num_compaction_trigger = 2;
@@ -3856,6 +3959,8 @@ TEST_F(DBCompactionTest, CompactionHasEmptyOutput) {
   ASSERT_EQ(2, collector->num_ssts_creation_started());
 }
 
+=======
+>>>>>>> blood in blood out
 INSTANTIATE_TEST_CASE_P(DBCompactionTestWithParam, DBCompactionTestWithParam,
                         ::testing::Values(std::make_tuple(1, true),
                                           std::make_tuple(1, false),
@@ -3875,7 +3980,11 @@ TEST_P(DBCompactionDirectIOTest, DirectIO) {
       "TableCache::NewIterator:for_compaction", [&](void* arg) {
         bool* use_direct_reads = static_cast<bool*>(arg);
         ASSERT_EQ(*use_direct_reads,
+<<<<<<< HEAD
                   options.use_direct_reads);
+=======
+                  options.use_direct_io_for_flush_and_compaction);
+>>>>>>> blood in blood out
       });
   SyncPoint::GetInstance()->SetCallBack(
       "CompactionJob::OpenCompactionOutputFile", [&](void* arg) {
@@ -3885,7 +3994,11 @@ TEST_P(DBCompactionDirectIOTest, DirectIO) {
       });
   if (options.use_direct_io_for_flush_and_compaction) {
     SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
         "SanitizeOptions:direct_io", [&](void* /*arg*/) {
+=======
+        "SanitizeOptions:direct_io", [&](void* arg) {
+>>>>>>> blood in blood out
           readahead = true;
         });
   }
@@ -3894,7 +4007,11 @@ TEST_P(DBCompactionDirectIOTest, DirectIO) {
   MakeTables(3, "p", "q", 1);
   ASSERT_EQ("1,1,1", FilesPerLevel(1));
   Compact(1, "p1", "p9");
+<<<<<<< HEAD
   ASSERT_EQ(readahead, options.use_direct_reads);
+=======
+  ASSERT_FALSE(readahead ^ options.use_direct_io_for_flush_and_compaction);
+>>>>>>> blood in blood out
   ASSERT_EQ("0,0,1", FilesPerLevel(1));
   Destroy(options);
   delete options.env;
@@ -3962,8 +4079,11 @@ int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 #else
+<<<<<<< HEAD
   (void) argc;
   (void) argv;
+=======
+>>>>>>> blood in blood out
   return 0;
 #endif
 }

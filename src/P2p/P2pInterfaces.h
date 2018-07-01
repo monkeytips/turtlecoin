@@ -34,11 +34,19 @@ public:
   virtual ~IP2pConnection();
   virtual void read(P2pMessage &message) = 0;
   virtual void write(const P2pMessage &message) = 0;
+<<<<<<< HEAD
+=======
+  virtual void ban() = 0;
+>>>>>>> blood in blood out
   virtual void stop() = 0;
 };
 
 class IP2pNode {
 public:
+<<<<<<< HEAD
+=======
+  virtual std::unique_ptr<IP2pConnection> receiveConnection() = 0;
+>>>>>>> blood in blood out
   virtual void stop() = 0;
 };
 

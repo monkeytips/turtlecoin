@@ -3,11 +3,18 @@
 //  COPYING file in the root directory) and Apache 2.0 License
 //  (found in the LICENSE.Apache file in the root directory).
 
+<<<<<<< HEAD
 #include "rocksdb/flush_block_policy.h"
 #include "rocksdb/options.h"
 #include "rocksdb/slice.h"
 #include "table/block_builder.h"
 #include "table/format.h"
+=======
+#include "rocksdb/options.h"
+#include "rocksdb/flush_block_policy.h"
+#include "rocksdb/slice.h"
+#include "table/block_builder.h"
+>>>>>>> blood in blood out
 
 #include <cassert>
 
@@ -22,12 +29,18 @@ class FlushBlockBySizePolicy : public FlushBlockPolicy {
   //                               reaches the configured
   FlushBlockBySizePolicy(const uint64_t block_size,
                          const uint64_t block_size_deviation,
+<<<<<<< HEAD
                          const bool align,
+=======
+>>>>>>> blood in blood out
                          const BlockBuilder& data_block_builder)
       : block_size_(block_size),
         block_size_deviation_limit_(
             ((block_size * (100 - block_size_deviation)) + 99) / 100),
+<<<<<<< HEAD
         align_(align),
+=======
+>>>>>>> blood in blood out
         data_block_builder_(data_block_builder) {}
 
   virtual bool Update(const Slice& key,
@@ -54,6 +67,7 @@ class FlushBlockBySizePolicy : public FlushBlockPolicy {
     }
 
     const auto curr_size = data_block_builder_.CurrentSizeEstimate();
+<<<<<<< HEAD
     auto estimated_size_after =
         data_block_builder_.EstimateSizeAfterKV(key, value);
 
@@ -61,6 +75,10 @@ class FlushBlockBySizePolicy : public FlushBlockPolicy {
       estimated_size_after += kBlockTrailerSize;
       return estimated_size_after > block_size_;
     }
+=======
+    const auto estimated_size_after =
+      data_block_builder_.EstimateSizeAfterKV(key, value);
+>>>>>>> blood in blood out
 
     return estimated_size_after > block_size_ &&
            curr_size > block_size_deviation_limit_;
@@ -68,7 +86,10 @@ class FlushBlockBySizePolicy : public FlushBlockPolicy {
 
   const uint64_t block_size_;
   const uint64_t block_size_deviation_limit_;
+<<<<<<< HEAD
   const bool align_;
+=======
+>>>>>>> blood in blood out
   const BlockBuilder& data_block_builder_;
 };
 
@@ -77,13 +98,21 @@ FlushBlockPolicy* FlushBlockBySizePolicyFactory::NewFlushBlockPolicy(
     const BlockBuilder& data_block_builder) const {
   return new FlushBlockBySizePolicy(
       table_options.block_size, table_options.block_size_deviation,
+<<<<<<< HEAD
       table_options.block_align, data_block_builder);
+=======
+      data_block_builder);
+>>>>>>> blood in blood out
 }
 
 FlushBlockPolicy* FlushBlockBySizePolicyFactory::NewFlushBlockPolicy(
     const uint64_t size, const int deviation,
     const BlockBuilder& data_block_builder) {
+<<<<<<< HEAD
   return new FlushBlockBySizePolicy(size, deviation, false, data_block_builder);
+=======
+  return new FlushBlockBySizePolicy(size, deviation, data_block_builder);
+>>>>>>> blood in blood out
 }
 
 }  // namespace rocksdb

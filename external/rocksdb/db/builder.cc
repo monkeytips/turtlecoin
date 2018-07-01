@@ -28,7 +28,10 @@
 #include "rocksdb/options.h"
 #include "rocksdb/table.h"
 #include "table/block_based_table_builder.h"
+<<<<<<< HEAD
 #include "table/format.h"
+=======
+>>>>>>> blood in blood out
 #include "table/internal_iterator.h"
 #include "util/file_reader_writer.h"
 #include "util/filename.h"
@@ -40,7 +43,11 @@ namespace rocksdb {
 class TableFactory;
 
 TableBuilder* NewTableBuilder(
+<<<<<<< HEAD
     const ImmutableCFOptions& ioptions, const MutableCFOptions& moptions,
+=======
+    const ImmutableCFOptions& ioptions,
+>>>>>>> blood in blood out
     const InternalKeyComparator& internal_comparator,
     const std::vector<std::unique_ptr<IntTblPropCollectorFactory>>*
         int_tbl_prop_collector_factories,
@@ -53,11 +60,18 @@ TableBuilder* NewTableBuilder(
           TablePropertiesCollectorFactory::Context::kUnknownColumnFamily) ==
          column_family_name.empty());
   return ioptions.table_factory->NewTableBuilder(
+<<<<<<< HEAD
       TableBuilderOptions(ioptions, moptions, internal_comparator,
                           int_tbl_prop_collector_factories, compression_type,
                           compression_opts, compression_dict, skip_filters,
                           column_family_name, level, creation_time,
                           oldest_key_time),
+=======
+      TableBuilderOptions(
+          ioptions, internal_comparator, int_tbl_prop_collector_factories,
+          compression_type, compression_opts, compression_dict, skip_filters,
+          column_family_name, level, creation_time, oldest_key_time),
+>>>>>>> blood in blood out
       column_family_id, file);
 }
 
@@ -94,7 +108,11 @@ Status BuildTable(
     return s;
   }
 
+<<<<<<< HEAD
   std::string fname = TableFileName(ioptions.cf_paths, meta->fd.GetNumber(),
+=======
+  std::string fname = TableFileName(ioptions.db_paths, meta->fd.GetNumber(),
+>>>>>>> blood in blood out
                                     meta->fd.GetPathId());
 #ifndef ROCKSDB_LITE
   EventHelpers::NotifyTableFileCreationStarted(
@@ -102,7 +120,11 @@ Status BuildTable(
 #endif  // !ROCKSDB_LITE
   TableProperties tp;
 
+<<<<<<< HEAD
   if (iter->Valid() || !range_del_agg->IsEmpty()) {
+=======
+  if (iter->Valid() || range_del_agg->ShouldAddTombstones()) {
+>>>>>>> blood in blood out
     TableBuilder* builder;
     unique_ptr<WritableFileWriter> file_writer;
     {
@@ -124,11 +146,18 @@ Status BuildTable(
       file_writer.reset(new WritableFileWriter(std::move(file), env_options,
                                                ioptions.statistics));
       builder = NewTableBuilder(
+<<<<<<< HEAD
           ioptions, mutable_cf_options, internal_comparator,
           int_tbl_prop_collector_factories, column_family_id,
           column_family_name, file_writer.get(), compression, compression_opts,
           level, nullptr /* compression_dict */, false /* skip_filters */,
           creation_time, oldest_key_time);
+=======
+          ioptions, internal_comparator, int_tbl_prop_collector_factories,
+          column_family_id, column_family_name, file_writer.get(), compression,
+          compression_opts, level, nullptr /* compression_dict */,
+          false /* skip_filters */, creation_time, oldest_key_time);
+>>>>>>> blood in blood out
     }
 
     MergeHelper merge(env, internal_comparator.user_comparator(),
@@ -140,7 +169,10 @@ Status BuildTable(
     CompactionIterator c_iter(
         iter, internal_comparator.user_comparator(), &merge, kMaxSequenceNumber,
         &snapshots, earliest_write_conflict_snapshot, snapshot_checker, env,
+<<<<<<< HEAD
         ShouldReportDetailedTime(env, ioptions.statistics),
+=======
+>>>>>>> blood in blood out
         true /* internal key corruption is not ok */, range_del_agg.get());
     c_iter.SeekToFirst();
     for (; c_iter.Valid(); c_iter.Next()) {
@@ -156,6 +188,7 @@ Status BuildTable(
             ThreadStatus::FLUSH_BYTES_WRITTEN, IOSTATS(bytes_written));
       }
     }
+<<<<<<< HEAD
 
     for (auto it = range_del_agg->NewIterator(); it->Valid(); it->Next()) {
       auto tombstone = it->Tombstone();
@@ -168,6 +201,14 @@ Status BuildTable(
     // Finish and check for builder errors
     tp = builder->GetTableProperties();
     bool empty = builder->NumEntries() == 0 && tp.num_range_deletions == 0;
+=======
+    // nullptr for table_{min,max} so all range tombstones will be flushed
+    range_del_agg->AddToBuilder(builder, nullptr /* lower_bound */,
+                                nullptr /* upper_bound */, meta);
+
+    // Finish and check for builder errors
+    bool empty = builder->NumEntries() == 0;
+>>>>>>> blood in blood out
     s = c_iter.status();
     if (!s.ok() || empty) {
       builder->Abandon();
@@ -180,7 +221,11 @@ Status BuildTable(
       meta->fd.file_size = file_size;
       meta->marked_for_compaction = builder->NeedCompact();
       assert(meta->fd.GetFileSize() > 0);
+<<<<<<< HEAD
       tp = builder->GetTableProperties(); // refresh now that builder is finished
+=======
+      tp = builder->GetTableProperties();
+>>>>>>> blood in blood out
       if (table_properties) {
         *table_properties = tp;
       }
@@ -204,9 +249,14 @@ Status BuildTable(
       // we will regrad this verification as user reads since the goal is
       // to cache it here for further user reads
       std::unique_ptr<InternalIterator> it(table_cache->NewIterator(
+<<<<<<< HEAD
           ReadOptions(), env_options, internal_comparator, *meta,
           nullptr /* range_del_agg */,
           mutable_cf_options.prefix_extractor.get(), nullptr,
+=======
+          ReadOptions(), env_options, internal_comparator, meta->fd,
+          nullptr /* range_del_agg */, nullptr,
+>>>>>>> blood in blood out
           (internal_stats == nullptr) ? nullptr
                                       : internal_stats->GetFileReadHist(0),
           false /* for_compaction */, nullptr /* arena */,

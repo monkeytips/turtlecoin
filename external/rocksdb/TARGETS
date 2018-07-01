@@ -25,10 +25,13 @@ rocksdb_compiler_flags = [
     "-DTBB",
     # Needed to compile in fbcode
     "-Wno-expansion-to-defined",
+<<<<<<< HEAD
     # Added missing flags from output of build_detect_platform
     "-DROCKSDB_PTHREAD_ADAPTIVE_MUTEX",
     "-DROCKSDB_BACKTRACE",
     "-Wnarrowing",
+=======
+>>>>>>> blood in blood out
 ]
 
 rocksdb_external_deps = [
@@ -50,10 +53,14 @@ rocksdb_preprocessor_flags = [
 ]
 
 rocksdb_arch_preprocessor_flags = {
+<<<<<<< HEAD
     "x86_64": [
         "-DHAVE_SSE42",
         "-DHAVE_PCLMUL",
     ],
+=======
+    "x86_64": ["-DHAVE_SSE42"],
+>>>>>>> blood in blood out
 }
 
 build_mode = read_config("fbcode", "build_mode")
@@ -93,7 +100,10 @@ cpp_library(
         "db/db_info_dumper.cc",
         "db/db_iter.cc",
         "db/dbformat.cc",
+<<<<<<< HEAD
         "db/error_handler.cc",
+=======
+>>>>>>> blood in blood out
         "db/event_helpers.cc",
         "db/experimental.cc",
         "db/external_sst_file_ingestion_job.cc",
@@ -104,8 +114,13 @@ cpp_library(
         "db/internal_stats.cc",
         "db/log_reader.cc",
         "db/log_writer.cc",
+<<<<<<< HEAD
         "db/logs_with_prep_tracker.cc",
         "db/malloc_stats.cc",
+=======
+        "db/malloc_stats.cc",
+        "db/managed_iterator.cc",
+>>>>>>> blood in blood out
         "db/memtable.cc",
         "db/memtable_list.cc",
         "db/merge_helper.cc",
@@ -200,7 +215,10 @@ cpp_library(
         "util/coding.cc",
         "util/compaction_job_stats_impl.cc",
         "util/comparator.cc",
+<<<<<<< HEAD
         "util/compression_context_cache.cc",
+=======
+>>>>>>> blood in blood out
         "util/concurrent_arena.cc",
         "util/crc32c.cc",
         "util/delete_scheduler.cc",
@@ -221,13 +239,19 @@ cpp_library(
         "util/status_message.cc",
         "util/string_util.cc",
         "util/sync_point.cc",
+<<<<<<< HEAD
         "util/sync_point_impl.cc",
+=======
+>>>>>>> blood in blood out
         "util/thread_local.cc",
         "util/threadpool_imp.cc",
         "util/transaction_test_util.cc",
         "util/xxhash.cc",
         "utilities/backupable/backupable_db.cc",
+<<<<<<< HEAD
         "utilities/blob_db/blob_compaction_filter.cc",
+=======
+>>>>>>> blood in blood out
         "utilities/blob_db/blob_db.cc",
         "utilities/blob_db/blob_db_impl.cc",
         "utilities/blob_db/blob_dump_tool.cc",
@@ -235,6 +259,10 @@ cpp_library(
         "utilities/blob_db/blob_log_format.cc",
         "utilities/blob_db/blob_log_reader.cc",
         "utilities/blob_db/blob_log_writer.cc",
+<<<<<<< HEAD
+=======
+        "utilities/blob_db/ttl_extractor.cc",
+>>>>>>> blood in blood out
         "utilities/cassandra/cassandra_compaction_filter.cc",
         "utilities/cassandra/format.cc",
         "utilities/cassandra/merge_operator.cc",
@@ -280,8 +308,11 @@ cpp_library(
         "utilities/transactions/transaction_util.cc",
         "utilities/transactions/write_prepared_txn.cc",
         "utilities/transactions/write_prepared_txn_db.cc",
+<<<<<<< HEAD
         "utilities/transactions/write_unprepared_txn.cc",
         "utilities/transactions/write_unprepared_txn_db.cc",
+=======
+>>>>>>> blood in blood out
         "utilities/ttl/db_ttl_impl.cc",
         "utilities/write_batch_with_index/write_batch_with_index.cc",
         "utilities/write_batch_with_index/write_batch_with_index_internal.cc",
@@ -558,11 +589,14 @@ ROCKS_TESTS = [
         "serial",
     ],
     [
+<<<<<<< HEAD
         "db_iter_stress_test",
         "db/db_iter_stress_test.cc",
         "serial",
     ],
     [
+=======
+>>>>>>> blood in blood out
         "db_iter_test",
         "db/db_iter_test.cc",
         "serial",
@@ -688,11 +722,14 @@ ROCKS_TESTS = [
         "serial",
     ],
     [
+<<<<<<< HEAD
         "error_handler_test",
         "db/error_handler_test.cc",
         "serial",
     ],
     [
+=======
+>>>>>>> blood in blood out
         "event_logger_test",
         "util/event_logger_test.cc",
         "serial",
@@ -843,11 +880,14 @@ ROCKS_TESTS = [
         "serial",
     ],
     [
+<<<<<<< HEAD
         "obsolete_files_test",
         "db/obsolete_files_test.cc",
         "serial",
     ],
     [
+=======
+>>>>>>> blood in blood out
         "optimistic_transaction_test",
         "utilities/transactions/optimistic_transaction_test.cc",
         "serial",
@@ -1047,11 +1087,14 @@ ROCKS_TESTS = [
         "utilities/transactions/write_prepared_transaction_test.cc",
         "parallel",
     ],
+<<<<<<< HEAD
     [
         "write_unprepared_transaction_test",
         "utilities/transactions/write_unprepared_transaction_test.cc",
         "parallel",
     ],
+=======
+>>>>>>> blood in blood out
 ]
 
 # Generate a test rule for each entry in ROCKS_TESTS
@@ -1081,3 +1124,17 @@ if not is_opt_mode:
           command = [TEST_RUNNER, BUCK_BINS + test_bin]
         )
 
+<<<<<<< HEAD
+=======
+custom_unittest(
+    name = "make_rocksdbjavastatic",
+    command = ["internal_repo_rocksdb/make_rocksdbjavastatic.sh"],
+    type = "simple",
+)
+
+custom_unittest(
+    name = "make_rocksdb_lite_release",
+    command = ["internal_repo_rocksdb/make_rocksdb_lite_release.sh"],
+    type = "simple",
+)
+>>>>>>> blood in blood out

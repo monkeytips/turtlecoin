@@ -72,7 +72,11 @@ void JsonOutputStreamSerializer::endObject() {
   chain.pop_back();
 }
 
+<<<<<<< HEAD
 bool JsonOutputStreamSerializer::beginArray(uint64_t& size, Common::StringView name) {
+=======
+bool JsonOutputStreamSerializer::beginArray(size_t& size, Common::StringView name) {
+>>>>>>> blood in blood out
   JsonValue val(JsonValue::ARRAY);
   JsonValue& res = chain.back()->insert(std::string(name), val);
   chain.push_back(&res);
@@ -134,7 +138,11 @@ bool JsonOutputStreamSerializer::operator()(bool& value, Common::StringView name
   return true;
 }
 
+<<<<<<< HEAD
 bool JsonOutputStreamSerializer::binary(void* value, uint64_t size, Common::StringView name) {
+=======
+bool JsonOutputStreamSerializer::binary(void* value, size_t size, Common::StringView name) {
+>>>>>>> blood in blood out
   std::string hex = Common::toHex(value, size);
   return (*this)(hex, name);
 }

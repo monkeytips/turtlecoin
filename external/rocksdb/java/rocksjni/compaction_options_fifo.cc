@@ -17,7 +17,11 @@
  * Signature: ()J
  */
 jlong Java_org_rocksdb_CompactionOptionsFIFO_newCompactionOptionsFIFO(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jclass /*jcls*/) {
+=======
+    JNIEnv* env, jclass jcls) {
+>>>>>>> blood in blood out
   const auto* opt = new rocksdb::CompactionOptionsFIFO();
   return reinterpret_cast<jlong>(opt);
 }
@@ -28,8 +32,12 @@ jlong Java_org_rocksdb_CompactionOptionsFIFO_newCompactionOptionsFIFO(
  * Signature: (JJ)V
  */
 void Java_org_rocksdb_CompactionOptionsFIFO_setMaxTableFilesSize(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jlong jmax_table_files_size) {
+=======
+    JNIEnv* env, jobject jobj, jlong jhandle, jlong jmax_table_files_size) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompactionOptionsFIFO*>(jhandle);
   opt->max_table_files_size = static_cast<uint64_t>(jmax_table_files_size);
 }
@@ -39,9 +47,14 @@ void Java_org_rocksdb_CompactionOptionsFIFO_setMaxTableFilesSize(
  * Method:    maxTableFilesSize
  * Signature: (J)J
  */
+<<<<<<< HEAD
 jlong Java_org_rocksdb_CompactionOptionsFIFO_maxTableFilesSize(JNIEnv* /*env*/,
                                                                jobject /*jobj*/,
                                                                jlong jhandle) {
+=======
+jlong Java_org_rocksdb_CompactionOptionsFIFO_maxTableFilesSize(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompactionOptionsFIFO*>(jhandle);
   return static_cast<jlong>(opt->max_table_files_size);
 }
@@ -51,8 +64,13 @@ jlong Java_org_rocksdb_CompactionOptionsFIFO_maxTableFilesSize(JNIEnv* /*env*/,
  * Method:    disposeInternal
  * Signature: (J)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_CompactionOptionsFIFO_disposeInternal(JNIEnv* /*env*/,
                                                             jobject /*jobj*/,
                                                             jlong jhandle) {
+=======
+void Java_org_rocksdb_CompactionOptionsFIFO_disposeInternal(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   delete reinterpret_cast<rocksdb::CompactionOptionsFIFO*>(jhandle);
 }

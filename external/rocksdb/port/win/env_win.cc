@@ -35,11 +35,14 @@
 
 #include <rpc.h>  // for uuid generation
 #include <windows.h>
+<<<<<<< HEAD
 #include <winioctl.h>
 #include <shlwapi.h>
 #include "strsafe.h"
 
 #include <algorithm>
+=======
+>>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -49,15 +52,21 @@ ThreadStatusUpdater* CreateThreadStatusUpdater() {
 
 namespace {
 
+<<<<<<< HEAD
 static const size_t kSectorSize = 512; // Sector size used when physical sector size could not be obtained from device.
 
+=======
+>>>>>>> blood in blood out
 // RAII helpers for HANDLEs
 const auto CloseHandleFunc = [](HANDLE h) { ::CloseHandle(h); };
 typedef std::unique_ptr<void, decltype(CloseHandleFunc)> UniqueCloseHandlePtr;
 
+<<<<<<< HEAD
 const auto FindCloseFunc = [](HANDLE h) { ::FindClose(h); };
 typedef std::unique_ptr<void, decltype(FindCloseFunc)> UniqueFindClosePtr;
 
+=======
+>>>>>>> blood in blood out
 void WinthreadCall(const char* label, std::error_code result) {
   if (0 != result.value()) {
     fprintf(stderr, "pthread %s: %s\n", label, strerror(result.value()));
@@ -71,7 +80,11 @@ namespace port {
 
 WinEnvIO::WinEnvIO(Env* hosted_env)
   :   hosted_env_(hosted_env),
+<<<<<<< HEAD
       page_size_(4 * 1024),
+=======
+      page_size_(4 * 1012),
+>>>>>>> blood in blood out
       allocation_granularity_(page_size_),
       perf_counter_frequency_(0),
       GetSystemTimePreciseAsFileTime_(NULL) {
@@ -103,16 +116,22 @@ WinEnvIO::~WinEnvIO() {
 Status WinEnvIO::DeleteFile(const std::string& fname) {
   Status result;
 
+<<<<<<< HEAD
   BOOL ret = DeleteFileA(fname.c_str());
   if(!ret) {
     auto lastError = GetLastError();
     result = IOErrorFromWindowsError("Failed to delete: " + fname,
       lastError);
+=======
+  if (_unlink(fname.c_str())) {
+    result = IOError("Failed to delete: " + fname, errno);
+>>>>>>> blood in blood out
   }
 
   return result;
 }
 
+<<<<<<< HEAD
 Status WinEnvIO::Truncate(const std::string& fname, size_t size) {
   Status s;
   int result = truncate(fname.c_str(), size);
@@ -122,6 +141,8 @@ Status WinEnvIO::Truncate(const std::string& fname, size_t size) {
   return s;
 }
 
+=======
+>>>>>>> blood in blood out
 Status WinEnvIO::GetCurrentTime(int64_t* unix_time) {
   time_t time = std::time(nullptr);
   if (time == (time_t)(-1)) {
@@ -253,8 +274,12 @@ Status WinEnvIO::NewRandomAccessFile(const std::string& fname,
       fileGuard.release();
     }
   } else {
+<<<<<<< HEAD
     result->reset(new WinRandomAccessFile(fname, hFile, 
       std::max(GetSectorSize(fname), page_size_), options));
+=======
+    result->reset(new WinRandomAccessFile(fname, hFile, page_size_, options));
+>>>>>>> blood in blood out
     fileGuard.release();
   }
   return s;
@@ -288,7 +313,12 @@ Status WinEnvIO::OpenWritableFile(const std::string& fname,
 
   if (local_options.use_mmap_writes) {
     desired_access |= GENERIC_READ;
+<<<<<<< HEAD
   } else {
+=======
+  }
+  else {
+>>>>>>> blood in blood out
     // Adding this solely for tests to pass (fault_injection_test,
     // wal_manager_test).
     shared_mode |= (FILE_SHARE_WRITE | FILE_SHARE_DELETE);
@@ -339,7 +369,11 @@ Status WinEnvIO::OpenWritableFile(const std::string& fname,
   } else {
     // Here we want the buffer allocation to be aligned by the SSD page size
     // and to be a multiple of it
+<<<<<<< HEAD
     result->reset(new WinWritableFile(fname, hFile, std::max(GetSectorSize(fname), GetPageSize()),
+=======
+    result->reset(new WinWritableFile(fname, hFile, page_size_,
+>>>>>>> blood in blood out
       c_BufferCapacity, local_options));
   }
   return s;
@@ -354,7 +388,11 @@ Status WinEnvIO::NewRandomRWFile(const std::string & fname,
   // Random access is to disable read-ahead as the system reads too much data
   DWORD desired_access = GENERIC_READ | GENERIC_WRITE;
   DWORD shared_mode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+<<<<<<< HEAD
   DWORD creation_disposition = OPEN_EXISTING; // Fail if file does not exist
+=======
+  DWORD creation_disposition = OPEN_ALWAYS; // Create if necessary or open existing
+>>>>>>> blood in blood out
   DWORD file_flags = FILE_FLAG_RANDOM_ACCESS;
 
   if (options.use_direct_reads && options.use_direct_writes) {
@@ -383,6 +421,7 @@ Status WinEnvIO::NewRandomRWFile(const std::string & fname,
   }
 
   UniqueCloseHandlePtr fileGuard(hFile, CloseHandleFunc);
+<<<<<<< HEAD
   result->reset(new WinRandomRWFile(fname, hFile, std::max(GetSectorSize(fname), GetPageSize()),
    options));
   fileGuard.release();
@@ -463,6 +502,9 @@ Status WinEnvIO::NewMemoryMappedFileBuffer(const std::string & fname,
     base, static_cast<size_t>(fileSize)));
 
   mapGuard.release();
+=======
+  result->reset(new WinRandomRWFile(fname, hFile, page_size_, options));
+>>>>>>> blood in blood out
   fileGuard.release();
 
   return s;
@@ -473,6 +515,7 @@ Status WinEnvIO::NewDirectory(const std::string& name,
   Status s;
   // Must be nullptr on failure
   result->reset();
+<<<<<<< HEAD
 
   if (!DirExists(name)) {
     s = IOErrorFromWindowsError(
@@ -501,10 +544,20 @@ Status WinEnvIO::NewDirectory(const std::string& name,
 
   result->reset(new WinDirectory(handle));
 
+=======
+  // Must fail if directory does not exist
+  if (!DirExists(name)) {
+    s = IOError("Directory does not exist: " + name, EEXIST);
+  } else {
+    IOSTATS_TIMER_GUARD(open_nanos);
+    result->reset(new WinDirectory);
+  }
+>>>>>>> blood in blood out
   return s;
 }
 
 Status WinEnvIO::FileExists(const std::string& fname) {
+<<<<<<< HEAD
   Status s;
   // TODO: This does not follow symbolic links at this point
   // which is consistent with _access() impl on windows
@@ -527,11 +580,18 @@ Status WinEnvIO::FileExists(const std::string& fname) {
     }
   }
   return s;
+=======
+  // F_OK == 0
+  const int F_OK_ = 0;
+  return _access(fname.c_str(), F_OK_) == 0 ? Status::OK()
+    : Status::NotFound();
+>>>>>>> blood in blood out
 }
 
 Status WinEnvIO::GetChildren(const std::string& dir,
   std::vector<std::string>* result) {
 
+<<<<<<< HEAD
   Status status;
   result->clear();
   std::vector<std::string> output;
@@ -584,17 +644,57 @@ Status WinEnvIO::GetChildren(const std::string& dir,
     data.cFileName[MAX_PATH - 1] = 0;
   }
   output.swap(*result);
+=======
+  result->clear();
+  std::vector<std::string> output;
+
+  Status status;
+
+  auto CloseDir = [](DIR* p) { closedir(p); };
+  std::unique_ptr<DIR, decltype(CloseDir)> dirp(opendir(dir.c_str()),
+    CloseDir);
+
+  if (!dirp) {
+    switch (errno) {
+      case EACCES:
+      case ENOENT:
+      case ENOTDIR:
+        return Status::NotFound();
+      default:
+        return IOError(dir, errno);
+    }
+  } else {
+    if (result->capacity() > 0) {
+      output.reserve(result->capacity());
+    }
+
+    struct dirent* ent = readdir(dirp.get());
+    while (ent) {
+      output.push_back(ent->d_name);
+      ent = readdir(dirp.get());
+    }
+  }
+
+  output.swap(*result);
+
+>>>>>>> blood in blood out
   return status;
 }
 
 Status WinEnvIO::CreateDir(const std::string& name) {
   Status result;
 
+<<<<<<< HEAD
   BOOL ret = CreateDirectoryA(name.c_str(), NULL);
   if (!ret) {
     auto lastError = GetLastError();
     result = IOErrorFromWindowsError(
         "Failed to create a directory: " + name, lastError);
+=======
+  if (_mkdir(name.c_str()) != 0) {
+    auto code = errno;
+    result = IOError("Failed to create dir: " + name, code);
+>>>>>>> blood in blood out
   }
 
   return result;
@@ -607,6 +707,7 @@ Status  WinEnvIO::CreateDirIfMissing(const std::string& name) {
     return result;
   }
 
+<<<<<<< HEAD
   BOOL ret = CreateDirectoryA(name.c_str(), NULL);
   if (!ret) {
     auto lastError = GetLastError();
@@ -618,15 +719,33 @@ Status  WinEnvIO::CreateDirIfMissing(const std::string& name) {
         Status::IOError(name + ": exists but is not a directory");
     }
   }
+=======
+  if (_mkdir(name.c_str()) != 0) {
+    if (errno == EEXIST) {
+      result =
+        Status::IOError("`" + name + "' exists but is not a directory");
+    } else {
+      auto code = errno;
+      result = IOError("Failed to create dir: " + name, code);
+    }
+  }
+
+>>>>>>> blood in blood out
   return result;
 }
 
 Status WinEnvIO::DeleteDir(const std::string& name) {
   Status result;
+<<<<<<< HEAD
   BOOL ret = RemoveDirectoryA(name.c_str());
   if (!ret) {
     auto lastError = GetLastError();
     result = IOErrorFromWindowsError("Failed to remove dir: " + name, lastError);
+=======
+  if (_rmdir(name.c_str()) != 0) {
+    auto code = errno;
+    result = IOError("Failed to remove dir: " + name, code);
+>>>>>>> blood in blood out
   }
   return result;
 }
@@ -717,6 +836,7 @@ Status WinEnvIO::LinkFile(const std::string& src,
   return result;
 }
 
+<<<<<<< HEAD
 Status WinEnvIO::AreFilesSame(const std::string& first,
   const std::string& second, bool* res) {
 // For MinGW builds
@@ -792,6 +912,8 @@ Status WinEnvIO::AreFilesSame(const std::string& first,
   return s;
 }
 
+=======
+>>>>>>> blood in blood out
 Status  WinEnvIO::LockFile(const std::string& lockFname,
   FileLock** lock) {
   assert(lock != nullptr);
@@ -835,12 +957,19 @@ Status WinEnvIO::UnlockFile(FileLock* lock) {
 }
 
 Status WinEnvIO::GetTestDirectory(std::string* result) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> blood in blood out
   std::string output;
 
   const char* env = getenv("TEST_TMPDIR");
   if (env && env[0] != '\0') {
     output = env;
+<<<<<<< HEAD
+=======
+    CreateDir(output);
+>>>>>>> blood in blood out
   } else {
     env = getenv("TMP");
 
@@ -849,8 +978,14 @@ Status WinEnvIO::GetTestDirectory(std::string* result) {
     } else {
       output = "c:\\tmp";
     }
+<<<<<<< HEAD
   }
   CreateDir(output);
+=======
+
+    CreateDir(output);
+  }
+>>>>>>> blood in blood out
 
   output.append("\\testrocksdb-");
   output.append(std::to_string(_getpid()));
@@ -960,17 +1095,27 @@ Status WinEnvIO::GetHostName(char* name, uint64_t len) {
 
 Status WinEnvIO::GetAbsolutePath(const std::string& db_path,
   std::string* output_path) {
+<<<<<<< HEAD
 
   // Check if we already have an absolute path
   // For test compatibility we will consider starting slash as an
   // absolute path
   if ((!db_path.empty() && (db_path[0] == '\\' || db_path[0] == '/')) ||
     !PathIsRelativeA(db_path.c_str())) {
+=======
+  // Check if we already have an absolute path
+  // that starts with non dot and has a semicolon in it
+  if ((!db_path.empty() && (db_path[0] == '/' || db_path[0] == '\\')) ||
+    (db_path.size() > 2 && db_path[0] != '.' &&
+    ((db_path[1] == ':' && db_path[2] == '\\') ||
+    (db_path[1] == ':' && db_path[2] == '/')))) {
+>>>>>>> blood in blood out
     *output_path = db_path;
     return Status::OK();
   }
 
   std::string result;
+<<<<<<< HEAD
   result.resize(MAX_PATH);
 
   // Hopefully no changes the current directory while we do this
@@ -983,6 +1128,17 @@ Status WinEnvIO::GetAbsolutePath(const std::string& db_path,
   }
 
   result.resize(len);
+=======
+  result.resize(_MAX_PATH);
+
+  char* ret = _getcwd(&result[0], _MAX_PATH);
+  if (ret == nullptr) {
+    return Status::IOError("Failed to get current working directory",
+      strerror(errno));
+  }
+
+  result.resize(strlen(result.data()));
+>>>>>>> blood in blood out
 
   result.swap(*output_path);
   return Status::OK();
@@ -1016,6 +1172,7 @@ std::string WinEnvIO::TimeToString(uint64_t secondsSince1970) {
 
 EnvOptions WinEnvIO::OptimizeForLogWrite(const EnvOptions& env_options,
   const DBOptions& db_options) const {
+<<<<<<< HEAD
   EnvOptions optimized(env_options);
   // These two the same as default optimizations
   optimized.bytes_per_sync = db_options.wal_bytes_per_sync;
@@ -1027,11 +1184,26 @@ EnvOptions WinEnvIO::OptimizeForLogWrite(const EnvOptions& env_options,
   // Direct writes will produce a huge perf impact on
   // Windows. Pre-allocate space for WAL.
   optimized.use_direct_writes = false;
+=======
+  EnvOptions optimized = env_options;
+  optimized.bytes_per_sync = db_options.wal_bytes_per_sync;
+  optimized.use_mmap_writes = false;
+  // This is because we flush only whole pages on unbuffered io and
+  // the last records are not guaranteed to be flushed.
+  optimized.use_direct_writes = false;
+  // TODO(icanadi) it's faster if fallocate_with_keep_size is false, but it
+  // breaks TransactionLogIteratorStallAtLastRecord unit test. Fix the unit
+  // test and make this false
+  optimized.fallocate_with_keep_size = true;
+  optimized.writable_file_max_buffer_size =
+      db_options.writable_file_max_buffer_size;
+>>>>>>> blood in blood out
   return optimized;
 }
 
 EnvOptions WinEnvIO::OptimizeForManifestWrite(
   const EnvOptions& env_options) const {
+<<<<<<< HEAD
   EnvOptions optimized(env_options);
   optimized.use_mmap_writes = false;
   optimized.use_direct_reads = false;
@@ -1043,6 +1215,12 @@ EnvOptions WinEnvIO::OptimizeForManifestRead(
   EnvOptions optimized(env_options);
   optimized.use_mmap_writes = false;
   optimized.use_direct_reads = false;
+=======
+  EnvOptions optimized = env_options;
+  optimized.use_mmap_writes = false;
+  optimized.use_direct_writes = false;
+  optimized.fallocate_with_keep_size = true;
+>>>>>>> blood in blood out
   return optimized;
 }
 
@@ -1055,6 +1233,7 @@ bool WinEnvIO::DirExists(const std::string& dname) {
   return false;
 }
 
+<<<<<<< HEAD
 size_t WinEnvIO::GetSectorSize(const std::string& fname) {
   size_t sector_size = kSectorSize;
 
@@ -1111,6 +1290,8 @@ size_t WinEnvIO::GetSectorSize(const std::string& fname) {
   return sector_size;
 }
 
+=======
+>>>>>>> blood in blood out
 ////////////////////////////////////////////////////////////////////////
 // WinEnvThreads
 
@@ -1239,10 +1420,13 @@ Status WinEnv::DeleteFile(const std::string& fname) {
   return winenv_io_.DeleteFile(fname);
 }
 
+<<<<<<< HEAD
 Status WinEnv::Truncate(const std::string& fname, size_t size) {
   return winenv_io_.Truncate(fname, size);
 }
 
+=======
+>>>>>>> blood in blood out
 Status WinEnv::GetCurrentTime(int64_t* unix_time) {
   return winenv_io_.GetCurrentTime(unix_time);
 }
@@ -1271,6 +1455,7 @@ Status WinEnv::ReopenWritableFile(const std::string& fname,
 }
 
 Status WinEnv::NewRandomRWFile(const std::string & fname,
+<<<<<<< HEAD
   std::unique_ptr<RandomRWFile>* result, const EnvOptions & options) {
   return winenv_io_.NewRandomRWFile(fname, result, options);
 }
@@ -1280,6 +1465,12 @@ Status WinEnv::NewMemoryMappedFileBuffer(const std::string& fname,
   return winenv_io_.NewMemoryMappedFileBuffer(fname, result);
 }
 
+=======
+  unique_ptr<RandomRWFile>* result, const EnvOptions & options) {
+  return winenv_io_.NewRandomRWFile(fname, result, options);
+}
+
+>>>>>>> blood in blood out
 Status WinEnv::NewDirectory(const std::string& name,
   std::unique_ptr<Directory>* result) {
   return winenv_io_.NewDirectory(name, result);
@@ -1326,11 +1517,14 @@ Status WinEnv::LinkFile(const std::string& src,
   return winenv_io_.LinkFile(src, target);
 }
 
+<<<<<<< HEAD
 Status WinEnv::AreFilesSame(const std::string& first,
   const std::string& second, bool* res) {
   return winenv_io_.AreFilesSame(first, second, res);
 }
 
+=======
+>>>>>>> blood in blood out
 Status WinEnv::LockFile(const std::string& lockFname,
   FileLock** lock) {
   return winenv_io_.LockFile(lockFname, lock);
@@ -1413,11 +1607,14 @@ void  WinEnv::IncBackgroundThreadsIfNeeded(int num, Env::Priority pri) {
   return winenv_threads_.IncBackgroundThreadsIfNeeded(num, pri);
 }
 
+<<<<<<< HEAD
 EnvOptions WinEnv::OptimizeForManifestRead(
   const EnvOptions& env_options) const {
   return winenv_io_.OptimizeForManifestRead(env_options);
 }
 
+=======
+>>>>>>> blood in blood out
 EnvOptions WinEnv::OptimizeForLogWrite(const EnvOptions& env_options,
   const DBOptions& db_options) const {
   return winenv_io_.OptimizeForLogWrite(env_options, db_options);

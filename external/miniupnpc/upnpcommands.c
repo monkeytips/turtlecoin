@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 /* $Id: upnpcommands.c,v 1.49 2018/03/13 23:34:47 nanard Exp $ */
 /* vim: tabstop=4 shiftwidth=4 noexpandtab
  * Project : miniupnp
  * Author : Thomas Bernard
  * Copyright (c) 2005-2018 Thomas Bernard
+=======
+/* $Id: upnpcommands.c,v 1.42 2014/01/31 13:18:25 nanard Exp $ */
+/* Project : miniupnp
+ * Author : Thomas Bernard
+ * Copyright (c) 2005-2012 Thomas Bernard
+>>>>>>> blood in blood out
  * This software is subject to the conditions detailed in the
  * LICENCE file provided in this distribution.
  * */
@@ -12,7 +19,10 @@
 #include "upnpcommands.h"
 #include "miniupnpc.h"
 #include "portlistingparse.h"
+<<<<<<< HEAD
 #include "upnpreplyparse.h"
+=======
+>>>>>>> blood in blood out
 
 static UNSIGNED_INTEGER
 my_atoui(const char * s)
@@ -22,7 +32,11 @@ my_atoui(const char * s)
 
 /*
  * */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC UNSIGNED_INTEGER
+=======
+LIBSPEC UNSIGNED_INTEGER
+>>>>>>> blood in blood out
 UPNP_GetTotalBytesSent(const char * controlURL,
 					const char * servicetype)
 {
@@ -46,7 +60,11 @@ UPNP_GetTotalBytesSent(const char * controlURL,
 
 /*
  * */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC UNSIGNED_INTEGER
+=======
+LIBSPEC UNSIGNED_INTEGER
+>>>>>>> blood in blood out
 UPNP_GetTotalBytesReceived(const char * controlURL,
 						const char * servicetype)
 {
@@ -70,7 +88,11 @@ UPNP_GetTotalBytesReceived(const char * controlURL,
 
 /*
  * */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC UNSIGNED_INTEGER
+=======
+LIBSPEC UNSIGNED_INTEGER
+>>>>>>> blood in blood out
 UPNP_GetTotalPacketsSent(const char * controlURL,
 						const char * servicetype)
 {
@@ -94,7 +116,11 @@ UPNP_GetTotalPacketsSent(const char * controlURL,
 
 /*
  * */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC UNSIGNED_INTEGER
+=======
+LIBSPEC UNSIGNED_INTEGER
+>>>>>>> blood in blood out
 UPNP_GetTotalPacketsReceived(const char * controlURL,
 						const char * servicetype)
 {
@@ -118,7 +144,11 @@ UPNP_GetTotalPacketsReceived(const char * controlURL,
 
 /* UPNP_GetStatusInfo() call the corresponding UPNP method
  * returns the current status and uptime */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetStatusInfo(const char * controlURL,
 				const char * servicetype,
 				char * status,
@@ -161,7 +191,11 @@ UPNP_GetStatusInfo(const char * controlURL,
 		if(up)
 			sscanf(up,"%u",uptime);
 		else
+<<<<<<< HEAD
 			*uptime = 0;
+=======
+			uptime = 0;
+>>>>>>> blood in blood out
 	}
 
 	if(lastconnerror) {
@@ -183,7 +217,11 @@ UPNP_GetStatusInfo(const char * controlURL,
 
 /* UPNP_GetConnectionTypeInfo() call the corresponding UPNP method
  * returns the connection type */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetConnectionTypeInfo(const char * controlURL,
                            const char * servicetype,
                            char * connectionType)
@@ -226,7 +264,11 @@ UPNP_GetConnectionTypeInfo(const char * controlURL,
  * One of the values can be null
  * Note : GetLinkLayerMaxBitRates belongs to WANPPPConnection:1 only
  * We can use the GetCommonLinkProperties from WANCommonInterfaceConfig:1 */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetLinkLayerMaxBitRates(const char * controlURL,
                              const char * servicetype,
                              unsigned int * bitrateDown,
@@ -295,7 +337,11 @@ UPNP_GetLinkLayerMaxBitRates(const char * controlURL,
  * 402 Invalid Args - See UPnP Device Architecture section on Control.
  * 501 Action Failed - See UPnP Device Architecture section on Control.
  */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetExternalIPAddress(const char * controlURL,
                           const char * servicetype,
                           char * extIpAdd)
@@ -335,6 +381,7 @@ UPNP_GetExternalIPAddress(const char * controlURL,
 	return ret;
 }
 
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
 UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
 		    const char * extPort,
@@ -344,6 +391,17 @@ UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
 		    const char * proto,
 		    const char * remoteHost,
 		    const char * leaseDuration)
+=======
+LIBSPEC int
+UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
+                    const char * extPort,
+					const char * inPort,
+					const char * inClient,
+					const char * desc,
+					const char * proto,
+                    const char * remoteHost,
+                    const char * leaseDuration)
+>>>>>>> blood in blood out
 {
 	struct UPNParg * AddPortMappingArgs;
 	char * buffer;
@@ -356,8 +414,11 @@ UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	AddPortMappingArgs = calloc(9, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(AddPortMappingArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	AddPortMappingArgs[0].elt = "NewRemoteHost";
 	AddPortMappingArgs[0].val = remoteHost;
 	AddPortMappingArgs[1].elt = "NewExternalPort";
@@ -374,11 +435,18 @@ UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
 	AddPortMappingArgs[6].val = desc?desc:"libminiupnpc";
 	AddPortMappingArgs[7].elt = "NewLeaseDuration";
 	AddPortMappingArgs[7].val = leaseDuration?leaseDuration:"0";
+<<<<<<< HEAD
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "AddPortMapping", AddPortMappingArgs,
 	                           &bufsize);
 	free(AddPortMappingArgs);
 	if(!buffer) {
+=======
+	if(!(buffer = simpleUPnPcommand(-1, controlURL, servicetype,
+	                                "AddPortMapping", AddPortMappingArgs,
+	                                &bufsize))) {
+		free(AddPortMappingArgs);
+>>>>>>> blood in blood out
 		return UPNPCOMMAND_HTTP_ERROR;
 	}
 	/*DisplayNameValueList(buffer, bufsize);*/
@@ -395,6 +463,7 @@ UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
 		ret = UPNPCOMMAND_SUCCESS;
 	}
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return ret;
 }
 
@@ -468,6 +537,13 @@ UPNP_AddAnyPortMapping(const char * controlURL, const char * servicetype,
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(AddPortMappingArgs);
+	return ret;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_DeletePortMapping(const char * controlURL, const char * servicetype,
                        const char * extPort, const char * proto,
                        const char * remoteHost)
@@ -484,19 +560,29 @@ UPNP_DeletePortMapping(const char * controlURL, const char * servicetype,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	DeletePortMappingArgs = calloc(4, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(DeletePortMappingArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	DeletePortMappingArgs[0].elt = "NewRemoteHost";
 	DeletePortMappingArgs[0].val = remoteHost;
 	DeletePortMappingArgs[1].elt = "NewExternalPort";
 	DeletePortMappingArgs[1].val = extPort;
 	DeletePortMappingArgs[2].elt = "NewProtocol";
 	DeletePortMappingArgs[2].val = proto;
+<<<<<<< HEAD
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                          "DeletePortMapping",
 	                          DeletePortMappingArgs, &bufsize);
 	free(DeletePortMappingArgs);
 	if(!buffer) {
+=======
+	if(!(buffer = simpleUPnPcommand(-1, controlURL, servicetype,
+	                               "DeletePortMapping",
+	                               DeletePortMappingArgs, &bufsize))) {
+		free(DeletePortMappingArgs);
+>>>>>>> blood in blood out
 		return UPNPCOMMAND_HTTP_ERROR;
 	}
 	/*DisplayNameValueList(buffer, bufsize);*/
@@ -510,6 +596,7 @@ UPNP_DeletePortMapping(const char * controlURL, const char * servicetype,
 		ret = UPNPCOMMAND_SUCCESS;
 	}
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return ret;
 }
 
@@ -562,6 +649,13 @@ UPNP_DeletePortMappingRange(const char * controlURL, const char * servicetype,
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(DeletePortMappingArgs);
+	return ret;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetGenericPortMappingEntry(const char * controlURL,
                                 const char * servicetype,
 							 const char * index,
@@ -585,6 +679,7 @@ UPNP_GetGenericPortMappingEntry(const char * controlURL,
 	intClient[0] = '\0';
 	intPort[0] = '\0';
 	GetPortMappingArgs = calloc(2, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(GetPortMappingArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
 	GetPortMappingArgs[0].elt = "NewPortMappingIndex";
@@ -594,6 +689,14 @@ UPNP_GetGenericPortMappingEntry(const char * controlURL,
 	                           GetPortMappingArgs, &bufsize);
 	free(GetPortMappingArgs);
 	if(!buffer) {
+=======
+	GetPortMappingArgs[0].elt = "NewPortMappingIndex";
+	GetPortMappingArgs[0].val = index;
+	if(!(buffer = simpleUPnPcommand(-1, controlURL, servicetype,
+	                               "GetGenericPortMappingEntry",
+	                               GetPortMappingArgs, &bufsize))) {
+		free(GetPortMappingArgs);
+>>>>>>> blood in blood out
 		return UPNPCOMMAND_HTTP_ERROR;
 	}
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -619,14 +722,22 @@ UPNP_GetGenericPortMappingEntry(const char * controlURL,
 		protocol[3] = '\0';
 	}
 	p = GetValueFromNameValueList(&pdata, "NewInternalClient");
+<<<<<<< HEAD
 	if(p)
+=======
+	if(p && intClient)
+>>>>>>> blood in blood out
 	{
 		strncpy(intClient, p, 16);
 		intClient[15] = '\0';
 		r = 0;
 	}
 	p = GetValueFromNameValueList(&pdata, "NewInternalPort");
+<<<<<<< HEAD
 	if(p)
+=======
+	if(p && intPort)
+>>>>>>> blood in blood out
 	{
 		strncpy(intPort, p, 6);
 		intPort[5] = '\0';
@@ -655,10 +766,18 @@ UPNP_GetGenericPortMappingEntry(const char * controlURL,
 		sscanf(p, "%d", &r);
 	}
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return r;
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(GetPortMappingArgs);
+	return r;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetPortMappingNumberOfEntries(const char * controlURL,
                                    const char * servicetype,
                                    unsigned int * numEntries)
@@ -699,7 +818,11 @@ UPNP_GetPortMappingNumberOfEntries(const char * controlURL,
 /* UPNP_GetSpecificPortMappingEntry retrieves an existing port mapping
  * the result is returned in the intClient and intPort strings
  * please provide 16 and 6 bytes of data */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetSpecificPortMappingEntry(const char * controlURL,
                                  const char * servicetype,
                                  const char * extPort,
@@ -722,19 +845,29 @@ UPNP_GetSpecificPortMappingEntry(const char * controlURL,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	GetPortMappingArgs = calloc(4, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(GetPortMappingArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	GetPortMappingArgs[0].elt = "NewRemoteHost";
 	GetPortMappingArgs[0].val = remoteHost;
 	GetPortMappingArgs[1].elt = "NewExternalPort";
 	GetPortMappingArgs[1].val = extPort;
 	GetPortMappingArgs[2].elt = "NewProtocol";
 	GetPortMappingArgs[2].val = proto;
+<<<<<<< HEAD
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "GetSpecificPortMappingEntry",
 	                           GetPortMappingArgs, &bufsize);
 	free(GetPortMappingArgs);
 	if(!buffer) {
+=======
+	if(!(buffer = simpleUPnPcommand(-1, controlURL, servicetype,
+	                                "GetSpecificPortMappingEntry",
+	                                GetPortMappingArgs, &bufsize))) {
+		free(GetPortMappingArgs);
+>>>>>>> blood in blood out
 		return UPNPCOMMAND_HTTP_ERROR;
 	}
 	/*DisplayNameValueList(buffer, bufsize);*/
@@ -782,6 +915,10 @@ UPNP_GetSpecificPortMappingEntry(const char * controlURL,
 	}
 
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
+=======
+	free(GetPortMappingArgs);
+>>>>>>> blood in blood out
 	return ret;
 }
 
@@ -793,7 +930,11 @@ UPNP_GetSpecificPortMappingEntry(const char * controlURL,
  * 733 InconsistantParameters - NewStartPort and NewEndPort values are not
  *                              consistent.
  */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetListOfPortMappings(const char * controlURL,
                            const char * servicetype,
                            const char * startPort,
@@ -813,8 +954,11 @@ UPNP_GetListOfPortMappings(const char * controlURL,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	GetListOfPortMappingsArgs = calloc(6, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(GetListOfPortMappingsArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	GetListOfPortMappingsArgs[0].elt = "NewStartPort";
 	GetListOfPortMappingsArgs[0].val = startPort;
 	GetListOfPortMappingsArgs[1].elt = "NewEndPort";
@@ -826,6 +970,7 @@ UPNP_GetListOfPortMappings(const char * controlURL,
 	GetListOfPortMappingsArgs[4].elt = "NewNumberOfPorts";
 	GetListOfPortMappingsArgs[4].val = numberOfPorts?numberOfPorts:"1000";
 
+<<<<<<< HEAD
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "GetListOfPortMappings",
 	                           GetListOfPortMappingsArgs, &bufsize);
@@ -833,6 +978,15 @@ UPNP_GetListOfPortMappings(const char * controlURL,
 	if(!buffer) {
 		return UPNPCOMMAND_HTTP_ERROR;
 	}
+=======
+	if(!(buffer = simpleUPnPcommand(-1, controlURL, servicetype,
+	                                "GetListOfPortMappings",
+	                                GetListOfPortMappingsArgs, &bufsize))) {
+		free(GetListOfPortMappingsArgs);
+		return UPNPCOMMAND_HTTP_ERROR;
+	}
+	free(GetListOfPortMappingsArgs);
+>>>>>>> blood in blood out
 
 	/*DisplayNameValueList(buffer, bufsize);*/
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -877,7 +1031,11 @@ UPNP_GetListOfPortMappings(const char * controlURL,
 }
 
 /* IGD:2, functions for service WANIPv6FirewallControl:1 */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetFirewallStatus(const char * controlURL,
 				const char * servicetype,
 				int * firewallEnabled,
@@ -921,7 +1079,11 @@ UPNP_GetFirewallStatus(const char * controlURL,
 	return ret;
 }
 
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetOutboundPinholeTimeout(const char * controlURL, const char * servicetype,
                     const char * remoteHost,
                     const char * remotePort,
@@ -942,8 +1104,11 @@ UPNP_GetOutboundPinholeTimeout(const char * controlURL, const char * servicetype
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	GetOutboundPinholeTimeoutArgs = calloc(6, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(GetOutboundPinholeTimeoutArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	GetOutboundPinholeTimeoutArgs[0].elt = "RemoteHost";
 	GetOutboundPinholeTimeoutArgs[0].val = remoteHost;
 	GetOutboundPinholeTimeoutArgs[1].elt = "RemotePort";
@@ -956,7 +1121,10 @@ UPNP_GetOutboundPinholeTimeout(const char * controlURL, const char * servicetype
 	GetOutboundPinholeTimeoutArgs[4].val = intClient;
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "GetOutboundPinholeTimeout", GetOutboundPinholeTimeoutArgs, &bufsize);
+<<<<<<< HEAD
 	free(GetOutboundPinholeTimeoutArgs);
+=======
+>>>>>>> blood in blood out
 	if(!buffer)
 		return UPNPCOMMAND_HTTP_ERROR;
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -975,10 +1143,18 @@ UPNP_GetOutboundPinholeTimeout(const char * controlURL, const char * servicetype
 			*opTimeout = my_atoui(p);
 	}
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return ret;
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(GetOutboundPinholeTimeoutArgs);
+	return ret;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_AddPinhole(const char * controlURL, const char * servicetype,
                     const char * remoteHost,
                     const char * remotePort,
@@ -1000,8 +1176,11 @@ UPNP_AddPinhole(const char * controlURL, const char * servicetype,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	AddPinholeArgs = calloc(7, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(AddPinholeArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	/* RemoteHost can be wilcarded */
 	if(strncmp(remoteHost, "empty", 5)==0)
 	{
@@ -1033,7 +1212,10 @@ UPNP_AddPinhole(const char * controlURL, const char * servicetype,
 	AddPinholeArgs[5].val = leaseTime;
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "AddPinhole", AddPinholeArgs, &bufsize);
+<<<<<<< HEAD
 	free(AddPinholeArgs);
+=======
+>>>>>>> blood in blood out
 	if(!buffer)
 		return UPNPCOMMAND_HTTP_ERROR;
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -1056,10 +1238,18 @@ UPNP_AddPinhole(const char * controlURL, const char * servicetype,
 		ret = UPNPCOMMAND_SUCCESS;
 	}
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return ret;
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(AddPinholeArgs);
+	return ret;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_UpdatePinhole(const char * controlURL, const char * servicetype,
                     const char * uniqueID,
                     const char * leaseTime)
@@ -1075,15 +1265,21 @@ UPNP_UpdatePinhole(const char * controlURL, const char * servicetype,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	UpdatePinholeArgs = calloc(3, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(UpdatePinholeArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	UpdatePinholeArgs[0].elt = "UniqueID";
 	UpdatePinholeArgs[0].val = uniqueID;
 	UpdatePinholeArgs[1].elt = "NewLeaseTime";
 	UpdatePinholeArgs[1].val = leaseTime;
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "UpdatePinhole", UpdatePinholeArgs, &bufsize);
+<<<<<<< HEAD
 	free(UpdatePinholeArgs);
+=======
+>>>>>>> blood in blood out
 	if(!buffer)
 		return UPNPCOMMAND_HTTP_ERROR;
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -1100,10 +1296,18 @@ UPNP_UpdatePinhole(const char * controlURL, const char * servicetype,
 		ret = UPNPCOMMAND_SUCCESS;
 	}
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return ret;
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(UpdatePinholeArgs);
+	return ret;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_DeletePinhole(const char * controlURL, const char * servicetype, const char * uniqueID)
 {
 	/*struct NameValueParserData pdata;*/
@@ -1118,13 +1322,19 @@ UPNP_DeletePinhole(const char * controlURL, const char * servicetype, const char
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	DeletePinholeArgs = calloc(2, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(DeletePinholeArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	DeletePinholeArgs[0].elt = "UniqueID";
 	DeletePinholeArgs[0].val = uniqueID;
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "DeletePinhole", DeletePinholeArgs, &bufsize);
+<<<<<<< HEAD
 	free(DeletePinholeArgs);
+=======
+>>>>>>> blood in blood out
 	if(!buffer)
 		return UPNPCOMMAND_HTTP_ERROR;
 	/*DisplayNameValueList(buffer, bufsize);*/
@@ -1141,10 +1351,18 @@ UPNP_DeletePinhole(const char * controlURL, const char * servicetype, const char
 		ret = UPNPCOMMAND_SUCCESS;
 	}
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return ret;
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(DeletePinholeArgs);
+	return ret;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_CheckPinholeWorking(const char * controlURL, const char * servicetype,
                                  const char * uniqueID, int * isWorking)
 {
@@ -1159,17 +1377,25 @@ UPNP_CheckPinholeWorking(const char * controlURL, const char * servicetype,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	CheckPinholeWorkingArgs = calloc(4, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(CheckPinholeWorkingArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	CheckPinholeWorkingArgs[0].elt = "UniqueID";
 	CheckPinholeWorkingArgs[0].val = uniqueID;
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "CheckPinholeWorking", CheckPinholeWorkingArgs, &bufsize);
+<<<<<<< HEAD
 	free(CheckPinholeWorkingArgs);
 	if(!buffer)
 	{
 		return UPNPCOMMAND_HTTP_ERROR;
 	}
+=======
+	if(!buffer)
+		return UPNPCOMMAND_HTTP_ERROR;
+>>>>>>> blood in blood out
 	ParseNameValue(buffer, bufsize, &pdata);
 	free(buffer); buffer = NULL;
 
@@ -1190,10 +1416,18 @@ UPNP_CheckPinholeWorking(const char * controlURL, const char * servicetype,
 	}
 
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
 	return ret;
 }
 
 MINIUPNP_LIBSPEC int
+=======
+	free(CheckPinholeWorkingArgs);
+	return ret;
+}
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetPinholePackets(const char * controlURL, const char * servicetype,
                                  const char * uniqueID, int * packets)
 {
@@ -1208,13 +1442,19 @@ UPNP_GetPinholePackets(const char * controlURL, const char * servicetype,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	GetPinholePacketsArgs = calloc(4, sizeof(struct UPNParg));
+<<<<<<< HEAD
 	if(GetPinholePacketsArgs == NULL)
 		return UPNPCOMMAND_MEM_ALLOC_ERROR;
+=======
+>>>>>>> blood in blood out
 	GetPinholePacketsArgs[0].elt = "UniqueID";
 	GetPinholePacketsArgs[0].val = uniqueID;
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
 	                           "GetPinholePackets", GetPinholePacketsArgs, &bufsize);
+<<<<<<< HEAD
 	free(GetPinholePacketsArgs);
+=======
+>>>>>>> blood in blood out
 	if(!buffer)
 		return UPNPCOMMAND_HTTP_ERROR;
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -1235,6 +1475,10 @@ UPNP_GetPinholePackets(const char * controlURL, const char * servicetype,
 	}
 
 	ClearNameValueList(&pdata);
+<<<<<<< HEAD
+=======
+	free(GetPinholePacketsArgs);
+>>>>>>> blood in blood out
 	return ret;
 }
 

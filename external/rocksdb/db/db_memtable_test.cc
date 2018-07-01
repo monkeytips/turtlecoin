@@ -119,7 +119,11 @@ class TestPrefixExtractor : public SliceTransform {
     return separator(key) != nullptr;
   }
 
+<<<<<<< HEAD
   virtual bool InRange(const Slice& /*key*/) const override { return false; }
+=======
+  virtual bool InRange(const Slice& key) const override { return false; }
+>>>>>>> blood in blood out
 
  private:
   const char* separator(const Slice& key) const {

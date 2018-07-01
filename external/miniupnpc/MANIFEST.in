@@ -1,4 +1,5 @@
 include README
+<<<<<<< HEAD
 include VERSION
 include LICENSE
 include miniupnpcmodule.c
@@ -7,3 +8,9 @@ include Makefile
 include *.[ch]
 include *.h.in
 include *.sh
+=======
+include miniupnpcmodule.c
+include setup.py
+include *.h
+include libminiupnpc.a
+>>>>>>> blood in blood out

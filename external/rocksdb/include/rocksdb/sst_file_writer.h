@@ -32,12 +32,18 @@ struct ExternalSstFileInfo {
       : file_path(""),
         smallest_key(""),
         largest_key(""),
+<<<<<<< HEAD
         smallest_range_del_key(""),
         largest_range_del_key(""),
         sequence_number(0),
         file_size(0),
         num_entries(0),
         num_range_del_entries(0),
+=======
+        sequence_number(0),
+        file_size(0),
+        num_entries(0),
+>>>>>>> blood in blood out
         version(0) {}
 
   ExternalSstFileInfo(const std::string& _file_path,
@@ -48,6 +54,7 @@ struct ExternalSstFileInfo {
       : file_path(_file_path),
         smallest_key(_smallest_key),
         largest_key(_largest_key),
+<<<<<<< HEAD
         smallest_range_del_key(""),
         largest_range_del_key(""),
         sequence_number(_sequence_number),
@@ -66,6 +73,19 @@ struct ExternalSstFileInfo {
   uint64_t file_size;                 // file size in bytes
   uint64_t num_entries;               // number of entries in file
   uint64_t num_range_del_entries;  // number of range deletion entries in file
+=======
+        sequence_number(_sequence_number),
+        file_size(_file_size),
+        num_entries(_num_entries),
+        version(_version) {}
+
+  std::string file_path;           // external sst file path
+  std::string smallest_key;        // smallest user key in file
+  std::string largest_key;         // largest user key in file
+  SequenceNumber sequence_number;  // sequence number of all keys in file
+  uint64_t file_size;              // file size in bytes
+  uint64_t num_entries;            // number of entries in file
+>>>>>>> blood in blood out
   int32_t version;                 // file version
 };
 
@@ -77,7 +97,11 @@ class SstFileWriter {
   // be ingested into this column_family, note that passing nullptr means that
   // the column_family is unknown.
   // If invalidate_page_cache is set to true, SstFileWriter will give the OS a
+<<<<<<< HEAD
   // hint that this file pages is not needed every time we write 1MB to the file.
+=======
+  // hint that this file pages is not needed everytime we write 1MB to the file.
+>>>>>>> blood in blood out
   // To use the rate limiter an io_priority smaller than IO_TOTAL can be passed.
   SstFileWriter(const EnvOptions& env_options, const Options& options,
                 ColumnFamilyHandle* column_family = nullptr,
@@ -116,9 +140,12 @@ class SstFileWriter {
   // REQUIRES: key is after any previously added key according to comparator.
   Status Delete(const Slice& user_key);
 
+<<<<<<< HEAD
   // Add a range deletion tombstone to currently opened file
   Status DeleteRange(const Slice& begin_key, const Slice& end_key);
 
+=======
+>>>>>>> blood in blood out
   // Finalize writing to sst file and close file.
   //
   // An optional ExternalSstFileInfo pointer can be passed to the function

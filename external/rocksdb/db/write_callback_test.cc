@@ -29,7 +29,11 @@ class WriteCallbackTest : public testing::Test {
   string dbname;
 
   WriteCallbackTest() {
+<<<<<<< HEAD
     dbname = test::PerThreadDBPath("write_callback_testdb");
+=======
+    dbname = test::TmpDir() + "/write_callback_testdb";
+>>>>>>> blood in blood out
   }
 };
 
@@ -54,7 +58,13 @@ class WriteCallbackTestWriteCallback1 : public WriteCallback {
 
 class WriteCallbackTestWriteCallback2 : public WriteCallback {
  public:
+<<<<<<< HEAD
   Status Callback(DB* /*db*/) override { return Status::Busy(); }
+=======
+  Status Callback(DB *db) override {
+    return Status::Busy();
+  }
+>>>>>>> blood in blood out
   bool AllowWriteBatching() override { return true; }
 };
 
@@ -72,7 +82,11 @@ class MockWriteCallback : public WriteCallback {
     was_called_.store(other.was_called_.load());
   }
 
+<<<<<<< HEAD
   Status Callback(DB* /*db*/) override {
+=======
+  Status Callback(DB* db) override {
+>>>>>>> blood in blood out
     was_called_.store(true);
     if (should_fail_) {
       return Status::Busy();
@@ -157,9 +171,14 @@ TEST_F(WriteCallbackTest, WriteWithCallbackTest) {
               column_families.push_back(
                   ColumnFamilyDescriptor(kDefaultColumnFamilyName, cf_options));
               std::vector<ColumnFamilyHandle*> handles;
+<<<<<<< HEAD
               auto open_s =
                   DBImpl::Open(db_options, dbname, column_families, &handles,
                                &db, seq_per_batch, true /* batch_per_txn */);
+=======
+              auto open_s = DBImpl::Open(db_options, dbname, column_families,
+                                         &handles, &db, seq_per_batch);
+>>>>>>> blood in blood out
               ASSERT_OK(open_s);
               assert(handles.size() == 1);
               delete handles[0];
@@ -295,8 +314,12 @@ TEST_F(WriteCallbackTest, WriteWithCallbackTest) {
                    public:
                     PublishSeqCallback(DBImpl* db_impl_in)
                         : db_impl_(db_impl_in) {}
+<<<<<<< HEAD
                     virtual Status Callback(SequenceNumber last_seq,
                                             bool /*not used*/) override {
+=======
+                    virtual Status Callback(SequenceNumber last_seq) {
+>>>>>>> blood in blood out
                       db_impl_->SetLastPublishedSequence(last_seq);
                       return Status::OK();
                     }
@@ -433,7 +456,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr,
           "SKIPPED as WriteWithCallback is not supported in ROCKSDB_LITE\n");
   return 0;

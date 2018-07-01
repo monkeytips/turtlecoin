@@ -53,6 +53,10 @@ struct ExternalSstFileInfo;
 class WriteBatch;
 class Env;
 class EventListener;
+<<<<<<< HEAD
+=======
+enum EntryType;
+>>>>>>> blood in blood out
 
 using std::unique_ptr;
 
@@ -170,10 +174,15 @@ class DB {
                      const std::vector<ColumnFamilyDescriptor>& column_families,
                      std::vector<ColumnFamilyHandle*>* handles, DB** dbptr);
 
+<<<<<<< HEAD
   virtual Status Resume() { return Status::NotSupported(); }
 
   // Close the DB by releasing resources, closing files etc. This should be
   // called before calling the destructor so that the caller can get back a
+=======
+  // Close the DB by releasing resources, closing files etc. This should be
+  // called before calling the desctructor so that the caller can get back a
+>>>>>>> blood in blood out
   // status in case there are any errors. This will not fsync the WAL files.
   // If syncing is required, the caller must first call SyncWAL(), or Write()
   // using an empty write batch with WriteOptions.sync=true.
@@ -577,10 +586,13 @@ class DB {
     //  WARNING: may slow down online queries if there are too many files.
     static const std::string kTotalSstFilesSize;
 
+<<<<<<< HEAD
     //  "rocksdb.live-sst-files-size" - returns total size (bytes) of all SST
     //      files belong to the latest LSM tree.
     static const std::string kLiveSstFilesSize;
 
+=======
+>>>>>>> blood in blood out
     //  "rocksdb.base-level" - returns number of level to which L0 data will be
     //      compacted.
     static const std::string kBaseLevel;
@@ -612,6 +624,7 @@ class DB {
     //      FIFO compaction with
     //      compaction_options_fifo.allow_compaction = false.
     static const std::string kEstimateOldestKeyTime;
+<<<<<<< HEAD
 
     //  "rocksdb.block-cache-capacity" - returns block cache capacity.
     static const std::string kBlockCacheCapacity;
@@ -627,6 +640,8 @@ class DB {
     // "rocksdb.options-statistics" - returns multi-line string
     //      of options.statistics
     static const std::string kOptionsStatistics;
+=======
+>>>>>>> blood in blood out
   };
 #endif /* ROCKSDB_LITE */
 
@@ -671,7 +686,10 @@ class DB {
   //  "rocksdb.estimate-live-data-size"
   //  "rocksdb.min-log-number-to-keep"
   //  "rocksdb.total-sst-files-size"
+<<<<<<< HEAD
   //  "rocksdb.live-sst-files-size"
+=======
+>>>>>>> blood in blood out
   //  "rocksdb.base-level"
   //  "rocksdb.estimate-pending-compaction-bytes"
   //  "rocksdb.num-running-compactions"
@@ -679,9 +697,12 @@ class DB {
   //  "rocksdb.actual-delayed-write-rate"
   //  "rocksdb.is-write-stopped"
   //  "rocksdb.estimate-oldest-key-time"
+<<<<<<< HEAD
   //  "rocksdb.block-cache-capacity"
   //  "rocksdb.block-cache-usage"
   //  "rocksdb.block-cache-pinned-usage"
+=======
+>>>>>>> blood in blood out
   virtual bool GetIntProperty(ColumnFamilyHandle* column_family,
                               const Slice& property, uint64_t* value) = 0;
   virtual bool GetIntProperty(const Slice& property, uint64_t* value) {
@@ -833,22 +854,36 @@ class DB {
       const CompactionOptions& compact_options,
       ColumnFamilyHandle* column_family,
       const std::vector<std::string>& input_file_names,
+<<<<<<< HEAD
       const int output_level, const int output_path_id = -1,
       std::vector<std::string>* const output_file_names = nullptr) = 0;
+=======
+      const int output_level, const int output_path_id = -1) = 0;
+>>>>>>> blood in blood out
 
   virtual Status CompactFiles(
       const CompactionOptions& compact_options,
       const std::vector<std::string>& input_file_names,
+<<<<<<< HEAD
       const int output_level, const int output_path_id = -1,
       std::vector<std::string>* const output_file_names = nullptr) {
     return CompactFiles(compact_options, DefaultColumnFamily(),
                         input_file_names, output_level, output_path_id,
                         output_file_names);
+=======
+      const int output_level, const int output_path_id = -1) {
+    return CompactFiles(compact_options, DefaultColumnFamily(),
+                        input_file_names, output_level, output_path_id);
+>>>>>>> blood in blood out
   }
 
   // This function will wait until all currently running background processes
   // finish. After it returns, no background process will be run until
+<<<<<<< HEAD
   // ContinueBackgroundWork is called
+=======
+  // UnblockBackgroundWork is called
+>>>>>>> blood in blood out
   virtual Status PauseBackgroundWork() = 0;
   virtual Status ContinueBackgroundWork() = 0;
 
@@ -908,7 +943,11 @@ class DB {
 
   // Flush the WAL memory buffer to the file. If sync is true, it calls SyncWAL
   // afterwards.
+<<<<<<< HEAD
   virtual Status FlushWAL(bool /*sync*/) {
+=======
+  virtual Status FlushWAL(bool sync) {
+>>>>>>> blood in blood out
     return Status::NotSupported("FlushWAL not implemented");
   }
   // Sync the wal. Note that Write() followed by SyncWAL() is not exactly the
@@ -1162,6 +1201,7 @@ class DB {
       ColumnFamilyHandle* column_family, const Range* range, std::size_t n,
       TablePropertiesCollection* props) = 0;
 
+<<<<<<< HEAD
   virtual Status SuggestCompactRange(ColumnFamilyHandle* /*column_family*/,
                                      const Slice* /*begin*/,
                                      const Slice* /*end*/) {
@@ -1170,6 +1210,15 @@ class DB {
 
   virtual Status PromoteL0(ColumnFamilyHandle* /*column_family*/,
                            int /*target_level*/) {
+=======
+  virtual Status SuggestCompactRange(ColumnFamilyHandle* column_family,
+                                     const Slice* begin, const Slice* end) {
+    return Status::NotSupported("SuggestCompactRange() is not implemented.");
+  }
+
+  virtual Status PromoteL0(ColumnFamilyHandle* column_family,
+                           int target_level) {
+>>>>>>> blood in blood out
     return Status::NotSupported("PromoteL0() is not implemented.");
   }
 
@@ -1186,9 +1235,13 @@ class DB {
 
 // Destroy the contents of the specified database.
 // Be very careful using this method.
+<<<<<<< HEAD
 Status DestroyDB(const std::string& name, const Options& options,
                  const std::vector<ColumnFamilyDescriptor>& column_families =
                    std::vector<ColumnFamilyDescriptor>());
+=======
+Status DestroyDB(const std::string& name, const Options& options);
+>>>>>>> blood in blood out
 
 #ifndef ROCKSDB_LITE
 // If a DB cannot be opened, you may attempt to call this method to

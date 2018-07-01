@@ -1,13 +1,35 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+<<<<<<< HEAD
 // Copyright (c) 2018-2019, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
+=======
+//
+// This file is part of Bytecoin.
+//
+// Bytecoin is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Bytecoin is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+>>>>>>> blood in blood out
 
 #include "TransactionPool.h"
 
 #include "Common/int-util.h"
 #include "CryptoNoteBasicImpl.h"
+<<<<<<< HEAD
 #include "Common/TransactionExtra.h"
+=======
+#include "CryptoNoteCore/TransactionExtra.h"
+>>>>>>> blood in blood out
 
 namespace CryptoNote {
 
@@ -45,7 +67,11 @@ size_t TransactionPool::PaymentIdHasher::operator() (const boost::optional<Crypt
   return std::hash<Crypto::Hash>{}(*paymentId);
 }
 
+<<<<<<< HEAD
 TransactionPool::TransactionPool(std::shared_ptr<Logging::ILogger> logger) :
+=======
+TransactionPool::TransactionPool(Logging::ILogger& logger) :
+>>>>>>> blood in blood out
   transactionHashIndex(transactions.get<TransactionHashTag>()),
   transactionCostIndex(transactions.get<TransactionCostTag>()),
   paymentIdIndex(transactions.get<PaymentIdTag>()),
@@ -73,7 +99,11 @@ bool TransactionPool::pushTransaction(CachedTransaction&& transaction, Transacti
   mergeStates(poolState, transactionState);
 
   logger(Logging::DEBUGGING) << "pushed transaction " << pendingTx.getTransactionHash() << " to pool";
+<<<<<<< HEAD
   return transactionHashIndex.insert(std::move(pendingTx)).second;
+=======
+  return transactionHashIndex.emplace(std::move(pendingTx)).second;
+>>>>>>> blood in blood out
 }
 
 const CachedTransaction& TransactionPool::getTransaction(const Crypto::Hash& hash) const {
@@ -129,6 +159,7 @@ std::vector<CachedTransaction> TransactionPool::getPoolTransactions() const {
   return result;
 }
 
+<<<<<<< HEAD
 std::tuple<std::vector<CachedTransaction>, std::vector<CachedTransaction>> TransactionPool::getPoolTransactionsForBlockTemplate() const
 {
   std::vector<CachedTransaction> regularTransactions;
@@ -152,6 +183,8 @@ std::tuple<std::vector<CachedTransaction>, std::vector<CachedTransaction>> Trans
   return {regularTransactions, fusionTransactions};
 }
 
+=======
+>>>>>>> blood in blood out
 uint64_t TransactionPool::getTransactionReceiveTime(const Crypto::Hash& hash) const {
   auto it = transactionHashIndex.find(hash);
   assert(it != transactionHashIndex.end());

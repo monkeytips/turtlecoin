@@ -17,7 +17,11 @@
  * Signature: ()V
  */
 void Java_org_rocksdb_RocksDBExceptionTest_raiseException(JNIEnv* env,
+<<<<<<< HEAD
                                                           jobject /*jobj*/) {
+=======
+                                                          jobject jobj) {
+>>>>>>> blood in blood out
   rocksdb::RocksDBExceptionJni::ThrowNew(env, std::string("test message"));
 }
 
@@ -27,7 +31,11 @@ void Java_org_rocksdb_RocksDBExceptionTest_raiseException(JNIEnv* env,
  * Signature: ()V
  */
 void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionWithStatusCode(
+<<<<<<< HEAD
     JNIEnv* env, jobject /*jobj*/) {
+=======
+    JNIEnv* env, jobject jobj) {
+>>>>>>> blood in blood out
   rocksdb::RocksDBExceptionJni::ThrowNew(env, "test message",
                                          rocksdb::Status::NotSupported());
 }
@@ -38,7 +46,11 @@ void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionWithStatusCode(
  * Signature: ()V
  */
 void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionNoMsgWithStatusCode(
+<<<<<<< HEAD
     JNIEnv* env, jobject /*jobj*/) {
+=======
+    JNIEnv* env, jobject jobj) {
+>>>>>>> blood in blood out
   rocksdb::RocksDBExceptionJni::ThrowNew(env, rocksdb::Status::NotSupported());
 }
 
@@ -48,7 +60,11 @@ void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionNoMsgWithStatusCode(
  * Signature: ()V
  */
 void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionWithStatusCodeSubCode(
+<<<<<<< HEAD
     JNIEnv* env, jobject /*jobj*/) {
+=======
+    JNIEnv* env, jobject jobj) {
+>>>>>>> blood in blood out
   rocksdb::RocksDBExceptionJni::ThrowNew(
       env, "test message",
       rocksdb::Status::TimedOut(rocksdb::Status::SubCode::kLockTimeout));
@@ -60,7 +76,11 @@ void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionWithStatusCodeSubCode(
  * Signature: ()V
  */
 void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionNoMsgWithStatusCodeSubCode(
+<<<<<<< HEAD
     JNIEnv* env, jobject /*jobj*/) {
+=======
+    JNIEnv* env, jobject jobj) {
+>>>>>>> blood in blood out
   rocksdb::RocksDBExceptionJni::ThrowNew(
       env, rocksdb::Status::TimedOut(rocksdb::Status::SubCode::kLockTimeout));
 }
@@ -71,7 +91,11 @@ void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionNoMsgWithStatusCodeSubC
  * Signature: ()V
  */
 void Java_org_rocksdb_RocksDBExceptionTest_raiseExceptionWithStatusCodeState(
+<<<<<<< HEAD
     JNIEnv* env, jobject /*jobj*/) {
+=======
+    JNIEnv* env, jobject jobj) {
+>>>>>>> blood in blood out
   rocksdb::Slice state("test state");
   rocksdb::RocksDBExceptionJni::ThrowNew(env, "test message",
                                          rocksdb::Status::NotSupported(state));

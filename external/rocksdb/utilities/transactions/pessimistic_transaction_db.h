@@ -35,8 +35,11 @@ class PessimisticTransactionDB : public TransactionDB {
 
   virtual ~PessimisticTransactionDB();
 
+<<<<<<< HEAD
   virtual const Snapshot* GetSnapshot() override { return db_->GetSnapshot(); }
 
+=======
+>>>>>>> blood in blood out
   virtual Status Initialize(
       const std::vector<size_t>& compaction_enabled_cf_indices,
       const std::vector<ColumnFamilyHandle*>& handles);
@@ -120,7 +123,11 @@ class PessimisticTransactionDB : public TransactionDB {
   // an odd performance drop we observed when the added std::atomic member to
   // the base class even when the subclass do not read it in the fast path.
   virtual void UpdateCFComparatorMap(const std::vector<ColumnFamilyHandle*>&) {}
+<<<<<<< HEAD
   virtual void UpdateCFComparatorMap(ColumnFamilyHandle*) {}
+=======
+  virtual void UpdateCFComparatorMap(const ColumnFamilyHandle*) {}
+>>>>>>> blood in blood out
 
  protected:
   DBImpl* db_impl_;
@@ -137,12 +144,19 @@ class PessimisticTransactionDB : public TransactionDB {
   friend class WritePreparedTxnDB;
   friend class WritePreparedTxnDBMock;
   friend class TransactionTest_DoubleEmptyWrite_Test;
+<<<<<<< HEAD
   friend class TransactionTest_DuplicateKeys_Test;
   friend class TransactionTest_PersistentTwoPhaseTransactionTest_Test;
   friend class TransactionStressTest_TwoPhaseLongPrepareTest_Test;
   friend class TransactionTest_TwoPhaseDoubleRecoveryTest_Test;
   friend class TransactionTest_TwoPhaseOutOfOrderDelete_Test;
   friend class WriteUnpreparedTransactionTest_RecoveryRollbackUnprepared_Test;
+=======
+  friend class TransactionTest_PersistentTwoPhaseTransactionTest_Test;
+  friend class TransactionTest_TwoPhaseLongPrepareTest_Test;
+  friend class TransactionTest_TwoPhaseDoubleRecoveryTest_Test;
+  friend class TransactionTest_TwoPhaseOutOfOrderDelete_Test;
+>>>>>>> blood in blood out
   TransactionLockMgr lock_mgr_;
 
   // Must be held when adding/dropping column families.

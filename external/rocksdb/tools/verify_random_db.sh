@@ -7,7 +7,11 @@
 
 scriptpath=`dirname $BASH_SOURCE`
 if [ "$#" -lt 2 ]; then
+<<<<<<< HEAD
   echo "usage: $BASH_SOURCE <db_directory> <compare_base_db_directory> [dump_file_name] [if_try_load_options] [if_ignore_unknown_options]"
+=======
+  echo "usage: $BASH_SOURCE <db_directory> <compare_base_db_directory> [dump_file_name] [if_try_load_options]"
+>>>>>>> blood in blood out
   exit 1
 fi
 
@@ -15,7 +19,10 @@ db_dir=$1
 base_db_dir=$2
 dump_file_name=${3:-"dump_file.txt"}
 try_load_options=${4:-"1"}
+<<<<<<< HEAD
 ignore_unknown_options=${5:-"0"}
+=======
+>>>>>>> blood in blood out
 db_dump=$db_dir"/"$dump_file_name
 base_db_dump=$base_db_dir"/"$dump_file_name
 extra_param=
@@ -24,10 +31,13 @@ if [ "$try_load_options" = "1" ]; then
  extra_param=" --try_load_options "
 fi
 
+<<<<<<< HEAD
 if [ "$ignore_unknown_options" = "1" ]; then
  extra_param=" --ignore_unknown_options "
 fi
 
+=======
+>>>>>>> blood in blood out
 set -e
 echo == Dumping data from $db_dir to $db_dump
 ./ldb dump --db=$db_dir $extra_param > $db_dump

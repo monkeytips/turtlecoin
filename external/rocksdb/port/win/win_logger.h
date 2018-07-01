@@ -36,6 +36,11 @@ class WinLogger : public rocksdb::Logger {
 
   WinLogger& operator=(const WinLogger&) = delete;
 
+<<<<<<< HEAD
+=======
+  void close();
+
+>>>>>>> blood in blood out
   void Flush() override;
 
   using rocksdb::Logger::Logv;
@@ -45,10 +50,13 @@ class WinLogger : public rocksdb::Logger {
 
   void DebugWriter(const char* str, int len);
 
+<<<<<<< HEAD
 protected:
 
     Status CloseImpl() override;
 
+=======
+>>>>>>> blood in blood out
  private:
   HANDLE file_;
   uint64_t (*gettid_)();  // Return the thread id for the current thread
@@ -57,8 +65,11 @@ protected:
   Env* env_;
   bool flush_pending_;
 
+<<<<<<< HEAD
   Status CloseInternal();
 
+=======
+>>>>>>> blood in blood out
   const static uint64_t flush_every_seconds_ = 5;
 };
 

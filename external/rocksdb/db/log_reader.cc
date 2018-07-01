@@ -14,7 +14,10 @@
 #include "util/coding.h"
 #include "util/crc32c.h"
 #include "util/file_reader_writer.h"
+<<<<<<< HEAD
 #include "util/util.h"
+=======
+>>>>>>> blood in blood out
 
 namespace rocksdb {
 namespace log {
@@ -152,7 +155,11 @@ bool Reader::ReadRecord(Slice* record, std::string* scratch,
           // in clean shutdown we don't expect any error in the log files
           ReportCorruption(drop_size, "truncated header");
         }
+<<<<<<< HEAD
 	FALLTHROUGH_INTENDED;
+=======
+      // fall-thru
+>>>>>>> blood in blood out
 
       case kEof:
         if (in_fragmented_record) {
@@ -182,7 +189,11 @@ bool Reader::ReadRecord(Slice* record, std::string* scratch,
           }
           return false;
         }
+<<<<<<< HEAD
 	FALLTHROUGH_INTENDED;
+=======
+      // fall-thru
+>>>>>>> blood in blood out
 
       case kBadRecord:
         if (in_fragmented_record) {

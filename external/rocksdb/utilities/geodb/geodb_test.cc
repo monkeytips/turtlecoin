@@ -35,8 +35,12 @@ class GeoDBTest : public testing::Test {
   }
 };
 
+<<<<<<< HEAD
 const std::string GeoDBTest::kDefaultDbName =
     test::PerThreadDBPath("geodb_test");
+=======
+const std::string GeoDBTest::kDefaultDbName = test::TmpDir() + "/geodb_test";
+>>>>>>> blood in blood out
 Options GeoDBTest::options = Options();
 
 // Insert, Get and Remove
@@ -109,6 +113,7 @@ TEST_F(GeoDBTest, Search) {
   ASSERT_EQ(iter1->geo_object().value, "midvalue1");
   uint32_t size = 0;
   while (iter1->Valid()) {
+<<<<<<< HEAD
     GeoObject obj;
     status = getdb()->GetById(Slice(id1), &obj);
     ASSERT_TRUE(status.ok());
@@ -120,6 +125,10 @@ TEST_F(GeoDBTest, Search) {
     size++;
     iter1->Next();
     ASSERT_TRUE(!iter1->Valid());
+=======
+    size++;
+    iter1->Next();
+>>>>>>> blood in blood out
   }
   ASSERT_EQ(size, 1U);
   delete iter1;
@@ -132,6 +141,7 @@ TEST_F(GeoDBTest, Search) {
   delete iter2;
 }
 
+<<<<<<< HEAD
 TEST_F(GeoDBTest, DifferentPosInSameQuadkey) {
   // insert obj1 into database
   GeoPosition pos1(40.00001, 116.00001);
@@ -183,6 +193,8 @@ TEST_F(GeoDBTest, DifferentPosInSameQuadkey) {
   ASSERT_EQ(obj.value, value2);
 }
 
+=======
+>>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char* argv[]) {

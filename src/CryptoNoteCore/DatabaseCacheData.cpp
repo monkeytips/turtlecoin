@@ -15,9 +15,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
+<<<<<<< HEAD
 #include <Common/CryptoNoteTools.h>
 #include <CryptoNoteCore/DatabaseCacheData.h>
 #include <Serialization/CryptoNoteSerialization.h>
+=======
+#include <CryptoNoteCore/CryptoNoteSerialization.h>
+#include <CryptoNoteCore/CryptoNoteTools.h>
+#include <CryptoNoteCore/DatabaseCacheData.h>
+>>>>>>> blood in blood out
 #include <Serialization/SerializationOverloads.h>
 
 namespace CryptoNote {

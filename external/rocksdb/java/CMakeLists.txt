@@ -3,8 +3,11 @@ cmake_minimum_required(VERSION 3.4)
 set(JNI_NATIVE_SOURCES
         rocksjni/backupablejni.cc
         rocksjni/backupenginejni.cc
+<<<<<<< HEAD
         rocksjni/cassandra_compactionfilterjni.cc
         rocksjni/cassandra_value_operator.cc
+=======
+>>>>>>> blood in blood out
         rocksjni/checkpoint.cc
         rocksjni/clock_cache.cc
         rocksjni/columnfamilyhandle.cc
@@ -27,23 +30,37 @@ set(JNI_NATIVE_SOURCES
         rocksjni/memtablejni.cc
         rocksjni/merge_operator.cc
         rocksjni/native_comparator_wrapper_test.cc
+<<<<<<< HEAD
         rocksjni/optimistic_transaction_db.cc
         rocksjni/optimistic_transaction_options.cc
+=======
+>>>>>>> blood in blood out
         rocksjni/options.cc
         rocksjni/options_util.cc
         rocksjni/ratelimiterjni.cc
         rocksjni/remove_emptyvalue_compactionfilterjni.cc
+<<<<<<< HEAD
         rocksjni/restorejni.cc
         rocksjni/rocks_callback_object.cc
+=======
+        rocksjni/rocks_callback_object.cc
+        rocksjni/cassandra_compactionfilterjni.cc
+        rocksjni/cassandra_value_operator.cc
+        rocksjni/restorejni.cc
+>>>>>>> blood in blood out
         rocksjni/rocksdb_exception_test.cc
         rocksjni/rocksjni.cc
         rocksjni/slice.cc
         rocksjni/snapshot.cc
+<<<<<<< HEAD
         rocksjni/sst_file_manager.cc
+=======
+>>>>>>> blood in blood out
         rocksjni/sst_file_writerjni.cc
         rocksjni/statistics.cc
         rocksjni/statisticsjni.cc
         rocksjni/table.cc
+<<<<<<< HEAD
         rocksjni/transaction.cc
         rocksjni/transaction_db.cc
         rocksjni/transaction_db_options.cc
@@ -56,21 +73,42 @@ set(JNI_NATIVE_SOURCES
         rocksjni/writebatchhandlerjnicallback.cc
         rocksjni/write_batch_test.cc
         rocksjni/write_batch_with_index.cc
+=======
+        rocksjni/transaction_log.cc
+        rocksjni/ttl.cc
+        rocksjni/write_batch.cc
+        rocksjni/write_batch_test.cc
+        rocksjni/write_batch_with_index.cc
+        rocksjni/writebatchhandlerjnicallback.cc
+>>>>>>> blood in blood out
 )
 
 set(NATIVE_JAVA_CLASSES
         org.rocksdb.AbstractCompactionFilter
         org.rocksdb.AbstractCompactionFilterFactory
+<<<<<<< HEAD
         org.rocksdb.AbstractComparator
+=======
+>>>>>>> blood in blood out
         org.rocksdb.AbstractImmutableNativeReference
         org.rocksdb.AbstractNativeReference
         org.rocksdb.AbstractRocksIterator
         org.rocksdb.AbstractSlice
+<<<<<<< HEAD
         org.rocksdb.AbstractTransactionNotifier
         org.rocksdb.BackupableDBOptions
         org.rocksdb.BackupEngine
         org.rocksdb.BlockBasedTableConfig
         org.rocksdb.BloomFilter
+=======
+        org.rocksdb.AbstractWriteBatch
+        org.rocksdb.BackupableDBOptions
+        org.rocksdb.BackupEngine
+        org.rocksdb.BackupEngineTest
+        org.rocksdb.BlockBasedTableConfig
+        org.rocksdb.BloomFilter
+        org.rocksdb.Cache
+>>>>>>> blood in blood out
         org.rocksdb.CassandraCompactionFilter
         org.rocksdb.CassandraValueMergeOperator
         org.rocksdb.Checkpoint
@@ -95,10 +133,17 @@ set(NATIVE_JAVA_CLASSES
         org.rocksdb.Logger
         org.rocksdb.LRUCache
         org.rocksdb.MemTableConfig
+<<<<<<< HEAD
         org.rocksdb.NativeComparatorWrapper
         org.rocksdb.NativeLibraryLoader
         org.rocksdb.OptimisticTransactionDB
         org.rocksdb.OptimisticTransactionOptions
+=======
+        org.rocksdb.MergeOperator
+        org.rocksdb.NativeComparatorWrapper
+        org.rocksdb.NativeComparatorWrapperTest.NativeStringComparatorWrapper
+        org.rocksdb.NativeLibraryLoader
+>>>>>>> blood in blood out
         org.rocksdb.Options
         org.rocksdb.OptionsUtil
         org.rocksdb.PlainTableConfig
@@ -108,6 +153,10 @@ set(NATIVE_JAVA_CLASSES
         org.rocksdb.RestoreOptions
         org.rocksdb.RocksCallbackObject
         org.rocksdb.RocksDB
+<<<<<<< HEAD
+=======
+        org.rocksdb.RocksDBExceptionTest
+>>>>>>> blood in blood out
         org.rocksdb.RocksEnv
         org.rocksdb.RocksIterator
         org.rocksdb.RocksIteratorInterface
@@ -117,21 +166,30 @@ set(NATIVE_JAVA_CLASSES
         org.rocksdb.SkipListMemTableConfig
         org.rocksdb.Slice
         org.rocksdb.Snapshot
+<<<<<<< HEAD
         org.rocksdb.SstFileManager
+=======
+        org.rocksdb.SnapshotTest
+>>>>>>> blood in blood out
         org.rocksdb.SstFileWriter
         org.rocksdb.Statistics
         org.rocksdb.StringAppendOperator
         org.rocksdb.TableFormatConfig
+<<<<<<< HEAD
         org.rocksdb.Transaction
         org.rocksdb.TransactionDB
         org.rocksdb.TransactionDBOptions
         org.rocksdb.TransactionLogIterator
         org.rocksdb.TransactionOptions
+=======
+        org.rocksdb.TransactionLogIterator
+>>>>>>> blood in blood out
         org.rocksdb.TtlDB
         org.rocksdb.VectorMemTableConfig
         org.rocksdb.WBWIRocksIterator
         org.rocksdb.WriteBatch
         org.rocksdb.WriteBatch.Handler
+<<<<<<< HEAD
         org.rocksdb.WriteBatchInterface
         org.rocksdb.WriteBatchWithIndex
         org.rocksdb.WriteOptions
@@ -140,6 +198,14 @@ set(NATIVE_JAVA_CLASSES
         org.rocksdb.SnapshotTest
         org.rocksdb.WriteBatchTest
         org.rocksdb.WriteBatchTestInternalHelper
+=======
+        org.rocksdb.WriteBatchTest
+        org.rocksdb.WriteBatchTestInternalHelper
+        org.rocksdb.WriteBatchWithIndex
+        org.rocksdb.WriteOptions
+        org.rocksdb.util.CapturingWriteBatchHandler
+        org.rocksdb.util.WriteBatchGetter
+>>>>>>> blood in blood out
 )
 
 include(FindJava)
@@ -161,14 +227,22 @@ set(JAVA_TESTCLASSPATH ${JAVA_JUNIT_JAR} ${JAVA_HAMCR_JAR} ${JAVA_MOCKITO_JAR} $
 add_jar(
   rocksdbjni_classes
   SOURCES
+<<<<<<< HEAD
   src/main/java/org/rocksdb/AbstractCompactionFilterFactory.java
   src/main/java/org/rocksdb/AbstractCompactionFilter.java
+=======
+  src/main/java/org/rocksdb/AbstractCompactionFilter.java
+  src/main/java/org/rocksdb/AbstractCompactionFilterFactory.java
+>>>>>>> blood in blood out
   src/main/java/org/rocksdb/AbstractComparator.java
   src/main/java/org/rocksdb/AbstractImmutableNativeReference.java
   src/main/java/org/rocksdb/AbstractNativeReference.java
   src/main/java/org/rocksdb/AbstractRocksIterator.java
   src/main/java/org/rocksdb/AbstractSlice.java
+<<<<<<< HEAD
   src/main/java/org/rocksdb/AbstractTransactionNotifier.java
+=======
+>>>>>>> blood in blood out
   src/main/java/org/rocksdb/AbstractWriteBatch.java
   src/main/java/org/rocksdb/AccessHint.java
   src/main/java/org/rocksdb/AdvancedColumnFamilyOptionsInterface.java
@@ -187,8 +261,13 @@ add_jar(
   src/main/java/org/rocksdb/ClockCache.java
   src/main/java/org/rocksdb/ColumnFamilyDescriptor.java
   src/main/java/org/rocksdb/ColumnFamilyHandle.java
+<<<<<<< HEAD
   src/main/java/org/rocksdb/ColumnFamilyOptionsInterface.java
   src/main/java/org/rocksdb/ColumnFamilyOptions.java
+=======
+  src/main/java/org/rocksdb/ColumnFamilyOptions.java
+  src/main/java/org/rocksdb/ColumnFamilyOptionsInterface.java
+>>>>>>> blood in blood out
   src/main/java/org/rocksdb/CompactionOptionsFIFO.java
   src/main/java/org/rocksdb/CompactionOptionsUniversal.java
   src/main/java/org/rocksdb/CompactionPriority.java
@@ -199,8 +278,13 @@ add_jar(
   src/main/java/org/rocksdb/ComparatorType.java
   src/main/java/org/rocksdb/CompressionOptions.java
   src/main/java/org/rocksdb/CompressionType.java
+<<<<<<< HEAD
   src/main/java/org/rocksdb/DBOptionsInterface.java
   src/main/java/org/rocksdb/DBOptions.java
+=======
+  src/main/java/org/rocksdb/DBOptions.java
+  src/main/java/org/rocksdb/DBOptionsInterface.java
+>>>>>>> blood in blood out
   src/main/java/org/rocksdb/DbPath.java
   src/main/java/org/rocksdb/DirectComparator.java
   src/main/java/org/rocksdb/DirectSlice.java
@@ -221,12 +305,19 @@ add_jar(
   src/main/java/org/rocksdb/LRUCache.java
   src/main/java/org/rocksdb/MemTableConfig.java
   src/main/java/org/rocksdb/MergeOperator.java
+<<<<<<< HEAD
   src/main/java/org/rocksdb/MutableColumnFamilyOptionsInterface.java
   src/main/java/org/rocksdb/MutableColumnFamilyOptions.java
   src/main/java/org/rocksdb/NativeComparatorWrapper.java
   src/main/java/org/rocksdb/NativeLibraryLoader.java
   src/main/java/org/rocksdb/OptimisticTransactionDB.java
   src/main/java/org/rocksdb/OptimisticTransactionOptions.java
+=======
+  src/main/java/org/rocksdb/MutableColumnFamilyOptions.java
+  src/main/java/org/rocksdb/MutableColumnFamilyOptionsInterface.java
+  src/main/java/org/rocksdb/NativeComparatorWrapper.java
+  src/main/java/org/rocksdb/NativeLibraryLoader.java
+>>>>>>> blood in blood out
   src/main/java/org/rocksdb/Options.java
   src/main/java/org/rocksdb/OptionsUtil.java
   src/main/java/org/rocksdb/PlainTableConfig.java
@@ -237,28 +328,42 @@ add_jar(
   src/main/java/org/rocksdb/RemoveEmptyValueCompactionFilter.java
   src/main/java/org/rocksdb/RestoreOptions.java
   src/main/java/org/rocksdb/RocksCallbackObject.java
+<<<<<<< HEAD
   src/main/java/org/rocksdb/RocksDBException.java
   src/main/java/org/rocksdb/RocksDB.java
   src/main/java/org/rocksdb/RocksEnv.java
   src/main/java/org/rocksdb/RocksIteratorInterface.java
   src/main/java/org/rocksdb/RocksIterator.java
+=======
+  src/main/java/org/rocksdb/RocksDB.java
+  src/main/java/org/rocksdb/RocksDBException.java
+  src/main/java/org/rocksdb/RocksEnv.java
+  src/main/java/org/rocksdb/RocksIterator.java
+  src/main/java/org/rocksdb/RocksIteratorInterface.java
+>>>>>>> blood in blood out
   src/main/java/org/rocksdb/RocksMemEnv.java
   src/main/java/org/rocksdb/RocksMutableObject.java
   src/main/java/org/rocksdb/RocksObject.java
   src/main/java/org/rocksdb/SkipListMemTableConfig.java
   src/main/java/org/rocksdb/Slice.java
   src/main/java/org/rocksdb/Snapshot.java
+<<<<<<< HEAD
   src/main/java/org/rocksdb/SstFileManager.java
   src/main/java/org/rocksdb/SstFileWriter.java
   src/main/java/org/rocksdb/StatisticsCollectorCallback.java
   src/main/java/org/rocksdb/StatisticsCollector.java
   src/main/java/org/rocksdb/Statistics.java
   src/main/java/org/rocksdb/StatsCollectorInput.java
+=======
+  src/main/java/org/rocksdb/SstFileWriter.java
+  src/main/java/org/rocksdb/Statistics.java
+>>>>>>> blood in blood out
   src/main/java/org/rocksdb/StatsLevel.java
   src/main/java/org/rocksdb/Status.java
   src/main/java/org/rocksdb/StringAppendOperator.java
   src/main/java/org/rocksdb/TableFormatConfig.java
   src/main/java/org/rocksdb/TickerType.java
+<<<<<<< HEAD
   src/main/java/org/rocksdb/TransactionalDB.java
   src/main/java/org/rocksdb/TransactionalOptions.java
   src/main/java/org/rocksdb/TransactionDB.java
@@ -280,6 +385,18 @@ add_jar(
   src/main/java/org/rocksdb/util/Environment.java
   src/main/java/org/rocksdb/util/ReverseBytewiseComparator.java
   src/main/java/org/rocksdb/util/SizeUnit.java
+=======
+  src/main/java/org/rocksdb/TransactionLogIterator.java
+  src/main/java/org/rocksdb/TtlDB.java
+  src/main/java/org/rocksdb/util/Environment.java
+  src/main/java/org/rocksdb/VectorMemTableConfig.java
+  src/main/java/org/rocksdb/WALRecoveryMode.java
+  src/main/java/org/rocksdb/WBWIRocksIterator.java
+  src/main/java/org/rocksdb/WriteBatch.java
+  src/main/java/org/rocksdb/WriteBatchInterface.java
+  src/main/java/org/rocksdb/WriteBatchWithIndex.java
+  src/main/java/org/rocksdb/WriteOptions.java
+>>>>>>> blood in blood out
   src/test/java/org/rocksdb/BackupEngineTest.java
   src/test/java/org/rocksdb/IngestExternalFileOptionsTest.java
   src/test/java/org/rocksdb/NativeComparatorWrapperTest.java

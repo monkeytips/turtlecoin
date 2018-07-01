@@ -34,7 +34,11 @@ class DeleteScheduler {
  public:
   DeleteScheduler(Env* env, int64_t rate_bytes_per_sec, Logger* info_log,
                   SstFileManagerImpl* sst_file_manager,
+<<<<<<< HEAD
                   double max_trash_db_ratio, uint64_t bytes_max_delete_chunk);
+=======
+                  double max_trash_db_ratio);
+>>>>>>> blood in blood out
 
   ~DeleteScheduler();
 
@@ -47,7 +51,11 @@ class DeleteScheduler {
   }
 
   // Mark file as trash directory and schedule it's deletion
+<<<<<<< HEAD
   Status DeleteFile(const std::string& fname, const std::string& dir_to_sync);
+=======
+  Status DeleteFile(const std::string& fname);
+>>>>>>> blood in blood out
 
   // Wait for all files being deleteing in the background to finish or for
   // destructor to be called.
@@ -82,8 +90,12 @@ class DeleteScheduler {
   Status MarkAsTrash(const std::string& file_path, std::string* path_in_trash);
 
   Status DeleteTrashFile(const std::string& path_in_trash,
+<<<<<<< HEAD
                          const std::string& dir_to_sync,
                          uint64_t* deleted_bytes, bool* is_complete);
+=======
+                         uint64_t* deleted_bytes);
+>>>>>>> blood in blood out
 
   void BackgroundEmptyTrash();
 
@@ -94,6 +106,7 @@ class DeleteScheduler {
   std::atomic<int64_t> rate_bytes_per_sec_;
   // Mutex to protect queue_, pending_files_, bg_errors_, closing_
   InstrumentedMutex mu_;
+<<<<<<< HEAD
 
   struct FileAndDir {
     FileAndDir(const std::string& f, const std::string& d) : fname(f), dir(d) {}
@@ -110,6 +123,14 @@ class DeleteScheduler {
   std::map<std::string, Status> bg_errors_;
 
   bool num_link_error_printed_ = false;
+=======
+  // Queue of trash files that need to be deleted
+  std::queue<std::string> queue_;
+  // Number of trash files that are waiting to be deleted
+  int32_t pending_files_;
+  // Errors that happened in BackgroundEmptyTrash (file_path => error)
+  std::map<std::string, Status> bg_errors_;
+>>>>>>> blood in blood out
   // Set to true in ~DeleteScheduler() to force BackgroundEmptyTrash to stop
   bool closing_;
   // Condition variable signaled in these conditions

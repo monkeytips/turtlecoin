@@ -53,9 +53,12 @@ private:
   System::Dispatcher& m_dispatcher;
   System::TcpConnection m_connection;
   std::unique_ptr<System::TcpStreambuf> m_streamBuf;
+<<<<<<< HEAD
   
   /* Don't send two requests at once */
   std::mutex m_mutex;
+=======
+>>>>>>> blood in blood out
 };
 
 template <typename Request, typename Response>

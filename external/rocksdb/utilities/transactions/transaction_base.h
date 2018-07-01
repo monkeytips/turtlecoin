@@ -180,14 +180,22 @@ class TransactionBaseImpl : public Transaction {
 
   WriteBatchWithIndex* GetWriteBatch() override;
 
+<<<<<<< HEAD
   virtual void SetLockTimeout(int64_t /*timeout*/) override { /* Do nothing */
+=======
+  virtual void SetLockTimeout(int64_t timeout) override { /* Do nothing */
+>>>>>>> blood in blood out
   }
 
   const Snapshot* GetSnapshot() const override {
     return snapshot_ ? snapshot_.get() : nullptr;
   }
 
+<<<<<<< HEAD
   virtual void SetSnapshot() override;
+=======
+  void SetSnapshot() override;
+>>>>>>> blood in blood out
   void SetSnapshotOnNextOperation(
       std::shared_ptr<TransactionNotifier> notifier = nullptr) override;
 
@@ -303,7 +311,10 @@ class TransactionBaseImpl : public Transaction {
   WriteBatchWithIndex write_batch_;
 
  private:
+<<<<<<< HEAD
   friend class WritePreparedTxn;
+=======
+>>>>>>> blood in blood out
   // Extra data to be persisted with the commit. Note this is only used when
   // prepare phase is not skipped.
   WriteBatch commit_time_batch_;
@@ -336,6 +347,10 @@ class TransactionBaseImpl : public Transaction {
                  bool read_only, bool exclusive, bool skip_validate = false);
 
   WriteBatchBase* GetBatchForWrite();
+<<<<<<< HEAD
+=======
+
+>>>>>>> blood in blood out
   void SetSnapshotInternal(const Snapshot* snapshot);
 };
 

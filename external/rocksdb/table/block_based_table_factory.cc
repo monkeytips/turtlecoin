@@ -69,17 +69,27 @@ Status BlockBasedTableFactory::NewTableReader(
   return BlockBasedTable::Open(
       table_reader_options.ioptions, table_reader_options.env_options,
       table_options_, table_reader_options.internal_comparator, std::move(file),
+<<<<<<< HEAD
       file_size, table_reader, table_reader_options.prefix_extractor,
       prefetch_index_and_filter_in_cache, table_reader_options.skip_filters,
       table_reader_options.level, table_reader_options.immortal);
+=======
+      file_size, table_reader, prefetch_index_and_filter_in_cache,
+      table_reader_options.skip_filters, table_reader_options.level);
+>>>>>>> blood in blood out
 }
 
 TableBuilder* BlockBasedTableFactory::NewTableBuilder(
     const TableBuilderOptions& table_builder_options, uint32_t column_family_id,
     WritableFileWriter* file) const {
   auto table_builder = new BlockBasedTableBuilder(
+<<<<<<< HEAD
       table_builder_options.ioptions, table_builder_options.moptions,
       table_options_, table_builder_options.internal_comparator,
+=======
+      table_builder_options.ioptions, table_options_,
+      table_builder_options.internal_comparator,
+>>>>>>> blood in blood out
       table_builder_options.int_tbl_prop_collector_factories, column_family_id,
       file, table_builder_options.compression_type,
       table_builder_options.compression_opts,
@@ -93,17 +103,29 @@ TableBuilder* BlockBasedTableFactory::NewTableBuilder(
 }
 
 Status BlockBasedTableFactory::SanitizeOptions(
+<<<<<<< HEAD
     const DBOptions& /*db_opts*/, const ColumnFamilyOptions& cf_opts) const {
   if (table_options_.index_type == BlockBasedTableOptions::kHashSearch &&
       cf_opts.prefix_extractor == nullptr) {
     return Status::InvalidArgument(
         "Hash index is specified for block-based "
+=======
+    const DBOptions& db_opts,
+    const ColumnFamilyOptions& cf_opts) const {
+  if (table_options_.index_type == BlockBasedTableOptions::kHashSearch &&
+      cf_opts.prefix_extractor == nullptr) {
+    return Status::InvalidArgument("Hash index is specified for block-based "
+>>>>>>> blood in blood out
         "table, but prefix_extractor is not given");
   }
   if (table_options_.cache_index_and_filter_blocks &&
       table_options_.no_block_cache) {
+<<<<<<< HEAD
     return Status::InvalidArgument(
         "Enable cache_index_and_filter_blocks, "
+=======
+    return Status::InvalidArgument("Enable cache_index_and_filter_blocks, "
+>>>>>>> blood in blood out
         ", but block cache is disabled");
   }
   if (table_options_.pin_l0_filter_and_index_blocks_in_cache &&
@@ -117,6 +139,7 @@ Status BlockBasedTableFactory::SanitizeOptions(
         "Unsupported BlockBasedTable format_version. Please check "
         "include/rocksdb/table.h for more info");
   }
+<<<<<<< HEAD
   if (table_options_.block_align && (cf_opts.compression != kNoCompression)) {
     return Status::InvalidArgument(
         "Enable block_align, but compression "
@@ -127,6 +150,8 @@ Status BlockBasedTableFactory::SanitizeOptions(
     return Status::InvalidArgument(
         "Block alignment requested but block size is not a power of 2");
   }
+=======
+>>>>>>> blood in blood out
   return Status::OK();
 }
 
@@ -151,16 +176,24 @@ std::string BlockBasedTableFactory::GetPrintableTableOptions() const {
            "  pin_l0_filter_and_index_blocks_in_cache: %d\n",
            table_options_.pin_l0_filter_and_index_blocks_in_cache);
   ret.append(buffer);
+<<<<<<< HEAD
   snprintf(buffer, kBufferSize, "  pin_top_level_index_and_filter: %d\n",
            table_options_.pin_top_level_index_and_filter);
   ret.append(buffer);
+=======
+>>>>>>> blood in blood out
   snprintf(buffer, kBufferSize, "  index_type: %d\n",
            table_options_.index_type);
   ret.append(buffer);
   snprintf(buffer, kBufferSize, "  hash_index_allow_collision: %d\n",
            table_options_.hash_index_allow_collision);
   ret.append(buffer);
+<<<<<<< HEAD
   snprintf(buffer, kBufferSize, "  checksum: %d\n", table_options_.checksum);
+=======
+  snprintf(buffer, kBufferSize, "  checksum: %d\n",
+           table_options_.checksum);
+>>>>>>> blood in blood out
   ret.append(buffer);
   snprintf(buffer, kBufferSize, "  no_block_cache: %d\n",
            table_options_.no_block_cache);
@@ -222,9 +255,14 @@ std::string BlockBasedTableFactory::GetPrintableTableOptions() const {
            table_options_.use_delta_encoding);
   ret.append(buffer);
   snprintf(buffer, kBufferSize, "  filter_policy: %s\n",
+<<<<<<< HEAD
            table_options_.filter_policy == nullptr
                ? "nullptr"
                : table_options_.filter_policy->Name());
+=======
+           table_options_.filter_policy == nullptr ?
+             "nullptr" : table_options_.filter_policy->Name());
+>>>>>>> blood in blood out
   ret.append(buffer);
   snprintf(buffer, kBufferSize, "  whole_key_filtering: %d\n",
            table_options_.whole_key_filtering);
@@ -241,9 +279,12 @@ std::string BlockBasedTableFactory::GetPrintableTableOptions() const {
   snprintf(buffer, kBufferSize, "  enable_index_compression: %d\n",
            table_options_.enable_index_compression);
   ret.append(buffer);
+<<<<<<< HEAD
   snprintf(buffer, kBufferSize, "  block_align: %d\n",
            table_options_.block_align);
   ret.append(buffer);
+=======
+>>>>>>> blood in blood out
   return ret;
 }
 
@@ -291,7 +332,11 @@ Status BlockBasedTableFactory::GetOptionString(
 }
 #else
 Status BlockBasedTableFactory::GetOptionString(
+<<<<<<< HEAD
     std::string* /*opt_string*/, const std::string& /*delimiter*/) const {
+=======
+    std::string* opt_string, const std::string& delimiter) const {
+>>>>>>> blood in blood out
   return Status::OK();
 }
 #endif  // !ROCKSDB_LITE
@@ -325,8 +370,13 @@ std::string ParseBlockBasedTableOption(const std::string& name,
         cache = NewLRUCache(ParseSizeT(value));
       } else {
         LRUCacheOptions cache_opts;
+<<<<<<< HEAD
         if (!ParseOptionHelper(reinterpret_cast<char*>(&cache_opts),
                                OptionType::kLRUCacheOptions, value)) {
+=======
+        if(!ParseOptionHelper(reinterpret_cast<char*>(&cache_opts),
+                              OptionType::kLRUCacheOptions, value)) {
+>>>>>>> blood in blood out
           return "Invalid cache options";
         }
         cache = NewLRUCache(cache_opts);

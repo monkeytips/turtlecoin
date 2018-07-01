@@ -6,18 +6,30 @@
 // This file implements the "bridge" between Java and C++ and enables
 // calling c++ rocksdb::Env methods from Java side.
 
+<<<<<<< HEAD
 #include "rocksdb/env.h"
 #include "include/org_rocksdb_Env.h"
 #include "include/org_rocksdb_RocksEnv.h"
 #include "include/org_rocksdb_RocksMemEnv.h"
+=======
+#include "include/org_rocksdb_Env.h"
+#include "include/org_rocksdb_RocksEnv.h"
+#include "include/org_rocksdb_RocksMemEnv.h"
+#include "rocksdb/env.h"
+>>>>>>> blood in blood out
 
 /*
  * Class:     org_rocksdb_Env
  * Method:    getDefaultEnvInternal
  * Signature: ()J
  */
+<<<<<<< HEAD
 jlong Java_org_rocksdb_Env_getDefaultEnvInternal(JNIEnv* /*env*/,
                                                  jclass /*jclazz*/) {
+=======
+jlong Java_org_rocksdb_Env_getDefaultEnvInternal(
+    JNIEnv* env, jclass jclazz) {
+>>>>>>> blood in blood out
   return reinterpret_cast<jlong>(rocksdb::Env::Default());
 }
 
@@ -26,9 +38,15 @@ jlong Java_org_rocksdb_Env_getDefaultEnvInternal(JNIEnv* /*env*/,
  * Method:    setBackgroundThreads
  * Signature: (JII)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_Env_setBackgroundThreads(JNIEnv* /*env*/,
                                                jobject /*jobj*/, jlong jhandle,
                                                jint num, jint priority) {
+=======
+void Java_org_rocksdb_Env_setBackgroundThreads(
+    JNIEnv* env, jobject jobj, jlong jhandle,
+    jint num, jint priority) {
+>>>>>>> blood in blood out
   auto* rocks_env = reinterpret_cast<rocksdb::Env*>(jhandle);
   switch (priority) {
     case org_rocksdb_Env_FLUSH_POOL:
@@ -45,9 +63,14 @@ void Java_org_rocksdb_Env_setBackgroundThreads(JNIEnv* /*env*/,
  * Method:    getThreadPoolQueueLen
  * Signature: (JI)I
  */
+<<<<<<< HEAD
 jint Java_org_rocksdb_Env_getThreadPoolQueueLen(JNIEnv* /*env*/,
                                                 jobject /*jobj*/, jlong jhandle,
                                                 jint pool_id) {
+=======
+jint Java_org_rocksdb_Env_getThreadPoolQueueLen(
+    JNIEnv* env, jobject jobj, jlong jhandle, jint pool_id) {
+>>>>>>> blood in blood out
   auto* rocks_env = reinterpret_cast<rocksdb::Env*>(jhandle);
   switch (pool_id) {
     case org_rocksdb_RocksEnv_FLUSH_POOL:
@@ -63,9 +86,16 @@ jint Java_org_rocksdb_Env_getThreadPoolQueueLen(JNIEnv* /*env*/,
  * Method:    createMemEnv
  * Signature: ()J
  */
+<<<<<<< HEAD
 jlong Java_org_rocksdb_RocksMemEnv_createMemEnv(JNIEnv* /*env*/,
                                                 jclass /*jclazz*/) {
   return reinterpret_cast<jlong>(rocksdb::NewMemEnv(rocksdb::Env::Default()));
+=======
+jlong Java_org_rocksdb_RocksMemEnv_createMemEnv(
+    JNIEnv* env, jclass jclazz) {
+  return reinterpret_cast<jlong>(rocksdb::NewMemEnv(
+      rocksdb::Env::Default()));
+>>>>>>> blood in blood out
 }
 
 /*
@@ -73,9 +103,14 @@ jlong Java_org_rocksdb_RocksMemEnv_createMemEnv(JNIEnv* /*env*/,
  * Method:    disposeInternal
  * Signature: (J)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_RocksMemEnv_disposeInternal(JNIEnv* /*env*/,
                                                   jobject /*jobj*/,
                                                   jlong jhandle) {
+=======
+void Java_org_rocksdb_RocksMemEnv_disposeInternal(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* e = reinterpret_cast<rocksdb::Env*>(jhandle);
   assert(e != nullptr);
   delete e;

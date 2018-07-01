@@ -45,7 +45,11 @@ class DeleteFileTest : public testing::Test {
     options_.max_bytes_for_level_base = 1024*1024*1000;
     options_.WAL_ttl_seconds = 300; // Used to test log files
     options_.WAL_size_limit_MB = 1024; // Used to test log files
+<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("deletefile_test");
+=======
+    dbname_ = test::TmpDir() + "/deletefile_test";
+>>>>>>> blood in blood out
     options_.wal_dir = dbname_ + "/wal_files";
 
     // clean up all the files that might have been there before
@@ -159,7 +163,11 @@ class DeleteFileTest : public testing::Test {
   }
 
   // An empty job to guard all jobs are processed
+<<<<<<< HEAD
   static void GuardFinish(void* /*arg*/) {
+=======
+  static void GuardFinish(void* arg) {
+>>>>>>> blood in blood out
     TEST_SYNC_POINT("DeleteFileTest::GuardFinish");
   }
 };
@@ -228,7 +236,11 @@ TEST_F(DeleteFileTest, PurgeObsoleteFilesTest) {
 
   // this time, we keep an iterator alive
   ReopenDB(true);
+<<<<<<< HEAD
   Iterator *itr = nullptr;
+=======
+  Iterator *itr = 0;
+>>>>>>> blood in blood out
   CreateTwoLevels();
   itr = db_->NewIterator(ReadOptions());
   db_->CompactRange(compact_options, &first_slice, &last_slice);
@@ -249,7 +261,11 @@ TEST_F(DeleteFileTest, BackgroundPurgeTest) {
   Slice first_slice(first), last_slice(last);
 
   // We keep an iterator alive
+<<<<<<< HEAD
   Iterator* itr = nullptr;
+=======
+  Iterator* itr = 0;
+>>>>>>> blood in blood out
   CreateTwoLevels();
   ReadOptions options;
   options.background_purge_on_iterator_cleanup = true;
@@ -289,7 +305,11 @@ TEST_F(DeleteFileTest, BackgroundPurgeCopyOptions) {
   Slice first_slice(first), last_slice(last);
 
   // We keep an iterator alive
+<<<<<<< HEAD
   Iterator* itr = nullptr;
+=======
+  Iterator* itr = 0;
+>>>>>>> blood in blood out
   CreateTwoLevels();
   ReadOptions* options = new ReadOptions();
   options->background_purge_on_iterator_cleanup = true;
@@ -500,7 +520,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr,
           "SKIPPED as DBImpl::DeleteFile is not supported in ROCKSDB_LITE\n");
   return 0;

@@ -187,7 +187,11 @@ class SpecialSkipListFactory : public MemTableRepFactory {
   using MemTableRepFactory::CreateMemTableRep;
   virtual MemTableRep* CreateMemTableRep(
       const MemTableRep::KeyComparator& compare, Allocator* allocator,
+<<<<<<< HEAD
       const SliceTransform* transform, Logger* /*logger*/) override {
+=======
+      const SliceTransform* transform, Logger* logger) override {
+>>>>>>> blood in blood out
     return new SpecialMemTableRep(
         allocator, factory_.CreateMemTableRep(compare, allocator, transform, 0),
         num_entries_flush_);
@@ -451,9 +455,14 @@ class SpecialEnv : public EnvWrapper {
     return s;
   }
 
+<<<<<<< HEAD
   virtual Status NewSequentialFile(const std::string& f,
                                    unique_ptr<SequentialFile>* r,
                                    const EnvOptions& soptions) override {
+=======
+  Status NewSequentialFile(const std::string& f, unique_ptr<SequentialFile>* r,
+                           const EnvOptions& soptions) override {
+>>>>>>> blood in blood out
     class CountingFile : public SequentialFile {
      public:
       CountingFile(unique_ptr<SequentialFile>&& target,
@@ -606,7 +615,11 @@ class MockTimeEnv : public EnvWrapper {
   }
 
  private:
+<<<<<<< HEAD
   std::atomic<uint64_t> current_time_{0};
+=======
+  uint64_t current_time_ = 0;
+>>>>>>> blood in blood out
 };
 
 #ifndef ROCKSDB_LITE
@@ -694,6 +707,7 @@ class DBTestBase : public testing::Test {
     kConcurrentSkipList = 29,
     kPipelinedWrite = 30,
     kConcurrentWALWrites = 31,
+<<<<<<< HEAD
     kDirectIO,
     kLevelSubcompactions,
     kBlockBasedTableWithIndexRestartInterval,
@@ -703,6 +717,15 @@ class DBTestBase : public testing::Test {
     kUniversalSubcompactions,
     // This must be the last line
     kEnd,
+=======
+    kEnd = 32,
+    kDirectIO = 33,
+    kLevelSubcompactions = 34,
+    kUniversalSubcompactions = 35,
+    kBlockBasedTableWithIndexRestartInterval = 36,
+    kBlockBasedTableWithPartitionedIndex = 37,
+    kPartitionedFilterWithNewTableReaderForCompactions = 38,
+>>>>>>> blood in blood out
   };
 
  public:
@@ -733,6 +756,7 @@ class DBTestBase : public testing::Test {
     kSkipMmapReads = 256,
   };
 
+<<<<<<< HEAD
   const int kRangeDelSkipConfigs =
       // Plain tables do not support range deletions.
       kSkipPlainTable |
@@ -740,6 +764,8 @@ class DBTestBase : public testing::Test {
       // requires.
       kSkipMmapReads;
 
+=======
+>>>>>>> blood in blood out
   explicit DBTestBase(const std::string path);
 
   ~DBTestBase();
@@ -813,7 +839,11 @@ class DBTestBase : public testing::Test {
 
   void DestroyAndReopen(const Options& options);
 
+<<<<<<< HEAD
   void Destroy(const Options& options, bool delete_cf_paths = false);
+=======
+  void Destroy(const Options& options);
+>>>>>>> blood in blood out
 
   Status ReadOnlyReopen(const Options& options);
 
@@ -913,8 +943,12 @@ class DBTestBase : public testing::Test {
 
   std::string DumpSSTableList();
 
+<<<<<<< HEAD
   static void GetSstFiles(Env* env, std::string path,
                           std::vector<std::string>* files);
+=======
+  void GetSstFiles(std::string path, std::vector<std::string>* files);
+>>>>>>> blood in blood out
 
   int GetSstFileCount(std::string path);
 

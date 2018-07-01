@@ -747,6 +747,7 @@ Status BackupEngineImpl::CreateNewBackupWithMetadata(
   BackupID new_backup_id = latest_backup_id_ + 1;
 
   assert(backups_.find(new_backup_id) == backups_.end());
+<<<<<<< HEAD
 
   auto private_dir = GetAbsolutePath(GetPrivateFileRel(new_backup_id));
   Status s = backup_env_->FileExists(private_dir);
@@ -760,6 +761,8 @@ Status BackupEngineImpl::CreateNewBackupWithMetadata(
     s = Status::OK();
   }
 
+=======
+>>>>>>> blood in blood out
   auto ret = backups_.insert(std::make_pair(
       new_backup_id, unique_ptr<BackupMeta>(new BackupMeta(
                          GetBackupMetaFile(new_backup_id, false /* tmp */),
@@ -770,13 +773,32 @@ Status BackupEngineImpl::CreateNewBackupWithMetadata(
   new_backup->RecordTimestamp();
   new_backup->SetAppMetadata(app_metadata);
 
+<<<<<<< HEAD
   auto start_backup = backup_env_->NowMicros();
+=======
+  auto start_backup = backup_env_-> NowMicros();
+>>>>>>> blood in blood out
 
   ROCKS_LOG_INFO(options_.info_log,
                  "Started the backup process -- creating backup %u",
                  new_backup_id);
+<<<<<<< HEAD
   if (s.ok()) {
     s = backup_env_->CreateDir(private_dir);
+=======
+
+  auto private_tmp_dir = GetAbsolutePath(GetPrivateFileRel(new_backup_id, true));
+  Status s = backup_env_->FileExists(private_tmp_dir);
+  if (s.ok()) {
+    // maybe last backup failed and left partial state behind, clean it up
+    s = GarbageCollect();
+  } else if (s.IsNotFound()) {
+    // normal case, the new backup's private dir doesn't exist yet
+    s = Status::OK();
+  }
+  if (s.ok()) {
+    s = backup_env_->CreateDir(private_tmp_dir);
+>>>>>>> blood in blood out
   }
 
   RateLimiter* rate_limiter = options_.backup_rate_limiter.get();
@@ -798,7 +820,11 @@ Status BackupEngineImpl::CreateNewBackupWithMetadata(
     uint64_t sequence_number = 0;
     s = checkpoint.CreateCustomCheckpoint(
         db->GetDBOptions(),
+<<<<<<< HEAD
         [&](const std::string& /*src_dirname*/, const std::string& /*fname*/,
+=======
+        [&](const std::string& src_dirname, const std::string& fname,
+>>>>>>> blood in blood out
             FileType) {
           // custom checkpoint will switch to calling copy_file_cb after it sees
           // NotSupported returned from link_file_cb.
@@ -862,6 +888,21 @@ Status BackupEngineImpl::CreateNewBackupWithMetadata(
   // we copied all the files, enable file deletions
   db->EnableFileDeletions(false);
 
+<<<<<<< HEAD
+=======
+  if (s.ok()) {
+    // move tmp private backup to real backup folder
+    ROCKS_LOG_INFO(
+        options_.info_log,
+        "Moving tmp backup directory to the real one: %s -> %s\n",
+        GetAbsolutePath(GetPrivateFileRel(new_backup_id, true)).c_str(),
+        GetAbsolutePath(GetPrivateFileRel(new_backup_id, false)).c_str());
+    s = backup_env_->RenameFile(
+        GetAbsolutePath(GetPrivateFileRel(new_backup_id, true)),  // tmp
+        GetAbsolutePath(GetPrivateFileRel(new_backup_id, false)));
+  }
+
+>>>>>>> blood in blood out
   auto backup_time = backup_env_->NowMicros() - start_backup;
 
   if (s.ok()) {
@@ -970,6 +1011,7 @@ Status BackupEngineImpl::DeleteBackup(BackupID backup_id) {
     corrupt_backups_.erase(corrupt);
   }
 
+<<<<<<< HEAD
   if (options_.max_valid_backups_to_open == port::kMaxInt32) {
     std::vector<std::string> to_delete;
     for (auto& itr : backuped_file_infos_) {
@@ -988,6 +1030,19 @@ Status BackupEngineImpl::DeleteBackup(BackupID backup_id) {
         options_.info_log,
         "DeleteBackup cleanup is limited since `max_valid_backups_to_open` "
         "constrains how many backups the engine knows about");
+=======
+  std::vector<std::string> to_delete;
+  for (auto& itr : backuped_file_infos_) {
+    if (itr.second->refs == 0) {
+      Status s = backup_env_->DeleteFile(GetAbsolutePath(itr.first));
+      ROCKS_LOG_INFO(options_.info_log, "Deleting %s -- %s", itr.first.c_str(),
+                     s.ToString().c_str());
+      to_delete.push_back(itr.first);
+    }
+  }
+  for (auto& td : to_delete) {
+    backuped_file_infos_.erase(td);
+>>>>>>> blood in blood out
   }
 
   // take care of private dirs -- GarbageCollect() will take care of them
@@ -1218,7 +1273,11 @@ Status BackupEngineImpl::CopyOrCreateFile(
   unique_ptr<SequentialFileReader> src_reader;
   unique_ptr<char[]> buf;
   if (!src.empty()) {
+<<<<<<< HEAD
     src_reader.reset(new SequentialFileReader(std::move(src_file), src));
+=======
+    src_reader.reset(new SequentialFileReader(std::move(src_file)));
+>>>>>>> blood in blood out
     buf.reset(new char[copy_file_buffer_size_]);
   }
 
@@ -1305,6 +1364,7 @@ Status BackupEngineImpl::AddBackupFileWorkItem(
     dst_relative_tmp = GetSharedFileRel(dst_relative, true);
     dst_relative = GetSharedFileRel(dst_relative, false);
   } else {
+<<<<<<< HEAD
     dst_relative = GetPrivateFileRel(backup_id, false, dst_relative);
   }
 
@@ -1321,10 +1381,18 @@ Status BackupEngineImpl::AddBackupFileWorkItem(
   } else {
     copy_dest_path = &final_dest_path;
   }
+=======
+    dst_relative_tmp = GetPrivateFileRel(backup_id, true, dst_relative);
+    dst_relative = GetPrivateFileRel(backup_id, false, dst_relative);
+  }
+  std::string dst_path = GetAbsolutePath(dst_relative);
+  std::string dst_path_tmp = GetAbsolutePath(dst_relative_tmp);
+>>>>>>> blood in blood out
 
   // if it's shared, we also need to check if it exists -- if it does, no need
   // to copy it again.
   bool need_to_copy = true;
+<<<<<<< HEAD
   // true if final_dest_path is the same path as another live file
   const bool same_path =
       live_dst_paths.find(final_dest_path) != live_dst_paths.end();
@@ -1332,6 +1400,15 @@ Status BackupEngineImpl::AddBackupFileWorkItem(
   bool file_exists = false;
   if (shared && !same_path) {
     Status exist = backup_env_->FileExists(final_dest_path);
+=======
+  // true if dst_path is the same path as another live file
+  const bool same_path =
+      live_dst_paths.find(dst_path) != live_dst_paths.end();
+
+  bool file_exists = false;
+  if (shared && !same_path) {
+    Status exist = backup_env_->FileExists(dst_path);
+>>>>>>> blood in blood out
     if (exist.ok()) {
       file_exists = true;
     } else if (exist.IsNotFound()) {
@@ -1360,7 +1437,11 @@ Status BackupEngineImpl::AddBackupFileWorkItem(
           "overwrite the file.",
           fname.c_str());
       need_to_copy = true;
+<<<<<<< HEAD
       backup_env_->DeleteFile(final_dest_path);
+=======
+      backup_env_->DeleteFile(dst_path);
+>>>>>>> blood in blood out
     } else {
       // the file is present and referenced by a backup
       ROCKS_LOG_INFO(options_.info_log,
@@ -1369,6 +1450,7 @@ Status BackupEngineImpl::AddBackupFileWorkItem(
                             &checksum_value);
     }
   }
+<<<<<<< HEAD
   live_dst_paths.insert(final_dest_path);
 
   if (!contents.empty() || need_to_copy) {
@@ -1381,13 +1463,31 @@ Status BackupEngineImpl::AddBackupFileWorkItem(
     BackupAfterCopyOrCreateWorkItem after_copy_or_create_work_item(
         copy_or_create_work_item.result.get_future(), shared, need_to_copy,
         backup_env_, temp_dest_path, final_dest_path, dst_relative);
+=======
+  live_dst_paths.insert(dst_path);
+
+  if (!contents.empty() || need_to_copy) {
+    ROCKS_LOG_INFO(options_.info_log, "Copying %s to %s", fname.c_str(),
+                   dst_path_tmp.c_str());
+    CopyOrCreateWorkItem copy_or_create_work_item(
+        src_dir.empty() ? "" : src_dir + fname, dst_path_tmp, contents, db_env_,
+        backup_env_, options_.sync, rate_limiter, size_limit,
+        progress_callback);
+    BackupAfterCopyOrCreateWorkItem after_copy_or_create_work_item(
+        copy_or_create_work_item.result.get_future(), shared, need_to_copy,
+        backup_env_, dst_path_tmp, dst_path, dst_relative);
+>>>>>>> blood in blood out
     files_to_copy_or_create_.write(std::move(copy_or_create_work_item));
     backup_items_to_finish.push_back(std::move(after_copy_or_create_work_item));
   } else {
     std::promise<CopyOrCreateResult> promise_result;
     BackupAfterCopyOrCreateWorkItem after_copy_or_create_work_item(
         promise_result.get_future(), shared, need_to_copy, backup_env_,
+<<<<<<< HEAD
         temp_dest_path, final_dest_path, dst_relative);
+=======
+        dst_path_tmp, dst_path, dst_relative);
+>>>>>>> blood in blood out
     backup_items_to_finish.push_back(std::move(after_copy_or_create_work_item));
     CopyOrCreateResult result;
     result.status = s;
@@ -1417,7 +1517,11 @@ Status BackupEngineImpl::CalculateChecksum(const std::string& src, Env* src_env,
   }
 
   unique_ptr<SequentialFileReader> src_reader(
+<<<<<<< HEAD
       new SequentialFileReader(std::move(src_file), src));
+=======
+      new SequentialFileReader(std::move(src_file)));
+>>>>>>> blood in blood out
   std::unique_ptr<char[]> buf(new char[copy_file_buffer_size_]);
   Slice data;
 
@@ -1480,6 +1584,7 @@ Status BackupEngineImpl::InsertPathnameToSizeBytes(
 Status BackupEngineImpl::GarbageCollect() {
   assert(!read_only_);
   ROCKS_LOG_INFO(options_.info_log, "Starting garbage collection");
+<<<<<<< HEAD
   if (options_.max_valid_backups_to_open == port::kMaxInt32) {
     ROCKS_LOG_WARN(
         options_.info_log,
@@ -1492,6 +1597,11 @@ Status BackupEngineImpl::GarbageCollect() {
     // delete obsolete shared files
     // we cannot do this when BackupEngine has `max_valid_backups_to_open` set
     // as those engines don't know about all shared files.
+=======
+
+  if (options_.share_table_files) {
+    // delete obsolete shared files
+>>>>>>> blood in blood out
     std::vector<std::string> shared_children;
     {
       std::string shared_path;
@@ -1541,8 +1651,11 @@ Status BackupEngineImpl::GarbageCollect() {
     }
   }
   for (auto& child : private_children) {
+<<<<<<< HEAD
     // it's ok to do this when BackupEngine has `max_valid_backups_to_open` set
     // as the engine always knows all valid backup numbers.
+=======
+>>>>>>> blood in blood out
     BackupID backup_id = 0;
     bool tmp_dir = child.find(".tmp") != std::string::npos;
     sscanf(child.c_str(), "%u", &backup_id);
@@ -1553,7 +1666,11 @@ Status BackupEngineImpl::GarbageCollect() {
     }
     // here we have to delete the dir and all its children
     std::string full_private_path =
+<<<<<<< HEAD
         GetAbsolutePath(GetPrivateFileRel(backup_id));
+=======
+        GetAbsolutePath(GetPrivateFileRel(backup_id, tmp_dir));
+>>>>>>> blood in blood out
     std::vector<std::string> subchildren;
     backup_env_->GetChildren(full_private_path, &subchildren);
     for (auto& subchild : subchildren) {
@@ -1641,7 +1758,11 @@ Status BackupEngineImpl::BackupMeta::LoadFromFile(
   }
 
   unique_ptr<SequentialFileReader> backup_meta_reader(
+<<<<<<< HEAD
       new SequentialFileReader(std::move(backup_meta_file), meta_filename_));
+=======
+      new SequentialFileReader(std::move(backup_meta_file)));
+>>>>>>> blood in blood out
   unique_ptr<char[]> buf(new char[max_backup_meta_file_size_ + 1]);
   Slice data;
   s = backup_meta_reader->Read(max_backup_meta_file_size_, &data, buf.get());
@@ -1753,6 +1874,7 @@ Status BackupEngineImpl::BackupMeta::StoreToFile(bool sync) {
   if (!app_metadata_.empty()) {
     std::string hex_encoded_metadata =
         Slice(app_metadata_).ToString(/* hex */ true);
+<<<<<<< HEAD
 
     // +1 to accomodate newline character
     size_t hex_meta_strlen = kMetaDataPrefix.ToString().length() + hex_encoded_metadata.length() + 1;
@@ -1800,6 +1922,27 @@ Status BackupEngineImpl::BackupMeta::StoreToFile(bool sync) {
     }
     len += snprintf(buf.get() + len, buf_size - len, "%s%s",
                     file->filename.c_str(), const_write);
+=======
+    len += snprintf(buf.get() + len, buf_size - len, "%s%s\n",
+                    kMetaDataPrefix.ToString().c_str(),
+                    hex_encoded_metadata.c_str());
+    if (len >= buf_size) {
+      return Status::Corruption("Buffer too small to fit backup metadata");
+    }
+  }
+  len += snprintf(buf.get() + len, buf_size - len, "%" ROCKSDB_PRIszt "\n",
+                  files_.size());
+  if (len >= buf_size) {
+    return Status::Corruption("Buffer too small to fit backup metadata");
+  }
+  for (const auto& file : files_) {
+    // use crc32 for now, switch to something else if needed
+    len += snprintf(buf.get() + len, buf_size - len, "%s crc32 %u\n",
+                    file->filename.c_str(), file->checksum_value);
+    if (len >= buf_size) {
+      return Status::Corruption("Buffer too small to fit backup metadata");
+    }
+>>>>>>> blood in blood out
   }
 
   s = backup_meta_file->Append(Slice(buf.get(), len));

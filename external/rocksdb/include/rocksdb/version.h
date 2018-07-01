@@ -5,8 +5,13 @@
 #pragma once
 
 #define ROCKSDB_MAJOR 5
+<<<<<<< HEAD
 #define ROCKSDB_MINOR 15
 #define ROCKSDB_PATCH 10
+=======
+#define ROCKSDB_MINOR 12
+#define ROCKSDB_PATCH 2
+>>>>>>> blood in blood out
 
 // Do not use these. We made the mistake of declaring macros starting with
 // double underscore. Now we have to live with our choice. We'll deprecate these

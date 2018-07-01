@@ -6,11 +6,19 @@
 // This file implements the "bridge" between Java and C++ for
 // rocksdb::Comparator.
 
+<<<<<<< HEAD
 #include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <functional>
 #include <string>
+=======
+#include <stdio.h>
+#include <stdlib.h>
+#include <jni.h>
+#include <string>
+#include <functional>
+>>>>>>> blood in blood out
 
 #include "include/org_rocksdb_Comparator.h"
 #include "include/org_rocksdb_DirectComparator.h"
@@ -25,12 +33,21 @@
  * Method:    createNewComparator0
  * Signature: ()J
  */
+<<<<<<< HEAD
 jlong Java_org_rocksdb_Comparator_createNewComparator0(JNIEnv* env,
                                                        jobject jobj,
                                                        jlong copt_handle) {
   auto* copt =
       reinterpret_cast<rocksdb::ComparatorJniCallbackOptions*>(copt_handle);
   auto* c = new rocksdb::ComparatorJniCallback(env, jobj, copt);
+=======
+jlong Java_org_rocksdb_Comparator_createNewComparator0(
+    JNIEnv* env, jobject jobj, jlong copt_handle) {
+  auto* copt =
+      reinterpret_cast<rocksdb::ComparatorJniCallbackOptions*>(copt_handle);
+  auto* c =
+      new rocksdb::ComparatorJniCallback(env, jobj, copt);
+>>>>>>> blood in blood out
   return reinterpret_cast<jlong>(c);
 }
 // </editor-fold>
@@ -46,7 +63,12 @@ jlong Java_org_rocksdb_DirectComparator_createNewDirectComparator0(
     JNIEnv* env, jobject jobj, jlong copt_handle) {
   auto* copt =
       reinterpret_cast<rocksdb::ComparatorJniCallbackOptions*>(copt_handle);
+<<<<<<< HEAD
   auto* c = new rocksdb::DirectComparatorJniCallback(env, jobj, copt);
+=======
+  auto* c =
+      new rocksdb::DirectComparatorJniCallback(env, jobj, copt);
+>>>>>>> blood in blood out
   return reinterpret_cast<jlong>(c);
 }
 
@@ -56,8 +78,14 @@ jlong Java_org_rocksdb_DirectComparator_createNewDirectComparator0(
  * Signature: (J)V
  */
 void Java_org_rocksdb_NativeComparatorWrapper_disposeInternal(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jcomparator_handle) {
   auto* comparator = reinterpret_cast<rocksdb::Comparator*>(jcomparator_handle);
+=======
+    JNIEnv* env, jobject jobj, jlong jcomparator_handle) {
+  auto* comparator =
+      reinterpret_cast<rocksdb::Comparator*>(jcomparator_handle);
+>>>>>>> blood in blood out
   delete comparator;
 }
 // </editor-fold>

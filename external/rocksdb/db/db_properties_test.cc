@@ -14,7 +14,10 @@
 
 #include "db/db_test_util.h"
 #include "port/stack_trace.h"
+<<<<<<< HEAD
 #include "rocksdb/listener.h"
+=======
+>>>>>>> blood in blood out
 #include "rocksdb/options.h"
 #include "rocksdb/perf_context.h"
 #include "rocksdb/perf_level.h"
@@ -69,27 +72,47 @@ TEST_F(DBPropertiesTest, Empty) {
     ASSERT_OK(db_->DisableFileDeletions());
     ASSERT_TRUE(
         dbfull()->GetProperty("rocksdb.is-file-deletions-enabled", &num));
+<<<<<<< HEAD
     ASSERT_EQ("0", num);
+=======
+    ASSERT_EQ("1", num);
+>>>>>>> blood in blood out
 
     ASSERT_OK(db_->DisableFileDeletions());
     ASSERT_TRUE(
         dbfull()->GetProperty("rocksdb.is-file-deletions-enabled", &num));
+<<<<<<< HEAD
     ASSERT_EQ("0", num);
+=======
+    ASSERT_EQ("2", num);
+>>>>>>> blood in blood out
 
     ASSERT_OK(db_->DisableFileDeletions());
     ASSERT_TRUE(
         dbfull()->GetProperty("rocksdb.is-file-deletions-enabled", &num));
+<<<<<<< HEAD
     ASSERT_EQ("0", num);
+=======
+    ASSERT_EQ("3", num);
+>>>>>>> blood in blood out
 
     ASSERT_OK(db_->EnableFileDeletions(false));
     ASSERT_TRUE(
         dbfull()->GetProperty("rocksdb.is-file-deletions-enabled", &num));
+<<<<<<< HEAD
     ASSERT_EQ("0", num);
+=======
+    ASSERT_EQ("2", num);
+>>>>>>> blood in blood out
 
     ASSERT_OK(db_->EnableFileDeletions());
     ASSERT_TRUE(
         dbfull()->GetProperty("rocksdb.is-file-deletions-enabled", &num));
+<<<<<<< HEAD
     ASSERT_EQ("1", num);
+=======
+    ASSERT_EQ("0", num);
+>>>>>>> blood in blood out
   } while (ChangeOptions());
 }
 
@@ -170,7 +193,10 @@ void ResetTableProperties(TableProperties* tp) {
   tp->raw_value_size = 0;
   tp->num_data_blocks = 0;
   tp->num_entries = 0;
+<<<<<<< HEAD
   tp->num_range_deletions = 0;
+=======
+>>>>>>> blood in blood out
 }
 
 void ParseTablePropertiesString(std::string tp_string, TableProperties* tp) {
@@ -178,6 +204,7 @@ void ParseTablePropertiesString(std::string tp_string, TableProperties* tp) {
   std::replace(tp_string.begin(), tp_string.end(), ';', ' ');
   std::replace(tp_string.begin(), tp_string.end(), '=', ' ');
   ResetTableProperties(tp);
+<<<<<<< HEAD
   sscanf(tp_string.c_str(),
          "# data blocks %" SCNu64 " # entries %" SCNu64
          " # range deletions %" SCNu64
@@ -191,6 +218,19 @@ void ParseTablePropertiesString(std::string tp_string, TableProperties* tp) {
          &tp->raw_key_size, &dummy_double, &tp->raw_value_size, &dummy_double,
          &tp->data_size, &tp->index_key_is_user_key, &tp->index_size,
          &tp->filter_size);
+=======
+
+  sscanf(tp_string.c_str(),
+         "# data blocks %" SCNu64 " # entries %" SCNu64 " raw key size %" SCNu64
+         " raw average key size %lf "
+         " raw value size %" SCNu64
+         " raw average value size %lf "
+         " data block size %" SCNu64 " index block size %" SCNu64
+         " filter block size %" SCNu64,
+         &tp->num_data_blocks, &tp->num_entries, &tp->raw_key_size,
+         &dummy_double, &tp->raw_value_size, &dummy_double, &tp->data_size,
+         &tp->index_size, &tp->filter_size);
+>>>>>>> blood in blood out
 }
 
 void VerifySimilar(uint64_t a, uint64_t b, double bias) {
@@ -221,11 +261,15 @@ void VerifyTableProperties(const TableProperties& base_tp,
   ASSERT_EQ(base_tp.raw_key_size, new_tp.raw_key_size);
   ASSERT_EQ(base_tp.raw_value_size, new_tp.raw_value_size);
   ASSERT_EQ(base_tp.num_entries, new_tp.num_entries);
+<<<<<<< HEAD
   ASSERT_EQ(base_tp.num_range_deletions, new_tp.num_range_deletions);
+=======
+>>>>>>> blood in blood out
 }
 
 void GetExpectedTableProperties(TableProperties* expected_tp,
                                 const int kKeySize, const int kValueSize,
+<<<<<<< HEAD
                                 const int kKeysPerTable,
                                 const int kRangeDeletionsPerTable,
                                 const int kTableCount,
@@ -240,6 +284,17 @@ void GetExpectedTableProperties(TableProperties* expected_tp,
   expected_tp->raw_value_size = (kKeyCount + kRangeDeletionCount) * kValueSize;
   expected_tp->num_entries = kKeyCount;
   expected_tp->num_range_deletions = kRangeDeletionCount;
+=======
+                                const int kKeysPerTable, const int kTableCount,
+                                const int kBloomBitsPerKey,
+                                const size_t kBlockSize) {
+  const int kKeyCount = kTableCount * kKeysPerTable;
+  const int kAvgSuccessorSize = kKeySize / 5;
+  const int kEncodingSavePerKey = kKeySize / 4;
+  expected_tp->raw_key_size = kKeyCount * (kKeySize + 8);
+  expected_tp->raw_value_size = kKeyCount * kValueSize;
+  expected_tp->num_entries = kKeyCount;
+>>>>>>> blood in blood out
   expected_tp->num_data_blocks =
       kTableCount *
       (kKeysPerTable * (kKeySize - kEncodingSavePerKey + kValueSize)) /
@@ -247,8 +302,12 @@ void GetExpectedTableProperties(TableProperties* expected_tp,
   expected_tp->data_size =
       kTableCount * (kKeysPerTable * (kKeySize + 8 + kValueSize));
   expected_tp->index_size =
+<<<<<<< HEAD
       expected_tp->num_data_blocks *
       (kAvgSuccessorSize + (index_key_is_user_key ? 0 : 8));
+=======
+      expected_tp->num_data_blocks * (kAvgSuccessorSize + 8);
+>>>>>>> blood in blood out
   expected_tp->filter_size =
       kTableCount * (kKeysPerTable * kBloomBitsPerKey / 8);
 }
@@ -261,11 +320,16 @@ TEST_F(DBPropertiesTest, ValidatePropertyInfo) {
     ASSERT_TRUE(ppt_name_and_info.first.empty() ||
                 !isdigit(ppt_name_and_info.first.back()));
 
+<<<<<<< HEAD
     int count = 0;
     count += (ppt_name_and_info.second.handle_string == nullptr) ? 0 : 1;
     count += (ppt_name_and_info.second.handle_int == nullptr) ? 0 : 1;
     count += (ppt_name_and_info.second.handle_string_dbimpl == nullptr) ? 0 : 1;
     ASSERT_TRUE(count == 1);
+=======
+    ASSERT_TRUE((ppt_name_and_info.second.handle_string == nullptr) !=
+                (ppt_name_and_info.second.handle_int == nullptr));
+>>>>>>> blood in blood out
   }
 }
 
@@ -300,7 +364,10 @@ TEST_F(DBPropertiesTest, ValidateSampleNumber) {
 
 TEST_F(DBPropertiesTest, AggregatedTableProperties) {
   for (int kTableCount = 40; kTableCount <= 100; kTableCount += 30) {
+<<<<<<< HEAD
     const int kRangeDeletionsPerTable = 5;
+=======
+>>>>>>> blood in blood out
     const int kKeysPerTable = 100;
     const int kKeySize = 80;
     const int kValueSize = 200;
@@ -319,26 +386,33 @@ TEST_F(DBPropertiesTest, AggregatedTableProperties) {
 
     DestroyAndReopen(options);
 
+<<<<<<< HEAD
     // Hold open a snapshot to prevent range tombstones from being compacted
     // away.
     ManagedSnapshot snapshot(db_);
 
+=======
+>>>>>>> blood in blood out
     Random rnd(5632);
     for (int table = 1; table <= kTableCount; ++table) {
       for (int i = 0; i < kKeysPerTable; ++i) {
         db_->Put(WriteOptions(), RandomString(&rnd, kKeySize),
                  RandomString(&rnd, kValueSize));
       }
+<<<<<<< HEAD
       for (int i = 0; i < kRangeDeletionsPerTable; i++) {
         std::string start = RandomString(&rnd, kKeySize);
         std::string end = start;
         end.resize(kValueSize);
         db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), start, end);
       }
+=======
+>>>>>>> blood in blood out
       db_->Flush(FlushOptions());
     }
     std::string property;
     db_->GetProperty(DB::Properties::kAggregatedTableProperties, &property);
+<<<<<<< HEAD
     TableProperties output_tp;
     ParseTablePropertiesString(property, &output_tp);
     bool index_key_is_user_key = output_tp.index_key_is_user_key > 0;
@@ -348,6 +422,16 @@ TEST_F(DBPropertiesTest, AggregatedTableProperties) {
                                kKeysPerTable, kRangeDeletionsPerTable,
                                kTableCount, kBloomBitsPerKey,
                                table_options.block_size, index_key_is_user_key);
+=======
+
+    TableProperties expected_tp;
+    GetExpectedTableProperties(&expected_tp, kKeySize, kValueSize,
+                               kKeysPerTable, kTableCount, kBloomBitsPerKey,
+                               table_options.block_size);
+
+    TableProperties output_tp;
+    ParseTablePropertiesString(property, &output_tp);
+>>>>>>> blood in blood out
 
     VerifyTableProperties(expected_tp, output_tp);
   }
@@ -396,6 +480,7 @@ TEST_F(DBPropertiesTest, ReadLatencyHistogramByLevel) {
   for (int key = 0; key < key_index; key++) {
     Get(Key(key));
   }
+<<<<<<< HEAD
 
   // Test for getting immutable_db_options_.statistics
   ASSERT_TRUE(dbfull()->GetProperty(dbfull()->DefaultColumnFamily(),
@@ -403,6 +488,8 @@ TEST_F(DBPropertiesTest, ReadLatencyHistogramByLevel) {
   ASSERT_NE(std::string::npos, prop.find("rocksdb.block.cache.miss"));
   ASSERT_EQ(std::string::npos, prop.find("rocksdb.db.f.micros"));
 
+=======
+>>>>>>> blood in blood out
   ASSERT_TRUE(dbfull()->GetProperty(dbfull()->DefaultColumnFamily(),
                                     "rocksdb.cf-file-histogram", &prop));
   ASSERT_NE(std::string::npos, prop.find("** Level 0 read latency histogram"));
@@ -469,7 +556,10 @@ TEST_F(DBPropertiesTest, ReadLatencyHistogramByLevel) {
 
 TEST_F(DBPropertiesTest, AggregatedTablePropertiesAtLevel) {
   const int kTableCount = 100;
+<<<<<<< HEAD
   const int kRangeDeletionsPerTable = 2;
+=======
+>>>>>>> blood in blood out
   const int kKeysPerTable = 10;
   const int kKeySize = 50;
   const int kValueSize = 400;
@@ -495,9 +585,12 @@ TEST_F(DBPropertiesTest, AggregatedTablePropertiesAtLevel) {
 
   DestroyAndReopen(options);
 
+<<<<<<< HEAD
   // Hold open a snapshot to prevent range tombstones from being compacted away.
   ManagedSnapshot snapshot(db_);
 
+=======
+>>>>>>> blood in blood out
   std::string level_tp_strings[kMaxLevel];
   std::string tp_string;
   TableProperties level_tps[kMaxLevel];
@@ -507,12 +600,15 @@ TEST_F(DBPropertiesTest, AggregatedTablePropertiesAtLevel) {
       db_->Put(WriteOptions(), RandomString(&rnd, kKeySize),
                RandomString(&rnd, kValueSize));
     }
+<<<<<<< HEAD
     for (int i = 0; i < kRangeDeletionsPerTable; i++) {
       std::string start = RandomString(&rnd, kKeySize);
       std::string end = start;
       end.resize(kValueSize);
       db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), start, end);
     }
+=======
+>>>>>>> blood in blood out
     db_->Flush(FlushOptions());
     db_->CompactRange(CompactRangeOptions(), nullptr, nullptr);
     ResetTableProperties(&sum_tp);
@@ -528,11 +624,17 @@ TEST_F(DBPropertiesTest, AggregatedTablePropertiesAtLevel) {
       sum_tp.raw_value_size += level_tps[level].raw_value_size;
       sum_tp.num_data_blocks += level_tps[level].num_data_blocks;
       sum_tp.num_entries += level_tps[level].num_entries;
+<<<<<<< HEAD
       sum_tp.num_range_deletions += level_tps[level].num_range_deletions;
     }
     db_->GetProperty(DB::Properties::kAggregatedTableProperties, &tp_string);
     ParseTablePropertiesString(tp_string, &tp);
     bool index_key_is_user_key = tp.index_key_is_user_key > 0;
+=======
+    }
+    db_->GetProperty(DB::Properties::kAggregatedTableProperties, &tp_string);
+    ParseTablePropertiesString(tp_string, &tp);
+>>>>>>> blood in blood out
     ASSERT_EQ(sum_tp.data_size, tp.data_size);
     ASSERT_EQ(sum_tp.index_size, tp.index_size);
     ASSERT_EQ(sum_tp.filter_size, tp.filter_size);
@@ -540,6 +642,7 @@ TEST_F(DBPropertiesTest, AggregatedTablePropertiesAtLevel) {
     ASSERT_EQ(sum_tp.raw_value_size, tp.raw_value_size);
     ASSERT_EQ(sum_tp.num_data_blocks, tp.num_data_blocks);
     ASSERT_EQ(sum_tp.num_entries, tp.num_entries);
+<<<<<<< HEAD
     ASSERT_EQ(sum_tp.num_range_deletions, tp.num_range_deletions);
     if (table > 3) {
       GetExpectedTableProperties(
@@ -549,6 +652,15 @@ TEST_F(DBPropertiesTest, AggregatedTablePropertiesAtLevel) {
       // Gives larger bias here as index block size, filter block size,
       // and data block size become much harder to estimate in this test.
       VerifyTableProperties(expected_tp, tp, 0.5, 0.4, 0.4, 0.25);
+=======
+    if (table > 3) {
+      GetExpectedTableProperties(&expected_tp, kKeySize, kValueSize,
+                                 kKeysPerTable, table, kBloomBitsPerKey,
+                                 table_options.block_size);
+      // Gives larger bias here as index block size, filter block size,
+      // and data block size become much harder to estimate in this test.
+      VerifyTableProperties(tp, expected_tp, 0.5, 0.4, 0.4, 0.25);
+>>>>>>> blood in blood out
     }
   }
 }
@@ -1032,9 +1144,14 @@ class CountingUserTblPropCollector : public TablePropertiesCollector {
     return Status::OK();
   }
 
+<<<<<<< HEAD
   Status AddUserKey(const Slice& /*user_key*/, const Slice& /*value*/,
                     EntryType /*type*/, SequenceNumber /*seq*/,
                     uint64_t /*file_size*/) override {
+=======
+  Status AddUserKey(const Slice& user_key, const Slice& value, EntryType type,
+                    SequenceNumber seq, uint64_t file_size) override {
+>>>>>>> blood in blood out
     ++count_;
     return Status::OK();
   }
@@ -1075,9 +1192,14 @@ class CountingDeleteTabPropCollector : public TablePropertiesCollector {
  public:
   const char* Name() const override { return "CountingDeleteTabPropCollector"; }
 
+<<<<<<< HEAD
   Status AddUserKey(const Slice& /*user_key*/, const Slice& /*value*/,
                     EntryType type, SequenceNumber /*seq*/,
                     uint64_t /*file_size*/) override {
+=======
+  Status AddUserKey(const Slice& user_key, const Slice& value, EntryType type,
+                    SequenceNumber seq, uint64_t file_size) override {
+>>>>>>> blood in blood out
     if (type == kEntryDelete) {
       num_deletes_++;
     }
@@ -1104,7 +1226,11 @@ class CountingDeleteTabPropCollectorFactory
     : public TablePropertiesCollectorFactory {
  public:
   virtual TablePropertiesCollector* CreateTablePropertiesCollector(
+<<<<<<< HEAD
       TablePropertiesCollectorFactory::Context /*context*/) override {
+=======
+      TablePropertiesCollectorFactory::Context context) override {
+>>>>>>> blood in blood out
     return new CountingDeleteTabPropCollector();
   }
   const char* Name() const override {
@@ -1432,6 +1558,7 @@ TEST_F(DBPropertiesTest, EstimateOldestKeyTime) {
   Close();
 }
 
+<<<<<<< HEAD
 TEST_F(DBPropertiesTest, SstFilesSize) {
   struct TestListener : public EventListener {
     void OnCompactionCompleted(DB* db,
@@ -1583,6 +1710,8 @@ TEST_F(DBPropertiesTest, BlockCacheProperties) {
   ASSERT_EQ(0, value);
 }
 
+=======
+>>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
 }  // namespace rocksdb
 

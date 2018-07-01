@@ -24,7 +24,12 @@ DBImplReadOnly::DBImplReadOnly(const DBOptions& db_options,
   LogFlush(immutable_db_options_.info_log);
 }
 
+<<<<<<< HEAD
 DBImplReadOnly::~DBImplReadOnly() {}
+=======
+DBImplReadOnly::~DBImplReadOnly() {
+}
+>>>>>>> blood in blood out
 
 // Implementations of the DB interface
 Status DBImplReadOnly::Get(const ReadOptions& read_options,
@@ -58,7 +63,11 @@ Iterator* DBImplReadOnly::NewIterator(const ReadOptions& read_options,
   SequenceNumber latest_snapshot = versions_->LastSequence();
   ReadCallback* read_callback = nullptr;  // No read callback provided.
   auto db_iter = NewArenaWrappedDbIterator(
+<<<<<<< HEAD
       env_, read_options, *cfd->ioptions(), super_version->mutable_cf_options,
+=======
+      env_, read_options, *cfd->ioptions(),
+>>>>>>> blood in blood out
       (read_options.snapshot != nullptr
            ? reinterpret_cast<const SnapshotImpl*>(read_options.snapshot)
                  ->number_
@@ -88,7 +97,11 @@ Status DBImplReadOnly::NewIterators(
     auto* cfd = reinterpret_cast<ColumnFamilyHandleImpl*>(cfh)->cfd();
     auto* sv = cfd->GetSuperVersion()->Ref();
     auto* db_iter = NewArenaWrappedDbIterator(
+<<<<<<< HEAD
         env_, read_options, *cfd->ioptions(), sv->mutable_cf_options,
+=======
+        env_, read_options, *cfd->ioptions(),
+>>>>>>> blood in blood out
         (read_options.snapshot != nullptr
              ? reinterpret_cast<const SnapshotImpl*>(read_options.snapshot)
                    ->number_
@@ -106,7 +119,11 @@ Status DBImplReadOnly::NewIterators(
 }
 
 Status DB::OpenForReadOnly(const Options& options, const std::string& dbname,
+<<<<<<< HEAD
                            DB** dbptr, bool /*error_if_log_file_exist*/) {
+=======
+                           DB** dbptr, bool error_if_log_file_exist) {
+>>>>>>> blood in blood out
   *dbptr = nullptr;
 
   // Try to first open DB as fully compacted DB
@@ -182,21 +199,39 @@ Status DB::OpenForReadOnly(
   return s;
 }
 
+<<<<<<< HEAD
 #else   // !ROCKSDB_LITE
 
 Status DB::OpenForReadOnly(const Options& /*options*/,
                            const std::string& /*dbname*/, DB** /*dbptr*/,
                            bool /*error_if_log_file_exist*/) {
+=======
+#else  // !ROCKSDB_LITE
+
+Status DB::OpenForReadOnly(const Options& options, const std::string& dbname,
+                           DB** dbptr, bool error_if_log_file_exist) {
+>>>>>>> blood in blood out
   return Status::NotSupported("Not supported in ROCKSDB_LITE.");
 }
 
 Status DB::OpenForReadOnly(
+<<<<<<< HEAD
     const DBOptions& /*db_options*/, const std::string& /*dbname*/,
     const std::vector<ColumnFamilyDescriptor>& /*column_families*/,
     std::vector<ColumnFamilyHandle*>* /*handles*/, DB** /*dbptr*/,
     bool /*error_if_log_file_exist*/) {
+=======
+    const DBOptions& db_options, const std::string& dbname,
+    const std::vector<ColumnFamilyDescriptor>& column_families,
+    std::vector<ColumnFamilyHandle*>* handles, DB** dbptr,
+    bool error_if_log_file_exist) {
+>>>>>>> blood in blood out
   return Status::NotSupported("Not supported in ROCKSDB_LITE.");
 }
 #endif  // !ROCKSDB_LITE
 
+<<<<<<< HEAD
 }  // namespace rocksdb
+=======
+}   // namespace rocksdb
+>>>>>>> blood in blood out

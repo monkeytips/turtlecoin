@@ -12,7 +12,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * {@link AbstractNativeReference} which have an immutable reference to the
  * underlying native C++ object
  */
+<<<<<<< HEAD
 //@ThreadSafe
+=======
+>>>>>>> blood in blood out
 public abstract class AbstractImmutableNativeReference
     extends AbstractNativeReference {
 

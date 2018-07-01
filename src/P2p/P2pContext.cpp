@@ -73,7 +73,11 @@ P2pContext::~P2pContext() {
   writeEvent.wait();
 }
 
+<<<<<<< HEAD
 uint64_t P2pContext::getPeerId() const {
+=======
+PeerIdType P2pContext::getPeerId() const {
+>>>>>>> blood in blood out
   return peerId;
 }
 
@@ -89,7 +93,11 @@ bool P2pContext::isIncoming() const {
   return incoming;
 }
 
+<<<<<<< HEAD
 void P2pContext::setPeerInfo(uint8_t protocolVersion, uint64_t id, uint16_t port) {
+=======
+void P2pContext::setPeerInfo(uint8_t protocolVersion, PeerIdType id, uint16_t port) {
+>>>>>>> blood in blood out
   version = protocolVersion;
   peerId = id;
   if (isIncoming()) {

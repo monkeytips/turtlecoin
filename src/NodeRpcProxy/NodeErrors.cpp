@@ -18,7 +18,11 @@
 #include "NodeErrors.h"
 
 namespace CryptoNote {
+<<<<<<< HEAD
 namespace NodeError {
+=======
+namespace error {
+>>>>>>> blood in blood out
 
 NodeErrorCategory NodeErrorCategory::INSTANCE;
 

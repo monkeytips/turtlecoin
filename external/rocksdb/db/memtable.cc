@@ -36,7 +36,10 @@
 #include "util/memory_usage.h"
 #include "util/murmurhash.h"
 #include "util/mutexlock.h"
+<<<<<<< HEAD
 #include "util/util.h"
+=======
+>>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -75,8 +78,13 @@ MemTable::MemTable(const InternalKeyComparator& cmp,
               : nullptr,
           mutable_cf_options.memtable_huge_page_size),
       table_(ioptions.memtable_factory->CreateMemTableRep(
+<<<<<<< HEAD
           comparator_, &arena_, mutable_cf_options.prefix_extractor.get(),
           ioptions.info_log, column_family_id)),
+=======
+          comparator_, &arena_, ioptions.prefix_extractor, ioptions.info_log,
+          column_family_id)),
+>>>>>>> blood in blood out
       range_del_table_(SkipListFactory().CreateMemTableRep(
           comparator_, &arena_, nullptr /* transform */, ioptions.info_log,
           column_family_id)),
@@ -96,7 +104,11 @@ MemTable::MemTable(const InternalKeyComparator& cmp,
       locks_(moptions_.inplace_update_support
                  ? moptions_.inplace_update_num_locks
                  : 0),
+<<<<<<< HEAD
       prefix_extractor_(mutable_cf_options.prefix_extractor.get()),
+=======
+      prefix_extractor_(ioptions.prefix_extractor),
+>>>>>>> blood in blood out
       flush_state_(FLUSH_NOT_REQUESTED),
       env_(ioptions.env),
       insert_with_hint_prefix_extractor_(
@@ -230,14 +242,22 @@ int MemTable::KeyComparator::operator()(const char* prefix_len_key1,
 }
 
 int MemTable::KeyComparator::operator()(const char* prefix_len_key,
+<<<<<<< HEAD
                                         const KeyComparator::DecodedType& key)
+=======
+                                        const Slice& key)
+>>>>>>> blood in blood out
     const {
   // Internal keys are encoded as length-prefixed strings.
   Slice a = GetLengthPrefixedSlice(prefix_len_key);
   return comparator.CompareKeySeq(a, key);
 }
 
+<<<<<<< HEAD
 void MemTableRep::InsertConcurrently(KeyHandle /*handle*/) {
+=======
+void MemTableRep::InsertConcurrently(KeyHandle handle) {
+>>>>>>> blood in blood out
 #ifndef ROCKSDB_LITE
   throw std::runtime_error("concurrent insert not supported");
 #else
@@ -480,12 +500,20 @@ bool MemTable::Add(SequenceNumber s, ValueType type,
         insert_with_hint_prefix_extractor_->InDomain(key_slice)) {
       Slice prefix = insert_with_hint_prefix_extractor_->Transform(key_slice);
       bool res = table->InsertKeyWithHint(handle, &insert_hints_[prefix]);
+<<<<<<< HEAD
       if (UNLIKELY(!res)) {
+=======
+      if (!res) {
+>>>>>>> blood in blood out
         return res;
       }
     } else {
       bool res = table->InsertKey(handle);
+<<<<<<< HEAD
       if (UNLIKELY(!res)) {
+=======
+      if (!res) {
+>>>>>>> blood in blood out
         return res;
       }
     }
@@ -521,7 +549,11 @@ bool MemTable::Add(SequenceNumber s, ValueType type,
     UpdateFlushState();
   } else {
     bool res = table->InsertKeyConcurrently(handle);
+<<<<<<< HEAD
     if (UNLIKELY(!res)) {
+=======
+    if (!res) {
+>>>>>>> blood in blood out
       return res;
     }
 
@@ -580,7 +612,11 @@ struct Saver {
 
   bool CheckCallback(SequenceNumber _seq) {
     if (callback_) {
+<<<<<<< HEAD
       return callback_->IsVisible(_seq);
+=======
+      return callback_->IsCommitted(_seq);
+>>>>>>> blood in blood out
     }
     return true;
   }
@@ -640,7 +676,11 @@ static bool SaveValue(void* arg, const char* entry) {
           *(s->found_final_value) = true;
           return false;
         }
+<<<<<<< HEAD
 	FALLTHROUGH_INTENDED;
+=======
+      // intentional fallthrough
+>>>>>>> blood in blood out
       case kTypeValue: {
         if (s->inplace_update_support) {
           s->mem->GetLock(s->key->user_key())->ReadLock();
@@ -697,7 +737,11 @@ static bool SaveValue(void* arg, const char* entry) {
         *(s->merge_in_progress) = true;
         merge_context->PushOperand(
             v, s->inplace_update_support == false /* operand_pinned */);
+<<<<<<< HEAD
         if (merge_operator->ShouldMerge(merge_context->GetOperandsDirectionBackward())) {
+=======
+        if (merge_operator->ShouldMerge(merge_context->GetOperands())) {
+>>>>>>> blood in blood out
           *(s->status) = MergeHelper::TimedFullMerge(
               merge_operator, s->key->user_key(), nullptr,
               merge_context->GetOperands(), s->value, s->logger, s->statistics,

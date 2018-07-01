@@ -9,7 +9,10 @@
 //
 #pragma once
 #include "rocksdb/env.h"
+<<<<<<< HEAD
 #include "rocksdb/slice_transform.h"
+=======
+>>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -34,8 +37,12 @@ class VersionBuilder {
   void Apply(VersionEdit* edit);
   void SaveTo(VersionStorageInfo* vstorage);
   void LoadTableHandlers(InternalStats* internal_stats, int max_threads,
+<<<<<<< HEAD
                          bool prefetch_index_and_filter_in_cache,
                          const SliceTransform* prefix_extractor);
+=======
+                         bool prefetch_index_and_filter_in_cache);
+>>>>>>> blood in blood out
   void MaybeAddFile(VersionStorageInfo* vstorage, int level, FileMetaData* f);
 
  private:

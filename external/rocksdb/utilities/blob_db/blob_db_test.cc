@@ -38,17 +38,25 @@ class BlobDBTest : public testing::Test {
   };
 
   BlobDBTest()
+<<<<<<< HEAD
       : dbname_(test::PerThreadDBPath("blob_db_test")),
+=======
+      : dbname_(test::TmpDir() + "/blob_db_test"),
+>>>>>>> blood in blood out
         mock_env_(new MockTimeEnv(Env::Default())),
         blob_db_(nullptr) {
     Status s = DestroyBlobDB(dbname_, Options(), BlobDBOptions());
     assert(s.ok());
   }
 
+<<<<<<< HEAD
   ~BlobDBTest() {
     SyncPoint::GetInstance()->ClearAllCallBacks();
     Destroy();
   }
+=======
+  ~BlobDBTest() { Destroy(); }
+>>>>>>> blood in blood out
 
   Status TryOpen(BlobDBOptions bdb_options = BlobDBOptions(),
                  Options options = Options()) {
@@ -83,6 +91,7 @@ class BlobDBTest : public testing::Test {
     return reinterpret_cast<BlobDBImpl *>(blob_db_);
   }
 
+<<<<<<< HEAD
   Status Put(const Slice &key, const Slice &value,
              std::map<std::string, std::string> *data = nullptr) {
     Status s = blob_db_->Put(WriteOptions(), key, value);
@@ -90,6 +99,10 @@ class BlobDBTest : public testing::Test {
       (*data)[key.ToString()] = value.ToString();
     }
     return s;
+=======
+  Status Put(const Slice &key, const Slice &value) {
+    return blob_db_->Put(WriteOptions(), key, value);
+>>>>>>> blood in blood out
   }
 
   void Delete(const std::string &key,
@@ -100,6 +113,7 @@ class BlobDBTest : public testing::Test {
     }
   }
 
+<<<<<<< HEAD
   Status PutWithTTL(const Slice &key, const Slice &value, uint64_t ttl,
                     std::map<std::string, std::string> *data = nullptr) {
     Status s = blob_db_->PutWithTTL(WriteOptions(), key, value, ttl);
@@ -109,6 +123,8 @@ class BlobDBTest : public testing::Test {
     return s;
   }
 
+=======
+>>>>>>> blood in blood out
   Status PutUntil(const Slice &key, const Slice &value, uint64_t expiration) {
     return blob_db_->PutUntil(WriteOptions(), key, value, expiration);
   }
@@ -235,6 +251,10 @@ class BlobDBTest : public testing::Test {
 
   const std::string dbname_;
   std::unique_ptr<MockTimeEnv> mock_env_;
+<<<<<<< HEAD
+=======
+  std::shared_ptr<TTLExtractor> ttl_extractor_;
+>>>>>>> blood in blood out
   BlobDB *blob_db_;
 };  // class BlobDBTest
 
@@ -311,6 +331,194 @@ TEST_F(BlobDBTest, PutUntil) {
   VerifyDB(data);
 }
 
+<<<<<<< HEAD
+=======
+TEST_F(BlobDBTest, TTLExtrator_NoTTL) {
+  // The default ttl extractor return no ttl for every key.
+  ttl_extractor_.reset(new TTLExtractor());
+  Random rnd(301);
+  Options options;
+  options.env = mock_env_.get();
+  BlobDBOptions bdb_options;
+  bdb_options.ttl_range_secs = 1000;
+  bdb_options.min_blob_size = 0;
+  bdb_options.blob_file_size = 256 * 1000 * 1000;
+  bdb_options.ttl_extractor = ttl_extractor_;
+  bdb_options.disable_background_tasks = true;
+  Open(bdb_options, options);
+  std::map<std::string, std::string> data;
+  mock_env_->set_current_time(0);
+  for (size_t i = 0; i < 100; i++) {
+    PutRandom("key" + ToString(i), &rnd, &data);
+  }
+  // very far in the future..
+  mock_env_->set_current_time(std::numeric_limits<uint64_t>::max() / 1000000 -
+                              10);
+  auto *bdb_impl = static_cast<BlobDBImpl *>(blob_db_);
+  auto blob_files = bdb_impl->TEST_GetBlobFiles();
+  ASSERT_EQ(1, blob_files.size());
+  ASSERT_FALSE(blob_files[0]->HasTTL());
+  ASSERT_OK(bdb_impl->TEST_CloseBlobFile(blob_files[0]));
+  GCStats gc_stats;
+  ASSERT_OK(bdb_impl->TEST_GCFileAndUpdateLSM(blob_files[0], &gc_stats));
+  ASSERT_EQ(0, gc_stats.num_keys_expired);
+  ASSERT_EQ(100, gc_stats.num_keys_relocated);
+  VerifyDB(data);
+}
+
+TEST_F(BlobDBTest, TTLExtractor_ExtractTTL) {
+  Random rnd(301);
+  class TestTTLExtractor : public TTLExtractor {
+   public:
+    explicit TestTTLExtractor(Random *r) : rnd(r) {}
+
+    virtual bool ExtractTTL(const Slice &key, const Slice &value, uint64_t *ttl,
+                            std::string * /*new_value*/,
+                            bool * /*value_changed*/) override {
+      *ttl = rnd->Next() % 100;
+      if (*ttl > 50) {
+        data[key.ToString()] = value.ToString();
+      }
+      return true;
+    }
+
+    Random *rnd;
+    std::map<std::string, std::string> data;
+  };
+  ttl_extractor_.reset(new TestTTLExtractor(&rnd));
+  Options options;
+  options.env = mock_env_.get();
+  BlobDBOptions bdb_options;
+  bdb_options.ttl_range_secs = 1000;
+  bdb_options.min_blob_size = 0;
+  bdb_options.blob_file_size = 256 * 1000 * 1000;
+  bdb_options.ttl_extractor = ttl_extractor_;
+  bdb_options.disable_background_tasks = true;
+  Open(bdb_options, options);
+  mock_env_->set_current_time(50);
+  for (size_t i = 0; i < 100; i++) {
+    PutRandom("key" + ToString(i), &rnd);
+  }
+  mock_env_->set_current_time(100);
+  auto *bdb_impl = static_cast<BlobDBImpl *>(blob_db_);
+  auto blob_files = bdb_impl->TEST_GetBlobFiles();
+  ASSERT_EQ(1, blob_files.size());
+  ASSERT_TRUE(blob_files[0]->HasTTL());
+  ASSERT_OK(bdb_impl->TEST_CloseBlobFile(blob_files[0]));
+  GCStats gc_stats;
+  ASSERT_OK(bdb_impl->TEST_GCFileAndUpdateLSM(blob_files[0], &gc_stats));
+  auto &data = static_cast<TestTTLExtractor *>(ttl_extractor_.get())->data;
+  ASSERT_EQ(100 - data.size(), gc_stats.num_keys_expired);
+  ASSERT_EQ(data.size(), gc_stats.num_keys_relocated);
+  VerifyDB(data);
+}
+
+TEST_F(BlobDBTest, TTLExtractor_ExtractExpiration) {
+  Random rnd(301);
+  class TestTTLExtractor : public TTLExtractor {
+   public:
+    explicit TestTTLExtractor(Random *r) : rnd(r) {}
+
+    virtual bool ExtractExpiration(const Slice &key, const Slice &value,
+                                   uint64_t /*now*/, uint64_t *expiration,
+                                   std::string * /*new_value*/,
+                                   bool * /*value_changed*/) override {
+      *expiration = rnd->Next() % 100 + 50;
+      if (*expiration > 100) {
+        data[key.ToString()] = value.ToString();
+      }
+      return true;
+    }
+
+    Random *rnd;
+    std::map<std::string, std::string> data;
+  };
+  ttl_extractor_.reset(new TestTTLExtractor(&rnd));
+  Options options;
+  options.env = mock_env_.get();
+  BlobDBOptions bdb_options;
+  bdb_options.ttl_range_secs = 1000;
+  bdb_options.min_blob_size = 0;
+  bdb_options.blob_file_size = 256 * 1000 * 1000;
+  bdb_options.ttl_extractor = ttl_extractor_;
+  bdb_options.disable_background_tasks = true;
+  Open(bdb_options, options);
+  mock_env_->set_current_time(50);
+  for (size_t i = 0; i < 100; i++) {
+    PutRandom("key" + ToString(i), &rnd);
+  }
+  mock_env_->set_current_time(100);
+  auto *bdb_impl = static_cast<BlobDBImpl *>(blob_db_);
+  auto blob_files = bdb_impl->TEST_GetBlobFiles();
+  ASSERT_EQ(1, blob_files.size());
+  ASSERT_TRUE(blob_files[0]->HasTTL());
+  ASSERT_OK(bdb_impl->TEST_CloseBlobFile(blob_files[0]));
+  GCStats gc_stats;
+  ASSERT_OK(bdb_impl->TEST_GCFileAndUpdateLSM(blob_files[0], &gc_stats));
+  auto &data = static_cast<TestTTLExtractor *>(ttl_extractor_.get())->data;
+  ASSERT_EQ(100 - data.size(), gc_stats.num_keys_expired);
+  ASSERT_EQ(data.size(), gc_stats.num_keys_relocated);
+  VerifyDB(data);
+}
+
+TEST_F(BlobDBTest, TTLExtractor_ChangeValue) {
+  class TestTTLExtractor : public TTLExtractor {
+   public:
+    const Slice kTTLSuffix = Slice("ttl:");
+
+    bool ExtractTTL(const Slice & /*key*/, const Slice &value, uint64_t *ttl,
+                    std::string *new_value, bool *value_changed) override {
+      if (value.size() < 12) {
+        return false;
+      }
+      const char *p = value.data() + value.size() - 12;
+      if (kTTLSuffix != Slice(p, 4)) {
+        return false;
+      }
+      *ttl = DecodeFixed64(p + 4);
+      *new_value = Slice(value.data(), value.size() - 12).ToString();
+      *value_changed = true;
+      return true;
+    }
+  };
+  Random rnd(301);
+  Options options;
+  options.env = mock_env_.get();
+  BlobDBOptions bdb_options;
+  bdb_options.ttl_range_secs = 1000;
+  bdb_options.min_blob_size = 0;
+  bdb_options.blob_file_size = 256 * 1000 * 1000;
+  bdb_options.ttl_extractor = std::make_shared<TestTTLExtractor>();
+  bdb_options.disable_background_tasks = true;
+  Open(bdb_options, options);
+  std::map<std::string, std::string> data;
+  mock_env_->set_current_time(50);
+  for (size_t i = 0; i < 100; i++) {
+    int len = rnd.Next() % kMaxBlobSize + 1;
+    std::string key = "key" + ToString(i);
+    std::string value = test::RandomHumanReadableString(&rnd, len);
+    uint64_t ttl = rnd.Next() % 100;
+    std::string value_ttl = value + "ttl:";
+    PutFixed64(&value_ttl, ttl);
+    ASSERT_OK(blob_db_->Put(WriteOptions(), Slice(key), Slice(value_ttl)));
+    if (ttl > 50) {
+      data[key] = value;
+    }
+  }
+  mock_env_->set_current_time(100);
+  auto *bdb_impl = static_cast<BlobDBImpl *>(blob_db_);
+  auto blob_files = bdb_impl->TEST_GetBlobFiles();
+  ASSERT_EQ(1, blob_files.size());
+  ASSERT_TRUE(blob_files[0]->HasTTL());
+  ASSERT_OK(bdb_impl->TEST_CloseBlobFile(blob_files[0]));
+  GCStats gc_stats;
+  ASSERT_OK(bdb_impl->TEST_GCFileAndUpdateLSM(blob_files[0], &gc_stats));
+  ASSERT_EQ(100 - data.size(), gc_stats.num_keys_expired);
+  ASSERT_EQ(data.size(), gc_stats.num_keys_relocated);
+  VerifyDB(data);
+}
+
+>>>>>>> blood in blood out
 TEST_F(BlobDBTest, StackableDBGet) {
   Random rnd(301);
   BlobDBOptions bdb_options;
@@ -334,6 +542,7 @@ TEST_F(BlobDBTest, StackableDBGet) {
   }
 }
 
+<<<<<<< HEAD
 TEST_F(BlobDBTest, GetExpiration) {
   Options options;
   options.env = mock_env_.get();
@@ -353,6 +562,8 @@ TEST_F(BlobDBTest, GetExpiration) {
   ASSERT_EQ(300 /* = 100 + 200 */, expiration);
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_F(BlobDBTest, WriteBatch) {
   Random rnd(301);
   BlobDBOptions bdb_options;
@@ -596,6 +807,7 @@ TEST_F(BlobDBTest, GCExpiredKeyWhileOverwriting) {
   VerifyDB({{"foo", "v2"}});
 }
 
+<<<<<<< HEAD
 TEST_F(BlobDBTest, NewFileGeneratedFromGCShouldMarkAsImmutable) {
   BlobDBOptions bdb_options;
   bdb_options.min_blob_size = 0;
@@ -618,6 +830,10 @@ TEST_F(BlobDBTest, NewFileGeneratedFromGCShouldMarkAsImmutable) {
 
 // This test is no longer valid since we now return an error when we go
 // over the configured max_db_size.
+=======
+// This test is no longer valid since we now return an error when we go
+// over the configured blob_dir_size.
+>>>>>>> blood in blood out
 // The test needs to be re-written later in such a way that writes continue
 // after a GC happens.
 TEST_F(BlobDBTest, DISABLED_GCOldestSimpleBlobFileWhenOutOfSpace) {
@@ -625,7 +841,11 @@ TEST_F(BlobDBTest, DISABLED_GCOldestSimpleBlobFileWhenOutOfSpace) {
   Options options;
   options.env = mock_env_.get();
   BlobDBOptions bdb_options;
+<<<<<<< HEAD
   bdb_options.max_db_size = 100;
+=======
+  bdb_options.blob_dir_size = 100;
+>>>>>>> blood in blood out
   bdb_options.blob_file_size = 100;
   bdb_options.min_blob_size = 0;
   bdb_options.disable_background_tasks = true;
@@ -908,14 +1128,22 @@ TEST_F(BlobDBTest, MigrateFromPlainRocksDB) {
 }
 
 // Test to verify that a NoSpace IOError Status is returned on reaching
+<<<<<<< HEAD
 // max_db_size limit.
+=======
+// blob_dir_size limit.
+>>>>>>> blood in blood out
 TEST_F(BlobDBTest, OutOfSpace) {
   // Use mock env to stop wall clock.
   Options options;
   options.env = mock_env_.get();
   BlobDBOptions bdb_options;
+<<<<<<< HEAD
   bdb_options.max_db_size = 200;
   bdb_options.is_fifo = false;
+=======
+  bdb_options.blob_dir_size = 150;
+>>>>>>> blood in blood out
   bdb_options.disable_background_tasks = true;
   Open(bdb_options);
 
@@ -924,16 +1152,26 @@ TEST_F(BlobDBTest, OutOfSpace) {
   std::string value(100, 'v');
   ASSERT_OK(blob_db_->PutWithTTL(WriteOptions(), "key1", value, 60));
 
+<<<<<<< HEAD
   // Putting another blob should fail as ading it would exceed the max_db_size
+=======
+  // Putting another blob should fail as ading it would exceed the blob_dir_size
+>>>>>>> blood in blood out
   // limit.
   Status s = blob_db_->PutWithTTL(WriteOptions(), "key2", value, 60);
   ASSERT_TRUE(s.IsIOError());
   ASSERT_TRUE(s.IsNoSpace());
 }
 
+<<<<<<< HEAD
 TEST_F(BlobDBTest, FIFOEviction) {
   BlobDBOptions bdb_options;
   bdb_options.max_db_size = 200;
+=======
+TEST_F(BlobDBTest, EvictOldestFileWhenCloseToSpaceLimit) {
+  BlobDBOptions bdb_options;
+  bdb_options.blob_dir_size = 270;
+>>>>>>> blood in blood out
   bdb_options.blob_file_size = 100;
   bdb_options.is_fifo = true;
   bdb_options.disable_background_tasks = true;
@@ -949,6 +1187,7 @@ TEST_F(BlobDBTest, FIFOEviction) {
   // So a 100 byte blob should take up 132 bytes.
   std::string value(100, 'v');
   ASSERT_OK(blob_db_->PutWithTTL(WriteOptions(), "key1", value, 10));
+<<<<<<< HEAD
   VerifyDB({{"key1", value}});
 
   ASSERT_EQ(1, blob_db_impl()->TEST_GetBlobFiles().size());
@@ -995,6 +1234,34 @@ TEST_F(BlobDBTest, FIFOEviction_NoOldestFileToEvict) {
   Options options;
   BlobDBOptions bdb_options;
   bdb_options.max_db_size = 1000;
+=======
+
+  auto *bdb_impl = static_cast<BlobDBImpl *>(blob_db_);
+  auto blob_files = bdb_impl->TEST_GetBlobFiles();
+  ASSERT_EQ(1, blob_files.size());
+
+  // Adding another 100 byte blob would take the total size to 264 bytes
+  // (2*132), which is more than 90% of blob_dir_size. So, the oldest file
+  // should be evicted and put in obsolete files list.
+  ASSERT_OK(blob_db_->PutWithTTL(WriteOptions(), "key2", value, 60));
+
+  auto obsolete_files = bdb_impl->TEST_GetObsoleteFiles();
+  ASSERT_EQ(1, obsolete_files.size());
+  ASSERT_TRUE(obsolete_files[0]->Immutable());
+  ASSERT_EQ(blob_files[0]->BlobFileNumber(),
+            obsolete_files[0]->BlobFileNumber());
+
+  bdb_impl->TEST_DeleteObsoleteFiles();
+  obsolete_files = bdb_impl->TEST_GetObsoleteFiles();
+  ASSERT_TRUE(obsolete_files.empty());
+  ASSERT_EQ(1, evict_count);
+}
+
+TEST_F(BlobDBTest, NoOldestFileToEvict) {
+  Options options;
+  BlobDBOptions bdb_options;
+  bdb_options.blob_dir_size = 1000;
+>>>>>>> blood in blood out
   bdb_options.blob_file_size = 5000;
   bdb_options.is_fifo = true;
   bdb_options.disable_background_tasks = true;
@@ -1007,6 +1274,7 @@ TEST_F(BlobDBTest, FIFOEviction_NoOldestFileToEvict) {
   SyncPoint::GetInstance()->EnableProcessing();
 
   std::string value(2000, 'v');
+<<<<<<< HEAD
   ASSERT_TRUE(Put("foo", std::string(2000, 'v')).IsNoSpace());
   ASSERT_EQ(0, evict_count);
 }
@@ -1098,6 +1366,13 @@ TEST_F(BlobDBTest, FIFOEviction_TriggerOnSSTSizeChange) {
   VerifyDB(data);
 }
 
+=======
+  ASSERT_OK(Put("foo", std::string(2000, 'v')));
+  ASSERT_OK(Put("bar", std::string(2000, 'v')));
+  ASSERT_EQ(0, evict_count);
+}
+
+>>>>>>> blood in blood out
 TEST_F(BlobDBTest, InlineSmallValues) {
   constexpr uint64_t kMaxExpiration = 1000;
   Random rnd(301);
@@ -1174,7 +1449,10 @@ TEST_F(BlobDBTest, CompactionFilterNotSupported) {
   }
 }
 
+<<<<<<< HEAD
 // Test comapction filter should remove any expired blob index.
+=======
+>>>>>>> blood in blood out
 TEST_F(BlobDBTest, FilterExpiredBlobIndex) {
   constexpr size_t kNumKeys = 100;
   constexpr size_t kNumPuts = 1000;
@@ -1240,6 +1518,7 @@ TEST_F(BlobDBTest, FilterExpiredBlobIndex) {
   VerifyDB(data_after_compact);
 }
 
+<<<<<<< HEAD
 // Test compaction filter should remove any blob index where corresponding
 // blob file has been removed (either by FIFO or garbage collection).
 TEST_F(BlobDBTest, FilterFileNotAvailable) {
@@ -1411,6 +1690,8 @@ TEST_F(BlobDBTest, EvictExpiredFile) {
   ASSERT_EQ(0, blob_db_impl()->TEST_GetObsoleteFiles().size());
 }
 
+=======
+>>>>>>> blood in blood out
 }  //  namespace blob_db
 }  //  namespace rocksdb
 
@@ -1423,7 +1704,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr, "SKIPPED as BlobDB is not supported in ROCKSDB_LITE\n");
   return 0;
 }

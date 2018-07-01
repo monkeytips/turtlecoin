@@ -29,6 +29,7 @@ class MockedBlockBasedTable : public BlockBasedTable {
 
   virtual CachableEntry<FilterBlockReader> GetFilter(
       FilePrefetchBuffer*, const BlockHandle& filter_blk_handle,
+<<<<<<< HEAD
       const bool /* unused */, bool /* unused */, GetContext* /* unused */,
       const SliceTransform* prefix_extractor) const override {
     Slice slice = slices[filter_blk_handle.offset()];
@@ -48,6 +49,16 @@ class MockedBlockBasedTable : public BlockBasedTable {
         rep_->table_options.filter_policy->GetFilterBitsReader(slice), nullptr);
     return obj;
   }
+=======
+      const bool /* unused */, bool /* unused */,
+      GetContext* /* unused */) const override {
+    Slice slice = slices[filter_blk_handle.offset()];
+    auto obj = new FullFilterBlockReader(
+        nullptr, true, BlockContents(slice, false, kNoCompression),
+        rep_->table_options.filter_policy->GetFilterBitsReader(slice), nullptr);
+    return {obj, nullptr};
+  }
+>>>>>>> blood in blood out
 };
 
 class PartitionedFilterBlockTest : public testing::Test {
@@ -104,8 +115,12 @@ class PartitionedFilterBlockTest : public testing::Test {
   }
 
   PartitionedFilterBlockBuilder* NewBuilder(
+<<<<<<< HEAD
       PartitionedIndexBuilder* const p_index_builder,
       const SliceTransform* prefix_extractor = nullptr) {
+=======
+      PartitionedIndexBuilder* const p_index_builder) {
+>>>>>>> blood in blood out
     assert(table_options_.block_size_deviation <= 100);
     auto partition_size = static_cast<uint32_t>(
              ((table_options_.metadata_block_size *
@@ -114,7 +129,11 @@ class PartitionedFilterBlockTest : public testing::Test {
              100);
     partition_size = std::max(partition_size, static_cast<uint32_t>(1));
     return new PartitionedFilterBlockBuilder(
+<<<<<<< HEAD
         prefix_extractor, table_options_.whole_key_filtering,
+=======
+        nullptr, table_options_.whole_key_filtering,
+>>>>>>> blood in blood out
         table_options_.filter_policy->GetFilterBitsBuilder(),
         table_options_.index_block_restart_interval, p_index_builder,
         partition_size);
@@ -123,8 +142,12 @@ class PartitionedFilterBlockTest : public testing::Test {
   std::unique_ptr<MockedBlockBasedTable> table;
 
   PartitionedFilterBlockReader* NewReader(
+<<<<<<< HEAD
       PartitionedFilterBlockBuilder* builder, PartitionedIndexBuilder* pib,
       const SliceTransform* prefix_extractor) {
+=======
+      PartitionedFilterBlockBuilder* builder) {
+>>>>>>> blood in blood out
     BlockHandle bh;
     Status status;
     Slice slice;
@@ -134,6 +157,7 @@ class PartitionedFilterBlockTest : public testing::Test {
     } while (status.IsIncomplete());
     const Options options;
     const ImmutableCFOptions ioptions(options);
+<<<<<<< HEAD
     const MutableCFOptions moptions(options);
     const EnvOptions env_options;
     const bool kSkipFilters = true;
@@ -144,40 +168,68 @@ class PartitionedFilterBlockTest : public testing::Test {
     auto reader = new PartitionedFilterBlockReader(
         prefix_extractor, true, BlockContents(slice, false, kNoCompression),
         nullptr, nullptr, icomp, table.get(), pib->seperator_is_key_plus_seq());
+=======
+    const EnvOptions env_options;
+    table.reset(new MockedBlockBasedTable(new BlockBasedTable::Rep(
+        ioptions, env_options, table_options_, icomp, false)));
+    auto reader = new PartitionedFilterBlockReader(
+        nullptr, true, BlockContents(slice, false, kNoCompression), nullptr,
+        nullptr, *icomp.user_comparator(), table.get());
+>>>>>>> blood in blood out
     return reader;
   }
 
   void VerifyReader(PartitionedFilterBlockBuilder* builder,
+<<<<<<< HEAD
                     PartitionedIndexBuilder* pib, bool empty = false,
                     const SliceTransform* prefix_extractor = nullptr) {
     std::unique_ptr<PartitionedFilterBlockReader> reader(
         NewReader(builder, pib, prefix_extractor));
+=======
+                    bool empty = false) {
+    std::unique_ptr<PartitionedFilterBlockReader> reader(NewReader(builder));
+>>>>>>> blood in blood out
     // Querying added keys
     const bool no_io = true;
     for (auto key : keys) {
       auto ikey = InternalKey(key, 0, ValueType::kTypeValue);
       const Slice ikey_slice = Slice(*ikey.rep());
+<<<<<<< HEAD
       ASSERT_TRUE(reader->KeyMayMatch(key, prefix_extractor, kNotValid, !no_io,
                                       &ikey_slice));
+=======
+      ASSERT_TRUE(reader->KeyMayMatch(key, kNotValid, !no_io, &ikey_slice));
+>>>>>>> blood in blood out
     }
     {
       // querying a key twice
       auto ikey = InternalKey(keys[0], 0, ValueType::kTypeValue);
       const Slice ikey_slice = Slice(*ikey.rep());
+<<<<<<< HEAD
       ASSERT_TRUE(reader->KeyMayMatch(keys[0], prefix_extractor, kNotValid,
                                       !no_io, &ikey_slice));
+=======
+      ASSERT_TRUE(reader->KeyMayMatch(keys[0], kNotValid, !no_io, &ikey_slice));
+>>>>>>> blood in blood out
     }
     // querying missing keys
     for (auto key : missing_keys) {
       auto ikey = InternalKey(key, 0, ValueType::kTypeValue);
       const Slice ikey_slice = Slice(*ikey.rep());
       if (empty) {
+<<<<<<< HEAD
         ASSERT_TRUE(reader->KeyMayMatch(key, prefix_extractor, kNotValid,
                                         !no_io, &ikey_slice));
       } else {
         // assuming a good hash function
         ASSERT_FALSE(reader->KeyMayMatch(key, prefix_extractor, kNotValid,
                                          !no_io, &ikey_slice));
+=======
+        ASSERT_TRUE(reader->KeyMayMatch(key, kNotValid, !no_io, &ikey_slice));
+      } else {
+        // assuming a good hash function
+        ASSERT_FALSE(reader->KeyMayMatch(key, kNotValid, !no_io, &ikey_slice));
+>>>>>>> blood in blood out
       }
     }
   }
@@ -200,6 +252,7 @@ class PartitionedFilterBlockTest : public testing::Test {
     builder->Add(keys[i]);
     CutABlock(pib.get(), keys[i]);
 
+<<<<<<< HEAD
     VerifyReader(builder.get(), pib.get());
     return CountNumOfIndexPartitions(pib.get());
   }
@@ -208,6 +261,16 @@ class PartitionedFilterBlockTest : public testing::Test {
     std::unique_ptr<PartitionedIndexBuilder> pib(NewIndexBuilder());
     std::unique_ptr<PartitionedFilterBlockBuilder> builder(
         NewBuilder(pib.get(), prefix_extractor));
+=======
+    VerifyReader(builder.get());
+    return CountNumOfIndexPartitions(pib.get());
+  }
+
+  void TestBlockPerTwoKeys() {
+    std::unique_ptr<PartitionedIndexBuilder> pib(NewIndexBuilder());
+    std::unique_ptr<PartitionedFilterBlockBuilder> builder(
+        NewBuilder(pib.get()));
+>>>>>>> blood in blood out
     int i = 0;
     builder->Add(keys[i]);
     i++;
@@ -220,7 +283,11 @@ class PartitionedFilterBlockTest : public testing::Test {
     builder->Add(keys[i]);
     CutABlock(pib.get(), keys[i]);
 
+<<<<<<< HEAD
     VerifyReader(builder.get(), pib.get(), prefix_extractor);
+=======
+    VerifyReader(builder.get());
+>>>>>>> blood in blood out
   }
 
   void TestBlockPerAllKeys() {
@@ -238,7 +305,11 @@ class PartitionedFilterBlockTest : public testing::Test {
     builder->Add(keys[i]);
     CutABlock(pib.get(), keys[i]);
 
+<<<<<<< HEAD
     VerifyReader(builder.get(), pib.get());
+=======
+    VerifyReader(builder.get());
+>>>>>>> blood in blood out
   }
 
   void CutABlock(PartitionedIndexBuilder* builder,
@@ -279,7 +350,11 @@ TEST_F(PartitionedFilterBlockTest, EmptyBuilder) {
   std::unique_ptr<PartitionedIndexBuilder> pib(NewIndexBuilder());
   std::unique_ptr<PartitionedFilterBlockBuilder> builder(NewBuilder(pib.get()));
   const bool empty = true;
+<<<<<<< HEAD
   VerifyReader(builder.get(), pib.get(), empty);
+=======
+  VerifyReader(builder.get(), empty);
+>>>>>>> blood in blood out
 }
 
 TEST_F(PartitionedFilterBlockTest, OneBlock) {
@@ -298,6 +373,7 @@ TEST_F(PartitionedFilterBlockTest, TwoBlocksPerKey) {
   }
 }
 
+<<<<<<< HEAD
 // This reproduces the bug that a prefix is the same among multiple consecutive
 // blocks but the bug would add it only to the first block.
 TEST_F(PartitionedFilterBlockTest, SamePrefixInMultipleBlocks) {
@@ -326,6 +402,8 @@ TEST_F(PartitionedFilterBlockTest, SamePrefixInMultipleBlocks) {
   }
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_F(PartitionedFilterBlockTest, OneBlockPerKey) {
   uint64_t max_index_size = MaxIndexSize();
   for (uint64_t i = 1; i < max_index_size + 1; i++) {

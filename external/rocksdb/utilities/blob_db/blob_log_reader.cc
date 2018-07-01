@@ -16,7 +16,11 @@
 namespace rocksdb {
 namespace blob_db {
 
+<<<<<<< HEAD
 Reader::Reader(unique_ptr<RandomAccessFileReader>&& file_reader, Env* env,
+=======
+Reader::Reader(unique_ptr<SequentialFileReader>&& file_reader, Env* env,
+>>>>>>> blood in blood out
                Statistics* statistics)
     : file_(std::move(file_reader)),
       env_(env),
@@ -27,7 +31,11 @@ Reader::Reader(unique_ptr<RandomAccessFileReader>&& file_reader, Env* env,
 Status Reader::ReadSlice(uint64_t size, Slice* slice, std::string* buf) {
   StopWatch read_sw(env_, statistics_, BLOB_DB_BLOB_FILE_READ_MICROS);
   buf->reserve(size);
+<<<<<<< HEAD
   Status s = file_->Read(next_byte_, size, slice, &(*buf)[0]);
+=======
+  Status s = file_->Read(size, slice, &(*buf)[0]);
+>>>>>>> blood in blood out
   next_byte_ += size;
   if (!s.ok()) {
     return s;
@@ -76,11 +84,19 @@ Status Reader::ReadRecord(BlobLogRecord* record, ReadLevel level,
 
   switch (level) {
     case kReadHeader:
+<<<<<<< HEAD
+=======
+      file_->Skip(record->key_size + record->value_size);
+>>>>>>> blood in blood out
       next_byte_ += kb_size;
       break;
 
     case kReadHeaderKey:
       s = ReadSlice(record->key_size, &record->key, &record->key_buf);
+<<<<<<< HEAD
+=======
+      file_->Skip(record->value_size);
+>>>>>>> blood in blood out
       next_byte_ += record->value_size;
       break;
 

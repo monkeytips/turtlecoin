@@ -4,11 +4,17 @@
 //  (found in the LICENSE.Apache file in the root directory).
 package org.rocksdb;
 
+<<<<<<< HEAD
 import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+=======
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+>>>>>>> blood in blood out
 import org.junit.rules.TemporaryFolder;
 
 import java.util.*;
@@ -145,6 +151,7 @@ public class RocksDBTest {
     }
   }
 
+<<<<<<< HEAD
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
@@ -178,6 +185,8 @@ public class RocksDBTest {
     }
   }
 
+=======
+>>>>>>> blood in blood out
   @Test
   public void multiGet() throws RocksDBException, InterruptedException {
     try (final RocksDB db = RocksDB.open(dbFolder.getRoot().getAbsolutePath());

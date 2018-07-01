@@ -31,8 +31,16 @@ namespace CryptoNote {
   public:
     AccountBase();
     void generate();
+<<<<<<< HEAD
 
     const AccountKeys& getAccountKeys() const;
+=======
+    static void generateViewFromSpend(Crypto::SecretKey&, Crypto::SecretKey&, Crypto::PublicKey&);
+    static void generateViewFromSpend(Crypto::SecretKey&, Crypto::SecretKey&);
+
+    const AccountKeys& getAccountKeys() const;
+    void setAccountKeys(const AccountKeys& keys);
+>>>>>>> blood in blood out
     uint64_t get_createtime() const { return m_creation_timestamp; }
     void set_createtime(uint64_t val) { m_creation_timestamp = val; }
     void serialize(ISerializer& s);

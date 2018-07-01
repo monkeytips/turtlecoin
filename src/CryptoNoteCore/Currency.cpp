@@ -13,6 +13,7 @@
 #include "../Common/StringTools.h"
 
 #include "Account.h"
+<<<<<<< HEAD
 #include "CheckDifficulty.h"
 #include "CryptoNoteBasicImpl.h"
 #include "CryptoNoteFormatUtils.h"
@@ -25,6 +26,14 @@
 
 #include <Utilities/Addresses.h>
 
+=======
+#include "CryptoNoteBasicImpl.h"
+#include "CryptoNoteFormatUtils.h"
+#include "CryptoNoteTools.h"
+#include "TransactionExtra.h"
+#include "UpgradeDetector.h"
+
+>>>>>>> blood in blood out
 #undef ERROR
 
 using namespace Logging;
@@ -32,6 +41,32 @@ using namespace Common;
 
 namespace CryptoNote {
 
+<<<<<<< HEAD
+=======
+const std::vector<uint64_t> Currency::PRETTY_AMOUNTS = {
+  1, 2, 3, 4, 5, 6, 7, 8, 9,
+  10, 20, 30, 40, 50, 60, 70, 80, 90,
+  100, 200, 300, 400, 500, 600, 700, 800, 900,
+  1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000,
+  10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000,
+  100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000,
+  1000000, 2000000, 3000000, 4000000, 5000000, 6000000, 7000000, 8000000, 9000000,
+  10000000, 20000000, 30000000, 40000000, 50000000, 60000000, 70000000, 80000000, 90000000,
+  100000000, 200000000, 300000000, 400000000, 500000000, 600000000, 700000000, 800000000, 900000000,
+  1000000000, 2000000000, 3000000000, 4000000000, 5000000000, 6000000000, 7000000000, 8000000000, 9000000000,
+  10000000000, 20000000000, 30000000000, 40000000000, 50000000000, 60000000000, 70000000000, 80000000000, 90000000000,
+  100000000000, 200000000000, 300000000000, 400000000000, 500000000000, 600000000000, 700000000000, 800000000000, 900000000000,
+  1000000000000, 2000000000000, 3000000000000, 4000000000000, 5000000000000, 6000000000000, 7000000000000, 8000000000000, 9000000000000,
+  10000000000000, 20000000000000, 30000000000000, 40000000000000, 50000000000000, 60000000000000, 70000000000000, 80000000000000, 90000000000000,
+  100000000000000, 200000000000000, 300000000000000, 400000000000000, 500000000000000, 600000000000000, 700000000000000, 800000000000000, 900000000000000,
+  1000000000000000, 2000000000000000, 3000000000000000, 4000000000000000, 5000000000000000, 6000000000000000, 7000000000000000, 8000000000000000, 9000000000000000,
+  10000000000000000, 20000000000000000, 30000000000000000, 40000000000000000, 50000000000000000, 60000000000000000, 70000000000000000, 80000000000000000, 90000000000000000,
+  100000000000000000, 200000000000000000, 300000000000000000, 400000000000000000, 500000000000000000, 600000000000000000, 700000000000000000, 800000000000000000, 900000000000000000,
+  1000000000000000000, 2000000000000000000, 3000000000000000000, 4000000000000000000, 5000000000000000000, 6000000000000000000, 7000000000000000000, 8000000000000000000, 9000000000000000000,
+  10000000000000000000ull
+};
+
+>>>>>>> blood in blood out
 bool Currency::init() {
   if (!generateGenesisBlock()) {
     logger(ERROR, BRIGHT_RED) << "Failed to generate genesis block";
@@ -59,7 +94,18 @@ bool Currency::init() {
 bool Currency::generateGenesisBlock() {
   genesisBlockTemplate = boost::value_initialized<BlockTemplate>();
 
+<<<<<<< HEAD
   std::string genesisCoinbaseTxHex = CryptoNote::parameters::GENESIS_COINBASE_TX_HEX;
+=======
+  //account_public_address ac = boost::value_initialized<AccountPublicAddress>();
+  //std::vector<size_t> sz;
+  //constructMinerTx(0, 0, 0, 0, 0, ac, m_genesisBlock.baseTransaction); // zero fee in genesis
+  //BinaryArray txb = toBinaryArray(m_genesisBlock.baseTransaction);
+  //std::string hex_tx_represent = Common::toHex(txb);
+
+  // Hard code coinbase tx in genesis block, because through generating tx use random, but genesis should be always the same
+  std::string genesisCoinbaseTxHex = "012801ff000180a8d6b907022bfdeeee6f2d6ab60a0b67a7d504192a5e851b71174098f719363346697c4f79210115dcc364197ec66ce30c8e6fb1ca237b38162324c904f97eb4d21fc899426e3c";
+>>>>>>> blood in blood out
   BinaryArray minerTxBlob;
 
   bool r =
@@ -140,8 +186,11 @@ uint32_t Currency::upgradeHeight(uint8_t majorVersion) const {
     return m_upgradeHeightV3;
   } else if (majorVersion == BLOCK_MAJOR_VERSION_4) {
     return m_upgradeHeightV4;
+<<<<<<< HEAD
   } else if (majorVersion == BLOCK_MAJOR_VERSION_5) {
     return m_upgradeHeightV5;
+=======
+>>>>>>> blood in blood out
   } else {
     return static_cast<uint32_t>(-1);
   }
@@ -153,8 +202,14 @@ bool Currency::getBlockReward(uint8_t blockMajorVersion, size_t medianSize, size
   assert(m_emissionSpeedFactor > 0 && m_emissionSpeedFactor <= 8 * sizeof(uint64_t));
 
   uint64_t baseReward = (m_moneySupply - alreadyGeneratedCoins) >> m_emissionSpeedFactor;
+<<<<<<< HEAD
   if (alreadyGeneratedCoins == 0 && m_genesisBlockReward != 0) {
     baseReward = m_genesisBlockReward;
+=======
+  if (alreadyGeneratedCoins == 0 && m_genesisBlockReward != 2000000000) {
+    baseReward = m_genesisBlockReward;
+    std::cout << "Genesis block reward: " << baseReward << std::endl;
+>>>>>>> blood in blood out
   }
 
   size_t blockGrantedFullRewardZone = blockGrantedFullRewardZoneByBlockVersion(blockMajorVersion);
@@ -277,7 +332,11 @@ bool Currency::isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, c
 
   uint64_t inputAmount = 0;
   for (auto amount: inputsAmounts) {
+<<<<<<< HEAD
     if (amount < defaultFusionDustThreshold(height)) {
+=======
+    if (amount < defaultDustThreshold(height)) {
+>>>>>>> blood in blood out
       return false;
     }
 
@@ -286,7 +345,11 @@ bool Currency::isFusionTransaction(const std::vector<uint64_t>& inputsAmounts, c
 
   std::vector<uint64_t> expectedOutputsAmounts;
   expectedOutputsAmounts.reserve(outputsAmounts.size());
+<<<<<<< HEAD
   decomposeAmount(inputAmount, defaultFusionDustThreshold(height), expectedOutputsAmounts);
+=======
+  decomposeAmount(inputAmount, defaultDustThreshold(height), expectedOutputsAmounts);
+>>>>>>> blood in blood out
   std::sort(expectedOutputsAmounts.begin(), expectedOutputsAmounts.end());
 
   return expectedOutputsAmounts == outputsAmounts;
@@ -318,6 +381,7 @@ bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint6
     return false;
   }
 
+<<<<<<< HEAD
   if (amount < defaultFusionDustThreshold(height)) {
     return false;
   }
@@ -328,20 +392,44 @@ bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint6
   }
 
   amountPowerOfTen = static_cast<uint8_t>(std::distance(Constants::PRETTY_AMOUNTS.begin(), it) / 9);
+=======
+  if (amount < defaultDustThreshold(height)) {
+    return false;
+  }
+
+  auto it = std::lower_bound(PRETTY_AMOUNTS.begin(), PRETTY_AMOUNTS.end(), amount);
+  if (it == PRETTY_AMOUNTS.end() || amount != *it) {
+    return false;
+  }
+
+  amountPowerOfTen = static_cast<uint8_t>(std::distance(PRETTY_AMOUNTS.begin(), it) / 9);
+>>>>>>> blood in blood out
   return true;
 }
 
 std::string Currency::accountAddressAsString(const AccountBase& account) const {
+<<<<<<< HEAD
   return Utilities::getAccountAddressAsStr(m_publicAddressBase58Prefix, account.getAccountKeys().address);
 }
 
 std::string Currency::accountAddressAsString(const AccountPublicAddress& accountPublicAddress) const {
   return Utilities::getAccountAddressAsStr(m_publicAddressBase58Prefix, accountPublicAddress);
+=======
+  return getAccountAddressAsStr(m_publicAddressBase58Prefix, account.getAccountKeys().address);
+}
+
+std::string Currency::accountAddressAsString(const AccountPublicAddress& accountPublicAddress) const {
+  return getAccountAddressAsStr(m_publicAddressBase58Prefix, accountPublicAddress);
+>>>>>>> blood in blood out
 }
 
 bool Currency::parseAccountAddressString(const std::string& str, AccountPublicAddress& addr) const {
   uint64_t prefix;
+<<<<<<< HEAD
   if (!Utilities::parseAccountAddressString(prefix, addr, str)) {
+=======
+  if (!CryptoNote::parseAccountAddressString(prefix, addr, str)) {
+>>>>>>> blood in blood out
     return false;
   }
 
@@ -407,6 +495,7 @@ bool Currency::parseAmount(const std::string& str, uint64_t& amount) const {
   return Common::fromString(strAmount, amount);
 }
 
+<<<<<<< HEAD
 uint64_t Currency::getNextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<uint64_t> cumulativeDifficulties) const
 {
     if (blockIndex >= CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX_V3)
@@ -429,6 +518,106 @@ uint64_t Currency::getNextDifficulty(uint8_t version, uint32_t blockIndex, std::
 
 uint64_t Currency::nextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps,
   std::vector<uint64_t> cumulativeDifficulties) const {
+=======
+Difficulty Currency::getNextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const
+{
+    if (blockIndex < CryptoNote::parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX)
+    {
+        return nextDifficulty(version, blockIndex, timestamps, cumulativeDifficulties);
+    }
+
+    return nextDifficultyV3(timestamps, cumulativeDifficulties);
+}
+
+// LWMA-2 difficulty algorithm
+// Copyright (c) 2017-2018 Zawy, MIT License
+// https://github.com/zawy12/difficulty-algorithms/issues/3
+Difficulty Currency::nextDifficultyV3(std::vector<std::uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const
+{
+    int64_t T = CryptoNote::parameters::DIFFICULTY_TARGET;
+    int64_t N = CryptoNote::parameters::DIFFICULTY_WINDOW_V3;
+    int64_t FTL = CryptoNote::parameters::CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT_V3;
+    int64_t L(0), ST, sum_3_ST(0), next_D, prev_D;
+
+    if (timestamps.size() <= static_cast<uint64_t>(N))
+    {
+        return 1000;
+    }
+
+    for (int64_t i = 1; i <= N; i++)
+    {
+        ST = std::max(-FTL, std::min(static_cast<int64_t>(timestamps[i]) - static_cast<int64_t>(timestamps[i-1]), 6 * T));
+
+        L +=  ST * i;
+
+        if (i > N-3)
+        {
+            sum_3_ST += ST;
+        }
+    }
+
+    next_D = (static_cast<int64_t>(cumulativeDifficulties[N] - cumulativeDifficulties[0]) * T * (N+1) * 99) / (100 * 2 * L);
+    prev_D = cumulativeDifficulties[N] - cumulativeDifficulties[N-1];
+
+    /* Make sure we don't divide by zero if 50x attacker (thanks fireice) */
+    next_D = std::max((prev_D*67)/100, std::min(next_D, (prev_D*150)/100));
+
+    if (sum_3_ST < (8 * T) / 10)
+    {
+        next_D = std::max(next_D, (prev_D * 110) / 100);
+    }
+
+    return static_cast<uint64_t>(next_D);
+}
+
+Difficulty Currency::nextDifficulty(std::vector<uint64_t> timestamps,
+  std::vector<Difficulty> cumulativeDifficulties) const {
+  assert(m_difficultyWindow >= 2);
+
+  if (timestamps.size() > m_difficultyWindow) {
+    timestamps.resize(m_difficultyWindow);
+    cumulativeDifficulties.resize(m_difficultyWindow);
+  }
+
+  size_t length = timestamps.size();
+  assert(length == cumulativeDifficulties.size());
+  assert(length <= m_difficultyWindow);
+  if (length <= 1) {
+    return 1;
+  }
+
+  sort(timestamps.begin(), timestamps.end());
+
+  size_t cutBegin, cutEnd;
+  assert(2 * m_difficultyCut <= m_difficultyWindow - 2);
+  if (length <= m_difficultyWindow - 2 * m_difficultyCut) {
+    cutBegin = 0;
+    cutEnd = length;
+  } else {
+    cutBegin = (length - (m_difficultyWindow - 2 * m_difficultyCut) + 1) / 2;
+    cutEnd = cutBegin + (m_difficultyWindow - 2 * m_difficultyCut);
+  }
+  assert(/*cut_begin >= 0 &&*/ cutBegin + 2 <= cutEnd && cutEnd <= length);
+  uint64_t timeSpan = timestamps[cutEnd - 1] - timestamps[cutBegin];
+  if (timeSpan == 0) {
+    timeSpan = 1;
+  }
+
+  Difficulty totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
+  assert(totalWork > 0);
+
+  uint64_t low, high;
+  low = mul128(totalWork, m_difficultyTarget, &high);
+  if (high != 0 || std::numeric_limits<uint64_t>::max() - low < (timeSpan - 1)) {
+    return 0;
+  }
+
+  return (low + timeSpan - 1) / timeSpan;
+}
+
+Difficulty Currency::nextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps,
+  std::vector<Difficulty> cumulativeDifficulties) const {
+>>>>>>> blood in blood out
 
 std::vector<uint64_t> timestamps_o(timestamps);
 std::vector<uint64_t> cumulativeDifficulties_o(cumulativeDifficulties);
@@ -466,7 +655,11 @@ std::vector<uint64_t> cumulativeDifficulties_o(cumulativeDifficulties);
     timeSpan = 1;
   }
 
+<<<<<<< HEAD
   uint64_t totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
+=======
+  Difficulty totalWork = cumulativeDifficulties[cutEnd - 1] - cumulativeDifficulties[cutBegin];
+>>>>>>> blood in blood out
   assert(totalWork > 0);
 
   uint64_t low, high;
@@ -551,21 +744,36 @@ std::vector<uint64_t> cumulativeDifficulties_o(cumulativeDifficulties);
   return (low + timeSpan - 1) / timeSpan;  // with version
 }
 
+<<<<<<< HEAD
 bool Currency::checkProofOfWorkV1(const CachedBlock& block, uint64_t currentDifficulty) const {
+=======
+bool Currency::checkProofOfWorkV1(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const {
+>>>>>>> blood in blood out
   if (BLOCK_MAJOR_VERSION_1 != block.getBlock().majorVersion) {
     return false;
   }
 
+<<<<<<< HEAD
   return check_hash(block.getBlockLongHash(), currentDifficulty);
 }
 
 bool Currency::checkProofOfWorkV2(const CachedBlock& cachedBlock, uint64_t currentDifficulty) const {
+=======
+  return check_hash(block.getBlockLongHash(context), currentDifficulty);
+}
+
+bool Currency::checkProofOfWorkV2(Crypto::cn_context& context, const CachedBlock& cachedBlock, Difficulty currentDifficulty) const {
+>>>>>>> blood in blood out
   const auto& block = cachedBlock.getBlock();
   if (block.majorVersion < BLOCK_MAJOR_VERSION_2) {
     return false;
   }
 
+<<<<<<< HEAD
   if (!check_hash(cachedBlock.getBlockLongHash(), currentDifficulty)) {
+=======
+  if (!check_hash(cachedBlock.getBlockLongHash(context), currentDifficulty)) {
+>>>>>>> blood in blood out
     return false;
   }
 
@@ -591,22 +799,59 @@ bool Currency::checkProofOfWorkV2(const CachedBlock& cachedBlock, uint64_t curre
   return true;
 }
 
+<<<<<<< HEAD
 bool Currency::checkProofOfWork(const CachedBlock& block, uint64_t currentDiffic) const {
   switch (block.getBlock().majorVersion) {
   case BLOCK_MAJOR_VERSION_1:
     return checkProofOfWorkV1(block, currentDiffic);
+=======
+bool Currency::checkProofOfWork(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDiffic) const {
+  switch (block.getBlock().majorVersion) {
+  case BLOCK_MAJOR_VERSION_1:
+    return checkProofOfWorkV1(context, block, currentDiffic);
+>>>>>>> blood in blood out
 
   case BLOCK_MAJOR_VERSION_2:
   case BLOCK_MAJOR_VERSION_3:
   case BLOCK_MAJOR_VERSION_4:
+<<<<<<< HEAD
   case BLOCK_MAJOR_VERSION_5:
     return checkProofOfWorkV2(block, currentDiffic);
+=======
+    return checkProofOfWorkV2(context, block, currentDiffic);
+>>>>>>> blood in blood out
   }
 
   logger(ERROR, BRIGHT_RED) << "Unknown block major version: " << block.getBlock().majorVersion << "." << block.getBlock().minorVersion;
   return false;
 }
 
+<<<<<<< HEAD
+=======
+size_t Currency::getApproximateMaximumInputCount(size_t transactionSize, size_t outputCount, size_t mixinCount) const {
+  const size_t KEY_IMAGE_SIZE = sizeof(Crypto::KeyImage);
+  const size_t OUTPUT_KEY_SIZE = sizeof(decltype(KeyOutput::key));
+  const size_t AMOUNT_SIZE = sizeof(uint64_t) + 2; //varint
+  const size_t GLOBAL_INDEXES_VECTOR_SIZE_SIZE = sizeof(uint8_t);//varint
+  const size_t GLOBAL_INDEXES_INITIAL_VALUE_SIZE = sizeof(uint32_t);//varint
+  const size_t GLOBAL_INDEXES_DIFFERENCE_SIZE = sizeof(uint32_t);//varint
+  const size_t SIGNATURE_SIZE = sizeof(Crypto::Signature);
+  const size_t EXTRA_TAG_SIZE = sizeof(uint8_t);
+  const size_t INPUT_TAG_SIZE = sizeof(uint8_t);
+  const size_t OUTPUT_TAG_SIZE = sizeof(uint8_t);
+  const size_t PUBLIC_KEY_SIZE = sizeof(Crypto::PublicKey);
+  const size_t TRANSACTION_VERSION_SIZE = sizeof(uint8_t);
+  const size_t TRANSACTION_UNLOCK_TIME_SIZE = sizeof(uint64_t);
+
+  const size_t outputsSize = outputCount * (OUTPUT_TAG_SIZE + OUTPUT_KEY_SIZE + AMOUNT_SIZE);
+  const size_t headerSize = TRANSACTION_VERSION_SIZE + TRANSACTION_UNLOCK_TIME_SIZE + EXTRA_TAG_SIZE + PUBLIC_KEY_SIZE;
+  const size_t inputSize = INPUT_TAG_SIZE + AMOUNT_SIZE + KEY_IMAGE_SIZE + SIGNATURE_SIZE + GLOBAL_INDEXES_VECTOR_SIZE_SIZE + GLOBAL_INDEXES_INITIAL_VALUE_SIZE +
+                            mixinCount * (GLOBAL_INDEXES_DIFFERENCE_SIZE + SIGNATURE_SIZE);
+
+  return (transactionSize - headerSize - outputsSize) / inputSize;
+}
+
+>>>>>>> blood in blood out
 Currency::Currency(Currency&& currency) :
 m_maxBlockHeight(currency.m_maxBlockHeight),
 m_maxBlockBlobSize(currency.m_maxBlockBlobSize),
@@ -642,7 +887,10 @@ m_fusionTxMinInOutCountRatio(currency.m_fusionTxMinInOutCountRatio),
 m_upgradeHeightV2(currency.m_upgradeHeightV2),
 m_upgradeHeightV3(currency.m_upgradeHeightV3),
 m_upgradeHeightV4(currency.m_upgradeHeightV4),
+<<<<<<< HEAD
 m_upgradeHeightV5(currency.m_upgradeHeightV5),
+=======
+>>>>>>> blood in blood out
 m_upgradeVotingThreshold(currency.m_upgradeVotingThreshold),
 m_upgradeVotingWindow(currency.m_upgradeVotingWindow),
 m_upgradeWindow(currency.m_upgradeWindow),
@@ -659,7 +907,11 @@ cachedGenesisBlock(new CachedBlock(genesisBlockTemplate)),
 logger(currency.logger) {
 }
 
+<<<<<<< HEAD
 CurrencyBuilder::CurrencyBuilder(std::shared_ptr<Logging::ILogger> log) : m_currency(log) {
+=======
+CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log) : m_currency(log) {
+>>>>>>> blood in blood out
   maxBlockNumber(parameters::CRYPTONOTE_MAX_BLOCK_NUMBER);
   maxBlockBlobSize(parameters::CRYPTONOTE_MAX_BLOCK_BLOB_SIZE);
   maxTxSize(parameters::CRYPTONOTE_MAX_TX_SIZE);
@@ -708,7 +960,10 @@ zawyDifficultyBlockVersion(parameters::ZAWY_DIFFICULTY_DIFFICULTY_BLOCK_VERSION)
   upgradeHeightV2(parameters::UPGRADE_HEIGHT_V2);
   upgradeHeightV3(parameters::UPGRADE_HEIGHT_V3);
   upgradeHeightV4(parameters::UPGRADE_HEIGHT_V4);
+<<<<<<< HEAD
   upgradeHeightV5(parameters::UPGRADE_HEIGHT_V5);
+=======
+>>>>>>> blood in blood out
   upgradeVotingThreshold(parameters::UPGRADE_VOTING_THRESHOLD);
   upgradeVotingWindow(parameters::UPGRADE_VOTING_WINDOW);
   upgradeWindow(parameters::UPGRADE_WINDOW);
@@ -758,6 +1013,10 @@ Transaction CurrencyBuilder::generateGenesisTransaction() {
       tk.key = outEphemeralPubKey;
       TransactionOutput out;
       out.amount = (i == 0) ? first_target_amount : target_amount;
+<<<<<<< HEAD
+=======
+      std::cout << "outs: " << std::to_string(out.amount) << std::endl;
+>>>>>>> blood in blood out
       out.target = tk;
       tx.outputs.push_back(out);
     }

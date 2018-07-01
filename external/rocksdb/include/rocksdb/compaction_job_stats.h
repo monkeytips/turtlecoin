@@ -72,7 +72,11 @@ struct CompactionJobStats {
   // Time spent on file fsync.
   uint64_t file_fsync_nanos;
 
+<<<<<<< HEAD
   // Time spent on preparing file write (fallocate, etc)
+=======
+  // Time spent on preparing file write (falocate, etc)
+>>>>>>> blood in blood out
   uint64_t file_prepare_write_nanos;
 
   // 0-terminated strings storing the first 8 bytes of the smallest and

@@ -179,6 +179,7 @@ public class DBOptions
   }
 
   @Override
+<<<<<<< HEAD
   public DBOptions setSstFileManager(final SstFileManager sstFileManager) {
     assert(isOwningHandle());
     setSstFileManager(nativeHandle_, sstFileManager.nativeHandle_);
@@ -186,6 +187,8 @@ public class DBOptions
   }
 
   @Override
+=======
+>>>>>>> blood in blood out
   public DBOptions setLogger(final Logger logger) {
     assert(isOwningHandle());
     setLogger(nativeHandle_, logger.nativeHandle_);
@@ -995,8 +998,11 @@ public class DBOptions
   private native boolean paranoidChecks(long handle);
   private native void setRateLimiter(long handle,
       long rateLimiterHandle);
+<<<<<<< HEAD
   private native void setSstFileManager(final long handle,
       final long sstFileManagerHandle);
+=======
+>>>>>>> blood in blood out
   private native void setLogger(long handle,
       long loggerHandle);
   private native void setInfoLogLevel(long handle, byte logLevel);

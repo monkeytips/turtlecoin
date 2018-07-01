@@ -24,7 +24,11 @@ class CompactFilesTest : public testing::Test {
  public:
   CompactFilesTest() {
     env_ = Env::Default();
+<<<<<<< HEAD
     db_name_ = test::PerThreadDBPath("compact_files_test");
+=======
+    db_name_ = test::TmpDir(env_) + "/compact_files_test";
+>>>>>>> blood in blood out
   }
 
   std::string db_name_;
@@ -37,7 +41,12 @@ class FlushedFileCollector : public EventListener {
   FlushedFileCollector() {}
   ~FlushedFileCollector() {}
 
+<<<<<<< HEAD
   virtual void OnFlushCompleted(DB* /*db*/, const FlushJobInfo& info) override {
+=======
+  virtual void OnFlushCompleted(
+      DB* db, const FlushJobInfo& info) override {
+>>>>>>> blood in blood out
     std::lock_guard<std::mutex> lock(mutex_);
     flushed_files_.push_back(info.file_path);
   }
@@ -256,9 +265,15 @@ TEST_F(CompactFilesTest, CapturingPendingFiles) {
 TEST_F(CompactFilesTest, CompactionFilterWithGetSv) {
   class FilterWithGet : public CompactionFilter {
    public:
+<<<<<<< HEAD
     virtual bool Filter(int /*level*/, const Slice& /*key*/,
                         const Slice& /*value*/, std::string* /*new_value*/,
                         bool* /*value_changed*/) const override {
+=======
+    virtual bool Filter(int level, const Slice& key, const Slice& value,
+                        std::string* new_value,
+                        bool* value_changed) const override {
+>>>>>>> blood in blood out
       if (db_ == nullptr) {
         return true;
       }
@@ -318,7 +333,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr,
           "SKIPPED as DBImpl::CompactFiles is not supported in ROCKSDB_LITE\n");
   return 0;

@@ -52,21 +52,28 @@ class MergingIterator : public InternalIterator {
     }
     for (auto& child : children_) {
       if (child.Valid()) {
+<<<<<<< HEAD
         assert(child.status().ok());
         minHeap_.push(&child);
       } else {
         considerStatus(child.status());
+=======
+        minHeap_.push(&child);
+>>>>>>> blood in blood out
       }
     }
     current_ = CurrentForward();
   }
 
+<<<<<<< HEAD
   void considerStatus(Status s) {
     if (!s.ok() && status_.ok()) {
       status_ = s;
     }
   }
 
+=======
+>>>>>>> blood in blood out
   virtual void AddIterator(InternalIterator* iter) {
     assert(direction_ == kForward);
     children_.emplace_back(iter);
@@ -75,11 +82,16 @@ class MergingIterator : public InternalIterator {
     }
     auto new_wrapper = children_.back();
     if (new_wrapper.Valid()) {
+<<<<<<< HEAD
       assert(new_wrapper.status().ok());
       minHeap_.push(&new_wrapper);
       current_ = CurrentForward();
     } else {
       considerStatus(new_wrapper.status());
+=======
+      minHeap_.push(&new_wrapper);
+      current_ = CurrentForward();
+>>>>>>> blood in blood out
     }
   }
 
@@ -89,6 +101,7 @@ class MergingIterator : public InternalIterator {
     }
   }
 
+<<<<<<< HEAD
   virtual bool Valid() const override {
     return current_ != nullptr && status_.ok();
   }
@@ -105,6 +118,16 @@ class MergingIterator : public InternalIterator {
         minHeap_.push(&child);
       } else {
         considerStatus(child.status());
+=======
+  virtual bool Valid() const override { return (current_ != nullptr); }
+
+  virtual void SeekToFirst() override {
+    ClearHeaps();
+    for (auto& child : children_) {
+      child.SeekToFirst();
+      if (child.Valid()) {
+        minHeap_.push(&child);
+>>>>>>> blood in blood out
       }
     }
     direction_ = kForward;
@@ -114,6 +137,7 @@ class MergingIterator : public InternalIterator {
   virtual void SeekToLast() override {
     ClearHeaps();
     InitMaxHeap();
+<<<<<<< HEAD
     status_ = Status::OK();
     for (auto& child : children_) {
       child.SeekToLast();
@@ -122,6 +146,12 @@ class MergingIterator : public InternalIterator {
         maxHeap_->push(&child);
       } else {
         considerStatus(child.status());
+=======
+    for (auto& child : children_) {
+      child.SeekToLast();
+      if (child.Valid()) {
+        maxHeap_->push(&child);
+>>>>>>> blood in blood out
       }
     }
     direction_ = kReverse;
@@ -130,7 +160,10 @@ class MergingIterator : public InternalIterator {
 
   virtual void Seek(const Slice& target) override {
     ClearHeaps();
+<<<<<<< HEAD
     status_ = Status::OK();
+=======
+>>>>>>> blood in blood out
     for (auto& child : children_) {
       {
         PERF_TIMER_GUARD(seek_child_seek_time);
@@ -139,11 +172,16 @@ class MergingIterator : public InternalIterator {
       PERF_COUNTER_ADD(seek_child_seek_count, 1);
 
       if (child.Valid()) {
+<<<<<<< HEAD
         assert(child.status().ok());
         PERF_TIMER_GUARD(seek_min_heap_time);
         minHeap_.push(&child);
       } else {
         considerStatus(child.status());
+=======
+        PERF_TIMER_GUARD(seek_min_heap_time);
+        minHeap_.push(&child);
+>>>>>>> blood in blood out
       }
     }
     direction_ = kForward;
@@ -156,7 +194,10 @@ class MergingIterator : public InternalIterator {
   virtual void SeekForPrev(const Slice& target) override {
     ClearHeaps();
     InitMaxHeap();
+<<<<<<< HEAD
     status_ = Status::OK();
+=======
+>>>>>>> blood in blood out
 
     for (auto& child : children_) {
       {
@@ -166,11 +207,16 @@ class MergingIterator : public InternalIterator {
       PERF_COUNTER_ADD(seek_child_seek_count, 1);
 
       if (child.Valid()) {
+<<<<<<< HEAD
         assert(child.status().ok());
         PERF_TIMER_GUARD(seek_max_heap_time);
         maxHeap_->push(&child);
       } else {
         considerStatus(child.status());
+=======
+        PERF_TIMER_GUARD(seek_max_heap_time);
+        maxHeap_->push(&child);
+>>>>>>> blood in blood out
       }
     }
     direction_ = kReverse;
@@ -204,11 +250,17 @@ class MergingIterator : public InternalIterator {
       // current is still valid after the Next() call above.  Call
       // replace_top() to restore the heap property.  When the same child
       // iterator yields a sequence of keys, this is cheap.
+<<<<<<< HEAD
       assert(current_->status().ok());
       minHeap_.replace_top(current_);
     } else {
       // current stopped being valid, remove it from the heap.
       considerStatus(current_->status());
+=======
+      minHeap_.replace_top(current_);
+    } else {
+      // current stopped being valid, remove it from the heap.
+>>>>>>> blood in blood out
       minHeap_.pop();
     }
     current_ = CurrentForward();
@@ -225,6 +277,7 @@ class MergingIterator : public InternalIterator {
       // just after the if-block.
       ClearHeaps();
       InitMaxHeap();
+<<<<<<< HEAD
       Slice target = key();
       for (auto& child : children_) {
         if (&child != current_) {
@@ -238,6 +291,30 @@ class MergingIterator : public InternalIterator {
         }
         if (child.Valid()) {
           assert(child.status().ok());
+=======
+      for (auto& child : children_) {
+        if (&child != current_) {
+          if (!prefix_seek_mode_) {
+            child.Seek(key());
+            if (child.Valid()) {
+              // Child is at first entry >= key().  Step back one to be < key()
+              TEST_SYNC_POINT_CALLBACK("MergeIterator::Prev:BeforePrev",
+                                       &child);
+              child.Prev();
+            } else {
+              // Child has no entries >= key().  Position at last entry.
+              TEST_SYNC_POINT("MergeIterator::Prev:BeforeSeekToLast");
+              child.SeekToLast();
+            }
+          } else {
+            child.SeekForPrev(key());
+            if (child.Valid() && comparator_->Equal(key(), child.key())) {
+              child.Prev();
+            }
+          }
+        }
+        if (child.Valid()) {
+>>>>>>> blood in blood out
           maxHeap_->push(&child);
         }
       }
@@ -263,11 +340,17 @@ class MergingIterator : public InternalIterator {
       // current is still valid after the Prev() call above.  Call
       // replace_top() to restore the heap property.  When the same child
       // iterator yields a sequence of keys, this is cheap.
+<<<<<<< HEAD
       assert(current_->status().ok());
       maxHeap_->replace_top(current_);
     } else {
       // current stopped being valid, remove it from the heap.
       considerStatus(current_->status());
+=======
+      maxHeap_->replace_top(current_);
+    } else {
+      // current stopped being valid, remove it from the heap.
+>>>>>>> blood in blood out
       maxHeap_->pop();
     }
     current_ = CurrentReverse();
@@ -283,6 +366,20 @@ class MergingIterator : public InternalIterator {
     return current_->value();
   }
 
+<<<<<<< HEAD
+=======
+  virtual Status status() const override {
+    Status s;
+    for (auto& child : children_) {
+      s = child.status();
+      if (!s.ok()) {
+        break;
+      }
+    }
+    return s;
+  }
+
+>>>>>>> blood in blood out
   virtual void SetPinnedItersMgr(
       PinnedIteratorsManager* pinned_iters_mgr) override {
     pinned_iters_mgr_ = pinned_iters_mgr;
@@ -318,8 +415,11 @@ class MergingIterator : public InternalIterator {
   // child iterators are valid.  This is the top of minHeap_ or maxHeap_
   // depending on the direction.
   IteratorWrapper* current_;
+<<<<<<< HEAD
   // If any of the children have non-ok status, this is one of them.
   Status status_;
+=======
+>>>>>>> blood in blood out
   // Which direction is the iterator moving?
   enum Direction {
     kForward,
@@ -352,6 +452,7 @@ void MergingIterator::SwitchToForward() {
   // Otherwise, advance the non-current children.  We advance current_
   // just after the if-block.
   ClearHeaps();
+<<<<<<< HEAD
   Slice target = key();
   for (auto& child : children_) {
     if (&child != current_) {
@@ -360,6 +461,13 @@ void MergingIterator::SwitchToForward() {
       if (child.Valid() && comparator_->Equal(target, child.key())) {
         child.Next();
         considerStatus(child.status());
+=======
+  for (auto& child : children_) {
+    if (&child != current_) {
+      child.Seek(key());
+      if (child.Valid() && comparator_->Equal(key(), child.key())) {
+        child.Next();
+>>>>>>> blood in blood out
       }
     }
     if (child.Valid()) {

@@ -89,6 +89,13 @@ void P2pConnectionProxy::write(const P2pMessage &message) {
   }
 }
 
+<<<<<<< HEAD
+=======
+void P2pConnectionProxy::ban() {
+  // not implemented
+}
+
+>>>>>>> blood in blood out
 void P2pConnectionProxy::stop() {
   m_context.stop();
 }

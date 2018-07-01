@@ -14,7 +14,10 @@
 #include "rocksdb/slice.h"
 #include "rocksdb/statistics.h"
 #include "rocksdb/status.h"
+<<<<<<< HEAD
 #include "util/file_reader_writer.h"
+=======
+>>>>>>> blood in blood out
 #include "utilities/blob_db/blob_log_format.h"
 
 namespace rocksdb {
@@ -40,7 +43,11 @@ class Reader {
 
   // Create a reader that will return log records from "*file".
   // "*file" must remain live while this Reader is in use.
+<<<<<<< HEAD
   Reader(std::unique_ptr<RandomAccessFileReader>&& file_reader, Env* env,
+=======
+  Reader(std::unique_ptr<SequentialFileReader>&& file_reader, Env* env,
+>>>>>>> blood in blood out
          Statistics* statistics);
 
   ~Reader() = default;
@@ -67,7 +74,11 @@ class Reader {
   uint64_t GetNextByte() const { return next_byte_; }
 
  private:
+<<<<<<< HEAD
   const std::unique_ptr<RandomAccessFileReader> file_;
+=======
+  const std::unique_ptr<SequentialFileReader> file_;
+>>>>>>> blood in blood out
   Env* env_;
   Statistics* statistics_;
 

@@ -79,7 +79,11 @@ void CompactionJobStats::Add(const CompactionJobStats& stats) {
 
 void CompactionJobStats::Reset() {}
 
+<<<<<<< HEAD
 void CompactionJobStats::Add(const CompactionJobStats& /*stats*/) {}
+=======
+void CompactionJobStats::Add(const CompactionJobStats& stats) {}
+>>>>>>> blood in blood out
 
 #endif  // !ROCKSDB_LITE
 

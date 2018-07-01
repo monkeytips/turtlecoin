@@ -27,7 +27,11 @@ namespace CryptoNote {
 
 class TransfersSubscription : public IObservableImpl < ITransfersObserver, ITransfersSubscription > {
 public:
+<<<<<<< HEAD
   TransfersSubscription(const CryptoNote::Currency& currency, std::shared_ptr<Logging::ILogger> logger, const AccountSubscription& sub);
+=======
+  TransfersSubscription(const CryptoNote::Currency& currency, Logging::ILogger& logger, const AccountSubscription& sub);
+>>>>>>> blood in blood out
 
   SynchronizationStart getSyncStart();
   void onBlockchainDetach(uint32_t height);

@@ -84,8 +84,15 @@ const std::string& ThreadStatus::GetOperationPropertyName(
   }
 }
 
+<<<<<<< HEAD
 std::map<std::string, uint64_t> ThreadStatus::InterpretOperationProperties(
     ThreadStatus::OperationType op_type, const uint64_t* op_properties) {
+=======
+std::map<std::string, uint64_t>
+    ThreadStatus::InterpretOperationProperties(
+    ThreadStatus::OperationType op_type,
+    const uint64_t* op_properties) {
+>>>>>>> blood in blood out
   int num_properties;
   switch (op_type) {
     case OP_COMPACTION:
@@ -100,6 +107,7 @@ std::map<std::string, uint64_t> ThreadStatus::InterpretOperationProperties(
 
   std::map<std::string, uint64_t> property_map;
   for (int i = 0; i < num_properties; ++i) {
+<<<<<<< HEAD
     if (op_type == OP_COMPACTION && i == COMPACTION_INPUT_OUTPUT_LEVEL) {
       property_map.insert({"BaseInputLevel", op_properties[i] >> 32});
       property_map.insert(
@@ -108,6 +116,22 @@ std::map<std::string, uint64_t> ThreadStatus::InterpretOperationProperties(
       property_map.insert({"IsManual", ((op_properties[i] & 2) >> 1)});
       property_map.insert({"IsDeletion", ((op_properties[i] & 4) >> 2)});
       property_map.insert({"IsTrivialMove", ((op_properties[i] & 8) >> 3)});
+=======
+    if (op_type == OP_COMPACTION &&
+        i == COMPACTION_INPUT_OUTPUT_LEVEL) {
+      property_map.insert(
+          {"BaseInputLevel", op_properties[i] >> 32});
+      property_map.insert(
+          {"OutputLevel", op_properties[i] % (uint64_t(1) << 32U)});
+    } else if (op_type == OP_COMPACTION &&
+               i == COMPACTION_PROP_FLAGS) {
+      property_map.insert(
+          {"IsManual", ((op_properties[i] & 2) >> 1)});
+      property_map.insert(
+          {"IsDeletion", ((op_properties[i] & 4) >> 2)});
+      property_map.insert(
+          {"IsTrivialMove", ((op_properties[i] & 8) >> 3)});
+>>>>>>> blood in blood out
     } else {
       property_map.insert(
           {GetOperationPropertyName(op_type, i), op_properties[i]});
@@ -116,46 +140,82 @@ std::map<std::string, uint64_t> ThreadStatus::InterpretOperationProperties(
   return property_map;
 }
 
+<<<<<<< HEAD
 #else
 
 std::string ThreadStatus::GetThreadTypeName(
     ThreadStatus::ThreadType /*thread_type*/) {
+=======
+
+#else
+
+std::string ThreadStatus::GetThreadTypeName(
+    ThreadStatus::ThreadType thread_type) {
+>>>>>>> blood in blood out
   static std::string dummy_str = "";
   return dummy_str;
 }
 
 const std::string& ThreadStatus::GetOperationName(
+<<<<<<< HEAD
     ThreadStatus::OperationType /*op_type*/) {
+=======
+    ThreadStatus::OperationType op_type) {
+>>>>>>> blood in blood out
   static std::string dummy_str = "";
   return dummy_str;
 }
 
 const std::string& ThreadStatus::GetOperationStageName(
+<<<<<<< HEAD
     ThreadStatus::OperationStage /*stage*/) {
+=======
+    ThreadStatus::OperationStage stage) {
+>>>>>>> blood in blood out
   static std::string dummy_str = "";
   return dummy_str;
 }
 
 const std::string& ThreadStatus::GetStateName(
+<<<<<<< HEAD
     ThreadStatus::StateType /*state_type*/) {
+=======
+    ThreadStatus::StateType state_type) {
+>>>>>>> blood in blood out
   static std::string dummy_str = "";
   return dummy_str;
 }
 
+<<<<<<< HEAD
 const std::string ThreadStatus::MicrosToString(uint64_t /*op_elapsed_time*/) {
+=======
+const std::string ThreadStatus::MicrosToString(
+    uint64_t op_elapsed_time) {
+>>>>>>> blood in blood out
   static std::string dummy_str = "";
   return dummy_str;
 }
 
 const std::string& ThreadStatus::GetOperationPropertyName(
+<<<<<<< HEAD
     ThreadStatus::OperationType /*op_type*/, int /*i*/) {
+=======
+    ThreadStatus::OperationType op_type, int i) {
+>>>>>>> blood in blood out
   static std::string dummy_str = "";
   return dummy_str;
 }
 
+<<<<<<< HEAD
 std::map<std::string, uint64_t> ThreadStatus::InterpretOperationProperties(
     ThreadStatus::OperationType /*op_type*/,
     const uint64_t* /*op_properties*/) {
+=======
+std::map<std::string, uint64_t>
+    ThreadStatus::InterpretOperationProperties(
+    ThreadStatus::OperationType op_type,
+    const uint64_t* op_properties) {
+>>>>>>> blood in blood out
   return std::map<std::string, uint64_t>();
 }
 

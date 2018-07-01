@@ -17,7 +17,11 @@
  * Signature: ()J
  */
 jlong Java_org_rocksdb_CompressionOptions_newCompressionOptions(
+<<<<<<< HEAD
     JNIEnv* /*env*/, jclass /*jcls*/) {
+=======
+    JNIEnv* env, jclass jcls) {
+>>>>>>> blood in blood out
   const auto* opt = new rocksdb::CompressionOptions();
   return reinterpret_cast<jlong>(opt);
 }
@@ -27,10 +31,15 @@ jlong Java_org_rocksdb_CompressionOptions_newCompressionOptions(
  * Method:    setWindowBits
  * Signature: (JI)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_CompressionOptions_setWindowBits(JNIEnv* /*env*/,
                                                        jobject /*jobj*/,
                                                        jlong jhandle,
                                                        jint jwindow_bits) {
+=======
+void Java_org_rocksdb_CompressionOptions_setWindowBits(
+    JNIEnv* env, jobject jobj, jlong jhandle, jint jwindow_bits) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   opt->window_bits = static_cast<int>(jwindow_bits);
 }
@@ -40,9 +49,14 @@ void Java_org_rocksdb_CompressionOptions_setWindowBits(JNIEnv* /*env*/,
  * Method:    windowBits
  * Signature: (J)I
  */
+<<<<<<< HEAD
 jint Java_org_rocksdb_CompressionOptions_windowBits(JNIEnv* /*env*/,
                                                     jobject /*jobj*/,
                                                     jlong jhandle) {
+=======
+jint Java_org_rocksdb_CompressionOptions_windowBits(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   return static_cast<jint>(opt->window_bits);
 }
@@ -52,9 +66,14 @@ jint Java_org_rocksdb_CompressionOptions_windowBits(JNIEnv* /*env*/,
  * Method:    setLevel
  * Signature: (JI)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_CompressionOptions_setLevel(JNIEnv* /*env*/,
                                                   jobject /*jobj*/,
                                                   jlong jhandle, jint jlevel) {
+=======
+void Java_org_rocksdb_CompressionOptions_setLevel(
+    JNIEnv* env, jobject jobj, jlong jhandle, jint jlevel) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   opt->level = static_cast<int>(jlevel);
 }
@@ -64,9 +83,14 @@ void Java_org_rocksdb_CompressionOptions_setLevel(JNIEnv* /*env*/,
  * Method:    level
  * Signature: (J)I
  */
+<<<<<<< HEAD
 jint Java_org_rocksdb_CompressionOptions_level(JNIEnv* /*env*/,
                                                jobject /*jobj*/,
                                                jlong jhandle) {
+=======
+jint Java_org_rocksdb_CompressionOptions_level(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   return static_cast<jint>(opt->level);
 }
@@ -76,10 +100,15 @@ jint Java_org_rocksdb_CompressionOptions_level(JNIEnv* /*env*/,
  * Method:    setStrategy
  * Signature: (JI)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_CompressionOptions_setStrategy(JNIEnv* /*env*/,
                                                      jobject /*jobj*/,
                                                      jlong jhandle,
                                                      jint jstrategy) {
+=======
+void Java_org_rocksdb_CompressionOptions_setStrategy(
+    JNIEnv* env, jobject jobj, jlong jhandle, jint jstrategy) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   opt->strategy = static_cast<int>(jstrategy);
 }
@@ -89,9 +118,14 @@ void Java_org_rocksdb_CompressionOptions_setStrategy(JNIEnv* /*env*/,
  * Method:    strategy
  * Signature: (J)I
  */
+<<<<<<< HEAD
 jint Java_org_rocksdb_CompressionOptions_strategy(JNIEnv* /*env*/,
                                                   jobject /*jobj*/,
                                                   jlong jhandle) {
+=======
+jint Java_org_rocksdb_CompressionOptions_strategy(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   return static_cast<jint>(opt->strategy);
 }
@@ -101,10 +135,15 @@ jint Java_org_rocksdb_CompressionOptions_strategy(JNIEnv* /*env*/,
  * Method:    setMaxDictBytes
  * Signature: (JI)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_CompressionOptions_setMaxDictBytes(JNIEnv* /*env*/,
                                                          jobject /*jobj*/,
                                                          jlong jhandle,
                                                          jint jmax_dict_bytes) {
+=======
+void Java_org_rocksdb_CompressionOptions_setMaxDictBytes(
+    JNIEnv* env, jobject jobj, jlong jhandle, jint jmax_dict_bytes) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   opt->max_dict_bytes = static_cast<int>(jmax_dict_bytes);
 }
@@ -114,15 +153,21 @@ void Java_org_rocksdb_CompressionOptions_setMaxDictBytes(JNIEnv* /*env*/,
  * Method:    maxDictBytes
  * Signature: (J)I
  */
+<<<<<<< HEAD
 jint Java_org_rocksdb_CompressionOptions_maxDictBytes(JNIEnv* /*env*/,
                                                       jobject /*jobj*/,
                                                       jlong jhandle) {
+=======
+jint Java_org_rocksdb_CompressionOptions_maxDictBytes(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   auto* opt = reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
   return static_cast<jint>(opt->max_dict_bytes);
 }
 
 /*
  * Class:     org_rocksdb_CompressionOptions
+<<<<<<< HEAD
  * Method:    setEnabled
  * Signature: (JI)V
  */
@@ -153,5 +198,12 @@ jint Java_org_rocksdb_CompressionOptions_enabled(JNIEnv* /*env*/,
 void Java_org_rocksdb_CompressionOptions_disposeInternal(JNIEnv* /*env*/,
                                                          jobject /*jobj*/,
                                                          jlong jhandle) {
+=======
+ * Method:    disposeInternal
+ * Signature: (J)V
+ */
+void Java_org_rocksdb_CompressionOptions_disposeInternal(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+>>>>>>> blood in blood out
   delete reinterpret_cast<rocksdb::CompressionOptions*>(jhandle);
 }

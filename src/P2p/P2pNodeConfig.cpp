@@ -16,8 +16,14 @@
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "P2pNodeConfig.h"
+<<<<<<< HEAD
 
 #include <config/CryptoNoteConfig.h>
+=======
+#include "P2pNetworks.h"
+
+#include <CryptoNoteConfig.h>
+>>>>>>> blood in blood out
 
 namespace CryptoNote {
 
@@ -34,7 +40,11 @@ P2pNodeConfig::P2pNodeConfig() :
   handshakeTimeout(std::chrono::milliseconds(P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT)),
   connectInterval(P2P_DEFAULT_CONNECT_INTERVAL),
   connectTimeout(std::chrono::milliseconds(P2P_DEFAULT_CONNECTION_TIMEOUT)),
+<<<<<<< HEAD
   networkId(CryptoNote::CRYPTONOTE_NETWORK),
+=======
+  networkId(BYTECOIN_NETWORK),
+>>>>>>> blood in blood out
   expectedOutgoingConnectionsCount(P2P_DEFAULT_CONNECTIONS_COUNT),
   whiteListConnectionsPercent(P2P_DEFAULT_WHITELIST_CONNECTIONS_PERCENT),
   peerListConnectRange(P2P_DEFAULT_CONNECT_RANGE),
@@ -84,4 +94,49 @@ size_t P2pNodeConfig::getPeerListGetTryCount() const {
   return peerListGetTryCount;
 }
 
+<<<<<<< HEAD
+=======
+// setters
+
+void P2pNodeConfig::setTimedSyncInterval(std::chrono::nanoseconds interval) {
+  timedSyncInterval = interval;
+}
+
+void P2pNodeConfig::setHandshakeTimeout(std::chrono::nanoseconds timeout) {
+  handshakeTimeout = timeout;
+}
+
+void P2pNodeConfig::setConnectInterval(std::chrono::nanoseconds interval) {
+  connectInterval = interval;
+}
+
+void P2pNodeConfig::setConnectTimeout(std::chrono::nanoseconds timeout) {
+  connectTimeout = timeout;
+}
+
+void P2pNodeConfig::setExpectedOutgoingConnectionsCount(size_t count) {
+  expectedOutgoingConnectionsCount = count;
+}
+
+void P2pNodeConfig::setWhiteListConnectionsPercent(size_t percent) {
+  if (percent > 100) {
+    throw std::invalid_argument("whiteListConnectionsPercent cannot be greater than 100");
+  }
+
+  whiteListConnectionsPercent = percent;
+}
+
+void P2pNodeConfig::setNetworkId(const boost::uuids::uuid& id) {
+  networkId = id;
+}
+
+void P2pNodeConfig::setPeerListConnectRange(size_t range) {
+  peerListConnectRange = range;
+}
+
+void P2pNodeConfig::setPeerListGetTryCount(size_t count) {
+  peerListGetTryCount = count;
+}
+
+>>>>>>> blood in blood out
 }

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* $Id: upnperrors.c,v 1.5 2011/04/10 11:19:36 nanard Exp $ */
+=======
+/* $Id: upnperrors.c,v 1.6 2012/03/15 01:02:03 nanard Exp $ */
+>>>>>>> blood in blood out
 /* Project : miniupnp
  * Author : Thomas BERNARD
  * copyright (c) 2007 Thomas Bernard
@@ -24,9 +28,12 @@ const char * strupnperror(int err)
 	case UPNPCOMMAND_INVALID_ARGS:
 		s = "Miniupnpc Invalid Arguments";
 		break;
+<<<<<<< HEAD
 	case UPNPCOMMAND_INVALID_RESPONSE:
 		s = "Miniupnpc Invalid response";
 		break;
+=======
+>>>>>>> blood in blood out
 	case UPNPDISCOVER_SOCKET_ERROR:
 		s = "Miniupnpc Socket error";
 		break;

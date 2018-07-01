@@ -42,6 +42,7 @@ class GetContext {
   // Records this key, value, and any meta-data (such as sequence number and
   // state) into this GetContext.
   //
+<<<<<<< HEAD
   // If the parsed_key matches the user key that we are looking for, sets
   // mathced to true.
   //
@@ -49,6 +50,12 @@ class GetContext {
   //         False if the complete value has been found.
   bool SaveValue(const ParsedInternalKey& parsed_key, const Slice& value,
                  bool* matched, Cleanable* value_pinner = nullptr);
+=======
+  // Returns True if more keys need to be read (due to merges) or
+  //         False if the complete value has been found.
+  bool SaveValue(const ParsedInternalKey& parsed_key, const Slice& value,
+                 Cleanable* value_pinner = nullptr);
+>>>>>>> blood in blood out
 
   // Simplified version of the previous function. Should only be used when we
   // know that the operation is a Put.
@@ -72,7 +79,11 @@ class GetContext {
 
   bool CheckCallback(SequenceNumber seq) {
     if (callback_) {
+<<<<<<< HEAD
       return callback_->IsVisible(seq);
+=======
+      return callback_->IsCommitted(seq);
+>>>>>>> blood in blood out
     }
     return true;
   }

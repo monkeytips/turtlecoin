@@ -99,8 +99,12 @@ TEST_F(BlockTest, SimpleTest) {
 
   // read contents of block sequentially
   int count = 0;
+<<<<<<< HEAD
   InternalIterator *iter =
       reader.NewIterator<DataBlockIter>(options.comparator, options.comparator);
+=======
+  InternalIterator *iter = reader.NewIterator(options.comparator);
+>>>>>>> blood in blood out
   for (iter->SeekToFirst();iter->Valid(); count++, iter->Next()) {
 
     // read kv from block
@@ -114,8 +118,12 @@ TEST_F(BlockTest, SimpleTest) {
   delete iter;
 
   // read block contents randomly
+<<<<<<< HEAD
   iter =
       reader.NewIterator<DataBlockIter>(options.comparator, options.comparator);
+=======
+  iter = reader.NewIterator(options.comparator);
+>>>>>>> blood in blood out
   for (int i = 0; i < num_records; i++) {
 
     // find a random key in the lookaside array
@@ -135,7 +143,11 @@ TEST_F(BlockTest, SimpleTest) {
 BlockContents GetBlockContents(std::unique_ptr<BlockBuilder> *builder,
                                const std::vector<std::string> &keys,
                                const std::vector<std::string> &values,
+<<<<<<< HEAD
                                const int /*prefix_group_size*/ = 1) {
+=======
+                               const int prefix_group_size = 1) {
+>>>>>>> blood in blood out
   builder->reset(new BlockBuilder(1 /* restart interval */));
 
   // Add only half of the keys
@@ -165,8 +177,12 @@ void CheckBlockContents(BlockContents contents, const int max_key,
       NewFixedPrefixTransform(prefix_size));
 
   std::unique_ptr<InternalIterator> regular_iter(
+<<<<<<< HEAD
       reader2.NewIterator<DataBlockIter>(BytewiseComparator(),
                                          BytewiseComparator()));
+=======
+      reader2.NewIterator(BytewiseComparator()));
+>>>>>>> blood in blood out
 
   // Seek existent keys
   for (size_t i = 0; i < keys.size(); i++) {
@@ -391,9 +407,14 @@ TEST_F(BlockTest, BlockWithReadAmpBitmap) {
 
     // read contents of block sequentially
     size_t read_bytes = 0;
+<<<<<<< HEAD
     DataBlockIter *iter =
         static_cast<DataBlockIter *>(reader.NewIterator<DataBlockIter>(
             options.comparator, options.comparator, nullptr, stats.get()));
+=======
+    BlockIter *iter = static_cast<BlockIter *>(
+        reader.NewIterator(options.comparator, nullptr, true, stats.get()));
+>>>>>>> blood in blood out
     for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
       iter->value();
       read_bytes += iter->TEST_CurrentEntrySize();
@@ -425,9 +446,14 @@ TEST_F(BlockTest, BlockWithReadAmpBitmap) {
                  kBytesPerBit, stats.get());
 
     size_t read_bytes = 0;
+<<<<<<< HEAD
     DataBlockIter *iter =
         static_cast<DataBlockIter *>(reader.NewIterator<DataBlockIter>(
             options.comparator, options.comparator, nullptr, stats.get()));
+=======
+    BlockIter *iter = static_cast<BlockIter *>(
+        reader.NewIterator(options.comparator, nullptr, true, stats.get()));
+>>>>>>> blood in blood out
     for (int i = 0; i < num_records; i++) {
       Slice k(keys[i]);
 
@@ -462,9 +488,14 @@ TEST_F(BlockTest, BlockWithReadAmpBitmap) {
                  kBytesPerBit, stats.get());
 
     size_t read_bytes = 0;
+<<<<<<< HEAD
     DataBlockIter *iter =
         static_cast<DataBlockIter *>(reader.NewIterator<DataBlockIter>(
             options.comparator, options.comparator, nullptr, stats.get()));
+=======
+    BlockIter *iter = static_cast<BlockIter *>(
+        reader.NewIterator(options.comparator, nullptr, true, stats.get()));
+>>>>>>> blood in blood out
     std::unordered_set<int> read_keys;
     for (int i = 0; i < num_records; i++) {
       int index = rnd.Uniform(num_records);

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018, The TurtleCoin Developers
+<<<<<<< HEAD
 // Copyright (c) 2018, The Karai Developers
 //
 // Please see the included LICENSE file for more information.
@@ -34,6 +35,28 @@
 #include <unordered_map>
 
 #include <Utilities/FormatTools.h>
+=======
+// 
+// Please see the included LICENSE file for more information.
+
+#include "RpcServer.h"
+#include <future>
+#include <unordered_map>
+#include "math.h"
+
+// CryptoNote
+#include "Common/StringTools.h"
+#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "CryptoNoteCore/Core.h"
+#include "CryptoNoteCore/Miner.h"
+#include "CryptoNoteCore/TransactionExtra.h"
+#include "CryptoNoteConfig.h"
+#include "CryptoNoteProtocol/CryptoNoteProtocolHandlerCommon.h"
+#include "P2p/NetNode.h"
+#include "CoreRpcServerErrorCodes.h"
+#include "JsonRpc.h"
+#include "version.h"
+>>>>>>> blood in blood out
 
 #undef ERROR
 
@@ -67,6 +90,7 @@ void serialize(BlockShortInfo& blockShortInfo, ISerializer& s) {
   KV_MEMBER(blockShortInfo.txPrefixes);
 }
 
+<<<<<<< HEAD
 void serialize(WalletTypes::WalletBlockInfo &walletBlockInfo, ISerializer &s)
 {
     s(walletBlockInfo.coinbaseTransaction, "coinbaseTX");
@@ -101,6 +125,26 @@ void serialize(WalletTypes::KeyOutput &keyOutput, ISerializer &s)
 }
 
 namespace {
+=======
+namespace {
+
+template <typename Command>
+RpcServer::HandlerFunction binMethod(bool (RpcServer::*handler)(typename Command::request const&, typename Command::response&)) {
+  return [handler](RpcServer* obj, const HttpRequest& request, HttpResponse& response) {
+
+    boost::value_initialized<typename Command::request> req;
+    boost::value_initialized<typename Command::response> res;
+
+    if (!loadFromBinaryKeyValue(static_cast<typename Command::request&>(req), request.getBody())) {
+      return false;
+    }
+
+    bool result = (obj->*handler)(req, res);
+    response.setBody(storeToBinaryKeyValue(res.data()));
+    return result;
+  };
+}
+>>>>>>> blood in blood out
 
 template <typename Command>
 RpcServer::HandlerFunction jsonMethod(bool (RpcServer::*handler)(typename Command::request const&, typename Command::response&)) {
@@ -127,6 +171,7 @@ RpcServer::HandlerFunction jsonMethod(bool (RpcServer::*handler)(typename Comman
 }
 
 std::unordered_map<std::string, RpcServer::RpcHandler<RpcServer::HandlerFunction>> RpcServer::s_handlers = {
+<<<<<<< HEAD
   // old json handlers - remove me in 2019
   { "/getinfo", { jsonMethod<COMMAND_RPC_GET_INFO>(&RpcServer::on_get_info), true } },
   { "/getheight", { jsonMethod<COMMAND_RPC_GET_HEIGHT>(&RpcServer::on_get_height), true } },
@@ -147,6 +192,36 @@ std::unordered_map<std::string, RpcServer::RpcHandler<RpcServer::HandlerFunction
   { "/queryblockslite", { jsonMethod<COMMAND_RPC_QUERY_BLOCKS_LITE>(&RpcServer::on_query_blocks_lite), false } },
   { "/queryblocksdetailed", { jsonMethod<COMMAND_RPC_QUERY_BLOCKS_DETAILED>(&RpcServer::on_query_blocks_detailed), false } },
   { "/getwalletsyncdata", { jsonMethod<COMMAND_RPC_GET_WALLET_SYNC_DATA>(&RpcServer::on_get_wallet_sync_data), false} },
+=======
+  // binary handlers
+  // These have been left behind to support legacy wallets during the transition
+  { "/getblocks.bin", { binMethod<COMMAND_RPC_GET_BLOCKS_FAST>(&RpcServer::on_get_blocks), false } },
+  { "/queryblocks.bin", { binMethod<COMMAND_RPC_QUERY_BLOCKS>(&RpcServer::on_query_blocks), false } },
+  { "/queryblockslite.bin", { binMethod<COMMAND_RPC_QUERY_BLOCKS_LITE>(&RpcServer::on_query_blocks_lite), false } },
+  { "/get_o_indexes.bin", { binMethod<COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES>(&RpcServer::on_get_indexes), false } },
+  { "/getrandom_outs.bin", { binMethod<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS>(&RpcServer::on_get_random_outs), false } },
+  { "/get_pool_changes.bin", { binMethod<COMMAND_RPC_GET_POOL_CHANGES>(&RpcServer::onGetPoolChanges), false } },
+  { "/get_pool_changes_lite.bin", { binMethod<COMMAND_RPC_GET_POOL_CHANGES_LITE>(&RpcServer::onGetPoolChangesLite), false } },
+  { "/get_block_details_by_height.bin", { binMethod<COMMAND_RPC_GET_BLOCK_DETAILS_BY_HEIGHT>(&RpcServer::onGetBlockDetailsByHeight), false } },
+  { "/get_blocks_details_by_heights.bin", { binMethod<COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HEIGHTS>(&RpcServer::onGetBlocksDetailsByHeights), false } },
+  { "/get_blocks_details_by_hashes.bin", { binMethod<COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES>(&RpcServer::onGetBlocksDetailsByHashes), false } },
+  { "/get_blocks_hashes_by_timestamps.bin", { binMethod<COMMAND_RPC_GET_BLOCKS_HASHES_BY_TIMESTAMPS>(&RpcServer::onGetBlocksHashesByTimestamps), false } },
+  { "/get_transaction_details_by_hashes.bin", { binMethod<COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES>(&RpcServer::onGetTransactionDetailsByHashes), false } },
+  { "/get_transaction_hashes_by_payment_id.bin", { binMethod<COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID>(&RpcServer::onGetTransactionHashesByPaymentId), false } },
+
+  // json handlers
+  { "/getinfo", { jsonMethod<COMMAND_RPC_GET_INFO>(&RpcServer::on_get_info), true } },
+  { "/getheight", { jsonMethod<COMMAND_RPC_GET_HEIGHT>(&RpcServer::on_get_height), true } },
+  { "/gettransactions", { jsonMethod<COMMAND_RPC_GET_TRANSACTIONS>(&RpcServer::on_get_transactions), false } },
+  { "/sendrawtransaction", { jsonMethod<COMMAND_RPC_SEND_RAW_TX>(&RpcServer::on_send_raw_tx), false } },
+  { "/stop_daemon", { jsonMethod<COMMAND_RPC_STOP_DAEMON>(&RpcServer::on_stop_daemon), true } },
+  { "/getpeers", { jsonMethod<COMMAND_RPC_GET_PEERS>(&RpcServer::on_get_peers), true } },
+
+  // New copies of the binary handlers but in JSON
+  { "/getblocks", { jsonMethod<COMMAND_RPC_GET_BLOCKS_FAST>(&RpcServer::on_get_blocks), false } },
+  { "/queryblocks", { jsonMethod<COMMAND_RPC_QUERY_BLOCKS>(&RpcServer::on_query_blocks), false } },
+  { "/queryblockslite", { jsonMethod<COMMAND_RPC_QUERY_BLOCKS_LITE>(&RpcServer::on_query_blocks_lite), false } },
+>>>>>>> blood in blood out
   { "/get_o_indexes", { jsonMethod<COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES>(&RpcServer::on_get_indexes), false } },
   { "/getrandom_outs", { jsonMethod<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS>(&RpcServer::on_get_random_outs), false } },
   { "/get_pool_changes", { jsonMethod<COMMAND_RPC_GET_POOL_CHANGES>(&RpcServer::onGetPoolChanges), false } },
@@ -157,14 +232,21 @@ std::unordered_map<std::string, RpcServer::RpcHandler<RpcServer::HandlerFunction
   { "/get_blocks_hashes_by_timestamps", { jsonMethod<COMMAND_RPC_GET_BLOCKS_HASHES_BY_TIMESTAMPS>(&RpcServer::onGetBlocksHashesByTimestamps), false } },
   { "/get_transaction_details_by_hashes", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES>(&RpcServer::onGetTransactionDetailsByHashes), false } },
   { "/get_transaction_hashes_by_payment_id", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID>(&RpcServer::onGetTransactionHashesByPaymentId), false } },
+<<<<<<< HEAD
   { "/get_global_indexes_for_range", { jsonMethod<COMMAND_RPC_GET_GLOBAL_INDEXES_FOR_RANGE>(&RpcServer::onGetGlobalIndexesForRange), false} },
   { "/get_transactions_status", { jsonMethod<COMMAND_RPC_GET_TRANSACTIONS_STATUS>(&RpcServer::onGetTransactionsStatus), false} },
+=======
+>>>>>>> blood in blood out
 
   // json rpc
   { "/json_rpc", { std::bind(&RpcServer::processJsonRpcRequest, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), true } }
 };
 
+<<<<<<< HEAD
 RpcServer::RpcServer(System::Dispatcher& dispatcher, std::shared_ptr<Logging::ILogger> log, Core& c, NodeServer& p2p, ICryptoNoteProtocolHandler& protocol) :
+=======
+RpcServer::RpcServer(System::Dispatcher& dispatcher, Logging::ILogger& log, Core& c, NodeServer& p2p, ICryptoNoteProtocolHandler& protocol) :
+>>>>>>> blood in blood out
   HttpServer(dispatcher, log), logger(log, "RpcServer"), m_core(c), m_p2p(p2p), m_protocol(protocol) {
 }
 
@@ -245,6 +327,7 @@ bool RpcServer::processJsonRpcRequest(const HttpRequest& request, HttpResponse& 
   return true;
 }
 
+<<<<<<< HEAD
 bool RpcServer::setFeeAddress(const std::string fee_address) {
   m_fee_address = fee_address;
   return true;
@@ -255,6 +338,8 @@ bool RpcServer::setFeeAmount(const uint32_t fee_amount) {
   return true;
 }
 
+=======
+>>>>>>> blood in blood out
 bool RpcServer::enableCors(const std::vector<std::string> domains) {
   m_cors_domains = domains;
   return true;
@@ -268,6 +353,13 @@ bool RpcServer::isCoreReady() {
   return m_core.getCurrency().isTestnet() || m_p2p.get_payload_object().isSynchronized();
 }
 
+<<<<<<< HEAD
+=======
+//
+// Binary handlers
+//
+
+>>>>>>> blood in blood out
 bool RpcServer::on_get_blocks(const COMMAND_RPC_GET_BLOCKS_FAST::request& req, COMMAND_RPC_GET_BLOCKS_FAST::response& res) {
   // TODO code duplication see InProcessNode::doGetNewBlocks()
   if (req.block_ids.empty()) {
@@ -329,6 +421,7 @@ bool RpcServer::on_query_blocks_lite(const COMMAND_RPC_QUERY_BLOCKS_LITE::reques
   return true;
 }
 
+<<<<<<< HEAD
 bool RpcServer::on_query_blocks_detailed(const COMMAND_RPC_QUERY_BLOCKS_DETAILED::request& req, COMMAND_RPC_QUERY_BLOCKS_DETAILED::response& res) {
   uint64_t startIndex;
   uint64_t currentIndex;
@@ -376,6 +469,8 @@ bool RpcServer::onGetTransactionsStatus(
     return true;
 }
 
+=======
+>>>>>>> blood in blood out
 bool RpcServer::on_get_indexes(const COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES::request& req, COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES::response& res) {
   std::vector<uint32_t> outputIndexes;
   if (!m_core.getTransactionGlobalIndexes(req.txid, outputIndexes)) {
@@ -389,6 +484,7 @@ bool RpcServer::on_get_indexes(const COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES::
   return true;
 }
 
+<<<<<<< HEAD
 bool RpcServer::onGetGlobalIndexesForRange(
     const COMMAND_RPC_GET_GLOBAL_INDEXES_FOR_RANGE::request &req,
     COMMAND_RPC_GET_GLOBAL_INDEXES_FOR_RANGE::response &res)
@@ -404,6 +500,8 @@ bool RpcServer::onGetGlobalIndexesForRange(
     return true;
 }
 
+=======
+>>>>>>> blood in blood out
 bool RpcServer::on_get_random_outs(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::request& req, COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::response& res) {
   res.status = "Failed";
 
@@ -414,6 +512,7 @@ bool RpcServer::on_get_random_outs(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOU
       return true;
     }
 
+<<<<<<< HEAD
     if (globalIndexes.size() != req.outs_count)
     {
         logger(ERROR) << "Failed to get enough matching outputs for amount "
@@ -428,6 +527,10 @@ bool RpcServer::on_get_random_outs(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOU
 
     assert(globalIndexes.size() == publicKeys.size());
     res.outs.push_back({amount, {}});
+=======
+    assert(globalIndexes.size() == publicKeys.size());
+    res.outs.emplace_back(COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount{amount, {}});
+>>>>>>> blood in blood out
     for (size_t i = 0; i < globalIndexes.size(); ++i) {
       res.outs.back().outs.push_back({globalIndexes[i], publicKeys[i]});
     }
@@ -436,13 +539,24 @@ bool RpcServer::on_get_random_outs(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOU
   res.status = CORE_RPC_STATUS_OK;
 
   std::stringstream ss;
+<<<<<<< HEAD
 
   std::for_each(res.outs.begin(), res.outs.end(), [&](auto& ofa)  {
+=======
+  typedef COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount outs_for_amount;
+  typedef COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::out_entry out_entry;
+
+  std::for_each(res.outs.begin(), res.outs.end(), [&](outs_for_amount& ofa)  {
+>>>>>>> blood in blood out
     ss << "[" << ofa.amount << "]:";
 
     assert(ofa.outs.size() && "internal error: ofa.outs.size() is empty");
 
+<<<<<<< HEAD
     std::for_each(ofa.outs.begin(), ofa.outs.end(), [&](auto& oe)
+=======
+    std::for_each(ofa.outs.begin(), ofa.outs.end(), [&](out_entry& oe)
+>>>>>>> blood in blood out
     {
       ss << oe.global_amount_index << " ";
     });
@@ -594,8 +708,14 @@ bool RpcServer::on_get_info(const COMMAND_RPC_GET_INFO::request& req, COMMAND_RP
   res.grey_peerlist_size = m_p2p.getPeerlistManager().get_gray_peers_count();
   res.last_known_block_index = std::max(static_cast<uint32_t>(1), m_protocol.getObservedHeight()) - 1;
   res.network_height = std::max(static_cast<uint32_t>(1), m_protocol.getBlockchainHeight());
+<<<<<<< HEAD
   res.upgrade_heights = CryptoNote::parameters::FORK_HEIGHTS_SIZE == 0 ? std::vector<uint64_t>() : std::vector<uint64_t>(CryptoNote::parameters::FORK_HEIGHTS, CryptoNote::parameters::FORK_HEIGHTS + CryptoNote::parameters::FORK_HEIGHTS_SIZE);
   res.supported_height = CryptoNote::parameters::FORK_HEIGHTS_SIZE == 0 ? 0 : CryptoNote::parameters::FORK_HEIGHTS[CryptoNote::parameters::CURRENT_FORK_INDEX];
+=======
+  res.upgrade_heights = std::vector<uint64_t>(std::begin(CryptoNote::parameters::FORK_HEIGHTS),
+                                              std::end(CryptoNote::parameters::FORK_HEIGHTS));
+  res.supported_height = CryptoNote::parameters::FORK_HEIGHTS[CryptoNote::parameters::CURRENT_FORK_INDEX];
+>>>>>>> blood in blood out
   res.hashrate = (uint32_t)round(res.difficulty / CryptoNote::parameters::DIFFICULTY_TARGET);
   res.synced = ((uint64_t)res.height == (uint64_t)res.network_height);
   res.testnet = m_core.getCurrency().isTestnet();
@@ -669,6 +789,7 @@ bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMM
   return true;
 }
 
+<<<<<<< HEAD
 bool RpcServer::on_get_fee_info(const COMMAND_RPC_GET_FEE_ADDRESS::request & req, COMMAND_RPC_GET_FEE_ADDRESS::response & res) {
   if (m_fee_address.empty()) {
     res.status = CORE_RPC_STATUS_OK;
@@ -678,6 +799,17 @@ bool RpcServer::on_get_fee_info(const COMMAND_RPC_GET_FEE_ADDRESS::request & req
   res.address = m_fee_address;
   res.amount = m_fee_amount;
   res.status = CORE_RPC_STATUS_OK;
+=======
+bool RpcServer::on_stop_daemon(const COMMAND_RPC_STOP_DAEMON::request& req, COMMAND_RPC_STOP_DAEMON::response& res) {
+  if (m_core.getCurrency().isTestnet()) {
+    m_p2p.sendStopSignal();
+    res.status = CORE_RPC_STATUS_OK;
+  } else {
+    res.status = CORE_RPC_ERROR_CODE_INTERNAL_ERROR;
+    return false;
+  }
+
+>>>>>>> blood in blood out
   return true;
 }
 
@@ -692,6 +824,7 @@ bool RpcServer::on_get_peers(const COMMAND_RPC_GET_PEERS::request& req, COMMAND_
     stream << peer.adr;
     res.peers.push_back(stream.str());
   }
+<<<<<<< HEAD
 
   for (const auto& peer : peers_gray) {
     std::stringstream stream;
@@ -699,6 +832,8 @@ bool RpcServer::on_get_peers(const COMMAND_RPC_GET_PEERS::request& req, COMMAND_
     res.gray_peers.push_back(stream.str());
   }
 
+=======
+>>>>>>> blood in blood out
   res.status = CORE_RPC_STATUS_OK;
   return true;
 }
@@ -808,12 +943,21 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request& 
   uint64_t maxReward = 0;
   uint64_t currentReward = 0;
   int64_t emissionChange = 0;
+<<<<<<< HEAD
 
   if (maxReward) {}
   if (currentReward) {}
   if (emissionChange) {}
 
   uint64_t blockGrantedFullRewardZone = m_core.getCurrency().blockGrantedFullRewardZoneByBlockVersion(block_header.major_version);
+=======
+  
+  if (maxReward) {}
+  if (currentReward) {}
+  if (emissionChange) {}
+  
+  size_t blockGrantedFullRewardZone = m_core.getCurrency().blockGrantedFullRewardZoneByBlockVersion(block_header.major_version);
+>>>>>>> blood in blood out
   res.block.effectiveSizeMedian = std::max(res.block.sizeMedian, blockGrantedFullRewardZone);
 
   res.block.baseReward = blkDetails.baseReward;
@@ -903,7 +1047,10 @@ bool RpcServer::f_on_transaction_json(const F_COMMAND_RPC_GET_TRANSACTION_DETAIL
 
     f_block_short_response block_short;
 
+<<<<<<< HEAD
     block_short.difficulty = blkDetails.difficulty;
+=======
+>>>>>>> blood in blood out
     block_short.cumul_size = blkDetails.blockSize;
     block_short.timestamp = blk.timestamp;
     block_short.height = blockHeight;
@@ -989,7 +1136,11 @@ bool RpcServer::on_getblockhash(const COMMAND_RPC_GETBLOCKHASH::request& req, CO
 
   uint32_t h = static_cast<uint32_t>(req[0]);
   Crypto::Hash blockId = m_core.getBlockHashByIndex(h - 1);
+<<<<<<< HEAD
   if (blockId == Constants::NULL_HASH) {
+=======
+  if (blockId == NULL_HASH) {
+>>>>>>> blood in blood out
     throw JsonRpc::JsonRpcError{
       CORE_RPC_ERROR_CODE_TOO_BIG_HEIGHT,
       std::string("Too big height: ") + std::to_string(h) + ", current blockchain height = " + std::to_string(m_core.getTopBlockIndex() + 1)
@@ -1039,7 +1190,11 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
 
   BinaryArray block_blob = toBinaryArray(blockTemplate);
   PublicKey tx_pub_key = CryptoNote::getTransactionPublicKeyFromExtra(blockTemplate.baseTransaction.extra);
+<<<<<<< HEAD
   if (tx_pub_key == Constants::NULL_PUBLIC_KEY) {
+=======
+  if (tx_pub_key == NULL_PUBLIC_KEY) {
+>>>>>>> blood in blood out
     logger(ERROR) << "Failed to find tx pub key in coinbase extra";
     throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_INTERNAL_ERROR, "Internal error: failed to find tx pub key in coinbase extra" };
   }
@@ -1090,7 +1245,11 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
   if (submitResult == error::AddBlockErrorCode::ADDED_TO_MAIN
       || submitResult == error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE_AND_SWITCHED) {
     NOTIFY_NEW_BLOCK::request newBlockMessage;
+<<<<<<< HEAD
     newBlockMessage.block = prepareRawBlockLegacy(std::move(blockToSend));
+=======
+    newBlockMessage.b = prepareRawBlockLegacy(std::move(blockToSend));
+>>>>>>> blood in blood out
     newBlockMessage.hop = 0;
     newBlockMessage.current_blockchain_height = m_core.getTopBlockIndex() + 1; //+1 because previous version of core sent m_blocks.size()
 
@@ -1108,7 +1267,11 @@ RawBlockLegacy RpcServer::prepareRawBlockLegacy(BinaryArray&& blockBlob) {
   assert(result);
 
   RawBlockLegacy rawBlock;
+<<<<<<< HEAD
   rawBlock.blockTemplate = std::move(blockBlob);
+=======
+  rawBlock.block = std::move(blockBlob);
+>>>>>>> blood in blood out
 
   if (blockTemplate.transactionHashes.empty()) {
     return rawBlock;
@@ -1211,7 +1374,11 @@ bool RpcServer::on_get_block_headers_range(const COMMAND_RPC_GET_BLOCK_HEADERS_R
 	for (uint32_t h = static_cast<uint32_t>(req.start_height); h <= static_cast<uint32_t>(req.end_height); ++h) {
 		Crypto::Hash block_hash = m_core.getBlockHashByIndex(h);
 		CryptoNote::BlockTemplate blk = m_core.getBlockByHash(block_hash);
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> blood in blood out
 		res.headers.push_back(block_header_response());
 		fill_block_header_response(blk, false, h, block_hash, res.headers.back());
 

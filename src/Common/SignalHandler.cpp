@@ -43,10 +43,14 @@ namespace {
     if (!lock.owns_lock()) {
       return;
     }
+<<<<<<< HEAD
 
     if (m_handler) {
       m_handler();
     }
+=======
+    m_handler();
+>>>>>>> blood in blood out
   }
 
 
@@ -104,4 +108,8 @@ namespace Tools {
     return true;
 #endif
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> blood in blood out
 }

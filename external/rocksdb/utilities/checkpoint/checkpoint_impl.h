@@ -47,7 +47,10 @@ class CheckpointImpl : public Checkpoint {
       uint64_t* sequence_number, uint64_t log_size_for_flush);
 
  private:
+<<<<<<< HEAD
   void CleanStagingDirectory(const std::string& path, Logger* info_log);
+=======
+>>>>>>> blood in blood out
   DB* db_;
 };
 

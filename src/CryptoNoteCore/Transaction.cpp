@@ -20,13 +20,21 @@
 #include "TransactionUtils.h"
 
 #include "Account.h"
+<<<<<<< HEAD
 #include "Common/CryptoNoteTools.h"
 #include <config/CryptoNoteConfig.h>
+=======
+#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "CryptoNoteConfig.h"
+>>>>>>> blood in blood out
 
 #include <boost/optional.hpp>
 #include <numeric>
 #include <unordered_set>
+<<<<<<< HEAD
 #include <memory>
+=======
+>>>>>>> blood in blood out
 
 using namespace Crypto;
 
@@ -80,12 +88,24 @@ namespace CryptoNote {
     virtual size_t getRequiredSignaturesCount(size_t index) const override;
     virtual bool findOutputsToAccount(const AccountPublicAddress& addr, const SecretKey& viewSecretKey, std::vector<uint32_t>& outs, uint64_t& outputAmount) const override;
 
+<<<<<<< HEAD
+=======
+    // various checks
+    virtual bool validateInputs() const override;
+    virtual bool validateOutputs() const override;
+    virtual bool validateSignatures() const override;
+
+>>>>>>> blood in blood out
     // get serialized transaction
     virtual BinaryArray getTransactionData() const override;
 
     // ITransactionWriter
 
     virtual void setUnlockTime(uint64_t unlockTime) override;
+<<<<<<< HEAD
+=======
+    virtual void setPaymentId(const Hash& hash) override;
+>>>>>>> blood in blood out
     virtual void setExtraNonce(const BinaryArray& nonce) override;
     virtual void appendExtra(const BinaryArray& extraData) override;
 
@@ -98,6 +118,13 @@ namespace CryptoNote {
 
     virtual void signInputKey(size_t input, const TransactionTypes::InputKeyInfo& info, const KeyPair& ephKeys) override;
 
+<<<<<<< HEAD
+=======
+    // secret key
+    virtual bool getTransactionSecretKey(SecretKey& key) const override;
+    virtual void setTransactionSecretKey(const SecretKey& key) override;
+
+>>>>>>> blood in blood out
   private:
 
     void invalidateHash();
@@ -185,7 +212,11 @@ namespace CryptoNote {
   }
 
   PublicKey TransactionImpl::getTransactionPublicKey() const {
+<<<<<<< HEAD
     PublicKey pk(Constants::NULL_PUBLIC_KEY);
+=======
+    PublicKey pk(NULL_PUBLIC_KEY);
+>>>>>>> blood in blood out
     extra.getPublicKey(pk);
     return pk;
   }
@@ -200,6 +231,32 @@ namespace CryptoNote {
     invalidateHash();
   }
 
+<<<<<<< HEAD
+=======
+  bool TransactionImpl::getTransactionSecretKey(SecretKey& key) const {
+    if (!secretKey) {
+      return false;
+    }
+    key = reinterpret_cast<const SecretKey&>(secretKey.get());
+    return true;
+  }
+
+  void TransactionImpl::setTransactionSecretKey(const SecretKey& key) {
+    const auto& sk = reinterpret_cast<const SecretKey&>(key);
+    PublicKey pk;
+    PublicKey txPubKey;
+
+    secret_key_to_public_key(sk, pk);
+    extra.getPublicKey(txPubKey);
+
+    if (txPubKey != pk) {
+      throw std::runtime_error("Secret transaction key does not match public key");
+    }
+
+    secretKey = key;
+  }
+
+>>>>>>> blood in blood out
   size_t TransactionImpl::addInput(const KeyInput& input) {
     checkIfSigning();
     transaction.inputs.emplace_back(input);
@@ -253,6 +310,7 @@ namespace CryptoNote {
     const auto& input = boost::get<KeyInput>(getInputChecked(transaction, index, TransactionTypes::InputType::Key));
     Hash prefixHash = getTransactionPrefixHash();
 
+<<<<<<< HEAD
     std::vector<PublicKey> publicKeys;
 
     for (const auto& o : info.outputs) {
@@ -269,6 +327,26 @@ namespace CryptoNote {
 
     getSignatures(index) = signatures;
 
+=======
+    std::vector<Signature> signatures;
+    std::vector<const PublicKey*> keysPtrs;
+
+    for (const auto& o : info.outputs) {
+      keysPtrs.push_back(reinterpret_cast<const PublicKey*>(&o.targetKey));
+    }
+
+    signatures.resize(keysPtrs.size());
+
+    generate_ring_signature(
+      reinterpret_cast<const Hash&>(prefixHash),
+      reinterpret_cast<const KeyImage&>(input.keyImage),
+      keysPtrs,
+      reinterpret_cast<const SecretKey&>(ephKeys.secretKey),
+      info.realOutput.transactionIndex,
+      signatures.data());
+
+    getSignatures(index) = signatures;
+>>>>>>> blood in blood out
     invalidateHash();
   }
 
@@ -289,6 +367,16 @@ namespace CryptoNote {
     return toBinaryArray(transaction);
   }
 
+<<<<<<< HEAD
+=======
+  void TransactionImpl::setPaymentId(const Hash& hash) {
+    checkIfSigning();
+    BinaryArray paymentIdBlob;
+    setPaymentIdToTransactionExtraNonce(paymentIdBlob, reinterpret_cast<const Hash&>(hash));
+    setExtraNonce(paymentIdBlob);
+  }
+
+>>>>>>> blood in blood out
   bool TransactionImpl::getPaymentId(Hash& hash) const {
     BinaryArray nonce;
     if (getExtraNonce(nonce)) {
@@ -371,4 +459,34 @@ namespace CryptoNote {
   size_t TransactionImpl::getRequiredSignaturesCount(size_t index) const {
     return ::getRequiredSignaturesCount(getInputChecked(transaction, index));
   }
+<<<<<<< HEAD
+=======
+
+  bool TransactionImpl::validateInputs() const {
+    return
+      checkInputTypesSupported(transaction) &&
+      checkInputsOverflow(transaction) &&
+      checkInputsKeyimagesDiff(transaction);
+  }
+
+  bool TransactionImpl::validateOutputs() const {
+    return
+      checkOutsValid(transaction) &&
+      checkOutsOverflow(transaction);
+  }
+
+  bool TransactionImpl::validateSignatures() const {
+    if (transaction.signatures.size() < transaction.inputs.size()) {
+      return false;
+    }
+
+    for (size_t i = 0; i < transaction.inputs.size(); ++i) {
+      if (getRequiredSignaturesCount(i) > transaction.signatures[i].size()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+>>>>>>> blood in blood out
 }

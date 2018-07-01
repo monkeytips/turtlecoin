@@ -169,6 +169,7 @@ std::string StatisticsImpl::ToString() const {
       char buffer[kTmpStrBufferSize];
       HistogramData hData;
       getHistogramImplLocked(h.first)->Data(&hData);
+<<<<<<< HEAD
       // don't handle failures - buffer should always be big enough and arguments
       // should be provided correctly
       int ret = snprintf(
@@ -180,6 +181,13 @@ std::string StatisticsImpl::ToString() const {
         assert(false);
         continue;
       }
+=======
+      snprintf(
+          buffer, kTmpStrBufferSize,
+          "%s statistics Percentiles :=> 50 : %f 95 : %f 99 : %f 100 : %f\n",
+          h.second.c_str(), hData.median, hData.percentile95,
+          hData.percentile99, hData.max);
+>>>>>>> blood in blood out
       res.append(buffer);
     }
   }

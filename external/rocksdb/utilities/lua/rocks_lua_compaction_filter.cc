@@ -218,7 +218,11 @@ RocksLuaCompactionFilterFactory::RocksLuaCompactionFilterFactory(
 
 std::unique_ptr<CompactionFilter>
 RocksLuaCompactionFilterFactory::CreateCompactionFilter(
+<<<<<<< HEAD
     const CompactionFilter::Context& /*context*/) {
+=======
+    const CompactionFilter::Context& context) {
+>>>>>>> blood in blood out
   std::lock_guard<std::mutex> lock(opt_mutex_);
   return std::unique_ptr<CompactionFilter>(new RocksLuaCompactionFilter(opt_));
 }

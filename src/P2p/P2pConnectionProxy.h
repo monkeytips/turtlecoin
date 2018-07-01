@@ -40,6 +40,10 @@ public:
   // IP2pConnection
   virtual void read(P2pMessage& message) override;
   virtual void write(const P2pMessage &message) override;
+<<<<<<< HEAD
+=======
+  virtual void ban() override;
+>>>>>>> blood in blood out
   virtual void stop() override;
 
 private:

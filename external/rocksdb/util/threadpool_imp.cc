@@ -18,15 +18,24 @@
 
 #ifdef OS_LINUX
 #  include <sys/syscall.h>
+<<<<<<< HEAD
 #  include <sys/resource.h>
 #endif
 
 #include <stdlib.h>
+=======
+#endif
+
+>>>>>>> blood in blood out
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
+<<<<<<< HEAD
 #include <sstream>
+=======
+#include <stdlib.h>
+>>>>>>> blood in blood out
 #include <thread>
 #include <vector>
 
@@ -55,8 +64,11 @@ struct ThreadPoolImpl::Impl {
 
   void LowerIOPriority();
 
+<<<<<<< HEAD
   void LowerCPUPriority();
 
+=======
+>>>>>>> blood in blood out
   void WakeUpAllThreads() {
     bgsignal_.notify_all();
   }
@@ -101,7 +113,10 @@ private:
   static void* BGThreadWrapper(void* arg);
 
   bool low_io_priority_;
+<<<<<<< HEAD
   bool low_cpu_priority_;
+=======
+>>>>>>> blood in blood out
   Env::Priority priority_;
   Env*         env_;
 
@@ -130,7 +145,10 @@ inline
 ThreadPoolImpl::Impl::Impl()
     :
       low_io_priority_(false),
+<<<<<<< HEAD
       low_cpu_priority_(false),
+=======
+>>>>>>> blood in blood out
       priority_(Env::LOW),
       env_(nullptr),
       total_threads_limit_(0),
@@ -177,6 +195,7 @@ void ThreadPoolImpl::Impl::LowerIOPriority() {
   low_io_priority_ = true;
 }
 
+<<<<<<< HEAD
 inline
 void ThreadPoolImpl::Impl::LowerCPUPriority() {
   std::lock_guard<std::mutex> lock(mu_);
@@ -187,6 +206,11 @@ void ThreadPoolImpl::Impl::BGThread(size_t thread_id) {
   bool low_io_priority = false;
   bool low_cpu_priority = false;
 
+=======
+
+void ThreadPoolImpl::Impl::BGThread(size_t thread_id) {
+  bool low_io_priority = false;
+>>>>>>> blood in blood out
   while (true) {
 // Wait until there is an item that is ready to run
     std::unique_lock<std::mutex> lock(mu_);
@@ -226,6 +250,7 @@ void ThreadPoolImpl::Impl::BGThread(size_t thread_id) {
                      std::memory_order_relaxed);
 
     bool decrease_io_priority = (low_io_priority != low_io_priority_);
+<<<<<<< HEAD
     bool decrease_cpu_priority = (low_cpu_priority != low_cpu_priority_);
     lock.unlock();
 
@@ -240,6 +265,11 @@ void ThreadPoolImpl::Impl::BGThread(size_t thread_id) {
       low_cpu_priority = true;
     }
 
+=======
+    lock.unlock();
+
+#ifdef OS_LINUX
+>>>>>>> blood in blood out
     if (decrease_io_priority) {
 #define IOPRIO_CLASS_SHIFT (13)
 #define IOPRIO_PRIO_VALUE(class, data) (((class) << IOPRIO_CLASS_SHIFT) | data)
@@ -260,7 +290,10 @@ void ThreadPoolImpl::Impl::BGThread(size_t thread_id) {
     }
 #else
     (void)decrease_io_priority;  // avoid 'unused variable' error
+<<<<<<< HEAD
     (void)decrease_cpu_priority;
+=======
+>>>>>>> blood in blood out
 #endif
     func();
   }
@@ -338,6 +371,7 @@ void ThreadPoolImpl::Impl::StartBGThreads() {
 #if defined(_GNU_SOURCE) && defined(__GLIBC_PREREQ)
 #if __GLIBC_PREREQ(2, 12)
     auto th_handle = p_t.native_handle();
+<<<<<<< HEAD
     std::string thread_priority = Env::PriorityToString(GetThreadPriority());
     std::ostringstream thread_name_stream;
     thread_name_stream << "rocksdb:";
@@ -346,6 +380,13 @@ void ThreadPoolImpl::Impl::StartBGThreads() {
     }
     thread_name_stream << bgthreads_.size();
     pthread_setname_np(th_handle, thread_name_stream.str().c_str());
+=======
+    char name_buf[16];
+    snprintf(name_buf, sizeof name_buf, "rocksdb:bg%" ROCKSDB_PRIszt,
+             bgthreads_.size());
+    name_buf[sizeof name_buf - 1] = '\0';
+    pthread_setname_np(th_handle, name_buf);
+>>>>>>> blood in blood out
 #endif
 #endif
     bgthreads_.push_back(std::move(p_t));
@@ -449,10 +490,13 @@ void ThreadPoolImpl::LowerIOPriority() {
   impl_->LowerIOPriority();
 }
 
+<<<<<<< HEAD
 void ThreadPoolImpl::LowerCPUPriority() {
   impl_->LowerCPUPriority();
 }
 
+=======
+>>>>>>> blood in blood out
 void ThreadPoolImpl::IncBackgroundThreadsIfNeeded(int num) {
   impl_->SetBackgroundThreadsInternal(num, false);
 }

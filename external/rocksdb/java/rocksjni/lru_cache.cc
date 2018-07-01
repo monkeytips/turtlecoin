@@ -16,6 +16,7 @@
  * Method:    newLRUCache
  * Signature: (JIZD)J
  */
+<<<<<<< HEAD
 jlong Java_org_rocksdb_LRUCache_newLRUCache(JNIEnv* /*env*/, jclass /*jcls*/,
                                             jlong jcapacity,
                                             jint jnum_shard_bits,
@@ -24,6 +25,15 @@ jlong Java_org_rocksdb_LRUCache_newLRUCache(JNIEnv* /*env*/, jclass /*jcls*/,
   auto* sptr_lru_cache =
       new std::shared_ptr<rocksdb::Cache>(rocksdb::NewLRUCache(
           static_cast<size_t>(jcapacity), static_cast<int>(jnum_shard_bits),
+=======
+jlong Java_org_rocksdb_LRUCache_newLRUCache(
+    JNIEnv* env, jclass jcls, jlong jcapacity, jint jnum_shard_bits,
+    jboolean jstrict_capacity_limit, jdouble jhigh_pri_pool_ratio) {
+  auto* sptr_lru_cache =
+      new std::shared_ptr<rocksdb::Cache>(rocksdb::NewLRUCache(
+          static_cast<size_t>(jcapacity),
+          static_cast<int>(jnum_shard_bits),
+>>>>>>> blood in blood out
           static_cast<bool>(jstrict_capacity_limit),
           static_cast<double>(jhigh_pri_pool_ratio)));
   return reinterpret_cast<jlong>(sptr_lru_cache);
@@ -34,10 +44,17 @@ jlong Java_org_rocksdb_LRUCache_newLRUCache(JNIEnv* /*env*/, jclass /*jcls*/,
  * Method:    disposeInternal
  * Signature: (J)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_LRUCache_disposeInternal(JNIEnv* /*env*/,
                                                jobject /*jobj*/,
                                                jlong jhandle) {
   auto* sptr_lru_cache =
       reinterpret_cast<std::shared_ptr<rocksdb::Cache>*>(jhandle);
+=======
+void Java_org_rocksdb_LRUCache_disposeInternal(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+  auto* sptr_lru_cache =
+      reinterpret_cast<std::shared_ptr<rocksdb::Cache> *>(jhandle);
+>>>>>>> blood in blood out
   delete sptr_lru_cache;  // delete std::shared_ptr
 }

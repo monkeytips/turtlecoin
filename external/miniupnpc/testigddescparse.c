@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 /* $Id: testigddescparse.c,v 1.8 2015/02/08 08:46:06 nanard Exp $ */
 /* Project : miniupnp
  * http://miniupnp.free.fr/
  * Author : Thomas Bernard
  * Copyright (c) 2008-2015 Thomas Bernard
+=======
+/* $Id: testigddescparse.c,v 1.4 2012/06/28 18:52:12 nanard Exp $ */
+/* Project : miniupnp
+ * http://miniupnp.free.fr/
+ * Author : Thomas Bernard
+ * Copyright (c) 2008-2012 Thomas Bernard
+>>>>>>> blood in blood out
  * This software is subject to the conditions detailed in the
  * LICENCE file provided in this distribution.
  * */
@@ -13,6 +21,7 @@
 #include "minixml.h"
 #include "miniupnpc.h"
 
+<<<<<<< HEAD
 /* count number of differences */
 int compare_service(struct IGDdatas_service * s, FILE * f)
 {
@@ -115,6 +124,13 @@ int test_igd_desc_parse(char * buffer, int len, FILE * f)
 	struct xmlparser parser;
 	struct UPNPUrls urls;
 
+=======
+int test_igd_desc_parse(char * buffer, int len)
+{
+	struct IGDdatas igd;
+	struct xmlparser parser;
+	struct UPNPUrls urls;
+>>>>>>> blood in blood out
 	memset(&igd, 0, sizeof(struct IGDdatas));
 	memset(&parser, 0, sizeof(struct xmlparser));
 	parser.xmlstart = buffer;
@@ -124,16 +140,25 @@ int test_igd_desc_parse(char * buffer, int len, FILE * f)
 	parser.endeltfunc = IGDendelt;
 	parser.datafunc = IGDdata;
 	parsexml(&parser);
+<<<<<<< HEAD
 #ifdef DEBUG
 	printIGD(&igd);
 #endif /* DEBUG */
+=======
+	printIGD(&igd);
+>>>>>>> blood in blood out
 	GetUPNPUrls(&urls, &igd, "http://fake/desc/url/file.xml", 0);
 	printf("ipcondescURL='%s'\n", urls.ipcondescURL);
 	printf("controlURL='%s'\n", urls.controlURL);
 	printf("controlURL_CIF='%s'\n", urls.controlURL_CIF);
+<<<<<<< HEAD
 	n = f ? compare_igd(&igd, f) : 0;
 	FreeUPNPUrls(&urls);
 	return n;
+=======
+	FreeUPNPUrls(&urls);
+	return 0;
+>>>>>>> blood in blood out
 }
 
 int main(int argc, char * * argv)
@@ -141,9 +166,15 @@ int main(int argc, char * * argv)
 	FILE * f;
 	char * buffer;
 	int len;
+<<<<<<< HEAD
 	int r;
 	if(argc<2) {
 		fprintf(stderr, "Usage: %s file.xml [file.values]\n", argv[0]);
+=======
+	int r = 0;
+	if(argc<2) {
+		fprintf(stderr, "Usage: %s file.xml\n", argv[0]);
+>>>>>>> blood in blood out
 		return 1;
 	}
 	f = fopen(argv[1], "r");
@@ -155,6 +186,7 @@ int main(int argc, char * * argv)
 	len = ftell(f);
 	fseek(f, 0, SEEK_SET);
 	buffer = malloc(len);
+<<<<<<< HEAD
 	if(!buffer) {
 		fprintf(stderr, "Memory allocation error.\n");
 		fclose(f);
@@ -182,6 +214,12 @@ int main(int argc, char * * argv)
 	free(buffer);
 	if(f)
 		fclose(f);
+=======
+	fread(buffer, 1, len, f);
+	fclose(f);
+	r = test_igd_desc_parse(buffer, len);
+	free(buffer);
+>>>>>>> blood in blood out
 	return r;
 }
 

@@ -46,6 +46,7 @@ class ThreadPoolImpl : public ThreadPool {
   // start yet
   void WaitForJobsAndJoinAllThreads() override;
 
+<<<<<<< HEAD
   // Make threads to run at a lower kernel IO priority
   // Currently only has effect on Linux
   void LowerIOPriority();
@@ -54,6 +55,12 @@ class ThreadPoolImpl : public ThreadPool {
   // Currently only has effect on Linux
   void LowerCPUPriority();
 
+=======
+  // Make threads to run at a lower kernel priority
+  // Currently only has effect on Linux
+  void LowerIOPriority();
+
+>>>>>>> blood in blood out
   // Ensure there is at aleast num threads in the pool
   // but do not kill threads if there are more
   void IncBackgroundThreadsIfNeeded(int num);

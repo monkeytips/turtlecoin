@@ -26,16 +26,26 @@ stl_wrappers::KVMap MakeMockFile(
   return stl_wrappers::KVMap(l, stl_wrappers::LessOfComparator(&icmp_));
 }
 
+<<<<<<< HEAD
 InternalIterator* MockTableReader::NewIterator(
     const ReadOptions&, const SliceTransform* /* prefix_extractor */,
     Arena* /*arena*/, bool /*skip_filters*/, bool /*for_compaction*/) {
+=======
+InternalIterator* MockTableReader::NewIterator(const ReadOptions&,
+                                               Arena* arena,
+                                               bool skip_filters) {
+>>>>>>> blood in blood out
   return new MockTableIterator(table_);
 }
 
 Status MockTableReader::Get(const ReadOptions&, const Slice& key,
+<<<<<<< HEAD
                             GetContext* get_context,
                             const SliceTransform* /*prefix_extractor*/,
                             bool /*skip_filters*/) {
+=======
+                            GetContext* get_context, bool skip_filters) {
+>>>>>>> blood in blood out
   std::unique_ptr<MockTableIterator> iter(new MockTableIterator(table_));
   for (iter->Seek(key); iter->Valid(); iter->Next()) {
     ParsedInternalKey parsed_key;
@@ -43,8 +53,12 @@ Status MockTableReader::Get(const ReadOptions&, const Slice& key,
       return Status::Corruption(Slice());
     }
 
+<<<<<<< HEAD
     bool dont_care __attribute__((__unused__));
     if (!get_context->SaveValue(parsed_key, iter->value(), &dont_care)) {
+=======
+    if (!get_context->SaveValue(parsed_key, iter->value())) {
+>>>>>>> blood in blood out
       break;
     }
   }
@@ -59,10 +73,17 @@ std::shared_ptr<const TableProperties> MockTableReader::GetTableProperties()
 MockTableFactory::MockTableFactory() : next_id_(1) {}
 
 Status MockTableFactory::NewTableReader(
+<<<<<<< HEAD
     const TableReaderOptions& /*table_reader_options*/,
     unique_ptr<RandomAccessFileReader>&& file, uint64_t /*file_size*/,
     unique_ptr<TableReader>* table_reader,
     bool /*prefetch_index_and_filter_in_cache*/) const {
+=======
+    const TableReaderOptions& table_reader_options,
+    unique_ptr<RandomAccessFileReader>&& file, uint64_t file_size,
+    unique_ptr<TableReader>* table_reader,
+    bool prefetch_index_and_filter_in_cache) const {
+>>>>>>> blood in blood out
   uint32_t id = GetIDFromFile(file.get());
 
   MutexLock lock_guard(&file_system_.mutex);
@@ -78,8 +99,13 @@ Status MockTableFactory::NewTableReader(
 }
 
 TableBuilder* MockTableFactory::NewTableBuilder(
+<<<<<<< HEAD
     const TableBuilderOptions& /*table_builder_options*/,
     uint32_t /*column_family_id*/, WritableFileWriter* file) const {
+=======
+    const TableBuilderOptions& table_builder_options, uint32_t column_family_id,
+    WritableFileWriter* file) const {
+>>>>>>> blood in blood out
   uint32_t id = GetAndWriteNextID(file);
 
   return new MockTableBuilder(id, &file_system_);

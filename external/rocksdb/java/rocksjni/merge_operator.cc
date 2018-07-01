@@ -6,6 +6,7 @@
 // This file implements the "bridge" between Java and C++
 // for rocksdb::MergeOperator.
 
+<<<<<<< HEAD
 #include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,17 +22,43 @@
 #include "rocksdb/statistics.h"
 #include "rocksdb/table.h"
 #include "rocksjni/portal.h"
+=======
+#include <stdio.h>
+#include <stdlib.h>
+#include <jni.h>
+#include <string>
+#include <memory>
+
+#include "include/org_rocksdb_StringAppendOperator.h"
+#include "rocksjni/portal.h"
+#include "rocksdb/db.h"
+#include "rocksdb/options.h"
+#include "rocksdb/statistics.h"
+#include "rocksdb/memtablerep.h"
+#include "rocksdb/table.h"
+#include "rocksdb/slice_transform.h"
+#include "rocksdb/merge_operator.h"
+>>>>>>> blood in blood out
 #include "utilities/merge_operators.h"
 
 /*
  * Class:     org_rocksdb_StringAppendOperator
  * Method:    newSharedStringAppendOperator
+<<<<<<< HEAD
  * Signature: (C)J
  */
 jlong Java_org_rocksdb_StringAppendOperator_newSharedStringAppendOperator(
     JNIEnv* /*env*/, jclass /*jclazz*/, jchar jdelim) {
   auto* sptr_string_append_op = new std::shared_ptr<rocksdb::MergeOperator>(
       rocksdb::MergeOperators::CreateStringAppendOperator((char)jdelim));
+=======
+ * Signature: ()J
+ */
+jlong Java_org_rocksdb_StringAppendOperator_newSharedStringAppendOperator
+(JNIEnv* env, jclass jclazz) {
+  auto* sptr_string_append_op = new std::shared_ptr<rocksdb::MergeOperator>(
+    rocksdb::MergeOperators::CreateFromStringId("stringappend"));
+>>>>>>> blood in blood out
   return reinterpret_cast<jlong>(sptr_string_append_op);
 }
 
@@ -40,10 +67,17 @@ jlong Java_org_rocksdb_StringAppendOperator_newSharedStringAppendOperator(
  * Method:    disposeInternal
  * Signature: (J)V
  */
+<<<<<<< HEAD
 void Java_org_rocksdb_StringAppendOperator_disposeInternal(JNIEnv* /*env*/,
                                                            jobject /*jobj*/,
                                                            jlong jhandle) {
   auto* sptr_string_append_op =
       reinterpret_cast<std::shared_ptr<rocksdb::MergeOperator>*>(jhandle);
+=======
+void Java_org_rocksdb_StringAppendOperator_disposeInternal(
+    JNIEnv* env, jobject jobj, jlong jhandle) {
+  auto* sptr_string_append_op =
+      reinterpret_cast<std::shared_ptr<rocksdb::MergeOperator>* >(jhandle);
+>>>>>>> blood in blood out
   delete sptr_string_append_op;  // delete std::shared_ptr
 }

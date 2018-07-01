@@ -22,7 +22,12 @@
 #include <boost/variant/static_visitor.hpp>
 #include <boost/variant/apply_visitor.hpp>
 
+<<<<<<< HEAD
 #include "Serialization/CryptoNoteSerialization.h"
+=======
+#include "CryptoNoteCore/CryptoNoteSerialization.h"
+
+>>>>>>> blood in blood out
 #include "Serialization/SerializationOverloads.h"
 
 namespace CryptoNote {
@@ -137,15 +142,22 @@ void serialize(TransactionDetails& transaction, ISerializer& serializer) {
 
   //serializer(transaction.signatures, "signatures");
   if (serializer.type() == ISerializer::OUTPUT) {
+<<<<<<< HEAD
     std::vector<std::pair<uint64_t, Crypto::Signature>> signaturesForSerialization;
     signaturesForSerialization.reserve(transaction.signatures.size());
     uint64_t ctr = 0;
+=======
+    std::vector<std::pair<size_t, Crypto::Signature>> signaturesForSerialization;
+    signaturesForSerialization.reserve(transaction.signatures.size());
+    size_t ctr = 0;
+>>>>>>> blood in blood out
     for (const auto& signaturesV : transaction.signatures) {
       for (auto signature : signaturesV) {
         signaturesForSerialization.emplace_back(ctr, std::move(signature));
       }
       ++ctr;
     }
+<<<<<<< HEAD
     uint64_t size = transaction.signatures.size();
     serializer(size, "signaturesSize");
     serializer(signaturesForSerialization, "signatures");
@@ -155,6 +167,17 @@ void serialize(TransactionDetails& transaction, ISerializer& serializer) {
     transaction.signatures.resize(size);
 
     std::vector<std::pair<uint64_t, Crypto::Signature>> signaturesForSerialization;
+=======
+    size_t size = transaction.signatures.size();
+    serializer(size, "signaturesSize");
+    serializer(signaturesForSerialization, "signatures");
+  } else {
+    size_t size = 0;
+    serializer(size, "signaturesSize");
+    transaction.signatures.resize(size);
+
+    std::vector<std::pair<size_t, Crypto::Signature>> signaturesForSerialization;
+>>>>>>> blood in blood out
     serializer(signaturesForSerialization, "signatures");
 
     for (const auto& signatureWithIndex : signaturesForSerialization) {

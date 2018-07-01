@@ -20,7 +20,11 @@ namespace rocksdb {
 
 // A dumb ReadCallback which saying every key is committed.
 class DummyReadCallback : public ReadCallback {
+<<<<<<< HEAD
   bool IsVisible(SequenceNumber /*seq*/) override { return true; }
+=======
+  bool IsCommitted(SequenceNumber /*seq*/) { return true; }
+>>>>>>> blood in blood out
 };
 
 // Test param:
@@ -50,7 +54,11 @@ class DBIteratorTest : public DBTestBase,
 
 class FlushBlockEveryKeyPolicy : public FlushBlockPolicy {
  public:
+<<<<<<< HEAD
   virtual bool Update(const Slice& /*key*/, const Slice& /*value*/) override {
+=======
+  virtual bool Update(const Slice& key, const Slice& value) override {
+>>>>>>> blood in blood out
     if (!start_) {
       start_ = true;
       return false;
@@ -70,8 +78,13 @@ class FlushBlockEveryKeyPolicyFactory : public FlushBlockPolicyFactory {
   }
 
   FlushBlockPolicy* NewFlushBlockPolicy(
+<<<<<<< HEAD
       const BlockBasedTableOptions& /*table_options*/,
       const BlockBuilder& /*data_block_builder*/) const override {
+=======
+    const BlockBasedTableOptions& table_options,
+    const BlockBuilder& data_block_builder) const override {
+>>>>>>> blood in blood out
     return new FlushBlockEveryKeyPolicy;
   }
 };
@@ -184,6 +197,76 @@ TEST_P(DBIteratorTest, NonBlockingIteration) {
                          kSkipMmapReads));
 }
 
+<<<<<<< HEAD
+=======
+#ifndef ROCKSDB_LITE
+TEST_P(DBIteratorTest, ManagedNonBlockingIteration) {
+  do {
+    ReadOptions non_blocking_opts, regular_opts;
+    Options options = CurrentOptions();
+    options.statistics = rocksdb::CreateDBStatistics();
+    non_blocking_opts.read_tier = kBlockCacheTier;
+    non_blocking_opts.managed = true;
+    CreateAndReopenWithCF({"pikachu"}, options);
+    // write one kv to the database.
+    ASSERT_OK(Put(1, "a", "b"));
+
+    // scan using non-blocking iterator. We should find it because
+    // it is in memtable.
+    Iterator* iter = NewIterator(non_blocking_opts, handles_[1]);
+    int count = 0;
+    for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
+      ASSERT_OK(iter->status());
+      count++;
+    }
+    ASSERT_EQ(count, 1);
+    delete iter;
+
+    // flush memtable to storage. Now, the key should not be in the
+    // memtable neither in the block cache.
+    ASSERT_OK(Flush(1));
+
+    // verify that a non-blocking iterator does not find any
+    // kvs. Neither does it do any IOs to storage.
+    int64_t numopen = TestGetTickerCount(options, NO_FILE_OPENS);
+    int64_t cache_added = TestGetTickerCount(options, BLOCK_CACHE_ADD);
+    iter = NewIterator(non_blocking_opts, handles_[1]);
+    count = 0;
+    for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
+      count++;
+    }
+    ASSERT_EQ(count, 0);
+    ASSERT_TRUE(iter->status().IsIncomplete());
+    ASSERT_EQ(numopen, TestGetTickerCount(options, NO_FILE_OPENS));
+    ASSERT_EQ(cache_added, TestGetTickerCount(options, BLOCK_CACHE_ADD));
+    delete iter;
+
+    // read in the specified block via a regular get
+    ASSERT_EQ(Get(1, "a"), "b");
+
+    // verify that we can find it via a non-blocking scan
+    numopen = TestGetTickerCount(options, NO_FILE_OPENS);
+    cache_added = TestGetTickerCount(options, BLOCK_CACHE_ADD);
+    iter = NewIterator(non_blocking_opts, handles_[1]);
+    count = 0;
+    for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
+      ASSERT_OK(iter->status());
+      count++;
+    }
+    ASSERT_EQ(count, 1);
+    ASSERT_EQ(numopen, TestGetTickerCount(options, NO_FILE_OPENS));
+    ASSERT_EQ(cache_added, TestGetTickerCount(options, BLOCK_CACHE_ADD));
+    delete iter;
+
+    // This test verifies block cache behaviors, which is not used by plain
+    // table format.
+    // Exclude kHashCuckoo as it does not support iteration currently
+  } while (ChangeOptions(kSkipPlainTable | kSkipNoSeekToLast | kSkipHashCuckoo |
+                         kSkipMmapReads));
+}
+#endif  // ROCKSDB_LITE
+
+>>>>>>> blood in blood out
 TEST_P(DBIteratorTest, IterSeekBeforePrev) {
   ASSERT_OK(Put("a", "b"));
   ASSERT_OK(Put("c", "d"));
@@ -795,8 +878,11 @@ TEST_P(DBIteratorTest, IteratorPinsRef) {
   } while (ChangeCompactOptions());
 }
 
+<<<<<<< HEAD
 // SetOptions not defined in ROCKSDB LITE
 #ifndef ROCKSDB_LITE
+=======
+>>>>>>> blood in blood out
 TEST_P(DBIteratorTest, DBIteratorBoundTest) {
   Options options = CurrentOptions();
   options.env = env_;
@@ -881,7 +967,13 @@ TEST_P(DBIteratorTest, DBIteratorBoundTest) {
   }
 
   // prefix is the first letter of the key
+<<<<<<< HEAD
   ASSERT_OK(dbfull()->SetOptions({{"prefix_extractor", "fixed:1"}}));
+=======
+  options.prefix_extractor.reset(NewFixedPrefixTransform(1));
+
+  DestroyAndReopen(options);
+>>>>>>> blood in blood out
   ASSERT_OK(Put("a", "0"));
   ASSERT_OK(Put("foo", "bar"));
   ASSERT_OK(Put("foo1", "bar1"));
@@ -969,6 +1061,7 @@ TEST_P(DBIteratorTest, DBIteratorBoundTest) {
   }
 }
 
+<<<<<<< HEAD
 TEST_P(DBIteratorTest, DBIteratorBoundMultiSeek) {
   Options options = CurrentOptions();
   options.env = env_;
@@ -1024,6 +1117,8 @@ TEST_P(DBIteratorTest, DBIteratorBoundMultiSeek) {
 }
 #endif
 
+=======
+>>>>>>> blood in blood out
 TEST_P(DBIteratorTest, DBIteratorBoundOptimizationTest) {
   int upper_bound_hits = 0;
   Options options = CurrentOptions();
@@ -1470,6 +1565,7 @@ TEST_P(DBIteratorTest, PinnedDataIteratorReadAfterUpdate) {
   delete iter;
 }
 
+<<<<<<< HEAD
 class SliceTransformLimitedDomainGeneric : public SliceTransform {
   const char* Name() const override {
     return "SliceTransformLimitedDomainGeneric";
@@ -1490,6 +1586,8 @@ class SliceTransformLimitedDomainGeneric : public SliceTransform {
   }
 };
 
+=======
+>>>>>>> blood in blood out
 TEST_P(DBIteratorTest, IterSeekForPrevCrossingFiles) {
   Options options = CurrentOptions();
   options.prefix_extractor.reset(NewFixedPrefixTransform(1));
@@ -1544,6 +1642,7 @@ TEST_P(DBIteratorTest, IterSeekForPrevCrossingFiles) {
   }
 }
 
+<<<<<<< HEAD
 TEST_P(DBIteratorTest, IterSeekForPrevCrossingFilesCustomPrefixExtractor) {
   Options options = CurrentOptions();
   options.prefix_extractor =
@@ -1599,6 +1698,8 @@ TEST_P(DBIteratorTest, IterSeekForPrevCrossingFilesCustomPrefixExtractor) {
   }
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_P(DBIteratorTest, IterPrevKeyCrossingBlocks) {
   Options options = CurrentOptions();
   BlockBasedTableOptions table_options;
@@ -2106,6 +2207,7 @@ TEST_P(DBIteratorTest, CreationFailure) {
   delete iter;
 }
 
+<<<<<<< HEAD
 TEST_P(DBIteratorTest, UpperBoundWithChangeDirection) {
   Options options = CurrentOptions();
   options.max_sequential_skip_in_iterations = 3;
@@ -2143,6 +2245,8 @@ TEST_P(DBIteratorTest, UpperBoundWithChangeDirection) {
   delete iter;
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_P(DBIteratorTest, TableFilter) {
   ASSERT_OK(Put("a", "1"));
   dbfull()->Flush(FlushOptions());
@@ -2209,6 +2313,7 @@ TEST_P(DBIteratorTest, TableFilter) {
   }
 }
 
+<<<<<<< HEAD
 TEST_P(DBIteratorTest, UpperBoundWithPrevReseek) {
   Options options = CurrentOptions();
   options.max_sequential_skip_in_iterations = 3;
@@ -2250,6 +2355,8 @@ TEST_P(DBIteratorTest, UpperBoundWithPrevReseek) {
   db_->ReleaseSnapshot(snapshot);
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_P(DBIteratorTest, SkipStatistics) {
   Options options = CurrentOptions();
   options.statistics = rocksdb::CreateDBStatistics();
@@ -2373,6 +2480,7 @@ TEST_P(DBIteratorTest, SeekAfterHittingManyInternalKeys) {
   ASSERT_EQ(iter2->value().ToString(), "val_6");
 }
 
+<<<<<<< HEAD
 // Reproduces a former bug where iterator would skip some records when DBIter
 // re-seeks subiterator with Incomplete status.
 TEST_P(DBIteratorTest, NonBlockingIterationBugRepro) {
@@ -2437,6 +2545,8 @@ TEST_P(DBIteratorTest, SeekBackwardAfterOutOfUpperBound) {
   ASSERT_EQ("a", it->key().ToString());
 }
 
+=======
+>>>>>>> blood in blood out
 INSTANTIATE_TEST_CASE_P(DBIteratorTestInstance, DBIteratorTest,
                         testing::Values(true, false));
 
@@ -2449,7 +2559,11 @@ TEST_F(DBIteratorWithReadCallbackTest, ReadCallback) {
     explicit TestReadCallback(SequenceNumber last_visible_seq)
         : last_visible_seq_(last_visible_seq) {}
 
+<<<<<<< HEAD
     bool IsVisible(SequenceNumber seq) override {
+=======
+    bool IsCommitted(SequenceNumber seq) override {
+>>>>>>> blood in blood out
       return seq <= last_visible_seq_;
     }
 

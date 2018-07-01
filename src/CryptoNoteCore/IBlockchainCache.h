@@ -17,16 +17,26 @@
 
 #pragma once
 
+<<<<<<< HEAD
 #include <unordered_map>
 
+=======
+>>>>>>> blood in blood out
 #include <vector>
 
 #include <CryptoNote.h>
 
 #include "CryptoNoteCore/CachedBlock.h"
 #include "CryptoNoteCore/CachedTransaction.h"
+<<<<<<< HEAD
 #include "CryptoNoteCore/TransactionValidatiorState.h"
 #include "Common/ArrayView.h"
+=======
+#include "CryptoNoteCore/Difficulty.h"
+#include "CryptoNoteCore/TransactionValidatiorState.h"
+#include "Common/ArrayView.h"
+#include <CryptoNoteCore/Difficulty.h>
+>>>>>>> blood in blood out
 
 namespace CryptoNote {
 
@@ -56,7 +66,11 @@ struct PushedBlockInfo {
   TransactionValidatorState validatorState;
   size_t blockSize;
   uint64_t generatedCoins;
+<<<<<<< HEAD
   uint64_t blockDifficulty;
+=======
+  Difficulty blockDifficulty;
+>>>>>>> blood in blood out
 };
 
 class UseGenesis {
@@ -92,7 +106,11 @@ public:
       const TransactionValidatorState& validatorState,
       size_t blockSize,
       uint64_t generatedCoins,
+<<<<<<< HEAD
       uint64_t blockDifficulty,
+=======
+      Difficulty blockDifficulty,
+>>>>>>> blood in blood out
       RawBlock&& rawBlock) = 0;
   virtual PushedBlockInfo getPushedBlockInfo(uint32_t index) const = 0;
   virtual bool checkIfSpent(const Crypto::KeyImage& keyImage, uint32_t blockIndex) const = 0;
@@ -125,6 +143,7 @@ public:
   virtual std::vector<uint64_t> getLastBlocksSizes(size_t count) const = 0;
   virtual std::vector<uint64_t> getLastBlocksSizes(size_t count, uint32_t blockIndex, UseGenesis) const = 0;
 
+<<<<<<< HEAD
   virtual std::vector<uint64_t> getLastCumulativeDifficulties(size_t count, uint32_t blockIndex, UseGenesis) const = 0;
   virtual std::vector<uint64_t> getLastCumulativeDifficulties(size_t count) const = 0;
 
@@ -133,6 +152,16 @@ public:
 
   virtual uint64_t getCurrentCumulativeDifficulty() const = 0;
   virtual uint64_t getCurrentCumulativeDifficulty(uint32_t blockIndex) const = 0;
+=======
+  virtual std::vector<Difficulty> getLastCumulativeDifficulties(size_t count, uint32_t blockIndex, UseGenesis) const = 0;
+  virtual std::vector<Difficulty> getLastCumulativeDifficulties(size_t count) const = 0;
+
+  virtual Difficulty getDifficultyForNextBlock() const = 0;
+  virtual Difficulty getDifficultyForNextBlock(uint32_t blockIndex) const = 0;
+
+  virtual Difficulty getCurrentCumulativeDifficulty() const = 0;
+  virtual Difficulty getCurrentCumulativeDifficulty(uint32_t blockIndex) const = 0;
+>>>>>>> blood in blood out
 
   virtual uint64_t getAlreadyGeneratedCoins() const = 0;
   virtual uint64_t getAlreadyGeneratedCoins(uint32_t blockIndex) const = 0;
@@ -148,8 +177,11 @@ public:
 
   virtual size_t getKeyOutputsCountForAmount(uint64_t amount, uint32_t blockIndex) const = 0;
 
+<<<<<<< HEAD
   virtual std::tuple<bool, uint64_t> getBlockHeightForTimestamp(uint64_t timestamp) const = 0;
 
+=======
+>>>>>>> blood in blood out
   virtual uint32_t getTimestampLowerBoundBlockIndex(uint64_t timestamp) const = 0;
 
   //NOTE: shouldn't be recursive otherwise we'll get quadratic complexity
@@ -162,9 +194,12 @@ public:
   //NOTE: not recursive!
   virtual bool getTransactionGlobalIndexes(const Crypto::Hash& transactionHash, std::vector<uint32_t>& globalIndexes) const = 0;
 
+<<<<<<< HEAD
   virtual std::unordered_map<Crypto::Hash, std::vector<uint64_t>> getGlobalIndexes( 
     const std::vector<Crypto::Hash> transactionHashes) const = 0;
 
+=======
+>>>>>>> blood in blood out
   virtual size_t getTransactionCount() const = 0;
 
   virtual uint32_t getBlockIndexContainingTx(const Crypto::Hash& transactionHash) const = 0;
@@ -183,10 +218,13 @@ public:
 
   virtual std::vector<Crypto::Hash> getTransactionHashesByPaymentId(const Crypto::Hash& paymentId) const = 0;
   virtual std::vector<Crypto::Hash> getBlockHashesByTimestamps(uint64_t timestampBegin, size_t secondsCount) const = 0;
+<<<<<<< HEAD
 
   virtual std::vector<RawBlock> getBlocksByHeight(
     const uint64_t startHeight,
     uint64_t endHeight) const = 0;
+=======
+>>>>>>> blood in blood out
 };
 
 }

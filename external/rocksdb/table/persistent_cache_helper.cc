@@ -49,9 +49,12 @@ void PersistentCacheHelper::InsertUncompressedPage(
 Status PersistentCacheHelper::LookupRawPage(
     const PersistentCacheOptions& cache_options, const BlockHandle& handle,
     std::unique_ptr<char[]>* raw_data, const size_t raw_data_size) {
+<<<<<<< HEAD
 #ifdef NDEBUG
   (void)raw_data_size;
 #endif
+=======
+>>>>>>> blood in blood out
   assert(cache_options.persistent_cache);
   assert(cache_options.persistent_cache->IsCompressed());
 

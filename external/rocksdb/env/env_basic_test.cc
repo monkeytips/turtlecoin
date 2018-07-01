@@ -57,7 +57,11 @@ class EnvBasicTestWithParam : public testing::Test,
   std::string test_dir_;
 
   EnvBasicTestWithParam() : env_(GetParam()) {
+<<<<<<< HEAD
     test_dir_ = test::PerThreadDBPath(env_, "env_basic_test");
+=======
+    test_dir_ = test::TmpDir(env_) + "/env_basic_test";
+>>>>>>> blood in blood out
   }
 
   void SetUp() {

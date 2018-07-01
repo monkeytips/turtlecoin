@@ -24,7 +24,11 @@
 #include "Serialization/KVBinaryOutputStreamSerializer.h"
 #include "Serialization/SerializationOverloads.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
+<<<<<<< HEAD
 #include "Serialization/CryptoNoteSerialization.h"
+=======
+#include "CryptoNoteCore/CryptoNoteSerialization.h"
+>>>>>>> blood in blood out
 #include "Common/StdInputStream.h"
 #include "Serialization/KVBinaryInputStreamSerializer.h"
 

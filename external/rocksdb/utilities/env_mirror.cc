@@ -20,7 +20,11 @@ class SequentialFileMirror : public SequentialFile {
   std::string fname;
   explicit SequentialFileMirror(std::string f) : fname(f) {}
 
+<<<<<<< HEAD
   Status Read(size_t n, Slice* result, char* scratch) override {
+=======
+  Status Read(size_t n, Slice* result, char* scratch) {
+>>>>>>> blood in blood out
     Slice aslice;
     Status as = a_->Read(n, &aslice, scratch);
     if (as == Status::OK()) {
@@ -44,13 +48,21 @@ class SequentialFileMirror : public SequentialFile {
     return as;
   }
 
+<<<<<<< HEAD
   Status Skip(uint64_t n) override {
+=======
+  Status Skip(uint64_t n) {
+>>>>>>> blood in blood out
     Status as = a_->Skip(n);
     Status bs = b_->Skip(n);
     assert(as == bs);
     return as;
   }
+<<<<<<< HEAD
   Status InvalidateCache(size_t offset, size_t length) override {
+=======
+  Status InvalidateCache(size_t offset, size_t length) {
+>>>>>>> blood in blood out
     Status as = a_->InvalidateCache(offset, length);
     Status bs = b_->InvalidateCache(offset, length);
     assert(as == bs);
@@ -64,7 +76,11 @@ class RandomAccessFileMirror : public RandomAccessFile {
   std::string fname;
   explicit RandomAccessFileMirror(std::string f) : fname(f) {}
 
+<<<<<<< HEAD
   Status Read(uint64_t offset, size_t n, Slice* result, char* scratch) const override {
+=======
+  Status Read(uint64_t offset, size_t n, Slice* result, char* scratch) const {
+>>>>>>> blood in blood out
     Status as = a_->Read(offset, n, result, scratch);
     if (as == Status::OK()) {
       char* bscratch = new char[n];
@@ -86,7 +102,11 @@ class RandomAccessFileMirror : public RandomAccessFile {
     return as;
   }
 
+<<<<<<< HEAD
   size_t GetUniqueId(char* id, size_t max_size) const override {
+=======
+  size_t GetUniqueId(char* id, size_t max_size) const {
+>>>>>>> blood in blood out
     // NOTE: not verified
     return a_->GetUniqueId(id, max_size);
   }

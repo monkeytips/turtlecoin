@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import optparse
+>>>>>>> blood in blood out
 import re
 import sys
 

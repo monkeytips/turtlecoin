@@ -42,7 +42,11 @@ std::string errorMessage(int error) {
   } buffer;
 
   auto size = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, nullptr, error,
+<<<<<<< HEAD
                             MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), reinterpret_cast<LPTSTR>(&buffer.pointer), 0, nullptr);
+=======
+                            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPTSTR>(&buffer.pointer), 0, nullptr);
+>>>>>>> blood in blood out
   return "result=" + std::to_string(error) + ", " + std::string(buffer.pointer, size);
 }
 

@@ -23,6 +23,7 @@
 
 namespace CryptoNote {
 
+<<<<<<< HEAD
 uint64_t getDefaultMixinByHeight(const uint64_t height)
 {
     if (height >= CryptoNote::parameters::MIXIN_LIMITS_V3_HEIGHT)
@@ -43,6 +44,8 @@ uint64_t getDefaultMixinByHeight(const uint64_t height)
     }
 }
 
+=======
+>>>>>>> blood in blood out
 void throwIfKeysMismatch(const Crypto::SecretKey& secretKey, const Crypto::PublicKey& expectedPublicKey, const std::string& message) {
   Crypto::PublicKey pub;
   bool r = Crypto::secret_key_to_public_key(secretKey, pub);

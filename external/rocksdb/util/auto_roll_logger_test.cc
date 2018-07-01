@@ -71,10 +71,16 @@ class AutoRollLoggerTest : public testing::Test {
 
 const std::string AutoRollLoggerTest::kSampleMessage(
     "this is the message to be written to the log file!!");
+<<<<<<< HEAD
 const std::string AutoRollLoggerTest::kTestDir(
     test::PerThreadDBPath("db_log_test"));
 const std::string AutoRollLoggerTest::kLogFile(
     test::PerThreadDBPath("db_log_test") + "/LOG");
+=======
+const std::string AutoRollLoggerTest::kTestDir(test::TmpDir() + "/db_log_test");
+const std::string AutoRollLoggerTest::kLogFile(test::TmpDir() +
+                                               "/db_log_test/LOG");
+>>>>>>> blood in blood out
 Env* AutoRollLoggerTest::default_env = Env::Default();
 
 // In this test we only want to Log some simple log message with
@@ -521,7 +527,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr,
           "SKIPPED as AutoRollLogger is not supported in ROCKSDB_LITE\n");
   return 0;

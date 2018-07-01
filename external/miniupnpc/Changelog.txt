@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 $Id: Changelog.txt,v 1.235 2018/05/07 11:05:16 nanard Exp $
 miniUPnP client Changelog.
 
@@ -127,6 +128,11 @@ VERSION 2.0 : released 2016/04/19
 2014/05/15:
   Add support for IGD2 AddAnyPortMapping and DeletePortMappingRange
 
+=======
+$Id: Changelog.txt,v 1.193 2014/02/05 17:26:45 nanard Exp $
+miniUPnP client Changelog.
+
+>>>>>>> blood in blood out
 2014/02/05:
   handle EINPROGRESS after connect()
 
@@ -622,7 +628,11 @@ VERSION 1.0 :
   upnpc now displays external ip address with -s or -l
 
 2007/04/11:
+<<<<<<< HEAD
   changed MINIUPNPC_URL_MAXSIZE to 128 to accommodate the "BT Voyager 210"
+=======
+  changed MINIUPNPC_URL_MAXSIZE to 128 to accomodate the "BT Voyager 210"
+>>>>>>> blood in blood out
 
 2007/03/19:
   cleanup in miniwget.c

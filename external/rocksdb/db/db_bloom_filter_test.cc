@@ -39,6 +39,7 @@ class DBBloomFilterTestWithParam
   }
 };
 
+<<<<<<< HEAD
 class SliceTransformLimitedDomainGeneric : public SliceTransform {
   const char* Name() const override {
     return "SliceTransformLimitedDomainGeneric";
@@ -59,6 +60,8 @@ class SliceTransformLimitedDomainGeneric : public SliceTransform {
   }
 };
 
+=======
+>>>>>>> blood in blood out
 // KeyMayExist can lead to a few false positives, but not false negatives.
 // To make test deterministic, use a much larger number of bits per key-20 than
 // bits in the key, so that false positives are eliminated
@@ -137,6 +140,7 @@ TEST_P(DBBloomFilterTestWithParam, KeyMayExist) {
       ChangeOptions(kSkipPlainTable | kSkipHashIndex | kSkipFIFOCompaction));
 }
 
+<<<<<<< HEAD
 TEST_F(DBBloomFilterTest, GetFilterByPrefixBloomCustomPrefixExtractor) {
   for (bool partition_filters : {true, false}) {
     Options options = last_options_;
@@ -184,6 +188,8 @@ TEST_F(DBBloomFilterTest, GetFilterByPrefixBloomCustomPrefixExtractor) {
   }
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_F(DBBloomFilterTest, GetFilterByPrefixBloom) {
   for (bool partition_filters : {true, false}) {
     Options options = last_options_;
@@ -1124,10 +1130,17 @@ TEST_F(DBBloomFilterTest, OptimizeFiltersForHits) {
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
+<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial",
       [&](void* /*arg*/) { non_trivial_move++; });
+=======
+      [&](void* arg) { trivial_move++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "DBImpl::BackgroundCompaction:NonTrivial",
+      [&](void* arg) { non_trivial_move++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   CompactRangeOptions compact_options;
@@ -1164,6 +1177,7 @@ TEST_F(DBBloomFilterTest, OptimizeFiltersForHits) {
             TestGetTickerCount(options, BLOCK_CACHE_ADD));
 }
 
+<<<<<<< HEAD
 int CountIter(std::unique_ptr<Iterator>& iter, const Slice& key) {
   int count = 0;
   for (iter->Seek(key); iter->Valid() && iter->status() == Status::OK();
@@ -1571,6 +1585,8 @@ TEST_F(DBBloomFilterTest, DynamicBloomFilterOptions) {
   }
 }
 
+=======
+>>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
 
 }  // namespace rocksdb

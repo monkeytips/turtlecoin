@@ -43,7 +43,11 @@ class TtlTest : public testing::Test {
  public:
   TtlTest() {
     env_.reset(new SpecialTimeEnv(Env::Default()));
+<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("db_ttl");
+=======
+    dbname_ = test::TmpDir() + "/db_ttl";
+>>>>>>> blood in blood out
     options_.create_if_missing = true;
     options_.env = env_.get();
     // ensure that compaction is kicked in to always strip timestamp from kvs
@@ -301,8 +305,13 @@ class TtlTest : public testing::Test {
     // Keeps key if it is in [kSampleSize_/3, 2*kSampleSize_/3),
     // Change value if it is in [2*kSampleSize_/3, kSampleSize_)
     // Eg. kSampleSize_=6. Drop:key0-1...Keep:key2-3...Change:key4-5...
+<<<<<<< HEAD
     virtual bool Filter(int /*level*/, const Slice& key, const Slice& /*value*/,
                         std::string* new_value,
+=======
+    virtual bool Filter(int level, const Slice& key,
+                        const Slice& value, std::string* new_value,
+>>>>>>> blood in blood out
                         bool* value_changed) const override {
       assert(new_value != nullptr);
 
@@ -351,7 +360,11 @@ class TtlTest : public testing::Test {
       }
 
       virtual std::unique_ptr<CompactionFilter> CreateCompactionFilter(
+<<<<<<< HEAD
           const CompactionFilter::Context& /*context*/) override {
+=======
+          const CompactionFilter::Context& context) override {
+>>>>>>> blood in blood out
         return std::unique_ptr<CompactionFilter>(
             new TestFilter(kSampleSize_, kNewValue_));
       }
@@ -655,7 +668,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr, "SKIPPED as DBWithTTL is not supported in ROCKSDB_LITE\n");
   return 0;
 }

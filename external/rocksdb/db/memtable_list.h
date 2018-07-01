@@ -13,7 +13,10 @@
 #include <vector>
 
 #include "db/dbformat.h"
+<<<<<<< HEAD
 #include "db/logs_with_prep_tracker.h"
+=======
+>>>>>>> blood in blood out
 #include "db/memtable.h"
 #include "db/range_del_aggregator.h"
 #include "monitoring/instrumented_mutex.h"
@@ -211,10 +214,16 @@ class MemTableList {
   // Commit a successful flush in the manifest file
   Status InstallMemtableFlushResults(
       ColumnFamilyData* cfd, const MutableCFOptions& mutable_cf_options,
+<<<<<<< HEAD
       const autovector<MemTable*>& m, LogsWithPrepTracker* prep_tracker,
       VersionSet* vset, InstrumentedMutex* mu, uint64_t file_number,
       autovector<MemTable*>* to_delete, Directory* db_directory,
       LogBuffer* log_buffer);
+=======
+      const autovector<MemTable*>& m, VersionSet* vset, InstrumentedMutex* mu,
+      uint64_t file_number, autovector<MemTable*>* to_delete,
+      Directory* db_directory, LogBuffer* log_buffer);
+>>>>>>> blood in blood out
 
   // New memtables are inserted at the front of the list.
   // Takes ownership of the referenced held on *m by the caller of Add().
@@ -245,10 +254,14 @@ class MemTableList {
 
   size_t* current_memory_usage() { return &current_memory_usage_; }
 
+<<<<<<< HEAD
   // Returns the min log containing the prep section after memtables listsed in
   // `memtables_to_flush` are flushed and their status is persisted in manifest.
   uint64_t PrecomputeMinLogContainingPrepSection(
       const autovector<MemTable*>& memtables_to_flush);
+=======
+  uint64_t GetMinLogContainingPrepSection();
+>>>>>>> blood in blood out
 
   uint64_t GetEarliestMemTableID() const {
     auto& memlist = current_->memlist_;

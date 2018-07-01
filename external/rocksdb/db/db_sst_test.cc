@@ -20,6 +20,7 @@ class DBSSTTest : public DBTestBase {
   DBSSTTest() : DBTestBase("/db_sst_test") {}
 };
 
+<<<<<<< HEAD
 #ifndef ROCKSDB_LITE
 // A class which remembers the name of each flushed file.
 class FlushedFileCollector : public EventListener {
@@ -51,6 +52,8 @@ class FlushedFileCollector : public EventListener {
 };
 #endif  // ROCKSDB_LITE
 
+=======
+>>>>>>> blood in blood out
 TEST_F(DBSSTTest, DontDeletePendingOutputs) {
   Options options;
   options.env = env_;
@@ -103,7 +106,11 @@ TEST_F(DBSSTTest, SSTsWithLdbSuffixHandling) {
   ASSERT_GT(num_files, 0);
 
   std::vector<std::string> filenames;
+<<<<<<< HEAD
   GetSstFiles(env_, dbname_, &filenames);
+=======
+  GetSstFiles(dbname_, &filenames);
+>>>>>>> blood in blood out
   int num_ldb_files = 0;
   for (size_t i = 0; i < filenames.size(); ++i) {
     if (i & 1) {
@@ -262,11 +269,19 @@ TEST_F(DBSSTTest, DBWithSstFileManager) {
   int files_deleted = 0;
   int files_moved = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "SstFileManagerImpl::OnAddFile", [&](void* /*arg*/) { files_added++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "SstFileManagerImpl::OnDeleteFile", [&](void* /*arg*/) { files_deleted++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "SstFileManagerImpl::OnMoveFile", [&](void* /*arg*/) { files_moved++; });
+=======
+      "SstFileManagerImpl::OnAddFile", [&](void* arg) { files_added++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "SstFileManagerImpl::OnDeleteFile", [&](void* arg) { files_deleted++; });
+  rocksdb::SyncPoint::GetInstance()->SetCallBack(
+      "SstFileManagerImpl::OnMoveFile", [&](void* arg) { files_moved++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Options options = CurrentOptions();
@@ -439,12 +454,16 @@ TEST_F(DBSSTTest, DeleteSchedulerMultipleDBPaths) {
   int bg_delete_file = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile:DeleteFile",
+<<<<<<< HEAD
       [&](void* /*arg*/) { bg_delete_file++; });
   // The deletion scheduler sometimes skips marking file as trash according to
   // a heuristic. In that case the deletion will go through the below SyncPoint.
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteFile",
       [&](void* /*arg*/) { bg_delete_file++; });
+=======
+      [&](void* arg) { bg_delete_file++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Options options = CurrentOptions();
@@ -497,15 +516,22 @@ TEST_F(DBSSTTest, DeleteSchedulerMultipleDBPaths) {
   sfm->WaitForEmptyTrash();
   ASSERT_EQ(bg_delete_file, 8);
 
+<<<<<<< HEAD
   // Compaction will delete both files and regenerate a file in L1 in second
   // db path. The deleted files should still be cleaned up via delete scheduler.
+=======
+>>>>>>> blood in blood out
   compact_options.bottommost_level_compaction =
       BottommostLevelCompaction::kForce;
   ASSERT_OK(db_->CompactRange(compact_options, nullptr, nullptr));
   ASSERT_EQ("0,1", FilesPerLevel(0));
 
   sfm->WaitForEmptyTrash();
+<<<<<<< HEAD
   ASSERT_EQ(bg_delete_file, 10);
+=======
+  ASSERT_EQ(bg_delete_file, 8);
+>>>>>>> blood in blood out
 
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
 }
@@ -514,7 +540,11 @@ TEST_F(DBSSTTest, DestroyDBWithRateLimitedDelete) {
   int bg_delete_file = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile:DeleteFile",
+<<<<<<< HEAD
       [&](void* /*arg*/) { bg_delete_file++; });
+=======
+      [&](void* arg) { bg_delete_file++; });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Status s;
@@ -576,6 +606,7 @@ TEST_F(DBSSTTest, DBWithMaxSpaceAllowed) {
   ASSERT_NOK(Flush());
 }
 
+<<<<<<< HEAD
 TEST_F(DBSSTTest, CancellingCompactionsWorks) {
   std::shared_ptr<SstFileManager> sst_file_manager(NewSstFileManager(env_));
   auto sfm = static_cast<SstFileManagerImpl*>(sst_file_manager.get());
@@ -697,6 +728,8 @@ TEST_F(DBSSTTest, CancellingManualCompactionsWorks) {
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
 }
 
+=======
+>>>>>>> blood in blood out
 TEST_F(DBSSTTest, DBWithMaxSpaceAllowedRandomized) {
   // This test will set a maximum allowed space for the DB, then it will
   // keep filling the DB until the limit is reached and bg_error_ is set.
@@ -726,6 +759,7 @@ TEST_F(DBSSTTest, DBWithMaxSpaceAllowedRandomized) {
       });
 
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "DBImpl::BackgroundCompaction():CancelledCompaction", [&](void* arg) {
         bool* enough_room = static_cast<bool*>(arg);
         *enough_room = true;
@@ -734,6 +768,10 @@ TEST_F(DBSSTTest, DBWithMaxSpaceAllowedRandomized) {
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "CompactionJob::FinishCompactionOutputFile:MaxAllowedSpaceReached",
       [&](void* /*arg*/) {
+=======
+      "CompactionJob::FinishCompactionOutputFile:MaxAllowedSpaceReached",
+      [&](void* arg) {
+>>>>>>> blood in blood out
         bg_error_set = true;
         GetAllSSTFiles(&total_sst_files_size);
         reached_max_space_on_compaction++;

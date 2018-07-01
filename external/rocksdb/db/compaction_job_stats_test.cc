@@ -98,7 +98,11 @@ class CompactionJobStatsTest : public testing::Test,
   CompactionJobStatsTest() : env_(Env::Default()) {
     env_->SetBackgroundThreads(1, Env::LOW);
     env_->SetBackgroundThreads(1, Env::HIGH);
+<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("compaction_job_stats_test");
+=======
+    dbname_ = test::TmpDir(env_) + "/compaction_job_stats_test";
+>>>>>>> blood in blood out
     alternative_wal_dir_ = dbname_ + "/wal";
     Options options;
     options.create_if_missing = true;
@@ -426,7 +430,11 @@ class CompactionJobStatsChecker : public EventListener {
   // Once a compaction completed, this function will verify the returned
   // CompactionJobInfo with the oldest CompactionJobInfo added earlier
   // in "expected_stats_" which has not yet being used for verification.
+<<<<<<< HEAD
   virtual void OnCompactionCompleted(DB* /*db*/, const CompactionJobInfo& ci) {
+=======
+  virtual void OnCompactionCompleted(DB *db, const CompactionJobInfo& ci) {
+>>>>>>> blood in blood out
     if (verify_next_comp_io_stats_) {
       ASSERT_GT(ci.stats.file_write_nanos, 0);
       ASSERT_GT(ci.stats.file_range_sync_nanos, 0);
@@ -806,7 +814,11 @@ TEST_P(CompactionJobStatsTest, CompactionJobStatsTest) {
     stats_checker->set_verify_next_comp_io_stats(true);
     std::atomic<bool> first_prepare_write(true);
     rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
         "WritableFileWriter::Append:BeforePrepareWrite", [&](void* /*arg*/) {
+=======
+        "WritableFileWriter::Append:BeforePrepareWrite", [&](void* arg) {
+>>>>>>> blood in blood out
           if (first_prepare_write.load()) {
             options.env->SleepForMicroseconds(3);
             first_prepare_write.store(false);
@@ -815,7 +827,11 @@ TEST_P(CompactionJobStatsTest, CompactionJobStatsTest) {
 
     std::atomic<bool> first_flush(true);
     rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
         "WritableFileWriter::Flush:BeforeAppend", [&](void* /*arg*/) {
+=======
+        "WritableFileWriter::Flush:BeforeAppend", [&](void* arg) {
+>>>>>>> blood in blood out
           if (first_flush.load()) {
             options.env->SleepForMicroseconds(3);
             first_flush.store(false);
@@ -824,7 +840,11 @@ TEST_P(CompactionJobStatsTest, CompactionJobStatsTest) {
 
     std::atomic<bool> first_sync(true);
     rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
         "WritableFileWriter::SyncInternal:0", [&](void* /*arg*/) {
+=======
+        "WritableFileWriter::SyncInternal:0", [&](void* arg) {
+>>>>>>> blood in blood out
           if (first_sync.load()) {
             options.env->SleepForMicroseconds(3);
             first_sync.store(false);
@@ -833,7 +853,11 @@ TEST_P(CompactionJobStatsTest, CompactionJobStatsTest) {
 
     std::atomic<bool> first_range_sync(true);
     rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
         "WritableFileWriter::RangeSync:0", [&](void* /*arg*/) {
+=======
+        "WritableFileWriter::RangeSync:0", [&](void* arg) {
+>>>>>>> blood in blood out
           if (first_range_sync.load()) {
             options.env->SleepForMicroseconds(3);
             first_range_sync.store(false);
@@ -1034,7 +1058,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr, "SKIPPED, not supported in ROCKSDB_LITE\n");
   return 0;
 }
@@ -1043,5 +1071,9 @@ int main(int /*argc*/, char** /*argv*/) {
 
 #else
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) { return 0; }
+=======
+int main(int argc, char** argv) { return 0; }
+>>>>>>> blood in blood out
 #endif  // !defined(IOS_CROSS_COMPILE)

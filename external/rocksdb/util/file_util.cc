@@ -41,7 +41,11 @@ Status CopyFile(Env* env, const std::string& source,
         return s;
       }
     }
+<<<<<<< HEAD
     src_reader.reset(new SequentialFileReader(std::move(srcfile), source));
+=======
+    src_reader.reset(new SequentialFileReader(std::move(srcfile)));
+>>>>>>> blood in blood out
     dest_writer.reset(new WritableFileWriter(std::move(destfile), soptions));
   }
 
@@ -62,7 +66,12 @@ Status CopyFile(Env* env, const std::string& source,
     }
     size -= slice.size();
   }
+<<<<<<< HEAD
   return dest_writer->Sync(use_fsync);
+=======
+  dest_writer->Sync(use_fsync);
+  return Status::OK();
+>>>>>>> blood in blood out
 }
 
 // Utility function to create a file with the provided contents
@@ -82,17 +91,30 @@ Status CreateFile(Env* env, const std::string& destination,
 }
 
 Status DeleteSSTFile(const ImmutableDBOptions* db_options,
+<<<<<<< HEAD
                      const std::string& fname, const std::string& dir_to_sync) {
 #ifndef ROCKSDB_LITE
   auto sfm =
       static_cast<SstFileManagerImpl*>(db_options->sst_file_manager.get());
   if (sfm) {
     return sfm->ScheduleFileDeletion(fname, dir_to_sync);
+=======
+                     const std::string& fname, uint32_t path_id) {
+  // TODO(tec): support sst_file_manager for multiple path_ids
+#ifndef ROCKSDB_LITE
+  auto sfm =
+      static_cast<SstFileManagerImpl*>(db_options->sst_file_manager.get());
+  if (sfm && path_id == 0) {
+    return sfm->ScheduleFileDeletion(fname);
+>>>>>>> blood in blood out
   } else {
     return db_options->env->DeleteFile(fname);
   }
 #else
+<<<<<<< HEAD
   (void)dir_to_sync;
+=======
+>>>>>>> blood in blood out
   // SstFileManager is not supported in ROCKSDB_LITE
   return db_options->env->DeleteFile(fname);
 #endif

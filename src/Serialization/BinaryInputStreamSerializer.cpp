@@ -22,7 +22,11 @@
 #include <stdexcept>
 #include <Common/StreamTools.h>
 #include "SerializationOverloads.h"
+<<<<<<< HEAD
 #include <config/CryptoNoteConfig.h>
+=======
+#include "CryptoNoteConfig.h"
+>>>>>>> blood in blood out
 
 using namespace Common;
 
@@ -48,7 +52,11 @@ bool BinaryInputStreamSerializer::beginObject(Common::StringView name) {
 void BinaryInputStreamSerializer::endObject() {
 }
 
+<<<<<<< HEAD
 bool BinaryInputStreamSerializer::beginArray(uint64_t& size, Common::StringView name) {
+=======
+bool BinaryInputStreamSerializer::beginArray(size_t& size, Common::StringView name) {
+>>>>>>> blood in blood out
   readVarintAs<uint64_t>(stream, size);
   return true;
 }
@@ -130,7 +138,11 @@ bool BinaryInputStreamSerializer::operator()(std::string& value, Common::StringV
   return true;
 }
 
+<<<<<<< HEAD
 bool BinaryInputStreamSerializer::binary(void* value, uint64_t size, Common::StringView name) {
+=======
+bool BinaryInputStreamSerializer::binary(void* value, size_t size, Common::StringView name) {
+>>>>>>> blood in blood out
   checkedRead(static_cast<char*>(value), size);
   return true;
 }
@@ -145,7 +157,11 @@ bool BinaryInputStreamSerializer::operator()(double& value, Common::StringView n
   return false;
 }
 
+<<<<<<< HEAD
 void BinaryInputStreamSerializer::checkedRead(char* buf, uint64_t size) {
+=======
+void BinaryInputStreamSerializer::checkedRead(char* buf, size_t size) {
+>>>>>>> blood in blood out
   read(stream, buf, size);
 }
 

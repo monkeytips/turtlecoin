@@ -40,7 +40,10 @@ class Compaction {
              std::vector<CompactionInputFiles> inputs, int output_level,
              uint64_t target_file_size, uint64_t max_compaction_bytes,
              uint32_t output_path_id, CompressionType compression,
+<<<<<<< HEAD
              CompressionOptions compression_opts, uint32_t max_subcompactions,
+=======
+>>>>>>> blood in blood out
              std::vector<FileMetaData*> grandparents,
              bool manual_compaction = false, double score = -1,
              bool deletion_compaction = false,
@@ -119,11 +122,14 @@ class Compaction {
   // What compression for output
   CompressionType output_compression() const { return output_compression_; }
 
+<<<<<<< HEAD
   // What compression options for output
   CompressionOptions output_compression_opts() const {
     return output_compression_opts_;
   }
 
+=======
+>>>>>>> blood in blood out
   // Whether need to write output file to second DB path.
   uint32_t output_path_id() const { return output_path_id_; }
 
@@ -239,8 +245,11 @@ class Compaction {
 
   Slice GetLargestUserKey() const { return largest_user_key_; }
 
+<<<<<<< HEAD
   int GetInputBaseLevel() const;
 
+=======
+>>>>>>> blood in blood out
   CompactionReason compaction_reason() { return compaction_reason_; }
 
   const std::vector<FileMetaData*>& grandparents() const {
@@ -249,8 +258,11 @@ class Compaction {
 
   uint64_t max_compaction_bytes() const { return max_compaction_bytes_; }
 
+<<<<<<< HEAD
   uint32_t max_subcompactions() const { return max_subcompactions_; }
 
+=======
+>>>>>>> blood in blood out
   uint64_t MaxInputFileCreationTime() const;
 
  private:
@@ -277,7 +289,10 @@ class Compaction {
   const int output_level_;  // levels to which output files are stored
   uint64_t max_output_file_size_;
   uint64_t max_compaction_bytes_;
+<<<<<<< HEAD
   uint32_t max_subcompactions_;
+=======
+>>>>>>> blood in blood out
   const ImmutableCFOptions immutable_cf_options_;
   const MutableCFOptions mutable_cf_options_;
   Version* input_version_;
@@ -288,7 +303,10 @@ class Compaction {
 
   const uint32_t output_path_id_;
   CompressionType output_compression_;
+<<<<<<< HEAD
   CompressionOptions output_compression_opts_;
+=======
+>>>>>>> blood in blood out
   // If true, then the comaction can be done by simply deleting input files.
   const bool deletion_compaction_;
 

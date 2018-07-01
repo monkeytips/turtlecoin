@@ -21,7 +21,11 @@
 #include <system_error>
 
 namespace CryptoNote {
+<<<<<<< HEAD
 namespace NodeError {
+=======
+namespace error {
+>>>>>>> blood in blood out
 
 // custom error conditions enum type:
 enum NodeErrorCodes {
@@ -31,8 +35,12 @@ enum NodeErrorCodes {
   NODE_BUSY,
   INTERNAL_NODE_ERROR,
   REQUEST_ERROR,
+<<<<<<< HEAD
   CONNECT_ERROR,
   TIMEOUT
+=======
+  CONNECT_ERROR
+>>>>>>> blood in blood out
 };
 
 // custom category:
@@ -57,7 +65,10 @@ public:
     case INTERNAL_NODE_ERROR: return "Internal node error";
     case REQUEST_ERROR:       return "Error in request parameters";
     case CONNECT_ERROR:       return "Can't connect to daemon";
+<<<<<<< HEAD
     case TIMEOUT:             return "Operation timed out";
+=======
+>>>>>>> blood in blood out
     default:                  return "Unknown error";
     }
   }
@@ -70,6 +81,11 @@ private:
 }
 }
  
+<<<<<<< HEAD
 inline std::error_code make_error_code(CryptoNote::NodeError::NodeErrorCodes e) {
   return std::error_code(static_cast<int>(e), CryptoNote::NodeError::NodeErrorCategory::INSTANCE);
+=======
+inline std::error_code make_error_code(CryptoNote::error::NodeErrorCodes e) {
+  return std::error_code(static_cast<int>(e), CryptoNote::error::NodeErrorCategory::INSTANCE);
+>>>>>>> blood in blood out
 }

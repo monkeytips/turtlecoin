@@ -15,7 +15,11 @@ namespace rocksdb {
 // Other than basic table properties, each table may also have the user
 // collected properties.
 // The value of the user-collected properties are encoded as raw bytes --
+<<<<<<< HEAD
 // users have to interpret these values by themselves.
+=======
+// users have to interprete these values by themselves.
+>>>>>>> blood in blood out
 // Note: To do prefix seek/scan in `UserCollectedProperties`, you can do
 // something similar to:
 //
@@ -33,13 +37,19 @@ struct TablePropertiesNames {
   static const std::string kIndexSize;
   static const std::string kIndexPartitions;
   static const std::string kTopLevelIndexSize;
+<<<<<<< HEAD
   static const std::string kIndexKeyIsUserKey;
+=======
+>>>>>>> blood in blood out
   static const std::string kFilterSize;
   static const std::string kRawKeySize;
   static const std::string kRawValueSize;
   static const std::string kNumDataBlocks;
   static const std::string kNumEntries;
+<<<<<<< HEAD
   static const std::string kNumRangeDeletions;
+=======
+>>>>>>> blood in blood out
   static const std::string kFormatVersion;
   static const std::string kFixedKeyLen;
   static const std::string kFilterPolicy;
@@ -61,7 +71,11 @@ extern const std::string kRangeDelBlock;
 // `TablePropertiesCollector` provides the mechanism for users to collect
 // their own properties that they are interested in. This class is essentially
 // a collection of callback functions that will be invoked during table
+<<<<<<< HEAD
 // building. It is constructed with TablePropertiesCollectorFactory. The methods
+=======
+// building. It is construced with TablePropertiesCollectorFactory. The methods
+>>>>>>> blood in blood out
 // don't need to be thread-safe, as we will create exactly one
 // TablePropertiesCollector object per table and then call it sequentially
 class TablePropertiesCollector {
@@ -136,9 +150,12 @@ struct TableProperties {
   uint64_t index_partitions = 0;
   // Size of the top-level index if kTwoLevelIndexSearch is used
   uint64_t top_level_index_size = 0;
+<<<<<<< HEAD
   // Whether the index key is user key. Otherwise it includes 8 byte of sequence
   // number added by internal key format.
   uint64_t index_key_is_user_key = 0;
+=======
+>>>>>>> blood in blood out
   // the size of filter block.
   uint64_t filter_size = 0;
   // total raw key size
@@ -149,8 +166,11 @@ struct TableProperties {
   uint64_t num_data_blocks = 0;
   // the number of entries in this table
   uint64_t num_entries = 0;
+<<<<<<< HEAD
   // the number of range deletions in this table
   uint64_t num_range_deletions = 0;
+=======
+>>>>>>> blood in blood out
   // format version, reserved for backward compatibility
   uint64_t format_version = 0;
   // If 0, key is variable length. Otherwise number of bytes for each key.

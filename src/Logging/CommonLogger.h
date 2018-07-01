@@ -25,9 +25,14 @@ namespace Logging {
 class CommonLogger : public ILogger {
 public:
 
+<<<<<<< HEAD
   virtual ~CommonLogger() {};
 
   virtual void operator()(const std::string& category, Level level, boost::posix_time::ptime time, const std::string& body) override;
+=======
+  virtual void operator()(const std::string& category, Level level, boost::posix_time::ptime time, const std::string& body) override;
+  virtual void enableCategory(const std::string& category);
+>>>>>>> blood in blood out
   virtual void disableCategory(const std::string& category);
   virtual void setMaxLevel(Level level);
 

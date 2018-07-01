@@ -17,7 +17,11 @@
 
 #include "UpgradeManager.h"
 
+<<<<<<< HEAD
 #include <config/CryptoNoteConfig.h>
+=======
+#include "CryptoNoteConfig.h"
+>>>>>>> blood in blood out
 
 namespace CryptoNote {
 

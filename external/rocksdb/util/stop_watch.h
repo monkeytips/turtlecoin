@@ -15,17 +15,24 @@ namespace rocksdb {
 class StopWatch {
  public:
   StopWatch(Env* const env, Statistics* statistics, const uint32_t hist_type,
+<<<<<<< HEAD
             uint64_t* elapsed = nullptr, bool overwrite = true,
             bool delay_enabled = false)
+=======
+            uint64_t* elapsed = nullptr, bool overwrite = true)
+>>>>>>> blood in blood out
       : env_(env),
         statistics_(statistics),
         hist_type_(hist_type),
         elapsed_(elapsed),
         overwrite_(overwrite),
         stats_enabled_(statistics && statistics->HistEnabledForType(hist_type)),
+<<<<<<< HEAD
         delay_enabled_(delay_enabled),
         total_delay_(0),
         delay_start_time_(0),
+=======
+>>>>>>> blood in blood out
         start_time_((stats_enabled_ || elapsed != nullptr) ? env->NowMicros()
                                                            : 0) {}
 
@@ -37,9 +44,12 @@ class StopWatch {
         *elapsed_ += env_->NowMicros() - start_time_;
       }
     }
+<<<<<<< HEAD
     if (elapsed_ && delay_enabled_) {
       *elapsed_ -= total_delay_;
     }
+=======
+>>>>>>> blood in blood out
     if (stats_enabled_) {
       statistics_->measureTime(hist_type_,
           (elapsed_ != nullptr) ? *elapsed_ :
@@ -47,6 +57,7 @@ class StopWatch {
     }
   }
 
+<<<<<<< HEAD
   void DelayStart() {
     // if delay_start_time_ is not 0, it means we are already tracking delay,
     // so delay_start_time_ should not be overwritten
@@ -66,6 +77,8 @@ class StopWatch {
 
   uint64_t GetDelay() const { return delay_enabled_ ? total_delay_ : 0; }
 
+=======
+>>>>>>> blood in blood out
   uint64_t start_time() const { return start_time_; }
 
  private:
@@ -75,9 +88,12 @@ class StopWatch {
   uint64_t* elapsed_;
   bool overwrite_;
   bool stats_enabled_;
+<<<<<<< HEAD
   bool delay_enabled_;
   uint64_t total_delay_;
   uint64_t delay_start_time_;
+=======
+>>>>>>> blood in blood out
   const uint64_t start_time_;
 };
 

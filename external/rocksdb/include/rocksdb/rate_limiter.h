@@ -45,7 +45,11 @@ class RateLimiter {
   // Request for token for bytes. If this request can not be satisfied, the call
   // is blocked. Caller is responsible to make sure
   // bytes <= GetSingleBurstBytes()
+<<<<<<< HEAD
   virtual void Request(const int64_t /*bytes*/, const Env::IOPriority /*pri*/) {
+=======
+  virtual void Request(const int64_t bytes, const Env::IOPriority pri) {
+>>>>>>> blood in blood out
     assert(false);
   }
 

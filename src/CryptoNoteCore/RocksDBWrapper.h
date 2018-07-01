@@ -32,7 +32,11 @@ namespace CryptoNote {
 
 class RocksDBWrapper : public IDataBase {
 public:
+<<<<<<< HEAD
   RocksDBWrapper(std::shared_ptr<Logging::ILogger> logger);
+=======
+  RocksDBWrapper(Logging::ILogger& logger);
+>>>>>>> blood in blood out
   virtual ~RocksDBWrapper();
 
   RocksDBWrapper(const RocksDBWrapper&) = delete;
@@ -46,6 +50,10 @@ public:
   void destroy(const DataBaseConfig& config); //Be careful with this method!
 
   std::error_code write(IWriteBatch& batch) override;
+<<<<<<< HEAD
+=======
+  std::error_code writeSync(IWriteBatch& batch) override;
+>>>>>>> blood in blood out
   std::error_code read(IReadBatch& batch) override;
 
 private:

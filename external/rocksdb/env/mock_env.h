@@ -60,8 +60,11 @@ class MockEnv : public EnvWrapper {
 
   virtual Status DeleteFile(const std::string& fname) override;
 
+<<<<<<< HEAD
   virtual Status Truncate(const std::string& fname, size_t size) override;
 
+=======
+>>>>>>> blood in blood out
   virtual Status CreateDir(const std::string& dirname) override;
 
   virtual Status CreateDirIfMissing(const std::string& dirname) override;
@@ -94,6 +97,12 @@ class MockEnv : public EnvWrapper {
   virtual uint64_t NowMicros() override;
   virtual uint64_t NowNanos() override;
 
+<<<<<<< HEAD
+=======
+  // Non-virtual functions, specific to MockEnv
+  Status Truncate(const std::string& fname, size_t size);
+
+>>>>>>> blood in blood out
   Status CorruptBuffer(const std::string& fname);
 
   // Doesn't really sleep, just affects output of GetCurrentTime(), NowMicros()

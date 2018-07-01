@@ -1,15 +1,36 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+<<<<<<< HEAD
 // Copyright (c) 2018, The TurtleCoin Developers
 // Copyright (c) 2019, The CyprusCoin Developers
 //
 // Please see the included LICENSE file for more information.
+=======
+//
+// This file is part of Bytecoin.
+//
+// Bytecoin is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Bytecoin is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+>>>>>>> blood in blood out
 
 #pragma once
 
 #include <functional>
 #include <unordered_map>
 
+<<<<<<< HEAD
 #include <boost/uuid/uuid.hpp>
+=======
+>>>>>>> blood in blood out
 #include <boost/functional/hash.hpp>
 
 #include <System/Context.h>
@@ -20,8 +41,14 @@
 #include <System/TcpConnection.h>
 #include <System/TcpListener.h>
 
+<<<<<<< HEAD
 #include "P2p/OnceInInterval.h"
 #include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
+=======
+#include "CryptoNoteCore/OnceInInterval.h"
+#include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
+#include "Common/CommandLine.h"
+>>>>>>> blood in blood out
 #include "Logging/LoggerRef.h"
 
 #include "ConnectionContext.h"
@@ -29,6 +56,10 @@
 #include "NetNodeCommon.h"
 #include "NetNodeConfig.h"
 #include "P2pProtocolDefinitions.h"
+<<<<<<< HEAD
+=======
+#include "P2pNetworks.h"
+>>>>>>> blood in blood out
 #include "PeerListManager.h"
 
 namespace System {
@@ -71,10 +102,17 @@ namespace CryptoNote
     using TimePoint = Clock::time_point;
 
     System::Context<void>* context;
+<<<<<<< HEAD
     uint64_t peerId;
     System::TcpConnection connection;
 
     P2pConnectionContext(System::Dispatcher& dispatcher, std::shared_ptr<Logging::ILogger> log, System::TcpConnection&& conn) :
+=======
+    PeerIdType peerId;
+    System::TcpConnection connection;
+
+    P2pConnectionContext(System::Dispatcher& dispatcher, Logging::ILogger& log, System::TcpConnection&& conn) :
+>>>>>>> blood in blood out
       context(nullptr),
       peerId(0),
       connection(std::move(conn)),
@@ -111,7 +149,14 @@ namespace CryptoNote
   class NodeServer :  public IP2pEndpoint
   {
   public:
+<<<<<<< HEAD
     NodeServer(System::Dispatcher& dispatcher, CryptoNote::CryptoNoteProtocolHandler& payload_handler, std::shared_ptr<Logging::ILogger> log);
+=======
+
+    static void init_options(boost::program_options::options_description& desc);
+
+    NodeServer(System::Dispatcher& dispatcher, CryptoNote::CryptoNoteProtocolHandler& payload_handler, Logging::ILogger& log);
+>>>>>>> blood in blood out
 
     bool run();
     bool init(const NetNodeConfig& config);
@@ -128,7 +173,11 @@ namespace CryptoNote
     virtual uint64_t get_connections_count() override;
     size_t get_outgoing_connections_count();
 
+<<<<<<< HEAD
     PeerlistManager& getPeerlistManager() { return m_peerlist; }
+=======
+    CryptoNote::PeerlistManager& getPeerlistManager() { return m_peerlist; }
+>>>>>>> blood in blood out
 
   private:
 
@@ -159,6 +208,7 @@ namespace CryptoNote
     void on_connection_close(P2pConnectionContext& context);
 
     //----------------- i_p2p_endpoint -------------------------------------------------------------
+<<<<<<< HEAD
     virtual void relay_notify_to_all(int command, const BinaryArray& data_buff, const boost::uuids::uuid* excludeConnection) override;
     virtual bool invoke_notify_to_peer(int command, const BinaryArray& req_buff, const CryptoNoteConnectionContext& context) override;
     virtual void for_each_connection(std::function<void(CryptoNote::CryptoNoteConnectionContext&, uint64_t)> f) override;
@@ -166,6 +216,15 @@ namespace CryptoNote
     virtual void externalRelayNotifyToList(int command, const BinaryArray& data_buff, const std::list<boost::uuids::uuid> relayList) override;
 
     //-----------------------------------------------------------------------------------------------
+=======
+    virtual void relay_notify_to_all(int command, const BinaryArray& data_buff, const net_connection_id* excludeConnection) override;
+    virtual bool invoke_notify_to_peer(int command, const BinaryArray& req_buff, const CryptoNoteConnectionContext& context) override;
+    virtual void for_each_connection(std::function<void(CryptoNote::CryptoNoteConnectionContext&, PeerIdType)> f) override;
+    virtual void externalRelayNotifyToAll(int command, const BinaryArray& data_buff) override;
+
+    //-----------------------------------------------------------------------------------------------
+    bool handle_command_line(const boost::program_options::variables_map& vm);
+>>>>>>> blood in blood out
     bool handleConfig(const NetNodeConfig& config);
     bool append_net_address(std::vector<NetworkAddress>& nodes, const std::string& addr);
     bool idle_worker();
@@ -182,9 +241,19 @@ namespace CryptoNote
     bool is_addr_connected(const NetworkAddress& peer);  
     bool try_ping(basic_node_data& node_data, P2pConnectionContext& context);
     bool make_expected_connections_count(bool white_list, size_t expected_connections);
+<<<<<<< HEAD
 
     bool connect_to_peerlist(const std::vector<NetworkAddress>& peers);
 
+=======
+    bool is_priority_node(const NetworkAddress& na);
+
+    bool connect_to_peerlist(const std::vector<NetworkAddress>& peers);
+
+    bool parse_peers_and_add_to_container(const boost::program_options::variables_map& vm, 
+      const command_line::arg_descriptor<std::vector<std::string> > & arg, std::vector<NetworkAddress>& container);
+
+>>>>>>> blood in blood out
     //debug functions
     std::string print_connections_container();
 
@@ -224,7 +293,10 @@ namespace CryptoNote
     bool m_allow_local_ip;
     bool m_hide_my_port;
     std::string m_p2p_state_filename;
+<<<<<<< HEAD
     bool m_p2p_state_reset;
+=======
+>>>>>>> blood in blood out
 
     System::Dispatcher& m_dispatcher;
     System::ContextGroup m_workingContextGroup;

@@ -53,12 +53,25 @@ class TableCache {
   InternalIterator* NewIterator(
       const ReadOptions& options, const EnvOptions& toptions,
       const InternalKeyComparator& internal_comparator,
+<<<<<<< HEAD
       const FileMetaData& file_meta, RangeDelAggregator* range_del_agg,
       const SliceTransform* prefix_extractor = nullptr,
+=======
+      const FileDescriptor& file_fd, RangeDelAggregator* range_del_agg,
+>>>>>>> blood in blood out
       TableReader** table_reader_ptr = nullptr,
       HistogramImpl* file_read_hist = nullptr, bool for_compaction = false,
       Arena* arena = nullptr, bool skip_filters = false, int level = -1);
 
+<<<<<<< HEAD
+=======
+  InternalIterator* NewRangeTombstoneIterator(
+      const ReadOptions& options, const EnvOptions& toptions,
+      const InternalKeyComparator& internal_comparator,
+      const FileDescriptor& file_fd, HistogramImpl* file_read_hist,
+      bool skip_filters, int level);
+
+>>>>>>> blood in blood out
   // If a seek to internal key "k" in specified file finds an entry,
   // call (*handle_result)(arg, found_key, found_value) repeatedly until
   // it returns false.
@@ -69,11 +82,17 @@ class TableCache {
   // @param level The level this table is at, -1 for "not set / don't know"
   Status Get(const ReadOptions& options,
              const InternalKeyComparator& internal_comparator,
+<<<<<<< HEAD
              const FileMetaData& file_meta, const Slice& k,
              GetContext* get_context,
              const SliceTransform* prefix_extractor = nullptr,
              HistogramImpl* file_read_hist = nullptr, bool skip_filters = false,
              int level = -1);
+=======
+             const FileDescriptor& file_fd, const Slice& k,
+             GetContext* get_context, HistogramImpl* file_read_hist = nullptr,
+             bool skip_filters = false, int level = -1);
+>>>>>>> blood in blood out
 
   // Evict any entry for the specified file number
   static void Evict(Cache* cache, uint64_t file_number);
@@ -88,7 +107,10 @@ class TableCache {
   Status FindTable(const EnvOptions& toptions,
                    const InternalKeyComparator& internal_comparator,
                    const FileDescriptor& file_fd, Cache::Handle**,
+<<<<<<< HEAD
                    const SliceTransform* prefix_extractor = nullptr,
+=======
+>>>>>>> blood in blood out
                    const bool no_io = false, bool record_read_stats = true,
                    HistogramImpl* file_read_hist = nullptr,
                    bool skip_filters = false, int level = -1,
@@ -107,7 +129,10 @@ class TableCache {
                             const InternalKeyComparator& internal_comparator,
                             const FileDescriptor& file_meta,
                             std::shared_ptr<const TableProperties>* properties,
+<<<<<<< HEAD
                             const SliceTransform* prefix_extractor = nullptr,
+=======
+>>>>>>> blood in blood out
                             bool no_io = false);
 
   // Return total memory usage of the table reader of the file.
@@ -115,8 +140,12 @@ class TableCache {
   size_t GetMemoryUsageByTableReader(
       const EnvOptions& toptions,
       const InternalKeyComparator& internal_comparator,
+<<<<<<< HEAD
       const FileDescriptor& fd,
       const SliceTransform* prefix_extractor = nullptr);
+=======
+      const FileDescriptor& fd);
+>>>>>>> blood in blood out
 
   // Release the handle from a cache
   void ReleaseHandle(Cache::Handle* handle);
@@ -125,6 +154,7 @@ class TableCache {
   // For example when max_open_files is -1 we set the backing Cache to this.
   static const int kInfiniteCapacity = 0x400000;
 
+<<<<<<< HEAD
   // The tables opened with this TableCache will be immortal, i.e., their
   // lifetime is as long as that of the DB.
   void SetTablesAreImmortal() {
@@ -133,6 +163,8 @@ class TableCache {
     }
   }
 
+=======
+>>>>>>> blood in blood out
  private:
   // Build a table reader
   Status GetTableReader(const EnvOptions& env_options,
@@ -141,7 +173,10 @@ class TableCache {
                         size_t readahead, bool record_read_stats,
                         HistogramImpl* file_read_hist,
                         unique_ptr<TableReader>* table_reader,
+<<<<<<< HEAD
                         const SliceTransform* prefix_extractor = nullptr,
+=======
+>>>>>>> blood in blood out
                         bool skip_filters = false, int level = -1,
                         bool prefetch_index_and_filter_in_cache = true,
                         bool for_compaction = false);
@@ -150,7 +185,10 @@ class TableCache {
   const EnvOptions& env_options_;
   Cache* const cache_;
   std::string row_cache_id_;
+<<<<<<< HEAD
   bool immortal_tables_;
+=======
+>>>>>>> blood in blood out
 };
 
 }  // namespace rocksdb

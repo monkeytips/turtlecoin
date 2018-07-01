@@ -31,15 +31,24 @@ IndexBuilder* IndexBuilder::CreateIndexBuilder(
   IndexBuilder* result = nullptr;
   switch (index_type) {
     case BlockBasedTableOptions::kBinarySearch: {
+<<<<<<< HEAD
       result = new ShortenedIndexBuilder(comparator,
                                          table_opt.index_block_restart_interval,
                                          table_opt.format_version);
+=======
+      result =  new ShortenedIndexBuilder(comparator,
+                                       table_opt.index_block_restart_interval);
+>>>>>>> blood in blood out
     }
   break;
     case BlockBasedTableOptions::kHashSearch: {
       result = new HashIndexBuilder(comparator, int_key_slice_transform,
+<<<<<<< HEAD
                                     table_opt.index_block_restart_interval,
                                     table_opt.format_version);
+=======
+                                  table_opt.index_block_restart_interval);
+>>>>>>> blood in blood out
     }
   break;
     case BlockBasedTableOptions::kTwoLevelIndexSearch: {
@@ -64,6 +73,7 @@ PartitionedIndexBuilder::PartitionedIndexBuilder(
     const InternalKeyComparator* comparator,
     const BlockBasedTableOptions& table_opt)
     : IndexBuilder(comparator),
+<<<<<<< HEAD
       index_block_builder_(table_opt.index_block_restart_interval,
                            table_opt.format_version),
       index_block_builder_without_seq_(table_opt.index_block_restart_interval,
@@ -77,6 +87,11 @@ PartitionedIndexBuilder::PartitionedIndexBuilder(
       // sub_index_builders could not safely exclude seq from the keys, then it
       // wil be enforced on all sub_index_builders on ::Finish.
       seperator_is_key_plus_seq_(false) {}
+=======
+      index_block_builder_(table_opt.index_block_restart_interval),
+      sub_index_builder_(nullptr),
+      table_opt_(table_opt) {}
+>>>>>>> blood in blood out
 
 PartitionedIndexBuilder::~PartitionedIndexBuilder() {
   delete sub_index_builder_;
@@ -85,6 +100,7 @@ PartitionedIndexBuilder::~PartitionedIndexBuilder() {
 void PartitionedIndexBuilder::MakeNewSubIndexBuilder() {
   assert(sub_index_builder_ == nullptr);
   sub_index_builder_ = new ShortenedIndexBuilder(
+<<<<<<< HEAD
       comparator_, table_opt_.index_block_restart_interval,
       table_opt_.format_version);
   flush_policy_.reset(FlushBlockBySizePolicyFactory::NewFlushBlockPolicy(
@@ -94,6 +110,12 @@ void PartitionedIndexBuilder::MakeNewSubIndexBuilder() {
       sub_index_builder_->seperator_is_key_plus_seq_
           ? sub_index_builder_->index_block_builder_
           : sub_index_builder_->index_block_builder_without_seq_));
+=======
+      comparator_, table_opt_.index_block_restart_interval);
+  flush_policy_.reset(FlushBlockBySizePolicyFactory::NewFlushBlockPolicy(
+      table_opt_.metadata_block_size, table_opt_.block_size_deviation,
+      sub_index_builder_->index_block_builder_));
+>>>>>>> blood in blood out
   partition_cut_requested_ = false;
 }
 
@@ -112,10 +134,13 @@ void PartitionedIndexBuilder::AddIndexEntry(
     }
     sub_index_builder_->AddIndexEntry(last_key_in_current_block,
                                       first_key_in_next_block, block_handle);
+<<<<<<< HEAD
     if (sub_index_builder_->seperator_is_key_plus_seq_) {
       // then we need to apply it to all sub-index builders
       seperator_is_key_plus_seq_ = true;
     }
+=======
+>>>>>>> blood in blood out
     sub_index_last_key_ = std::string(*last_key_in_current_block);
     entries_.push_back(
         {sub_index_last_key_,
@@ -144,18 +169,25 @@ void PartitionedIndexBuilder::AddIndexEntry(
     sub_index_builder_->AddIndexEntry(last_key_in_current_block,
                                       first_key_in_next_block, block_handle);
     sub_index_last_key_ = std::string(*last_key_in_current_block);
+<<<<<<< HEAD
     if (sub_index_builder_->seperator_is_key_plus_seq_) {
       // then we need to apply it to all sub-index builders
       seperator_is_key_plus_seq_ = true;
     }
+=======
+>>>>>>> blood in blood out
   }
 }
 
 Status PartitionedIndexBuilder::Finish(
     IndexBlocks* index_blocks, const BlockHandle& last_partition_block_handle) {
+<<<<<<< HEAD
   if (partition_cnt_ == 0) {
     partition_cnt_ = entries_.size();
   }
+=======
+  assert(!entries_.empty());
+>>>>>>> blood in blood out
   // It must be set to null after last key is added
   assert(sub_index_builder_ == nullptr);
   if (finishing_indexes == true) {
@@ -163,14 +195,18 @@ Status PartitionedIndexBuilder::Finish(
     std::string handle_encoding;
     last_partition_block_handle.EncodeTo(&handle_encoding);
     index_block_builder_.Add(last_entry.key, handle_encoding);
+<<<<<<< HEAD
     if (!seperator_is_key_plus_seq_) {
       index_block_builder_without_seq_.Add(ExtractUserKey(last_entry.key),
                                            handle_encoding);
     }
+=======
+>>>>>>> blood in blood out
     entries_.pop_front();
   }
   // If there is no sub_index left, then return the 2nd level index.
   if (UNLIKELY(entries_.empty())) {
+<<<<<<< HEAD
     if (seperator_is_key_plus_seq_) {
       index_blocks->index_block_contents = index_block_builder_.Finish();
     } else {
@@ -179,21 +215,64 @@ Status PartitionedIndexBuilder::Finish(
     }
     top_level_index_size_ = index_blocks->index_block_contents.size();
     index_size_ += top_level_index_size_;
+=======
+    index_blocks->index_block_contents = index_block_builder_.Finish();
+>>>>>>> blood in blood out
     return Status::OK();
   } else {
     // Finish the next partition index in line and Incomplete() to indicate we
     // expect more calls to Finish
     Entry& entry = entries_.front();
+<<<<<<< HEAD
     // Apply the policy to all sub-indexes
     entry.value->seperator_is_key_plus_seq_ = seperator_is_key_plus_seq_;
     auto s = entry.value->Finish(index_blocks);
     index_size_ += index_blocks->index_block_contents.size();
+=======
+    auto s = entry.value->Finish(index_blocks);
+>>>>>>> blood in blood out
     finishing_indexes = true;
     return s.ok() ? Status::Incomplete() : s;
   }
 }
 
+<<<<<<< HEAD
 size_t PartitionedIndexBuilder::NumPartitions() const {
   return partition_cnt_;
+=======
+// Estimate size excluding the top-level index
+// It is assumed that this method is called before writing index partition
+// starts
+size_t PartitionedIndexBuilder::EstimatedSize() const {
+  size_t total = 0;
+  for (auto it = entries_.begin(); it != entries_.end(); ++it) {
+    total += it->value->EstimatedSize();
+  }
+  total +=
+      sub_index_builder_ == nullptr ? 0 : sub_index_builder_->EstimatedSize();
+  return total;
+}
+
+// Since when this method is called we do not know the index block offsets yet,
+// the top-level index does not exist. Hence we estimate the block offsets and
+// create a temporary top-level index.
+size_t PartitionedIndexBuilder::EstimateTopLevelIndexSize(
+    uint64_t offset) const {
+  BlockBuilder tmp_builder(
+      table_opt_.index_block_restart_interval);  // tmp top-level index builder
+  for (auto it = entries_.begin(); it != entries_.end(); ++it) {
+    std::string tmp_handle_encoding;
+    uint64_t size = it->value->EstimatedSize();
+    BlockHandle tmp_block_handle(offset, size);
+    tmp_block_handle.EncodeTo(&tmp_handle_encoding);
+    tmp_builder.Add(it->key, tmp_handle_encoding);
+    offset += size;
+  }
+  return tmp_builder.CurrentSizeEstimate();
+}
+
+size_t PartitionedIndexBuilder::NumPartitions() const {
+  return entries_.size();
+>>>>>>> blood in blood out
 }
 }  // namespace rocksdb

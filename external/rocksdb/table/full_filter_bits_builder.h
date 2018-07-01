@@ -51,7 +51,10 @@ class FullFilterBitsBuilder : public FilterBitsBuilder {
                           uint32_t* num_lines);
 
  private:
+<<<<<<< HEAD
   friend class FullFilterBlockTest_DuplicateEntries_Test;
+=======
+>>>>>>> blood in blood out
   size_t bits_per_key_;
   size_t num_probes_;
   std::vector<uint32_t> hash_entries_;

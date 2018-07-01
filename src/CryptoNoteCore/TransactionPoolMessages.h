@@ -57,4 +57,9 @@ private:
   };
 };
 
+<<<<<<< HEAD
+=======
+TransactionPoolMessage makeAddTransaction(const Crypto::Hash& hash);
+TransactionPoolMessage makeDelTransaction(const Crypto::Hash& hash);
+>>>>>>> blood in blood out
 }

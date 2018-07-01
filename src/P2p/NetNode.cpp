@@ -1,9 +1,28 @@
+<<<<<<< HEAD
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018-2019, The TurtleCoin Developers
 // Copyright (c) 2019, The CyprusCoin Developers
 //
 // Please see the included LICENSE file for more information.
+=======
+// Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers, The TurtleCoin developers
+//
+// This file is part of Bytecoin.
+//
+// Bytecoin is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Bytecoin is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+>>>>>>> blood in blood out
 
 #include "NetNode.h"
 
@@ -28,12 +47,18 @@
 #include <System/TcpConnector.h>
 
 #include "version.h"
+<<<<<<< HEAD
 #include <config/CryptoNoteConfig.h>
+=======
+>>>>>>> blood in blood out
 #include "Common/StdInputStream.h"
 #include "Common/StdOutputStream.h"
 #include "Common/Util.h"
 #include "crypto/crypto.h"
+<<<<<<< HEAD
 #include <crypto/random.h>
+=======
+>>>>>>> blood in blood out
 
 #include "ConnectionContext.h"
 #include "LevinProtocol.h"
@@ -53,7 +78,11 @@ size_t get_random_index_with_fixed_probability(size_t max_index) {
   //divide by zero workaround
   if (!max_index)
     return 0;
+<<<<<<< HEAD
   size_t x = Random::randomValue<size_t>() % (max_index + 1);
+=======
+  size_t x = Crypto::rand<size_t>() % (max_index + 1);
+>>>>>>> blood in blood out
   return (x*x*x) / (max_index*max_index); //parabola \/
 }
 
@@ -62,7 +91,11 @@ void addPortMapping(Logging::LoggerRef& logger, uint32_t port) {
   // Add UPnP port mapping
   logger(INFO) << "Attempting to add IGD port mapping.";
   int result;
+<<<<<<< HEAD
   UPNPDev* deviceList = upnpDiscover(1000, NULL, NULL, 0, 0, 2, &result);
+=======
+  UPNPDev* deviceList = upnpDiscover(1000, NULL, NULL, 0, 0, &result);
+>>>>>>> blood in blood out
   UPNPUrls urls;
   IGDdatas igdData;
   char lanAddress[64];
@@ -92,12 +125,33 @@ void addPortMapping(Logging::LoggerRef& logger, uint32_t port) {
   }
 }
 
+<<<<<<< HEAD
+=======
+bool parse_peer_from_string(NetworkAddress& pe, const std::string& node_addr) {
+  return Common::parseIpAddressAndPort(pe.ip, pe.port, node_addr);
+}
+
+>>>>>>> blood in blood out
 }
 
 
 namespace CryptoNote {
 namespace {
 
+<<<<<<< HEAD
+=======
+const command_line::arg_descriptor<std::string> arg_p2p_bind_ip        = {"p2p-bind-ip", "Interface for p2p network protocol", "0.0.0.0"};
+const command_line::arg_descriptor<std::string> arg_p2p_bind_port      = {"p2p-bind-port", "Port for p2p network protocol", std::to_string(CryptoNote::P2P_DEFAULT_PORT)};
+const command_line::arg_descriptor<uint32_t>    arg_p2p_external_port  = {"p2p-external-port", "External port for p2p network protocol (if port forwarding used with NAT)", 0};
+const command_line::arg_descriptor<bool>        arg_p2p_allow_local_ip = {"allow-local-ip", "Allow local ip add to peer list, mostly in debug purposes"};
+const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_peer   = {"add-peer", "Manually add peer to local peerlist"};
+const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_priority_node   = {"add-priority-node", "Specify list of peers to connect to and attempt to keep the connection open"};
+const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_add_exclusive_node   = {"add-exclusive-node", "Specify list of peers to connect to only."
+                                                                                              " If this option is given the options add-priority-node and seed-node are ignored"};
+const command_line::arg_descriptor<std::vector<std::string> > arg_p2p_seed_node   = {"seed-node", "Connect to a node to retrieve peer addresses, and disconnect"};
+const command_line::arg_descriptor<bool> arg_p2p_hide_my_port   =    {"hide-my-port", "Do not announce yourself as peerlist candidate", false, true};
+
+>>>>>>> blood in blood out
 std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
   time_t now_time = 0;
   time(&now_time);
@@ -176,13 +230,21 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     return ret;
   }
 
+<<<<<<< HEAD
   NodeServer::NodeServer(System::Dispatcher& dispatcher, CryptoNote::CryptoNoteProtocolHandler& payload_handler, std::shared_ptr<Logging::ILogger> log) :
+=======
+  NodeServer::NodeServer(System::Dispatcher& dispatcher, CryptoNote::CryptoNoteProtocolHandler& payload_handler, Logging::ILogger& log) :
+>>>>>>> blood in blood out
     m_dispatcher(dispatcher),
     m_workingContextGroup(dispatcher),
     m_payload_handler(payload_handler),
     m_allow_local_ip(false),
     m_hide_my_port(false),
+<<<<<<< HEAD
     m_network_id(CryptoNote::CRYPTONOTE_NETWORK),
+=======
+    m_network_id(BYTECOIN_NETWORK),
+>>>>>>> blood in blood out
     logger(log, "node_server"),
     m_stopEvent(m_dispatcher),
     m_idleTimer(m_dispatcher),
@@ -207,9 +269,13 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     s(m_config.m_peer_id, "peer_id");
   }
 
+<<<<<<< HEAD
   using namespace std::placeholders;
 
   #define INVOKE_HANDLER(CMD, Handler) case CMD::ID: { ret = invokeAdaptor<CMD>(cmd.buf, out, ctx,  std::bind(Handler, this, _1, _2, _3, _4)); break; }
+=======
+#define INVOKE_HANDLER(CMD, Handler) case CMD::ID: { ret = invokeAdaptor<CMD>(cmd.buf, out, ctx,  boost::bind(Handler, this, _1, _2, _3, _4)); break; }
+>>>>>>> blood in blood out
 
   int NodeServer::handleCommand(const LevinProtocol::Command& cmd, BinaryArray& out, P2pConnectionContext& ctx, bool& handled) {
     int ret = 0;
@@ -243,6 +309,25 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
 
 #undef INVOKE_HANDLER
 
+<<<<<<< HEAD
+=======
+  //-----------------------------------------------------------------------------------
+
+  void NodeServer::init_options(boost::program_options::options_description& desc)
+  {
+    command_line::add_arg(desc, arg_p2p_bind_ip);
+    command_line::add_arg(desc, arg_p2p_bind_port);
+    command_line::add_arg(desc, arg_p2p_external_port);
+    command_line::add_arg(desc, arg_p2p_allow_local_ip);
+    command_line::add_arg(desc, arg_p2p_add_peer);
+    command_line::add_arg(desc, arg_p2p_add_priority_node);
+    command_line::add_arg(desc, arg_p2p_add_exclusive_node);
+    command_line::add_arg(desc, arg_p2p_seed_node);
+    command_line::add_arg(desc, arg_p2p_hide_my_port);
+  }
+  //-----------------------------------------------------------------------------------
+
+>>>>>>> blood in blood out
   bool NodeServer::init_config() {
     try {
       std::string state_file_path = m_config_folder + "/" + m_p2p_state_filename;
@@ -250,6 +335,7 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
 
       try {
         std::ifstream p2p_data;
+<<<<<<< HEAD
 
         std::ios_base::openmode open_mode = std::ios_base::binary | std::ios_base::in;
         /* --p2p-reset-peerstate daemon option 
@@ -258,6 +344,9 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
           open_mode |= std::ios_base::trunc;
         }
         p2p_data.open(state_file_path, open_mode);
+=======
+        p2p_data.open(state_file_path, std::ios_base::binary | std::ios_base::in);
+>>>>>>> blood in blood out
 
         if (!p2p_data.fail()) {
           StdInputStream inputStream(p2p_data);
@@ -291,7 +380,11 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
   }
 
   //-----------------------------------------------------------------------------------
+<<<<<<< HEAD
   void NodeServer::for_each_connection(std::function<void(CryptoNoteConnectionContext&, uint64_t)> f)
+=======
+  void NodeServer::for_each_connection(std::function<void(CryptoNoteConnectionContext&, PeerIdType)> f)
+>>>>>>> blood in blood out
   {
     for (auto& ctx : m_connections) {
       f(ctx.second, ctx.second.peerId);
@@ -299,13 +392,20 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
   }
 
   //-----------------------------------------------------------------------------------
+<<<<<<< HEAD
   void NodeServer::externalRelayNotifyToAll(int command, const BinaryArray& data_buff, const boost::uuids::uuid* excludeConnection) {
     m_dispatcher.remoteSpawn([this, command, data_buff, excludeConnection] {
       relay_notify_to_all(command, data_buff, excludeConnection);
+=======
+  void NodeServer::externalRelayNotifyToAll(int command, const BinaryArray& data_buff) {
+    m_dispatcher.remoteSpawn([this, command, data_buff] {
+      relay_notify_to_all(command, data_buff, nullptr);
+>>>>>>> blood in blood out
     });
   }
 
   //-----------------------------------------------------------------------------------
+<<<<<<< HEAD
   void NodeServer::externalRelayNotifyToList(int command, const BinaryArray& data_buff, const std::list<boost::uuids::uuid> relayList) {
     m_dispatcher.remoteSpawn([this, command, data_buff, relayList] {
       forEachConnection([&](P2pConnectionContext& conn) {
@@ -322,12 +422,60 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
   bool NodeServer::make_default_config()
   {
     m_config.m_peer_id = Random::randomValue<uint64_t>();
+=======
+  bool NodeServer::make_default_config()
+  {
+    m_config.m_peer_id  = Crypto::rand<uint64_t>();
+>>>>>>> blood in blood out
     logger(INFO, BRIGHT_WHITE) << "Generated new peer ID: " << m_config.m_peer_id;
     return true;
   }
 
   //-----------------------------------------------------------------------------------
 
+<<<<<<< HEAD
+=======
+  bool NodeServer::handle_command_line(const boost::program_options::variables_map& vm)
+  {
+    m_bind_ip = command_line::get_arg(vm, arg_p2p_bind_ip);
+    m_port = command_line::get_arg(vm, arg_p2p_bind_port);
+    m_external_port = command_line::get_arg(vm, arg_p2p_external_port);
+    m_allow_local_ip = command_line::get_arg(vm, arg_p2p_allow_local_ip);
+
+    if (command_line::has_arg(vm, arg_p2p_add_peer))
+    {
+      std::vector<std::string> perrs = command_line::get_arg(vm, arg_p2p_add_peer);
+      for(const std::string& pr_str: perrs)
+      {
+        PeerlistEntry pe = boost::value_initialized<PeerlistEntry>();
+        pe.id = Crypto::rand<uint64_t>();
+        bool r = parse_peer_from_string(pe.adr, pr_str);
+        if (!(r)) { logger(ERROR, BRIGHT_RED) << "Failed to parse address from string: " << pr_str; return false; }
+        m_command_line_peers.push_back(pe);
+      }
+    }
+
+    if (command_line::has_arg(vm,arg_p2p_add_exclusive_node)) {
+      if (!parse_peers_and_add_to_container(vm, arg_p2p_add_exclusive_node, m_exclusive_peers))
+        return false;
+    }
+    if (command_line::has_arg(vm, arg_p2p_add_priority_node)) {
+      if (!parse_peers_and_add_to_container(vm, arg_p2p_add_priority_node, m_priority_peers))
+        return false;
+    }
+    if (command_line::has_arg(vm, arg_p2p_seed_node)) {
+      if (!parse_peers_and_add_to_container(vm, arg_p2p_seed_node, m_seed_nodes))
+        return false;
+    }
+
+    if (command_line::has_arg(vm, arg_p2p_hide_my_port)) {
+      m_hide_my_port = true;
+    }
+
+    return true;
+  }
+
+>>>>>>> blood in blood out
   bool NodeServer::handleConfig(const NetNodeConfig& config) {
     m_bind_ip = config.getBindIp();
     m_port = std::to_string(config.getBindPort());
@@ -394,7 +542,10 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     }
     m_config_folder = config.getConfigFolder();
     m_p2p_state_filename = config.getP2pStateFilename();
+<<<<<<< HEAD
     m_p2p_state_reset = config.getP2pStateReset();
+=======
+>>>>>>> blood in blood out
 
     if (!init_config()) {
       logger(ERROR, BRIGHT_RED) << "Failed to init config.";
@@ -530,6 +681,7 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     context.version = rsp.node_data.version;
 
     if (rsp.node_data.network_id != m_network_id) {
+<<<<<<< HEAD
       logger(Logging::DEBUGGING) << context << "COMMAND_HANDSHAKE Failed, wrong network! (" << rsp.node_data.network_id << "), closing connection.";
       return false;
     }
@@ -542,6 +694,12 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
         << CryptoNote::LATEST_VERSION_URL << " for the latest version.";
     }
 
+=======
+      logger(Logging::ERROR) << context << "COMMAND_HANDSHAKE Failed, wrong network!  (" << rsp.node_data.network_id << "), closing connection.";
+      return false;
+    }
+
+>>>>>>> blood in blood out
     if (!handle_remote_peerlist(rsp.local_peerlist, rsp.node_data.local_time, context)) {
       logger(Logging::ERROR) << context << "COMMAND_HANDSHAKE: failed to handle_remote_peerlist(...), closing connection.";
       return false;
@@ -793,7 +951,11 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
 
     if(!m_peerlist.get_white_peers_count() && m_seed_nodes.size()) {
       size_t try_count = 0;
+<<<<<<< HEAD
       size_t current_index = Random::randomValue<size_t>() % m_seed_nodes.size();
+=======
+      size_t current_index = Crypto::rand<size_t>() % m_seed_nodes.size();
+>>>>>>> blood in blood out
 
       while(true) {
         if(try_to_connect_and_handshake_with_new_peer(m_seed_nodes[current_index], true))
@@ -887,7 +1049,11 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     {
       if(be.last_seen > uint64_t(local_time))
       {
+<<<<<<< HEAD
         logger(DEBUGGING) << "FOUND FUTURE peerlist for entry " << be.adr << " last_seen: " << be.last_seen << ", local_time(on remote node):" << local_time;
+=======
+        logger(ERROR) << "FOUND FUTURE peerlist for entry " << be.adr << " last_seen: " << be.last_seen << ", local_time(on remote node):" << local_time;
+>>>>>>> blood in blood out
         return false;
       }
       be.last_seen += delta;
@@ -911,7 +1077,11 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
 
   bool NodeServer::get_local_node_data(basic_node_data& node_data)
   {
+<<<<<<< HEAD
     node_data.version = CryptoNote::P2P_CURRENT_VERSION;
+=======
+    node_data.version = P2PProtocolVersion::CURRENT;
+>>>>>>> blood in blood out
     time_t local_time;
     time(&local_time);
     node_data.local_time = local_time;
@@ -1006,8 +1176,13 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
 
   //-----------------------------------------------------------------------------------
 
+<<<<<<< HEAD
   void NodeServer::relay_notify_to_all(int command, const BinaryArray& data_buff, const boost::uuids::uuid* excludeConnection) {
     boost::uuids::uuid excludeId = excludeConnection ? *excludeConnection : boost::value_initialized<boost::uuids::uuid>();
+=======
+  void NodeServer::relay_notify_to_all(int command, const BinaryArray& data_buff, const net_connection_id* excludeConnection) {
+    net_connection_id excludeId = excludeConnection ? *excludeConnection : boost::value_initialized<net_connection_id>();
+>>>>>>> blood in blood out
 
     forEachConnection([&](P2pConnectionContext& conn) {
       if (conn.peerId && conn.m_connection_id != excludeId &&
@@ -1098,11 +1273,16 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     context.version = arg.node_data.version;
 
     if (arg.node_data.network_id != m_network_id) {
+<<<<<<< HEAD
       logger(Logging::DEBUGGING) << context << "WRONG NETWORK AGENT CONNECTED! id=" << arg.node_data.network_id;
+=======
+      logger(Logging::INFO) << context << "WRONG NETWORK AGENT CONNECTED! id=" << arg.node_data.network_id;
+>>>>>>> blood in blood out
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
       return 1;
     }
 
+<<<<<<< HEAD
     if (arg.node_data.version < CryptoNote::P2P_MINIMUM_VERSION) {
       logger(Logging::DEBUGGING) << context << "UNSUPPORTED NETWORK AGENT VERSION CONNECTED! version=" << std::to_string(arg.node_data.version);
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
@@ -1112,6 +1292,8 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
         << CryptoNote::LATEST_VERSION_URL << " for the latest version.";
     }
 
+=======
+>>>>>>> blood in blood out
     if(!context.m_is_income) {
       logger(Logging::ERROR) << context << "COMMAND_HANDSHAKE came not from incoming connection";
       context.m_state = CryptoNoteConnectionContext::state_shutdown;
@@ -1133,7 +1315,11 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     context.peerId = arg.node_data.peer_id;
 
     if(arg.node_data.peer_id != m_config.m_peer_id && arg.node_data.my_port) {
+<<<<<<< HEAD
       uint64_t peer_id_l = arg.node_data.peer_id;
+=======
+      PeerIdType peer_id_l = arg.node_data.peer_id;
+>>>>>>> blood in blood out
       uint32_t port_l = arg.node_data.my_port;
 
       if (try_ping(arg.node_data, context)) {
@@ -1212,6 +1398,16 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     m_payload_handler.onConnectionClosed(context);
   }
 
+<<<<<<< HEAD
+=======
+  bool NodeServer::is_priority_node(const NetworkAddress& na)
+  {
+    return
+      (std::find(m_priority_peers.begin(), m_priority_peers.end(), na) != m_priority_peers.end()) ||
+      (std::find(m_exclusive_peers.begin(), m_exclusive_peers.end(), na) != m_exclusive_peers.end());
+  }
+
+>>>>>>> blood in blood out
   bool NodeServer::connect_to_peerlist(const std::vector<NetworkAddress>& peers)
   {
     for(const auto& na: peers) {
@@ -1223,6 +1419,26 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     return true;
   }
 
+<<<<<<< HEAD
+=======
+  bool NodeServer::parse_peers_and_add_to_container(const boost::program_options::variables_map& vm,
+    const command_line::arg_descriptor<std::vector<std::string> > & arg, std::vector<NetworkAddress>& container)
+  {
+    std::vector<std::string> perrs = command_line::get_arg(vm, arg);
+
+    for(const std::string& pr_str: perrs) {
+      NetworkAddress na;
+      if (!parse_peer_from_string(na, pr_str)) {
+        logger(ERROR, BRIGHT_RED) << "Failed to parse address from string: " << pr_str;
+        return false;
+      }
+      container.push_back(na);
+    }
+
+    return true;
+  }
+
+>>>>>>> blood in blood out
   void NodeServer::acceptLoop() {
     while (!m_stop) {
       try {

@@ -1,24 +1,38 @@
+<<<<<<< HEAD
 /* $Id: minissdpc.c,v 1.32 2016/10/07 09:04:36 nanard Exp $ */
 /* vim: tabstop=4 shiftwidth=4 noexpandtab
  * Project : miniupnp
  * Web : http://miniupnp.free.fr/
  * Author : Thomas BERNARD
  * copyright (c) 2005-2018 Thomas Bernard
+=======
+/* $Id: minissdpc.c,v 1.16 2012/03/05 19:42:46 nanard Exp $ */
+/* Project : miniupnp
+ * Web : http://miniupnp.free.fr/
+ * Author : Thomas BERNARD
+ * copyright (c) 2005-2012 Thomas Bernard
+>>>>>>> blood in blood out
  * This software is subjet to the conditions detailed in the
  * provided LICENCE file. */
 /*#include <syslog.h>*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <sys/types.h>
 #if defined (__NetBSD__)
 #include <net/if.h>
 #endif
+=======
+#include <unistd.h>
+#include <sys/types.h>
+>>>>>>> blood in blood out
 #if defined(_WIN32) || defined(__amigaos__) || defined(__amigaos4__)
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <io.h>
+<<<<<<< HEAD
 #include <iphlpapi.h>
 #define snprintf _snprintf
 #if !defined(_MSC_VER)
@@ -40,12 +54,24 @@ typedef unsigned short uint16_t;
 #if defined(__amigaos__)
 #define uint16_t unsigned short
 #endif /* defined(__amigaos__) */
+=======
+#include <winsock.h>
+#include <stdint.h>
+#endif
+#if defined(__amigaos__) || defined(__amigaos4__)
+#include <sys/socket.h>
+#endif
+#if defined(__amigaos__)
+#define uint16_t unsigned short
+#endif
+>>>>>>> blood in blood out
 /* Hack */
 #define UNIX_PATH_LEN   108
 struct sockaddr_un {
   uint16_t sun_family;
   char     sun_path[UNIX_PATH_LEN];
 };
+<<<<<<< HEAD
 #else /* defined(_WIN32) || defined(__amigaos__) || defined(__amigaos4__) */
 #include <strings.h>
 #include <unistd.h>
@@ -87,17 +113,26 @@ struct ip_mreqn
 #if defined(__amigaos__) || defined(__amigaos4__)
 /* Amiga OS specific stuff */
 #define TIMEVAL struct timeval
+=======
+#else
+#include <sys/socket.h>
+#include <sys/un.h>
+>>>>>>> blood in blood out
 #endif
 
 #include "minissdpc.h"
 #include "miniupnpc.h"
+<<<<<<< HEAD
 #include "receivedata.h"
 
 #if !(defined(_WIN32) || defined(__amigaos__) || defined(__amigaos4__))
+=======
+>>>>>>> blood in blood out
 
 #include "codelength.h"
 
 struct UPNPDev *
+<<<<<<< HEAD
 getDevicesFromMiniSSDPD(const char * devtype, const char * socketpath, int * error)
 {
 	struct UPNPDev * devlist = NULL;
@@ -170,12 +205,27 @@ connectToMiniSSDPD(const char * socketpath)
 #if defined(MINIUPNPC_SET_SOCKET_TIMEOUT) && !defined(__sun)
 	struct timeval timeout;
 #endif /* #ifdef MINIUPNPC_SET_SOCKET_TIMEOUT */
+=======
+getDevicesFromMiniSSDPD(const char * devtype, const char * socketpath)
+{
+	struct UPNPDev * tmp;
+	struct UPNPDev * devlist = NULL;
+	unsigned char buffer[2048];
+	ssize_t n;
+	unsigned char * p;
+	unsigned char * url;
+	unsigned int i;
+	unsigned int urlsize, stsize, usnsize, l;
+	int s;
+	struct sockaddr_un addr;
+>>>>>>> blood in blood out
 
 	s = socket(AF_UNIX, SOCK_STREAM, 0);
 	if(s < 0)
 	{
 		/*syslog(LOG_ERR, "socket(unix): %m");*/
 		perror("socket(unix)");
+<<<<<<< HEAD
 		return MINISSDPC_SOCKET_ERROR;
 	}
 #if defined(MINIUPNPC_SET_SOCKET_TIMEOUT) && !defined(__sun)
@@ -197,6 +247,10 @@ connectToMiniSSDPD(const char * socketpath)
 	if(!socketpath)
 		socketpath = "/var/run/minissdpd.sock";
 	memset(&addr, 0, sizeof(addr));
+=======
+		return NULL;
+	}
+>>>>>>> blood in blood out
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path, socketpath, sizeof(addr.sun_path));
 	/* TODO : check if we need to handle the EINTR */
@@ -204,6 +258,7 @@ connectToMiniSSDPD(const char * socketpath)
 	{
 		/*syslog(LOG_WARNING, "connect(\"%s\"): %m", socketpath);*/
 		close(s);
+<<<<<<< HEAD
 		return MINISSDPC_SOCKET_ERROR;
 	}
 	return s;
@@ -233,16 +288,27 @@ requestDevicesFromMiniSSDPD(int s, const char * devtype)
 	{
 		buffer[0] = 1; /* request type 1 : request devices/services by type */
 	}
+=======
+		return NULL;
+	}
+	stsize = strlen(devtype);
+	buffer[0] = 1; /* request type 1 : request devices/services by type */
+>>>>>>> blood in blood out
 	p = buffer + 1;
 	l = stsize;	CODELENGTH(l, p);
 	if(p + stsize > buffer + sizeof(buffer))
 	{
 		/* devtype is too long ! */
+<<<<<<< HEAD
 #ifdef DEBUG
 		fprintf(stderr, "devtype is too long ! stsize=%u sizeof(buffer)=%u\n",
 		        stsize, (unsigned)sizeof(buffer));
 #endif /* DEBUG */
 		return MINISSDPC_INVALID_INPUT;
+=======
+		close(s);
+		return NULL;
+>>>>>>> blood in blood out
 	}
 	memcpy(p, devtype, stsize);
 	p += stsize;
@@ -250,6 +316,7 @@ requestDevicesFromMiniSSDPD(int s, const char * devtype)
 	{
 		/*syslog(LOG_ERR, "write(): %m");*/
 		perror("minissdpc.c: write()");
+<<<<<<< HEAD
 		return MINISSDPC_SOCKET_ERROR;
 	}
 	return MINISSDPC_SUCCESS;
@@ -269,10 +336,16 @@ receiveDevicesFromMiniSSDPD(int s, int * error)
 	unsigned int i, ndev;
 	unsigned int urlsize, stsize, usnsize, l;
 
+=======
+		close(s);
+		return NULL;
+	}
+>>>>>>> blood in blood out
 	n = read(s, buffer, sizeof(buffer));
 	if(n<=0)
 	{
 		perror("minissdpc.c: read()");
+<<<<<<< HEAD
 		if (error)
 			*error = MINISSDPC_SOCKET_ERROR;
 		return NULL;
@@ -338,11 +411,31 @@ receiveDevicesFromMiniSSDPD(int s, int * error)
 				*error = MINISSDPC_MEMORY_ERROR;
 			goto free_url_and_st_and_return;
 		}
+=======
+		close(s);
+		return NULL;
+	}
+	p = buffer + 1;
+	for(i = 0; i < buffer[0]; i++)
+	{
+		if(p+2>=buffer+sizeof(buffer))
+			break;
+		DECODELENGTH(urlsize, p);
+		if(p+urlsize+2>=buffer+sizeof(buffer))
+			break;
+		url = p;
+		p += urlsize;
+		DECODELENGTH(stsize, p);
+		if(p+stsize+2>=buffer+sizeof(buffer))
+			break;
+		tmp = (struct UPNPDev *)malloc(sizeof(struct UPNPDev)+urlsize+stsize);
+>>>>>>> blood in blood out
 		tmp->pNext = devlist;
 		tmp->descURL = tmp->buffer;
 		tmp->st = tmp->buffer + 1 + urlsize;
 		memcpy(tmp->buffer, url, urlsize);
 		tmp->buffer[urlsize] = '\0';
+<<<<<<< HEAD
 		memcpy(tmp->st, st, stsize);
 		tmp->buffer[urlsize+1+stsize] = '\0';
 		free(url);
@@ -883,6 +976,20 @@ ssdpDiscoverDevices(const char * const deviceTypes[],
 	}
 error:
 	closesocket(sudp);
+=======
+		memcpy(tmp->buffer + urlsize + 1, p, stsize);
+		p += stsize;
+		tmp->buffer[urlsize+1+stsize] = '\0';
+		devlist = tmp;
+		/* added for compatibility with recent versions of MiniSSDPd
+		 * >= 2007/12/19 */
+		DECODELENGTH(usnsize, p);
+		p += usnsize;
+		if(p>buffer + sizeof(buffer))
+			break;
+	}
+	close(s);
+>>>>>>> blood in blood out
 	return devlist;
 }
 

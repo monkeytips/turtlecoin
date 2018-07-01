@@ -46,11 +46,19 @@ class EventListenerTest : public DBTestBase {
 };
 
 struct TestPropertiesCollector : public rocksdb::TablePropertiesCollector {
+<<<<<<< HEAD
   virtual rocksdb::Status AddUserKey(const rocksdb::Slice& /*key*/,
                                      const rocksdb::Slice& /*value*/,
                                      rocksdb::EntryType /*type*/,
                                      rocksdb::SequenceNumber /*seq*/,
                                      uint64_t /*file_size*/) override {
+=======
+  virtual rocksdb::Status AddUserKey(const rocksdb::Slice& key,
+                                     const rocksdb::Slice& value,
+                                     rocksdb::EntryType type,
+                                     rocksdb::SequenceNumber seq,
+                                     uint64_t file_size) override {
+>>>>>>> blood in blood out
     return Status::OK();
   }
   virtual rocksdb::Status Finish(
@@ -73,7 +81,11 @@ struct TestPropertiesCollector : public rocksdb::TablePropertiesCollector {
 class TestPropertiesCollectorFactory : public TablePropertiesCollectorFactory {
  public:
   virtual TablePropertiesCollector* CreateTablePropertiesCollector(
+<<<<<<< HEAD
       TablePropertiesCollectorFactory::Context /*context*/) override {
+=======
+      TablePropertiesCollectorFactory::Context context) override {
+>>>>>>> blood in blood out
     return new TestPropertiesCollector;
   }
   const char* Name() const override { return "TestTablePropertiesCollector"; }
@@ -260,7 +272,11 @@ TEST_F(EventListenerTest, OnSingleDBFlushTest) {
     ASSERT_EQ(listener->flushed_column_family_names_.size(), i);
   }
 
+<<<<<<< HEAD
   // make sure callback functions are called in the right order
+=======
+  // make sure call-back functions are called in the right order
+>>>>>>> blood in blood out
   for (size_t i = 0; i < cf_names.size(); ++i) {
     ASSERT_EQ(listener->flushed_dbs_[i], db_);
     ASSERT_EQ(listener->flushed_column_family_names_[i], cf_names[i]);
@@ -296,7 +312,11 @@ TEST_F(EventListenerTest, MultiCF) {
     ASSERT_EQ(listener->flushed_column_family_names_.size(), i);
   }
 
+<<<<<<< HEAD
   // make sure callback functions are called in the right order
+=======
+  // make sure call-back functions are called in the right order
+>>>>>>> blood in blood out
   for (size_t i = 0; i < cf_names.size(); i++) {
     ASSERT_EQ(listener->flushed_dbs_[i], db_);
     ASSERT_EQ(listener->flushed_column_family_names_[i], cf_names[i]);
@@ -425,7 +445,11 @@ TEST_F(EventListenerTest, DisableBGCompaction) {
 
 class TestCompactionReasonListener : public EventListener {
  public:
+<<<<<<< HEAD
   void OnCompactionCompleted(DB* /*db*/, const CompactionJobInfo& ci) override {
+=======
+  void OnCompactionCompleted(DB* db, const CompactionJobInfo& ci) override {
+>>>>>>> blood in blood out
     std::lock_guard<std::mutex> lock(mutex_);
     compaction_reasons_.push_back(ci.compaction_reason);
   }
@@ -807,8 +831,12 @@ class BackgroundErrorListener : public EventListener {
  public:
   BackgroundErrorListener(SpecialEnv* env) : env_(env), counter_(0) {}
 
+<<<<<<< HEAD
   void OnBackgroundError(BackgroundErrorReason /*reason*/,
                          Status* bg_error) override {
+=======
+  void OnBackgroundError(BackgroundErrorReason reason, Status* bg_error) override {
+>>>>>>> blood in blood out
     if (counter_ == 0) {
       // suppress the first error and disable write-dropping such that a retry
       // can succeed.

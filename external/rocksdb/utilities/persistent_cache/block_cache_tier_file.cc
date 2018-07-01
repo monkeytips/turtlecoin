@@ -278,7 +278,11 @@ WriteableCacheFile::~WriteableCacheFile() {
   ClearBuffers();
 }
 
+<<<<<<< HEAD
 bool WriteableCacheFile::Create(const bool /*enable_direct_writes*/,
+=======
+bool WriteableCacheFile::Create(const bool enable_direct_writes,
+>>>>>>> blood in blood out
                                 const bool enable_direct_reads) {
   WriteLock _(&rwlock_);
 

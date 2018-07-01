@@ -58,8 +58,12 @@ class CompactionPicker {
   virtual Compaction* CompactRange(
       const std::string& cf_name, const MutableCFOptions& mutable_cf_options,
       VersionStorageInfo* vstorage, int input_level, int output_level,
+<<<<<<< HEAD
       uint32_t output_path_id, uint32_t max_subcompactions,
       const InternalKey* begin, const InternalKey* end,
+=======
+      uint32_t output_path_id, const InternalKey* begin, const InternalKey* end,
+>>>>>>> blood in blood out
       InternalKey** compaction_end, bool* manual_conflict);
 
   // The maximum allowed output level.  Default value is NumberLevels() - 1.
@@ -175,6 +179,7 @@ class CompactionPicker {
                        const CompactionInputFiles& output_level_inputs,
                        std::vector<FileMetaData*>* grandparents);
 
+<<<<<<< HEAD
   void PickFilesMarkedForCompaction(const std::string& cf_name,
                                     VersionStorageInfo* vstorage,
                                     int* start_level, int* output_level,
@@ -184,6 +189,8 @@ class CompactionPicker {
                              CompactionInputFiles* start_level_inputs,
                              int output_level, int* parent_index);
 
+=======
+>>>>>>> blood in blood out
   // Register this compaction in the set of running compactions
   void RegisterCompaction(Compaction* c);
 
@@ -248,8 +255,12 @@ class FIFOCompactionPicker : public CompactionPicker {
   virtual Compaction* CompactRange(
       const std::string& cf_name, const MutableCFOptions& mutable_cf_options,
       VersionStorageInfo* vstorage, int input_level, int output_level,
+<<<<<<< HEAD
       uint32_t output_path_id, uint32_t max_subcompactions,
       const InternalKey* begin, const InternalKey* end,
+=======
+      uint32_t output_path_id, const InternalKey* begin, const InternalKey* end,
+>>>>>>> blood in blood out
       InternalKey** compaction_end, bool* manual_conflict) override;
 
   // The maximum allowed output level.  Always returns 0.
@@ -278,14 +289,22 @@ class NullCompactionPicker : public CompactionPicker {
   virtual ~NullCompactionPicker() {}
 
   // Always return "nullptr"
+<<<<<<< HEAD
   Compaction* PickCompaction(const std::string& /*cf_name*/,
                              const MutableCFOptions& /*mutable_cf_options*/,
                              VersionStorageInfo* /*vstorage*/,
                              LogBuffer* /*log_buffer*/) override {
+=======
+  Compaction* PickCompaction(const std::string& cf_name,
+                             const MutableCFOptions& mutable_cf_options,
+                             VersionStorageInfo* vstorage,
+                             LogBuffer* log_buffer) override {
+>>>>>>> blood in blood out
     return nullptr;
   }
 
   // Always return "nullptr"
+<<<<<<< HEAD
   Compaction* CompactRange(const std::string& /*cf_name*/,
                            const MutableCFOptions& /*mutable_cf_options*/,
                            VersionStorageInfo* /*vstorage*/,
@@ -296,12 +315,25 @@ class NullCompactionPicker : public CompactionPicker {
                            const InternalKey* /*end*/,
                            InternalKey** /*compaction_end*/,
                            bool* /*manual_conflict*/) override {
+=======
+  Compaction* CompactRange(const std::string& cf_name,
+                           const MutableCFOptions& mutable_cf_options,
+                           VersionStorageInfo* vstorage, int input_level,
+                           int output_level, uint32_t output_path_id,
+                           const InternalKey* begin, const InternalKey* end,
+                           InternalKey** compaction_end,
+                           bool* manual_conflict) override {
+>>>>>>> blood in blood out
     return nullptr;
   }
 
   // Always returns false.
   virtual bool NeedsCompaction(
+<<<<<<< HEAD
       const VersionStorageInfo* /*vstorage*/) const override {
+=======
+      const VersionStorageInfo* vstorage) const override {
+>>>>>>> blood in blood out
     return false;
   }
 };
@@ -313,9 +345,12 @@ CompressionType GetCompressionType(const ImmutableCFOptions& ioptions,
                                    int level, int base_level,
                                    const bool enable_compression = true);
 
+<<<<<<< HEAD
 CompressionOptions GetCompressionOptions(const ImmutableCFOptions& ioptions,
                                          const VersionStorageInfo* vstorage,
                                          int level,
                                          const bool enable_compression = true);
 
+=======
+>>>>>>> blood in blood out
 }  // namespace rocksdb

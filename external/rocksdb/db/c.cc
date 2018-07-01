@@ -32,13 +32,19 @@
 #include "rocksdb/universal_compaction.h"
 #include "rocksdb/utilities/backupable_db.h"
 #include "rocksdb/utilities/checkpoint.h"
+<<<<<<< HEAD
 #include "rocksdb/utilities/db_ttl.h"
+=======
+>>>>>>> blood in blood out
 #include "rocksdb/utilities/optimistic_transaction_db.h"
 #include "rocksdb/utilities/transaction.h"
 #include "rocksdb/utilities/transaction_db.h"
 #include "rocksdb/utilities/write_batch_with_index.h"
 #include "rocksdb/write_batch.h"
+<<<<<<< HEAD
 #include "rocksdb/perf_context.h"
+=======
+>>>>>>> blood in blood out
 #include "utilities/merge_operators.h"
 
 using rocksdb::BytewiseComparator;
@@ -90,10 +96,15 @@ using rocksdb::LiveFileMetaData;
 using rocksdb::BackupEngine;
 using rocksdb::BackupableDBOptions;
 using rocksdb::BackupInfo;
+<<<<<<< HEAD
 using rocksdb::BackupID;
 using rocksdb::RestoreOptions;
 using rocksdb::CompactRangeOptions;
 using rocksdb::BottommostLevelCompaction;
+=======
+using rocksdb::RestoreOptions;
+using rocksdb::CompactRangeOptions;
+>>>>>>> blood in blood out
 using rocksdb::RateLimiter;
 using rocksdb::NewGenericRateLimiter;
 using rocksdb::PinnableSlice;
@@ -104,10 +115,13 @@ using rocksdb::OptimisticTransactionDB;
 using rocksdb::OptimisticTransactionOptions;
 using rocksdb::Transaction;
 using rocksdb::Checkpoint;
+<<<<<<< HEAD
 using rocksdb::TransactionLogIterator;
 using rocksdb::BatchResult;
 using rocksdb::PerfLevel;
 using rocksdb::PerfContext;
+=======
+>>>>>>> blood in blood out
 
 using std::shared_ptr;
 
@@ -139,8 +153,11 @@ struct rocksdb_cuckoo_table_options_t  { CuckooTableOptions rep; };
 struct rocksdb_seqfile_t         { SequentialFile*   rep; };
 struct rocksdb_randomfile_t      { RandomAccessFile* rep; };
 struct rocksdb_writablefile_t    { WritableFile*     rep; };
+<<<<<<< HEAD
 struct rocksdb_wal_iterator_t { TransactionLogIterator* rep; };
 struct rocksdb_wal_readoptions_t { TransactionLogIterator::ReadOptions rep; };
+=======
+>>>>>>> blood in blood out
 struct rocksdb_filelock_t        { FileLock*         rep; };
 struct rocksdb_logger_t          { shared_ptr<Logger>  rep; };
 struct rocksdb_cache_t           { shared_ptr<Cache>   rep; };
@@ -149,8 +166,12 @@ struct rocksdb_column_family_handle_t  { ColumnFamilyHandle* rep; };
 struct rocksdb_envoptions_t      { EnvOptions        rep; };
 struct rocksdb_ingestexternalfileoptions_t  { IngestExternalFileOptions rep; };
 struct rocksdb_sstfilewriter_t   { SstFileWriter*    rep; };
+<<<<<<< HEAD
 struct rocksdb_ratelimiter_t     { shared_ptr<RateLimiter>      rep; };
 struct rocksdb_perfcontext_t     { PerfContext*      rep; };
+=======
+struct rocksdb_ratelimiter_t     { RateLimiter*      rep; };
+>>>>>>> blood in blood out
 struct rocksdb_pinnableslice_t {
   PinnableSlice rep;
 };
@@ -263,7 +284,11 @@ struct rocksdb_comparator_t : public Comparator {
   // No-ops since the C binding does not support key shortening methods.
   virtual void FindShortestSeparator(std::string*,
                                      const Slice&) const override {}
+<<<<<<< HEAD
   virtual void FindShortSuccessor(std::string* /*key*/) const override {}
+=======
+  virtual void FindShortSuccessor(std::string* key) const override {}
+>>>>>>> blood in blood out
 };
 
 struct rocksdb_filterpolicy_t : public FilterPolicy {
@@ -378,7 +403,11 @@ struct rocksdb_mergeoperator_t : public MergeOperator {
   virtual bool PartialMergeMulti(const Slice& key,
                                  const std::deque<Slice>& operand_list,
                                  std::string* new_value,
+<<<<<<< HEAD
                                  Logger* /*logger*/) const override {
+=======
+                                 Logger* logger) const override {
+>>>>>>> blood in blood out
     size_t operand_count = operand_list.size();
     std::vector<const char*> operand_pointers(operand_count);
     std::vector<size_t> operand_sizes(operand_count);
@@ -488,6 +517,7 @@ rocksdb_t* rocksdb_open(
   return result;
 }
 
+<<<<<<< HEAD
 rocksdb_t* rocksdb_open_with_ttl(
     const rocksdb_options_t* options,
     const char* name,
@@ -502,6 +532,8 @@ rocksdb_t* rocksdb_open_with_ttl(
   return result;
 }
 
+=======
+>>>>>>> blood in blood out
 rocksdb_t* rocksdb_open_for_read_only(
     const rocksdb_options_t* options,
     const char* name,
@@ -533,6 +565,7 @@ rocksdb_backup_engine_t* rocksdb_backup_engine_open(
 }
 
 void rocksdb_backup_engine_create_new_backup(rocksdb_backup_engine_t* be,
+<<<<<<< HEAD
                                              rocksdb_t* db,
                                              char** errptr) {
   SaveError(errptr, be->rep->CreateNewBackup(db->rep));
@@ -545,6 +578,12 @@ void rocksdb_backup_engine_create_new_backup_flush(rocksdb_backup_engine_t* be,
   SaveError(errptr, be->rep->CreateNewBackup(db->rep, flush_before_backup));
 }
 
+=======
+                                             rocksdb_t* db, char** errptr) {
+  SaveError(errptr, be->rep->CreateNewBackup(db->rep));
+}
+
+>>>>>>> blood in blood out
 void rocksdb_backup_engine_purge_old_backups(rocksdb_backup_engine_t* be,
                                              uint32_t num_backups_to_keep,
                                              char** errptr) {
@@ -564,12 +603,15 @@ void rocksdb_restore_options_set_keep_log_files(rocksdb_restore_options_t* opt,
   opt->rep.keep_log_files = v;
 }
 
+<<<<<<< HEAD
 
 void rocksdb_backup_engine_verify_backup(rocksdb_backup_engine_t* be,
     uint32_t backup_id, char** errptr) {
   SaveError(errptr, be->rep->VerifyBackup(static_cast<BackupID>(backup_id)));
 }
 
+=======
+>>>>>>> blood in blood out
 void rocksdb_backup_engine_restore_db_from_latest_backup(
     rocksdb_backup_engine_t* be, const char* db_dir, const char* wal_dir,
     const rocksdb_restore_options_t* restore_options, char** errptr) {
@@ -950,6 +992,7 @@ rocksdb_iterator_t* rocksdb_create_iterator(
   return result;
 }
 
+<<<<<<< HEAD
 rocksdb_wal_iterator_t* rocksdb_get_updates_since(
         rocksdb_t* db, uint64_t seq_number,
         const rocksdb_wal_readoptions_t* options,
@@ -998,6 +1041,8 @@ uint64_t rocksdb_get_latest_sequence_number (rocksdb_t *db) {
     return db->rep->GetLatestSequenceNumber();
 }
 
+=======
+>>>>>>> blood in blood out
 rocksdb_iterator_t* rocksdb_create_iterator_cf(
     rocksdb_t* db,
     const rocksdb_readoptions_t* options,
@@ -1985,11 +2030,14 @@ void rocksdb_block_based_options_set_pin_l0_filter_and_index_blocks_in_cache(
   options->rep.pin_l0_filter_and_index_blocks_in_cache = v;
 }
 
+<<<<<<< HEAD
 void rocksdb_block_based_options_set_pin_top_level_index_and_filter(
     rocksdb_block_based_table_options_t* options, unsigned char v) {
   options->rep.pin_top_level_index_and_filter = v;
 }
 
+=======
+>>>>>>> blood in blood out
 void rocksdb_options_set_block_based_table_factory(
     rocksdb_options_t *opt,
     rocksdb_block_based_table_options_t* table_options) {
@@ -2247,8 +2295,13 @@ void rocksdb_options_set_level0_stop_writes_trigger(
   opt->rep.level0_stop_writes_trigger = n;
 }
 
+<<<<<<< HEAD
 void rocksdb_options_set_max_mem_compaction_level(rocksdb_options_t* /*opt*/,
                                                   int /*n*/) {}
+=======
+void rocksdb_options_set_max_mem_compaction_level(rocksdb_options_t* opt,
+                                                  int n) {}
+>>>>>>> blood in blood out
 
 void rocksdb_options_set_wal_recovery_mode(rocksdb_options_t* opt,int mode) {
   opt->rep.wal_recovery_mode = static_cast<WALRecoveryMode>(mode);
@@ -2268,6 +2321,7 @@ void rocksdb_options_set_compression_per_level(rocksdb_options_t* opt,
   }
 }
 
+<<<<<<< HEAD
 void rocksdb_options_set_bottommost_compression_options(rocksdb_options_t* opt,
                                                         int w_bits, int level,
                                                         int strategy,
@@ -2280,6 +2334,8 @@ void rocksdb_options_set_bottommost_compression_options(rocksdb_options_t* opt,
   opt->rep.bottommost_compression_opts.enabled = enabled;
 }
 
+=======
+>>>>>>> blood in blood out
 void rocksdb_options_set_compression_options(rocksdb_options_t* opt, int w_bits,
                                              int level, int strategy,
                                              int max_dict_bytes) {
@@ -2324,8 +2380,13 @@ void rocksdb_options_set_manifest_preallocation_size(
 }
 
 // noop
+<<<<<<< HEAD
 void rocksdb_options_set_purge_redundant_kvs_while_flush(
     rocksdb_options_t* /*opt*/, unsigned char /*v*/) {}
+=======
+void rocksdb_options_set_purge_redundant_kvs_while_flush(rocksdb_options_t* opt,
+                                                         unsigned char v) {}
+>>>>>>> blood in blood out
 
 void rocksdb_options_set_use_direct_reads(rocksdb_options_t* opt,
                                           unsigned char v) {
@@ -2495,7 +2556,11 @@ void rocksdb_options_set_table_cache_numshardbits(
 }
 
 void rocksdb_options_set_table_cache_remove_scan_count_limit(
+<<<<<<< HEAD
     rocksdb_options_t* /*opt*/, int /*v*/) {
+=======
+    rocksdb_options_t* opt, int v) {
+>>>>>>> blood in blood out
   // this option is deprecated
 }
 
@@ -2609,9 +2674,14 @@ char *rocksdb_options_statistics_get_string(rocksdb_options_t *opt) {
 }
 
 void rocksdb_options_set_ratelimiter(rocksdb_options_t *opt, rocksdb_ratelimiter_t *limiter) {
+<<<<<<< HEAD
   if (limiter) {
     opt->rep.rate_limiter = limiter->rep;
   }
+=======
+  opt->rep.rate_limiter.reset(limiter->rep);
+  limiter->rep = nullptr;
+>>>>>>> blood in blood out
 }
 
 rocksdb_ratelimiter_t* rocksdb_ratelimiter_create(
@@ -2619,13 +2689,19 @@ rocksdb_ratelimiter_t* rocksdb_ratelimiter_create(
     int64_t refill_period_us,
     int32_t fairness) {
   rocksdb_ratelimiter_t* rate_limiter = new rocksdb_ratelimiter_t;
+<<<<<<< HEAD
   rate_limiter->rep.reset(
                NewGenericRateLimiter(rate_bytes_per_sec,
                                      refill_period_us, fairness));
+=======
+  rate_limiter->rep = NewGenericRateLimiter(rate_bytes_per_sec,
+                                            refill_period_us, fairness);
+>>>>>>> blood in blood out
   return rate_limiter;
 }
 
 void rocksdb_ratelimiter_destroy(rocksdb_ratelimiter_t *limiter) {
+<<<<<<< HEAD
   delete limiter;
 }
 
@@ -2797,6 +2873,12 @@ uint64_t rocksdb_perfcontext_metric(rocksdb_perfcontext_t* context,
 
 void rocksdb_perfcontext_destroy(rocksdb_perfcontext_t* context) {
   delete context;
+=======
+  if (limiter->rep) {
+    delete limiter->rep;
+  }
+  delete limiter;
+>>>>>>> blood in blood out
 }
 
 /*
@@ -3127,11 +3209,14 @@ void rocksdb_compactoptions_destroy(rocksdb_compactoptions_t* opt) {
   delete opt;
 }
 
+<<<<<<< HEAD
 void rocksdb_compactoptions_set_bottommost_level_compaction(
     rocksdb_compactoptions_t* opt, unsigned char v) {
   opt->rep.bottommost_level_compaction = static_cast<BottommostLevelCompaction>(v);
 }
 
+=======
+>>>>>>> blood in blood out
 void rocksdb_compactoptions_set_exclusive_manual_compaction(
     rocksdb_compactoptions_t* opt, unsigned char v) {
   opt->rep.exclusive_manual_compaction = v;
@@ -3240,7 +3325,11 @@ rocksdb_sstfilewriter_t* rocksdb_sstfilewriter_create(
 
 rocksdb_sstfilewriter_t* rocksdb_sstfilewriter_create_with_comparator(
     const rocksdb_envoptions_t* env, const rocksdb_options_t* io_options,
+<<<<<<< HEAD
     const rocksdb_comparator_t* /*comparator*/) {
+=======
+    const rocksdb_comparator_t* comparator) {
+>>>>>>> blood in blood out
   rocksdb_sstfilewriter_t* writer = new rocksdb_sstfilewriter_t;
   writer->rep = new SstFileWriter(env->rep, io_options->rep);
   return writer;
@@ -3278,12 +3367,16 @@ void rocksdb_sstfilewriter_delete(rocksdb_sstfilewriter_t* writer,
 
 void rocksdb_sstfilewriter_finish(rocksdb_sstfilewriter_t* writer,
                                   char** errptr) {
+<<<<<<< HEAD
   SaveError(errptr, writer->rep->Finish(nullptr));
 }
 
 void rocksdb_sstfilewriter_file_size(rocksdb_sstfilewriter_t* writer,
                                   uint64_t* file_size) {
   *file_size = writer->rep->FileSize();
+=======
+  SaveError(errptr, writer->rep->Finish(NULL));
+>>>>>>> blood in blood out
 }
 
 void rocksdb_sstfilewriter_destroy(rocksdb_sstfilewriter_t* writer) {
@@ -4053,7 +4146,11 @@ rocksdb_pinnableslice_t* rocksdb_get_pinned(
     if (!s.IsNotFound()) {
       SaveError(errptr, s);
     }
+<<<<<<< HEAD
     return nullptr;
+=======
+    return NULL;
+>>>>>>> blood in blood out
   }
   return v;
 }
@@ -4070,7 +4167,11 @@ rocksdb_pinnableslice_t* rocksdb_get_pinned_cf(
     if (!s.IsNotFound()) {
       SaveError(errptr, s);
     }
+<<<<<<< HEAD
     return nullptr;
+=======
+    return NULL;
+>>>>>>> blood in blood out
   }
   return v;
 }
@@ -4081,7 +4182,11 @@ const char* rocksdb_pinnableslice_value(const rocksdb_pinnableslice_t* v,
                                         size_t* vlen) {
   if (!v) {
     *vlen = 0;
+<<<<<<< HEAD
     return nullptr;
+=======
+    return NULL;
+>>>>>>> blood in blood out
   }
 
   *vlen = v->rep.size();

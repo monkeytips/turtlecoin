@@ -15,6 +15,7 @@ namespace rocksdb {
 class OptimisticTransactionDBImpl : public OptimisticTransactionDB {
  public:
   explicit OptimisticTransactionDBImpl(DB* db, bool take_ownership = true)
+<<<<<<< HEAD
       : OptimisticTransactionDB(db), db_owner_(take_ownership) {}
 
   ~OptimisticTransactionDBImpl() {
@@ -22,6 +23,13 @@ class OptimisticTransactionDBImpl : public OptimisticTransactionDB {
     // base db
     if (!db_owner_) {
       db_ = nullptr;
+=======
+      : OptimisticTransactionDB(db), db_(db), db_owner_(take_ownership) {}
+
+  ~OptimisticTransactionDBImpl() {
+    if (!db_owner_) {
+      db_.release();
+>>>>>>> blood in blood out
     }
   }
 
@@ -29,9 +37,17 @@ class OptimisticTransactionDBImpl : public OptimisticTransactionDB {
                                 const OptimisticTransactionOptions& txn_options,
                                 Transaction* old_txn) override;
 
+<<<<<<< HEAD
  private:
 
    bool db_owner_;
+=======
+  DB* GetBaseDB() override { return db_.get(); }
+
+ private:
+  std::unique_ptr<DB> db_;
+  bool db_owner_;
+>>>>>>> blood in blood out
 
   void ReinitializeTransaction(Transaction* txn,
                                const WriteOptions& write_options,

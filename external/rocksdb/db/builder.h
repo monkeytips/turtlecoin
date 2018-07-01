@@ -43,7 +43,11 @@ class InternalIterator;
 // @param compression_dict Data for presetting the compression library's
 //    dictionary, or nullptr.
 TableBuilder* NewTableBuilder(
+<<<<<<< HEAD
     const ImmutableCFOptions& options, const MutableCFOptions& moptions,
+=======
+    const ImmutableCFOptions& options,
+>>>>>>> blood in blood out
     const InternalKeyComparator& internal_comparator,
     const std::vector<std::unique_ptr<IntTblPropCollectorFactory>>*
         int_tbl_prop_collector_factories,

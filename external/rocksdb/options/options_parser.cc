@@ -17,7 +17,10 @@
 #include "rocksdb/convenience.h"
 #include "rocksdb/db.h"
 #include "util/cast_util.h"
+<<<<<<< HEAD
 #include "util/file_reader_writer.h"
+=======
+>>>>>>> blood in blood out
 #include "util/string_util.h"
 #include "util/sync_point.h"
 
@@ -42,6 +45,7 @@ Status PersistRocksDBOptions(const DBOptions& db_opt,
     return Status::InvalidArgument(
         "cf_names.size() and cf_opts.size() must be the same");
   }
+<<<<<<< HEAD
   std::unique_ptr<WritableFile> wf;
 
   Status s = env->NewWritableFile(file_name, &wf, EnvOptions());
@@ -52,6 +56,14 @@ Status PersistRocksDBOptions(const DBOptions& db_opt,
   writable.reset(new WritableFileWriter(std::move(wf), EnvOptions(),
                                         nullptr /* statistics */));
 
+=======
+  std::unique_ptr<WritableFile> writable;
+
+  Status s = env->NewWritableFile(file_name, &writable, EnvOptions());
+  if (!s.ok()) {
+    return s;
+  }
+>>>>>>> blood in blood out
   std::string options_file_content;
 
   writable->Append(option_file_header + "[" +
@@ -98,7 +110,12 @@ Status PersistRocksDBOptions(const DBOptions& db_opt,
       writable->Append(options_file_content + "\n");
     }
   }
+<<<<<<< HEAD
   writable->Sync(true /* use_fsync */);
+=======
+  writable->Flush();
+  writable->Fsync();
+>>>>>>> blood in blood out
   writable->Close();
 
   return RocksDBOptionsParser::VerifyRocksDBOptionsFromFile(
@@ -739,7 +756,11 @@ Status RocksDBOptionsParser::VerifyRocksDBOptionsFromFile(
 
 Status RocksDBOptionsParser::VerifyDBOptions(
     const DBOptions& base_opt, const DBOptions& persisted_opt,
+<<<<<<< HEAD
     const std::unordered_map<std::string, std::string>* /*opt_map*/,
+=======
+    const std::unordered_map<std::string, std::string>* opt_map,
+>>>>>>> blood in blood out
     OptionsSanityCheckLevel sanity_check_level) {
   for (auto pair : db_options_type_info) {
     if (pair.second.verification == OptionVerificationType::kDeprecated) {

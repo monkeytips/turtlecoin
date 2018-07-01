@@ -18,7 +18,11 @@ namespace rocksdb {
 class DocumentDBTest : public testing::Test {
  public:
   DocumentDBTest() {
+<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("document_db_test");
+=======
+    dbname_ = test::TmpDir() + "/document_db_test";
+>>>>>>> blood in blood out
     DestroyDB(dbname_, Options());
   }
   ~DocumentDBTest() {
@@ -328,7 +332,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr, "SKIPPED as DocumentDB is not supported in ROCKSDB_LITE\n");
   return 0;
 }

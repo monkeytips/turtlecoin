@@ -47,6 +47,7 @@ struct LRUCacheOptions {
   bool strict_capacity_limit = false;
 
   // Percentage of cache reserved for high priority entries.
+<<<<<<< HEAD
   // If greater than zero, the LRU list will be split into a high-pri
   // list and a low-pri list. High-pri entries will be insert to the
   // tail of high-pri list, while low-pri entries will be first inserted to
@@ -56,6 +57,8 @@ struct LRUCacheOptions {
   //
   // See also
   // BlockBasedTableOptions::cache_index_and_filter_blocks_with_high_priority.
+=======
+>>>>>>> blood in blood out
   double high_pri_pool_ratio = 0.0;
 
   LRUCacheOptions() {}
@@ -225,8 +228,12 @@ class Cache {
 
   // Mark the last inserted object as being a raw data block. This will be used
   // in tests. The default implementation does nothing.
+<<<<<<< HEAD
   virtual void TEST_mark_as_data_block(const Slice& /*key*/,
                                        size_t /*charge*/) {}
+=======
+  virtual void TEST_mark_as_data_block(const Slice& key, size_t charge) {}
+>>>>>>> blood in blood out
 
  private:
   // No copying allowed

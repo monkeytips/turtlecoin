@@ -32,12 +32,15 @@ static Key Decode(const char* key) {
 }
 
 struct TestComparator {
+<<<<<<< HEAD
   typedef Key DecodedType;
 
   static DecodedType decode_key(const char* b) {
     return Decode(b);
   }
 
+=======
+>>>>>>> blood in blood out
   int operator()(const char* a, const char* b) const {
     if (Decode(a) < Decode(b)) {
       return -1;
@@ -47,6 +50,7 @@ struct TestComparator {
       return 0;
     }
   }
+<<<<<<< HEAD
 
   int operator()(const char* a, const DecodedType b) const {
     if (Decode(a) < b) {
@@ -57,6 +61,8 @@ struct TestComparator {
       return 0;
     }
   }
+=======
+>>>>>>> blood in blood out
 };
 
 typedef InlineSkipList<TestComparator> TestInlineSkipList;
@@ -309,7 +315,10 @@ TEST_F(InlineSkipTest, InsertWithHint_CompatibleWithInsertWithoutHint) {
   Validate(&list);
 }
 
+<<<<<<< HEAD
 #ifndef ROCKSDB_VALGRIND_RUN
+=======
+>>>>>>> blood in blood out
 // We want to make sure that with a single writer and multiple
 // concurrent readers (with no synchronization other than when a
 // reader's iterator is created), the reader always observes all the
@@ -636,7 +645,10 @@ TEST_F(InlineSkipTest, ConcurrentInsert1) { RunConcurrentInsert(1); }
 TEST_F(InlineSkipTest, ConcurrentInsert2) { RunConcurrentInsert(2); }
 TEST_F(InlineSkipTest, ConcurrentInsert3) { RunConcurrentInsert(3); }
 
+<<<<<<< HEAD
 #endif  // ROCKSDB_VALGRIND_RUN
+=======
+>>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char** argv) {

@@ -7,7 +7,10 @@
 
 #include <string>
 #include <vector>
+<<<<<<< HEAD
 #include "port/port.h"
+=======
+>>>>>>> blood in blood out
 #include "util/testharness.h"
 
 namespace rocksdb {
@@ -15,6 +18,7 @@ namespace rocksdb {
 class LRUCacheTest : public testing::Test {
  public:
   LRUCacheTest() {}
+<<<<<<< HEAD
   ~LRUCacheTest() { DeleteCache(); }
 
   void DeleteCache() {
@@ -31,6 +35,24 @@ class LRUCacheTest : public testing::Test {
         port::cacheline_aligned_alloc(sizeof(LRUCacheShard)));
     new (cache_) LRUCacheShard(capacity, false /*strict_capcity_limit*/,
                                high_pri_pool_ratio);
+=======
+  ~LRUCacheTest() {}
+
+  void NewCache(size_t capacity, double high_pri_pool_ratio = 0.0) {
+    cache_.reset(
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable: 4316) // We've validated the alignment with the new operators
+#endif
+      new LRUCacheShard()
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
+    );
+    cache_->SetCapacity(capacity);
+    cache_->SetStrictCapacityLimit(false);
+    cache_->SetHighPriorityPoolRatio(high_pri_pool_ratio);
+>>>>>>> blood in blood out
   }
 
   void Insert(const std::string& key,
@@ -86,7 +108,11 @@ class LRUCacheTest : public testing::Test {
   }
 
  private:
+<<<<<<< HEAD
   LRUCacheShard* cache_ = nullptr;
+=======
+  std::unique_ptr<LRUCacheShard> cache_;
+>>>>>>> blood in blood out
 };
 
 TEST_F(LRUCacheTest, BasicLRU) {
@@ -115,6 +141,7 @@ TEST_F(LRUCacheTest, BasicLRU) {
   ValidateLRUList({"e", "z", "d", "u", "v"});
 }
 
+<<<<<<< HEAD
 TEST_F(LRUCacheTest, MidpointInsertion) {
   // Allocate 2 cache entries to high-pri pool.
   NewCache(5, 0.45);
@@ -139,6 +166,9 @@ TEST_F(LRUCacheTest, MidpointInsertion) {
 }
 
 TEST_F(LRUCacheTest, EntriesWithPriority) {
+=======
+TEST_F(LRUCacheTest, MidPointInsertion) {
+>>>>>>> blood in blood out
   // Allocate 2 cache entries to high-pri pool.
   NewCache(5, 0.45);
 
@@ -164,6 +194,7 @@ TEST_F(LRUCacheTest, EntriesWithPriority) {
   Insert("a", Cache::Priority::LOW);
   ValidateLRUList({"v", "X", "a", "Y", "Z"}, 2);
 
+<<<<<<< HEAD
   // Low-pri entries will be inserted to head of high-pri pool after lookup.
   ASSERT_TRUE(Lookup("v"));
   ValidateLRUList({"X", "a", "Y", "Z", "v"}, 2);
@@ -173,6 +204,17 @@ TEST_F(LRUCacheTest, EntriesWithPriority) {
   ValidateLRUList({"a", "Y", "Z", "v", "X"}, 2);
   ASSERT_TRUE(Lookup("Z"));
   ValidateLRUList({"a", "Y", "v", "X", "Z"}, 2);
+=======
+  // Low-pri entries will be inserted to head of low-pri pool after lookup.
+  ASSERT_TRUE(Lookup("v"));
+  ValidateLRUList({"X", "a", "v", "Y", "Z"}, 2);
+
+  // High-pri entries will be inserted to the head of the list after lookup.
+  ASSERT_TRUE(Lookup("X"));
+  ValidateLRUList({"a", "v", "Y", "Z", "X"}, 2);
+  ASSERT_TRUE(Lookup("Z"));
+  ValidateLRUList({"a", "v", "Y", "X", "Z"}, 2);
+>>>>>>> blood in blood out
 
   Erase("Y");
   ValidateLRUList({"a", "v", "X", "Z"}, 2);
@@ -185,7 +227,11 @@ TEST_F(LRUCacheTest, EntriesWithPriority) {
   Insert("g", Cache::Priority::LOW);
   ValidateLRUList({"d", "e", "f", "g", "Z"}, 1);
   ASSERT_TRUE(Lookup("d"));
+<<<<<<< HEAD
   ValidateLRUList({"e", "f", "g", "Z", "d"}, 2);
+=======
+  ValidateLRUList({"e", "f", "g", "d", "Z"}, 1);
+>>>>>>> blood in blood out
 }
 
 }  // namespace rocksdb

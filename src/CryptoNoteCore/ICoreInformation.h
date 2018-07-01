@@ -27,6 +27,11 @@ public:
   virtual size_t getPoolTransactionCount() const = 0;
   virtual size_t getBlockchainTransactionCount() const = 0;
   virtual size_t getAlternativeBlockCount() const = 0;
+<<<<<<< HEAD
+=======
+  virtual uint64_t getTotalGeneratedAmount() const = 0;
+  virtual std::vector<BlockTemplate> getAlternativeBlocks() const = 0;
+>>>>>>> blood in blood out
   virtual std::vector<Transaction> getPoolTransactions() const = 0;
 };
 

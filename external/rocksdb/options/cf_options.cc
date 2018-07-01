@@ -27,6 +27,10 @@ ImmutableCFOptions::ImmutableCFOptions(const ImmutableDBOptions& db_options,
                                        const ColumnFamilyOptions& cf_options)
     : compaction_style(cf_options.compaction_style),
       compaction_pri(cf_options.compaction_pri),
+<<<<<<< HEAD
+=======
+      prefix_extractor(cf_options.prefix_extractor.get()),
+>>>>>>> blood in blood out
       user_comparator(cf_options.comparator),
       internal_comparator(InternalKeyComparator(cf_options.comparator)),
       merge_operator(cf_options.merge_operator.get()),
@@ -57,7 +61,10 @@ ImmutableCFOptions::ImmutableCFOptions(const ImmutableDBOptions& db_options,
       use_fsync(db_options.use_fsync),
       compression_per_level(cf_options.compression_per_level),
       bottommost_compression(cf_options.bottommost_compression),
+<<<<<<< HEAD
       bottommost_compression_opts(cf_options.bottommost_compression_opts),
+=======
+>>>>>>> blood in blood out
       compression_opts(cf_options.compression_opts),
       level_compaction_dynamic_level_bytes(
           cf_options.level_compaction_dynamic_level_bytes),
@@ -74,8 +81,12 @@ ImmutableCFOptions::ImmutableCFOptions(const ImmutableDBOptions& db_options,
       row_cache(db_options.row_cache),
       max_subcompactions(db_options.max_subcompactions),
       memtable_insert_with_hint_prefix_extractor(
+<<<<<<< HEAD
           cf_options.memtable_insert_with_hint_prefix_extractor.get()),
       cf_paths(cf_options.cf_paths) {}
+=======
+          cf_options.memtable_insert_with_hint_prefix_extractor.get()) {}
+>>>>>>> blood in blood out
 
 // Multiple two operands. If they overflow, return op1.
 uint64_t MultiplyCheckOverflow(uint64_t op1, double op2) {
@@ -88,6 +99,7 @@ uint64_t MultiplyCheckOverflow(uint64_t op1, double op2) {
   return static_cast<uint64_t>(op1 * op2);
 }
 
+<<<<<<< HEAD
 // when level_compaction_dynamic_level_bytes is true and leveled compaction
 // is used, the base level is not always L1, so precomupted max_file_size can
 // no longer be used. Recompute file_size_for_level from base level.
@@ -106,6 +118,8 @@ uint64_t MaxFileSizeForLevel(const MutableCFOptions& cf_options,
   }
 }
 
+=======
+>>>>>>> blood in blood out
 void MutableCFOptions::RefreshDerivedOptions(int num_levels,
                                              CompactionStyle compaction_style) {
   max_file_size.resize(num_levels);
@@ -121,6 +135,15 @@ void MutableCFOptions::RefreshDerivedOptions(int num_levels,
   }
 }
 
+<<<<<<< HEAD
+=======
+uint64_t MutableCFOptions::MaxFileSizeForLevel(int level) const {
+  assert(level >= 0);
+  assert(level < (int)max_file_size.size());
+  return max_file_size[level];
+}
+
+>>>>>>> blood in blood out
 void MutableCFOptions::Dump(Logger* log) const {
   // Memtable related options
   ROCKS_LOG_INFO(log,
@@ -142,9 +165,12 @@ void MutableCFOptions::Dump(Logger* log) const {
   ROCKS_LOG_INFO(log,
                  "                 inplace_update_num_locks: %" ROCKSDB_PRIszt,
                  inplace_update_num_locks);
+<<<<<<< HEAD
   ROCKS_LOG_INFO(
       log, "                         prefix_extractor: %s",
       prefix_extractor == nullptr ? "nullptr" : prefix_extractor->Name());
+=======
+>>>>>>> blood in blood out
   ROCKS_LOG_INFO(log, "                 disable_auto_compactions: %d",
                  disable_auto_compactions);
   ROCKS_LOG_INFO(log, "      soft_pending_compaction_bytes_limit: %" PRIu64,
@@ -167,8 +193,11 @@ void MutableCFOptions::Dump(Logger* log) const {
                  max_bytes_for_level_base);
   ROCKS_LOG_INFO(log, "           max_bytes_for_level_multiplier: %f",
                  max_bytes_for_level_multiplier);
+<<<<<<< HEAD
   ROCKS_LOG_INFO(log, "                                      ttl: %" PRIu64,
                  ttl);
+=======
+>>>>>>> blood in blood out
   std::string result;
   char buf[10];
   for (const auto m : max_bytes_for_level_multiplier_additional) {
@@ -191,6 +220,7 @@ void MutableCFOptions::Dump(Logger* log) const {
                  report_bg_io_stats);
   ROCKS_LOG_INFO(log, "                              compression: %d",
                  static_cast<int>(compression));
+<<<<<<< HEAD
 
   // Universal Compaction Options
   ROCKS_LOG_INFO(log, "compaction_options_universal.size_ratio : %d",
@@ -223,4 +253,8 @@ void MutableCFOptions::Dump(Logger* log) const {
 MutableCFOptions::MutableCFOptions(const Options& options)
     : MutableCFOptions(ColumnFamilyOptions(options)) {}
 
+=======
+}
+
+>>>>>>> blood in blood out
 }  // namespace rocksdb

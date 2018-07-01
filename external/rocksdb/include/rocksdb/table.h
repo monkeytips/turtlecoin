@@ -77,6 +77,7 @@ struct BlockBasedTableOptions {
   // evicted from cache when the table reader is freed.
   bool pin_l0_filter_and_index_blocks_in_cache = false;
 
+<<<<<<< HEAD
   // If cache_index_and_filter_blocks is true and the below is true, then
   // the top-level index of partitioned filter and index blocks are stored in
   // the cache, but a reference is held in the "table reader" object so the
@@ -84,6 +85,8 @@ struct BlockBasedTableOptions {
   // freed. This is not limited to l0 in LSM tree.
   bool pin_top_level_index_and_filter = true;
 
+=======
+>>>>>>> blood in blood out
   // The index type that will be used for this table.
   enum IndexType : char {
     // A space efficient index block that is optimized for
@@ -163,7 +166,11 @@ struct BlockBasedTableOptions {
   // well.
   // TODO(myabandeh): remove the note above once the limitation is lifted
   // Use partitioned full filters for each SST file. This option is
+<<<<<<< HEAD
   // incompatible with block-based filters.
+=======
+  // incompatibile with block-based filters.
+>>>>>>> blood in blood out
   bool partition_filters = false;
 
   // Use delta encoding to compress keys in blocks.
@@ -221,25 +228,37 @@ struct BlockBasedTableOptions {
   // encode compressed blocks with LZ4, BZip2 and Zlib compression. If you
   // don't plan to run RocksDB before version 3.10, you should probably use
   // this.
+<<<<<<< HEAD
   // 3 -- Can be read by RocksDB's versions since 5.15. Changes the way we
   // encode the keys in index blocks. If you don't plan to run RocksDB before
   // version 5.15, you should probably use this.
   // This option only affects newly written tables. When reading existing
   // tables, the information about version is read from the footer.
+=======
+  // This option only affects newly written tables. When reading exising tables,
+  // the information about version is read from the footer.
+>>>>>>> blood in blood out
   uint32_t format_version = 2;
 
   // Store index blocks on disk in compressed format. Changing this option to
   // false  will avoid the overhead of decompression if index blocks are evicted
   // and read back
   bool enable_index_compression = true;
+<<<<<<< HEAD
 
   // Align data blocks on lesser of page size and block size
   bool block_align = false;
+=======
+>>>>>>> blood in blood out
 };
 
 // Table Properties that are specific to block-based table properties.
 struct BlockBasedTablePropertyNames {
+<<<<<<< HEAD
   // value of this properties is a fixed int32 number.
+=======
+  // value of this propertis is a fixed int32 number.
+>>>>>>> blood in blood out
   static const std::string kIndexType;
   // value is "1" for true and "0" for false.
   static const std::string kWholeKeyFiltering;
@@ -332,7 +351,11 @@ struct PlainTableOptions {
 };
 
 // -- Plain Table with prefix-only seek
+<<<<<<< HEAD
 // For this factory, you need to set Options.prefix_extractor properly to make it
+=======
+// For this factory, you need to set Options.prefix_extrator properly to make it
+>>>>>>> blood in blood out
 // work. Look-up will starts with prefix hash lookup for key prefix. Inside the
 // hash bucket found, a binary search is executed for hash conflicts. Finally,
 // a linear search is used.
@@ -395,7 +418,11 @@ struct CuckooTableOptions {
   bool identity_as_first_hash = false;
   // If this option is set to true, module is used during hash calculation.
   // This often yields better space efficiency at the cost of performance.
+<<<<<<< HEAD
   // If this option is set to false, # of entries in table is constrained to be
+=======
+  // If this optino is set to false, # of entries in table is constrained to be
+>>>>>>> blood in blood out
   // power of two, and bit and is used to calculate hash, which is faster in
   // general.
   bool use_module_hash = true;
@@ -432,7 +459,11 @@ class TableFactory {
   //     and cache the table object returned.
   // (2) SstFileReader (for SST Dump) opens the table and dump the table
   //     contents using the iterator of the table.
+<<<<<<< HEAD
   // (3) DBImpl::IngestExternalFile() calls this function to read the contents of
+=======
+  // (3) DBImpl::AddFile() calls this function to read the contents of
+>>>>>>> blood in blood out
   //     the sst file it's attempting to add
   //
   // table_reader_options is a TableReaderOptions which contain all the
@@ -480,8 +511,13 @@ class TableFactory {
   // RocksDB prints configurations at DB Open().
   virtual std::string GetPrintableTableOptions() const = 0;
 
+<<<<<<< HEAD
   virtual Status GetOptionString(std::string* /*opt_string*/,
                                  const std::string& /*delimiter*/) const {
+=======
+  virtual Status GetOptionString(std::string* opt_string,
+                                 const std::string& delimiter) const {
+>>>>>>> blood in blood out
     return Status::NotSupported(
         "The table factory doesn't implement GetOptionString().");
   }

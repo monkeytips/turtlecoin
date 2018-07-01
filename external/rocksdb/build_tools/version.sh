@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #!/usr/bin/env bash
+=======
+#!/bin/sh
+>>>>>>> blood in blood out
 if [ "$#" = "0" ]; then
   echo "Usage: $0 major|minor|patch|full"
   exit 1

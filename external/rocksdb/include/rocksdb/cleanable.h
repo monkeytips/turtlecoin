@@ -30,7 +30,11 @@ class Cleanable {
   Cleanable(Cleanable&) = delete;
   Cleanable& operator=(Cleanable&) = delete;
 
+<<<<<<< HEAD
   // Move constructor and move assignment is allowed.
+=======
+  // Move consturctor and move assignment is allowed.
+>>>>>>> blood in blood out
   Cleanable(Cleanable&&);
   Cleanable& operator=(Cleanable&&);
 

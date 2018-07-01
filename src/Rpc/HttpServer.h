@@ -36,7 +36,11 @@ class HttpServer {
 
 public:
 
+<<<<<<< HEAD
   HttpServer(System::Dispatcher& dispatcher, std::shared_ptr<Logging::ILogger> log);
+=======
+  HttpServer(System::Dispatcher& dispatcher, Logging::ILogger& log);
+>>>>>>> blood in blood out
 
   void start(const std::string& address, uint16_t port);
   void stop();

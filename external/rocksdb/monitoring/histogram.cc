@@ -235,8 +235,11 @@ void HistogramStat::Data(HistogramData * const data) const {
   data->max = static_cast<double>(max());
   data->average = Average();
   data->standard_deviation = StandardDeviation();
+<<<<<<< HEAD
   data->count = num();
   data->sum = sum();
+=======
+>>>>>>> blood in blood out
 }
 
 void HistogramImpl::Clear() {

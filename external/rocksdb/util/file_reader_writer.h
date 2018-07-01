@@ -26,6 +26,7 @@ std::unique_ptr<RandomAccessFile> NewReadaheadRandomAccessFile(
 class SequentialFileReader {
  private:
   std::unique_ptr<SequentialFile> file_;
+<<<<<<< HEAD
   std::string file_name_;
   std::atomic<size_t> offset_;  // read offset
 
@@ -33,6 +34,13 @@ class SequentialFileReader {
   explicit SequentialFileReader(std::unique_ptr<SequentialFile>&& _file,
                                 const std::string& _file_name)
       : file_(std::move(_file)), file_name_(_file_name), offset_(0) {}
+=======
+  std::atomic<size_t> offset_;  // read offset
+
+ public:
+  explicit SequentialFileReader(std::unique_ptr<SequentialFile>&& _file)
+      : file_(std::move(_file)), offset_(0) {}
+>>>>>>> blood in blood out
 
   SequentialFileReader(SequentialFileReader&& o) ROCKSDB_NOEXCEPT {
     *this = std::move(o);
@@ -54,8 +62,11 @@ class SequentialFileReader {
 
   SequentialFile* file() { return file_.get(); }
 
+<<<<<<< HEAD
   std::string file_name() { return file_name_; }
 
+=======
+>>>>>>> blood in blood out
   bool use_direct_io() const { return file_->use_direct_io(); }
 };
 
@@ -170,8 +181,11 @@ class WritableFileWriter {
 
   Status Append(const Slice& data);
 
+<<<<<<< HEAD
   Status Pad(const size_t pad_bytes);
 
+=======
+>>>>>>> blood in blood out
   Status Flush();
 
   Status Close();
@@ -193,8 +207,11 @@ class WritableFileWriter {
 
   bool use_direct_io() { return writable_file_->use_direct_io(); }
 
+<<<<<<< HEAD
   bool TEST_BufferIsEmpty() { return buf_.CurrentSize() == 0; }
 
+=======
+>>>>>>> blood in blood out
  private:
   // Used when os buffering is OFF and we are writing
   // DMA such as in Direct I/O mode
@@ -207,6 +224,7 @@ class WritableFileWriter {
   Status SyncInternal(bool use_fsync);
 };
 
+<<<<<<< HEAD
 // FilePrefetchBuffer can automatically do the readahead if file_reader,
 // readahead_size, and max_readahead_size are passed in.
 // max_readahead_size should be greater than or equal to readahead_size.
@@ -221,13 +239,24 @@ class FilePrefetchBuffer {
         max_readahead_size_(max_readahead_size) {}
   Status Prefetch(RandomAccessFileReader* reader, uint64_t offset, size_t n);
   bool TryReadFromCache(uint64_t offset, size_t n, Slice* result);
+=======
+class FilePrefetchBuffer {
+ public:
+  FilePrefetchBuffer() : buffer_offset_(0), buffer_len_(0) {}
+  Status Prefetch(RandomAccessFileReader* reader, uint64_t offset, size_t n);
+  bool TryReadFromCache(uint64_t offset, size_t n, Slice* result) const;
+>>>>>>> blood in blood out
 
  private:
   AlignedBuffer buffer_;
   uint64_t buffer_offset_;
+<<<<<<< HEAD
   RandomAccessFileReader* file_reader_;
   size_t readahead_size_;
   size_t max_readahead_size_;
+=======
+  size_t buffer_len_;
+>>>>>>> blood in blood out
 };
 
 extern Status NewWritableFile(Env* env, const std::string& fname,

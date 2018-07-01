@@ -79,7 +79,10 @@ class BaseDeltaIterator : public Iterator {
   void Next() override {
     if (!Valid()) {
       status_ = Status::NotSupported("Next() on invalid iterator");
+<<<<<<< HEAD
       return;
+=======
+>>>>>>> blood in blood out
     }
 
     if (!forward_) {
@@ -115,7 +118,10 @@ class BaseDeltaIterator : public Iterator {
   void Prev() override {
     if (!Valid()) {
       status_ = Status::NotSupported("Prev() on invalid iterator");
+<<<<<<< HEAD
       return;
+=======
+>>>>>>> blood in blood out
     }
 
     if (forward_) {
@@ -172,6 +178,7 @@ class BaseDeltaIterator : public Iterator {
  private:
   void AssertInvariants() {
 #ifndef NDEBUG
+<<<<<<< HEAD
     bool not_ok = false;
     if (!base_iterator_->status().ok()) {
       assert(!base_iterator_->Valid());
@@ -187,6 +194,8 @@ class BaseDeltaIterator : public Iterator {
       return;
     }
 
+=======
+>>>>>>> blood in blood out
     if (!Valid()) {
       return;
     }
@@ -255,6 +264,7 @@ class BaseDeltaIterator : public Iterator {
   void UpdateCurrent() {
 // Suppress false positive clang analyzer warnings.
 #ifndef __clang_analyzer__
+<<<<<<< HEAD
     status_ = Status::OK();
     while (true) {
       WriteEntry delta_entry;
@@ -274,6 +284,15 @@ class BaseDeltaIterator : public Iterator {
           return;
         }
 
+=======
+    while (true) {
+      WriteEntry delta_entry;
+      if (DeltaValid()) {
+        delta_entry = delta_iterator_->Entry();
+      }
+      equal_keys_ = false;
+      if (!BaseValid()) {
+>>>>>>> blood in blood out
         // Base has finished.
         if (!DeltaValid()) {
           // Finished
@@ -594,7 +613,10 @@ Status WriteBatchWithIndex::Rep::ReBuildIndex() {
       case kTypeLogData:
       case kTypeBeginPrepareXID:
       case kTypeBeginPersistedPrepareXID:
+<<<<<<< HEAD
       case kTypeBeginUnprepareXID:
+=======
+>>>>>>> blood in blood out
       case kTypeEndPrepareXID:
       case kTypeCommitXID:
       case kTypeRollbackXID:

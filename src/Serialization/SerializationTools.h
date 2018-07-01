@@ -21,16 +21,22 @@
 #include <vector>
 #include <Common/MemoryInputStream.h>
 #include <Common/StringOutputStream.h>
+<<<<<<< HEAD
 #include <Common/VectorOutputStream.h>
+=======
+>>>>>>> blood in blood out
 #include "JsonInputStreamSerializer.h"
 #include "JsonOutputStreamSerializer.h"
 #include "KVBinaryInputStreamSerializer.h"
 #include "KVBinaryOutputStreamSerializer.h"
+<<<<<<< HEAD
 #include <zedwallet/Types.h>
 
 #include <Serialization/BinaryInputStreamSerializer.h>
 #include <Serialization/BinaryOutputStreamSerializer.h>
 #include <Serialization/CryptoNoteSerialization.h>
+=======
+>>>>>>> blood in blood out
 
 namespace Common {
 
@@ -66,6 +72,7 @@ Common::JsonValue storeContainerToJsonValue(const T& cont) {
   return js;
 }
 
+<<<<<<< HEAD
 template <>
 inline Common::JsonValue storeContainerToJsonValue(const std::vector<AddressBookEntry> &cont) {
   Common::JsonValue js(Common::JsonValue::ARRAY);
@@ -75,6 +82,8 @@ inline Common::JsonValue storeContainerToJsonValue(const std::vector<AddressBook
   return js;
 }
 
+=======
+>>>>>>> blood in blood out
 template <typename T>
 Common::JsonValue storeToJsonValue(const std::vector<T>& v) { return storeContainerToJsonValue(v); }
 
@@ -92,11 +101,16 @@ void loadFromJsonValue(T& v, const Common::JsonValue& js) {
 
 template <typename T>
 void loadFromJsonValue(std::vector<T>& v, const Common::JsonValue& js) {
+<<<<<<< HEAD
   for (uint64_t i = 0; i < js.size(); ++i) {
+=======
+  for (size_t i = 0; i < js.size(); ++i) {
+>>>>>>> blood in blood out
     v.push_back(Common::getValueAs<T>(js[i]));
   }
 }
 
+<<<<<<< HEAD
 template <>
 inline void loadFromJsonValue(AddressBook &v, const Common::JsonValue &js) {
   for (uint64_t i = 0; i < js.size(); ++i) {
@@ -109,6 +123,11 @@ inline void loadFromJsonValue(AddressBook &v, const Common::JsonValue &js) {
 template <typename T>
 void loadFromJsonValue(std::list<T>& v, const Common::JsonValue& js) {
   for (uint64_t i = 0; i < js.size(); ++i) {
+=======
+template <typename T>
+void loadFromJsonValue(std::list<T>& v, const Common::JsonValue& js) {
+  for (size_t i = 0; i < js.size(); ++i) {
+>>>>>>> blood in blood out
     v.push_back(Common::getValueAs<T>(js[i]));
   }
 }
@@ -155,6 +174,7 @@ bool loadFromBinaryKeyValue(T& v, const std::string& buf) {
   }
 }
 
+<<<<<<< HEAD
 // throws exception if serialization failed
 template<class T>
 std::vector<uint8_t> toBinaryArray(const T& object) {
@@ -214,4 +234,6 @@ bool fromBinaryArray(T& object, const std::vector<uint8_t>& binaryArray) {
 
   return true;
 }
+=======
+>>>>>>> blood in blood out
 }

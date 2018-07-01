@@ -64,7 +64,11 @@ struct MemTablePostProcessInfo {
 };
 
 // Note:  Many of the methods in this class have comments indicating that
+<<<<<<< HEAD
 // external synchronization is required as these methods are not thread-safe.
+=======
+// external synchromization is required as these methods are not thread-safe.
+>>>>>>> blood in blood out
 // It is up to higher layers of code to decide how to prevent concurrent
 // invokation of these methods.  This is usually done by acquiring either
 // the db mutex or the single writer thread.
@@ -84,7 +88,11 @@ class MemTable {
     virtual int operator()(const char* prefix_len_key1,
                            const char* prefix_len_key2) const override;
     virtual int operator()(const char* prefix_len_key,
+<<<<<<< HEAD
                            const DecodedType& key) const override;
+=======
+                           const Slice& key) const override;
+>>>>>>> blood in blood out
   };
 
   // MemTables are reference counted.  The initial reference count

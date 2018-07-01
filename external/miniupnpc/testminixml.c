@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 /* $Id: testminixml.c,v 1.10 2014/11/17 17:19:13 nanard Exp $
  * MiniUPnP project
  * Website : http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * Author : Thomas Bernard.
  * Copyright (c) 2005-2014 Thomas Bernard
+=======
+/* $Id: testminixml.c,v 1.9 2013/05/14 19:50:49 nanard Exp $
+ * MiniUPnP project
+ * Website : http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
+ * Author : Thomas Bernard.
+ * Copyright (c) 2005-2013 Thomas Bernard
+>>>>>>> blood in blood out
  *
  * testminixml.c
  * test program for the "minixml" functions.
@@ -58,9 +66,13 @@ void burptest(const char * buffer, int bufsize)
 	parser.endeltfunc = IGDendelt;
 	parser.datafunc = IGDdata;
 	parsexml(&parser);
+<<<<<<< HEAD
 #ifdef DEBUG
 	printIGD(&data);
 #endif /* DEBUG */
+=======
+	printIGD(&data);
+>>>>>>> blood in blood out
 }
 
 /* ----- main ---- */

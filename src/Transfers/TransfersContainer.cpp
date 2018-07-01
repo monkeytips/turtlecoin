@@ -15,8 +15,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
+<<<<<<< HEAD
 #include "IWallet.h"
 #include "TransfersContainer.h"
+=======
+#include "TransfersContainer.h"
+#include "IWalletLegacy.h"
+>>>>>>> blood in blood out
 #include "Common/StdInputStream.h"
 #include "Common/StdOutputStream.h"
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
@@ -25,8 +30,11 @@
 #include "Serialization/BinaryOutputStreamSerializer.h"
 #include "Serialization/SerializationOverloads.h"
 
+<<<<<<< HEAD
 #include <config/Constants.h>
 
+=======
+>>>>>>> blood in blood out
 using namespace Common;
 using namespace Crypto;
 using namespace Logging;
@@ -127,6 +135,13 @@ void SpentOutputDescriptor::assign(const KeyImage* keyImage) {
   m_keyImage = keyImage;
 }
 
+<<<<<<< HEAD
+=======
+bool SpentOutputDescriptor::isValid() const {
+  return m_type != TransactionTypes::OutputType::Invalid;
+}
+
+>>>>>>> blood in blood out
 bool SpentOutputDescriptor::operator==(const SpentOutputDescriptor& other) const {
   if (m_type == TransactionTypes::OutputType::Key) {
     return other.m_type == m_type && *other.m_keyImage == *m_keyImage;
@@ -147,7 +162,11 @@ size_t SpentOutputDescriptor::hash() const {
 }
 
 
+<<<<<<< HEAD
 TransfersContainer::TransfersContainer(const Currency& currency, std::shared_ptr<Logging::ILogger> logger, size_t transactionSpendableAge) :
+=======
+TransfersContainer::TransfersContainer(const Currency& currency, Logging::ILogger& logger, size_t transactionSpendableAge) :
+>>>>>>> blood in blood out
   m_currentHeight(0),
   m_currency(currency),
   m_logger(logger, "TransfersContainer"),
@@ -179,7 +198,11 @@ bool TransfersContainer::addTransaction(const TransactionBlockInfo& block, const
       addTransaction(block, tx);
     }
 
+<<<<<<< HEAD
     if (block.height != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
+=======
+    if (block.height != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
+>>>>>>> blood in blood out
       m_currentHeight = block.height;
     }
 
@@ -212,10 +235,17 @@ void TransfersContainer::addTransaction(const TransactionBlockInfo& block, const
   txInfo.extra = tx.getExtra();
 
   if (!tx.getPaymentId(txInfo.paymentId)) {
+<<<<<<< HEAD
     txInfo.paymentId = Constants::NULL_HASH;
   }
 
   auto result = m_transactions.insert(std::move(txInfo));
+=======
+    txInfo.paymentId = NULL_HASH;
+  }
+
+  auto result = m_transactions.emplace(std::move(txInfo));
+>>>>>>> blood in blood out
   (void)result; // Disable unused warning
   assert(result.second);
 }
@@ -228,7 +258,11 @@ bool TransfersContainer::addTransactionOutputs(const TransactionBlockInfo& block
   bool outputsAdded = false;
 
   auto txHash = tx.getTransactionHash();
+<<<<<<< HEAD
   bool transactionIsUnconfimed = (block.height == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT);
+=======
+  bool transactionIsUnconfimed = (block.height == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+>>>>>>> blood in blood out
   for (const auto& transfer : transfers) {
     assert(transfer.outputInTransaction < tx.getOutputCount());
     assert(transfer.type == tx.getOutputType(transfer.outputInTransaction));
@@ -250,7 +284,11 @@ bool TransfersContainer::addTransactionOutputs(const TransactionBlockInfo& block
     info.visible = true;
 
     if (transferIsUnconfirmed) {
+<<<<<<< HEAD
       auto result = m_unconfirmedTransfers.insert(std::move(info));
+=======
+      auto result = m_unconfirmedTransfers.emplace(std::move(info));
+>>>>>>> blood in blood out
       (void)result; // Disable unused warning
       assert(result.second);
     } else {
@@ -280,7 +318,11 @@ bool TransfersContainer::addTransactionOutputs(const TransactionBlockInfo& block
         }
       }
 
+<<<<<<< HEAD
       auto result = m_availableTransfers.insert(std::move(info));
+=======
+      auto result = m_availableTransfers.emplace(std::move(info));
+>>>>>>> blood in blood out
       (void)result; // Disable unused warning
       assert(result.second);
     }
@@ -383,7 +425,11 @@ bool TransfersContainer::deleteUnconfirmedTransaction(const Hash& transactionHas
   auto it = m_transactions.find(transactionHash);
   if (it == m_transactions.end()) {
     return false;
+<<<<<<< HEAD
   } else if (it->blockHeight != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
+=======
+  } else if (it->blockHeight != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
+>>>>>>> blood in blood out
     return false;
   } else {
     deleteTransactionTransfers(it->transactionHash);
@@ -394,7 +440,11 @@ bool TransfersContainer::deleteUnconfirmedTransaction(const Hash& transactionHas
 
 bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& block, const Hash& transactionHash,
                                                   const std::vector<uint32_t>& globalIndices) {
+<<<<<<< HEAD
   if (block.height == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
+=======
+  if (block.height == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
+>>>>>>> blood in blood out
     auto message = "Failed to confirm transaction: block height is unconfirmed";
     m_logger(ERROR, BRIGHT_RED) << message << ", transaction hash " << transactionHash;
     throw std::invalid_argument(message);
@@ -407,7 +457,11 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
     return false;
   }
 
+<<<<<<< HEAD
   if (transactionIt->blockHeight != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
+=======
+  if (transactionIt->blockHeight != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
+>>>>>>> blood in blood out
     return false;
   }
 
@@ -420,7 +474,11 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
     auto availableRange = m_unconfirmedTransfers.get<ContainingTransactionIndex>().equal_range(transactionHash);
     for (auto transferIt = availableRange.first; transferIt != availableRange.second; ) {
       auto transfer = *transferIt;
+<<<<<<< HEAD
       assert(transfer.blockHeight == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT);
+=======
+      assert(transfer.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+>>>>>>> blood in blood out
       assert(transfer.globalOutputIndex == UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX);
       if (transfer.outputInTransaction >= globalIndices.size()) {
         auto message = "Failed to confirm transaction: not enough elements in globalIndices";
@@ -432,7 +490,11 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
       transfer.transactionIndex = block.transactionIndex;
       transfer.globalOutputIndex = globalIndices[transfer.outputInTransaction];
 
+<<<<<<< HEAD
       auto result = m_availableTransfers.insert(std::move(transfer));
+=======
+      auto result = m_availableTransfers.emplace(std::move(transfer));
+>>>>>>> blood in blood out
       (void)result; // Disable unused warning
       assert(result.second);
 
@@ -447,7 +509,11 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
     auto spentRange = spendingTransactionIndex.equal_range(transactionHash);
     for (auto transferIt = spentRange.first; transferIt != spentRange.second; ++transferIt) {
       auto transfer = *transferIt;
+<<<<<<< HEAD
       assert(transfer.spendingBlock.height == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT);
+=======
+      assert(transfer.spendingBlock.height == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+>>>>>>> blood in blood out
 
       transfer.spendingBlock = block;
       spendingTransactionIndex.replace(transferIt, transfer);
@@ -457,13 +523,18 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
       ", tx " << transactionHash;
 
     auto txInfo = *transactionIt;
+<<<<<<< HEAD
     txInfo.blockHeight = WALLET_UNCONFIRMED_TRANSACTION_HEIGHT;
+=======
+    txInfo.blockHeight = WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT;
+>>>>>>> blood in blood out
     txInfo.timestamp = 0;
     m_transactions.replace(transactionIt, txInfo);
 
     auto availableRange = m_availableTransfers.get<ContainingTransactionIndex>().equal_range(transactionHash);
     for (auto transferIt = availableRange.first; transferIt != availableRange.second; ) {
       TransactionOutputInformationEx unconfirmedTransfer = *transferIt;
+<<<<<<< HEAD
       assert(unconfirmedTransfer.blockHeight != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT);
       assert(unconfirmedTransfer.globalOutputIndex != UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX);
       unconfirmedTransfer.blockHeight = WALLET_UNCONFIRMED_TRANSACTION_HEIGHT;
@@ -471,6 +542,15 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
       unconfirmedTransfer.globalOutputIndex = UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX;
 
       auto result = m_unconfirmedTransfers.insert(std::move(unconfirmedTransfer));
+=======
+      assert(unconfirmedTransfer.blockHeight != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+      assert(unconfirmedTransfer.globalOutputIndex != UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX);
+      unconfirmedTransfer.blockHeight = WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT;
+      unconfirmedTransfer.transactionIndex = 0;
+      unconfirmedTransfer.globalOutputIndex = UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX;
+
+      auto result = m_unconfirmedTransfers.emplace(std::move(unconfirmedTransfer));
+>>>>>>> blood in blood out
       (void)result; // Disable unused warning
       assert(result.second);
 
@@ -485,7 +565,11 @@ bool TransfersContainer::markTransactionConfirmed(const TransactionBlockInfo& bl
     auto spentRange = spendingTransactionIndex.equal_range(transactionHash);
     for (auto transferIt = spentRange.first; transferIt != spentRange.second; ++transferIt) {
       auto spentTransfer = *transferIt;
+<<<<<<< HEAD
       spentTransfer.spendingBlock.height = WALLET_UNCONFIRMED_TRANSACTION_HEIGHT;
+=======
+      spentTransfer.spendingBlock.height = WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT;
+>>>>>>> blood in blood out
       spentTransfer.spendingBlock.timestamp = 0;
       spentTransfer.spendingBlock.transactionIndex = 0;
 
@@ -505,10 +589,17 @@ void TransfersContainer::deleteTransactionTransfers(const Hash& transactionHash)
   auto& spendingTransactionIndex = m_spentTransfers.get<SpendingTransactionIndex>();
   auto spentTransfersRange = spendingTransactionIndex.equal_range(transactionHash);
   for (auto it = spentTransfersRange.first; it != spentTransfersRange.second;) {
+<<<<<<< HEAD
     assert(it->blockHeight != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT);
     assert(it->globalOutputIndex != UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX);
 
     auto result = m_availableTransfers.insert(static_cast<const TransactionOutputInformationEx&>(*it));
+=======
+    assert(it->blockHeight != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+    assert(it->globalOutputIndex != UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX);
+
+    auto result = m_availableTransfers.emplace(static_cast<const TransactionOutputInformationEx&>(*it));
+>>>>>>> blood in blood out
     assert(result.second);
     it = spendingTransactionIndex.erase(it);
 
@@ -546,7 +637,11 @@ void TransfersContainer::deleteTransactionTransfers(const Hash& transactionHash)
  */
 void TransfersContainer::copyToSpent(const TransactionBlockInfo& block, const ITransactionReader& tx, size_t inputIndex,
                                      const TransactionOutputInformationEx& output) {
+<<<<<<< HEAD
   assert(output.blockHeight != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT);
+=======
+  assert(output.blockHeight != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+>>>>>>> blood in blood out
   assert(output.globalOutputIndex != UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX);
 
   SpentTransactionOutput spentOutput;
@@ -554,14 +649,23 @@ void TransfersContainer::copyToSpent(const TransactionBlockInfo& block, const IT
   spentOutput.spendingBlock = block;
   spentOutput.spendingTransactionHash = tx.getTransactionHash();
   spentOutput.inputInTransaction = static_cast<uint32_t>(inputIndex);
+<<<<<<< HEAD
   auto result = m_spentTransfers.insert(std::move(spentOutput));
+=======
+  auto result = m_spentTransfers.emplace(std::move(spentOutput));
+>>>>>>> blood in blood out
   (void)result; // Disable unused warning
   assert(result.second);
 }
 
 std::vector<Hash> TransfersContainer::detach(uint32_t height) {
+<<<<<<< HEAD
   // This method expects that WALLET_UNCONFIRMED_TRANSACTION_HEIGHT is a big positive number
   assert(height < WALLET_UNCONFIRMED_TRANSACTION_HEIGHT);
+=======
+  // This method expects that WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT is a big positive number
+  assert(height < WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+>>>>>>> blood in blood out
 
   std::lock_guard<std::mutex> lk(m_mutex);
 
@@ -573,7 +677,11 @@ std::vector<Hash> TransfersContainer::detach(uint32_t height) {
     --it;
 
     bool doDelete = false;
+<<<<<<< HEAD
     if (it->blockHeight == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
+=======
+    if (it->blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
+>>>>>>> blood in blood out
       auto range = spendingTransactionIndex.equal_range(it->transactionHash);
       for (auto spentTransferIt = range.first; spentTransferIt != range.second; ++spentTransferIt) {
         if (spentTransferIt->blockHeight >= height) {
@@ -660,6 +768,14 @@ bool TransfersContainer::advanceHeight(uint32_t height) {
   return false;
 }
 
+<<<<<<< HEAD
+=======
+size_t TransfersContainer::transfersCount() const {
+  std::lock_guard<std::mutex> lk(m_mutex);
+  return m_unconfirmedTransfers.size() + m_availableTransfers.size() + m_spentTransfers.size();
+}
+
+>>>>>>> blood in blood out
 size_t TransfersContainer::transactionsCount() const {
   std::lock_guard<std::mutex> lk(m_mutex);
   return m_transactions.size();
@@ -715,7 +831,11 @@ bool TransfersContainer::getTransactionInformation(const Hash& transactionHash, 
   if (amountOut != nullptr) {
     *amountOut = 0;
 
+<<<<<<< HEAD
     if (info.blockHeight == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
+=======
+    if (info.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
+>>>>>>> blood in blood out
       auto unconfirmedOutputsRange = m_unconfirmedTransfers.get<ContainingTransactionIndex>().equal_range(transactionHash);
       for (auto it = unconfirmedOutputsRange.first; it != unconfirmedOutputsRange.second; ++it) {
         *amountOut += it->amount;
@@ -801,12 +921,42 @@ void TransfersContainer::getUnconfirmedTransactions(std::vector<Crypto::Hash>& t
   std::lock_guard<std::mutex> lk(m_mutex);
   transactions.clear();
   for (auto& element : m_transactions) {
+<<<<<<< HEAD
     if (element.blockHeight == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
+=======
+    if (element.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
+>>>>>>> blood in blood out
       transactions.push_back(*reinterpret_cast<const Crypto::Hash*>(&element.transactionHash));
     }
   }
 }
 
+<<<<<<< HEAD
+=======
+std::vector<TransactionSpentOutputInformation> TransfersContainer::getSpentOutputs() const {
+  std::lock_guard<std::mutex> lk(m_mutex);
+
+  std::vector<TransactionSpentOutputInformation> spentOutputs;
+
+  spentOutputs.reserve(m_spentTransfers.size());
+
+  for (const auto& o : m_spentTransfers) {
+    TransactionSpentOutputInformation spentOutput;
+    static_cast<TransactionOutputInformation&>(spentOutput) = o;
+
+    spentOutput.spendingBlockHeight = o.spendingBlock.height;
+    spentOutput.timestamp = o.spendingBlock.timestamp;
+    spentOutput.spendingTransactionHash = o.spendingTransactionHash;
+    spentOutput.keyImage = o.keyImage;
+    spentOutput.inputInTransaction = o.inputInTransaction;
+
+    spentOutputs.push_back(spentOutput);
+  }
+
+  return spentOutputs;
+}
+
+>>>>>>> blood in blood out
 void TransfersContainer::save(std::ostream& os) {
   std::lock_guard<std::mutex> lk(m_mutex);
   StdOutputStream stream(os);
@@ -852,6 +1002,107 @@ void TransfersContainer::load(std::istream& in) {
   m_unconfirmedTransfers = std::move(unconfirmedTransfers);
   m_availableTransfers = std::move(availableTransfers);
   m_spentTransfers = std::move(spentTransfers);
+<<<<<<< HEAD
+=======
+
+  // Repair the container if it was broken while handling addTransaction() in previous version of the code
+  // Hope it isn't necessary anymore
+  //repair();
+}
+
+void TransfersContainer::repair() {
+  size_t deletedInputCount = 0;
+  for (auto it = m_spentTransfers.begin(); it != m_spentTransfers.end();) {
+    assert(it->blockHeight != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+    assert(it->globalOutputIndex != UNCONFIRMED_TRANSACTION_GLOBAL_OUTPUT_INDEX);
+
+    if (m_transactions.count(it->spendingTransactionHash) == 0) {
+      bool isInputConfirmed = it->spendingBlock.height != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT;
+      m_logger(WARNING, BRIGHT_YELLOW) << "Orphan input found, remove it and return output spent by them to available outputs:\n" <<
+        "    input       " <<
+        ": block " << std::setw(7) << (isInputConfirmed ? static_cast<int32_t>(it->spendingBlock.height) : -1) <<
+        ", transaction index " << std::setw(2) << (isInputConfirmed ? static_cast<int32_t>(it->spendingBlock.transactionIndex) : -1) <<
+        ", transaction hash " << it->spendingTransactionHash <<
+        ", input " << std::setw(3) << it->inputInTransaction << '\n' <<
+        "    spent output" <<
+        ": block " << std::setw(7) << it->blockHeight <<
+        ", transaction index " << std::setw(2) << it->transactionIndex <<
+        ", transaction hash " << it->transactionHash <<
+        ", output " << std::setw(2) << it->outputInTransaction;
+
+      auto result = m_availableTransfers.emplace(static_cast<const TransactionOutputInformationEx&>(*it));
+      assert(result.second);
+      it = m_spentTransfers.erase(it);
+
+      if (result.first->type == TransactionTypes::OutputType::Key) {
+        updateTransfersVisibility(result.first->keyImage);
+      }
+
+      ++deletedInputCount;
+    } else {
+      ++it;
+    }
+  }
+
+  size_t deletedUnconfirmedOutputCount = 0;
+  for (auto it = m_unconfirmedTransfers.begin(); it != m_unconfirmedTransfers.end();) {
+    assert(it->blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+
+    if (m_transactions.count(it->transactionHash) == 0) {
+      m_logger(WARNING, BRIGHT_YELLOW) << "Orphan unconfirmed output found, remove it" <<
+        ", transaction hash " << it->transactionHash <<
+        ", output " << std::setw(2) << it->outputInTransaction <<
+        ", amount " << m_currency.formatAmount(it->amount);
+
+      if (it->type == TransactionTypes::OutputType::Key) {
+        KeyImage keyImage = it->keyImage;
+        it = m_unconfirmedTransfers.erase(it);
+        updateTransfersVisibility(keyImage);
+      } else {
+        it = m_unconfirmedTransfers.erase(it);
+      }
+
+      ++deletedUnconfirmedOutputCount;
+    } else {
+      ++it;
+    }
+  }
+
+  size_t deletedAvailableOutputCount = 0;
+  for (auto it = m_availableTransfers.begin(); it != m_availableTransfers.end();) {
+    assert(it->blockHeight != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT);
+
+    if (m_transactions.count(it->transactionHash) == 0) {
+      m_logger(WARNING, BRIGHT_YELLOW) << "Orphan output found, remove it" <<
+        ", block " << std::setw(7) << it->blockHeight <<
+        ", transaction index " << std::setw(2) << it->transactionIndex <<
+        ", transaction hash " << it->transactionHash <<
+        ", output " << std::setw(2) << it->outputInTransaction <<
+        ", amount " << m_currency.formatAmount(it->amount);
+
+      if (it->type == TransactionTypes::OutputType::Key) {
+        KeyImage keyImage = it->keyImage;
+        it = m_availableTransfers.erase(it);
+        updateTransfersVisibility(keyImage);
+      } else {
+        it = m_availableTransfers.erase(it);
+      }
+
+      ++deletedAvailableOutputCount;
+    } else {
+      ++it;
+    }
+  }
+
+  if (deletedInputCount + deletedUnconfirmedOutputCount + deletedAvailableOutputCount > 0) {
+    m_logger(WARNING, BRIGHT_YELLOW) << "Repair finished:\n" <<
+      "    Deleted inputs " << deletedInputCount << ", total inputs " << m_spentTransfers.size() << '\n' <<
+      "    Deleted unconfirmed outputs " << deletedUnconfirmedOutputCount << ", total unconfirmed outputs " << m_unconfirmedTransfers.size() << '\n' <<
+      "    Deleted available outputs " << deletedAvailableOutputCount << ", total available outputs " << m_availableTransfers.size();
+  } else {
+    m_logger(DEBUGGING) << "Repair finished";
+  }
+>>>>>>> blood in blood out
 }
 
 bool TransfersContainer::isSpendTimeUnlocked(uint64_t unlockTime) const {
@@ -869,7 +1120,11 @@ bool TransfersContainer::isSpendTimeUnlocked(uint64_t unlockTime) const {
 
 bool TransfersContainer::isIncluded(const TransactionOutputInformationEx& info, uint32_t flags) const {
   uint32_t state;
+<<<<<<< HEAD
   if (info.blockHeight == WALLET_UNCONFIRMED_TRANSACTION_HEIGHT || !isSpendTimeUnlocked(info.unlockTime)) {
+=======
+  if (info.blockHeight == WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT || !isSpendTimeUnlocked(info.unlockTime)) {
+>>>>>>> blood in blood out
     state = IncludeStateLocked;
   } else if (m_currentHeight < info.blockHeight + m_transactionSpendableAge) {
     state = IncludeStateSoftLocked;

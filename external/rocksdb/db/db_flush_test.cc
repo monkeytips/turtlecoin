@@ -72,23 +72,37 @@ TEST_F(DBFlushTest, SyncFail) {
   auto* cfd =
       reinterpret_cast<ColumnFamilyHandleImpl*>(db_->DefaultColumnFamily())
           ->cfd();
+<<<<<<< HEAD
   FlushOptions flush_options;
   flush_options.wait = false;
   ASSERT_OK(dbfull()->Flush(flush_options));
   // Flush installs a new super-version. Get the ref count after that.
   auto current_before = cfd->current();
   int refs_before = cfd->current()->TEST_refs();
+=======
+  int refs_before = cfd->current()->TEST_refs();
+  FlushOptions flush_options;
+  flush_options.wait = false;
+  ASSERT_OK(dbfull()->Flush(flush_options));
+>>>>>>> blood in blood out
   fault_injection_env->SetFilesystemActive(false);
   TEST_SYNC_POINT("DBFlushTest::SyncFail:1");
   TEST_SYNC_POINT("DBFlushTest::SyncFail:2");
   fault_injection_env->SetFilesystemActive(true);
+<<<<<<< HEAD
   // Now the background job will do the flush; wait for it.
+=======
+>>>>>>> blood in blood out
   dbfull()->TEST_WaitForFlushMemTable();
 #ifndef ROCKSDB_LITE
   ASSERT_EQ("", FilesPerLevel());  // flush failed.
 #endif                             // ROCKSDB_LITE
+<<<<<<< HEAD
   // Backgroun flush job should release ref count to current version.
   ASSERT_EQ(current_before, cfd->current());
+=======
+  // Flush job should release ref count to current version.
+>>>>>>> blood in blood out
   ASSERT_EQ(refs_before, cfd->current()->TEST_refs());
   Destroy(options);
 }
@@ -105,7 +119,11 @@ TEST_F(DBFlushTest, FlushInLowPriThreadPool) {
   std::thread::id tid;
   int num_flushes = 0, num_compactions = 0;
   SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "DBImpl::BGWorkFlush", [&](void* /*arg*/) {
+=======
+      "DBImpl::BGWorkFlush", [&](void* arg) {
+>>>>>>> blood in blood out
         if (tid == std::thread::id()) {
           tid = std::this_thread::get_id();
         } else {
@@ -114,7 +132,11 @@ TEST_F(DBFlushTest, FlushInLowPriThreadPool) {
         ++num_flushes;
       });
   SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "DBImpl::BGWorkCompaction", [&](void* /*arg*/) {
+=======
+      "DBImpl::BGWorkCompaction", [&](void* arg) {
+>>>>>>> blood in blood out
         ASSERT_EQ(tid, std::this_thread::get_id());
         ++num_compactions;
       });

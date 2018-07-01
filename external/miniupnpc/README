@@ -1,8 +1,16 @@
 Project: miniupnp
+<<<<<<< HEAD
 Project web page: http://miniupnp.free.fr/ or https://miniupnp.tuxfamily.org/
 github: https://github.com/miniupnp/miniupnp
 Author: Thomas Bernard
 Copyright (c) 2005-2017 Thomas Bernard
+=======
+Project web page: http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
+github: https://github.com/miniupnp/miniupnp
+freecode: http://freecode.com/projects/miniupnp
+Author: Thomas Bernard
+Copyright (c) 2005-2014 Thomas Bernard
+>>>>>>> blood in blood out
 This software is subject to the conditions detailed in the
 LICENSE file provided within this distribution.
 
@@ -31,7 +39,10 @@ To use the libminiupnpc in your application, link it with
 libminiupnpc.a (or .so) and use the following functions found in miniupnpc.h,
 upnpcommands.h and miniwget.h :
 - upnpDiscover()
+<<<<<<< HEAD
 - UPNP_GetValidIGD()
+=======
+>>>>>>> blood in blood out
 - miniwget()
 - parserootdesc()
 - GetUPNPUrls()
@@ -57,7 +68,12 @@ If you are using libminiupnpc in your application, please
 send me an email !
 
 For any question, you can use the web forum :
+<<<<<<< HEAD
 https://miniupnp.tuxfamily.org/forum/
 
 Bugs should be reported on github :
 https://github.com/miniupnp/miniupnp/issues
+=======
+http://miniupnp.tuxfamily.org/forum/
+
+>>>>>>> blood in blood out

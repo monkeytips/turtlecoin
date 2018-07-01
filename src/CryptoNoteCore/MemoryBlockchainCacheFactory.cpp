@@ -19,7 +19,11 @@
 
 namespace CryptoNote {
 
+<<<<<<< HEAD
 MemoryBlockchainCacheFactory::MemoryBlockchainCacheFactory(const std::string& filename, std::shared_ptr<Logging::ILogger> logger):
+=======
+MemoryBlockchainCacheFactory::MemoryBlockchainCacheFactory(const std::string& filename, Logging::ILogger& logger):
+>>>>>>> blood in blood out
   filename(filename), logger(logger) {
 }
 

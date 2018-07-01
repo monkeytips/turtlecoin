@@ -85,8 +85,12 @@ AdvancedColumnFamilyOptions::AdvancedColumnFamilyOptions(const Options& options)
       optimize_filters_for_hits(options.optimize_filters_for_hits),
       paranoid_file_checks(options.paranoid_file_checks),
       force_consistency_checks(options.force_consistency_checks),
+<<<<<<< HEAD
       report_bg_io_stats(options.report_bg_io_stats),
       ttl(options.ttl) {
+=======
+      report_bg_io_stats(options.report_bg_io_stats) {
+>>>>>>> blood in blood out
   assert(memtable_factory.get() != nullptr);
   if (max_bytes_for_level_multiplier_additional.size() <
       static_cast<unsigned int>(num_levels)) {
@@ -159,6 +163,7 @@ void ColumnFamilyOptions::Dump(Logger* log) const {
                      min_write_buffer_number_to_merge);
     ROCKS_LOG_HEADER(log, "    Options.max_write_buffer_number_to_maintain: %d",
                      max_write_buffer_number_to_maintain);
+<<<<<<< HEAD
     ROCKS_LOG_HEADER(
         log, "           Options.bottommost_compression_opts.window_bits: %d",
         bottommost_compression_opts.window_bits);
@@ -181,6 +186,8 @@ void ColumnFamilyOptions::Dump(Logger* log) const {
     ROCKS_LOG_HEADER(
         log, "                 Options.bottommost_compression_opts.enabled: %s",
         bottommost_compression_opts.enabled ? "true" : "false");
+=======
+>>>>>>> blood in blood out
     ROCKS_LOG_HEADER(log, "           Options.compression_opts.window_bits: %d",
                      compression_opts.window_bits);
     ROCKS_LOG_HEADER(log, "                 Options.compression_opts.level: %d",
@@ -191,6 +198,7 @@ void ColumnFamilyOptions::Dump(Logger* log) const {
         log,
         "        Options.compression_opts.max_dict_bytes: %" ROCKSDB_PRIszt,
         compression_opts.max_dict_bytes);
+<<<<<<< HEAD
     ROCKS_LOG_HEADER(log,
                      "        Options.compression_opts.zstd_max_train_bytes: "
                      "%" ROCKSDB_PRIszt,
@@ -198,6 +206,8 @@ void ColumnFamilyOptions::Dump(Logger* log) const {
     ROCKS_LOG_HEADER(log,
                      "                 Options.compression_opts.enabled: %s",
                      compression_opts.enabled ? "true" : "false");
+=======
+>>>>>>> blood in blood out
     ROCKS_LOG_HEADER(log, "     Options.level0_file_num_compaction_trigger: %d",
                      level0_file_num_compaction_trigger);
     ROCKS_LOG_HEADER(log, "         Options.level0_slowdown_writes_trigger: %d",
@@ -347,7 +357,10 @@ void ColumnFamilyOptions::Dump(Logger* log) const {
                      force_consistency_checks);
     ROCKS_LOG_HEADER(log, "               Options.report_bg_io_stats: %d",
                      report_bg_io_stats);
+<<<<<<< HEAD
     ROCKS_LOG_HEADER(log, "                              Options.ttl: %d", ttl);
+=======
+>>>>>>> blood in blood out
 }  // ColumnFamilyOptions::Dump
 
 void Options::Dump(Logger* log) const {

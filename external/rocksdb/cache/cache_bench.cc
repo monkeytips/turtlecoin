@@ -52,7 +52,11 @@ namespace rocksdb {
 
 class CacheBench;
 namespace {
+<<<<<<< HEAD
 void deleter(const Slice& /*key*/, void* value) {
+=======
+void deleter(const Slice& key, void* value) {
+>>>>>>> blood in blood out
     delete reinterpret_cast<char *>(value);
 }
 

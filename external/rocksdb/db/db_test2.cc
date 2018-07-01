@@ -354,7 +354,11 @@ INSTANTIATE_TEST_CASE_P(DBTestSharedWriteBufferAcrossCFs,
                                           std::make_tuple(false, true)));
 
 TEST_F(DBTest2, SharedWriteBufferLimitAcrossDB) {
+<<<<<<< HEAD
   std::string dbname2 = test::PerThreadDBPath("db_shared_wb_db2");
+=======
+  std::string dbname2 = test::TmpDir(env_) + "/db_shared_wb_db2";
+>>>>>>> blood in blood out
   Options options = CurrentOptions();
   options.arena_block_size = 4096;
   // Avoid undeterministic value by malloc_usable_size();
@@ -498,9 +502,15 @@ TEST_F(DBTest2, WalFilterTest) {
       apply_option_at_record_index_(apply_option_for_record_index),
       current_record_index_(0) {}
 
+<<<<<<< HEAD
     virtual WalProcessingOption LogRecord(
         const WriteBatch& /*batch*/, WriteBatch* /*new_batch*/,
         bool* /*batch_changed*/) const override {
+=======
+    virtual WalProcessingOption LogRecord(const WriteBatch& batch,
+      WriteBatch* new_batch,
+      bool* batch_changed) const override {
+>>>>>>> blood in blood out
       WalFilter::WalProcessingOption option_to_return;
 
       if (current_record_index_ == apply_option_at_record_index_) {
@@ -874,10 +884,18 @@ TEST_F(DBTest2, WalFilterTestWithColumnFamilies) {
       cf_name_id_map_ = cf_name_id_map;
     }
 
+<<<<<<< HEAD
     virtual WalProcessingOption LogRecordFound(
         unsigned long long log_number, const std::string& /*log_file_name*/,
         const WriteBatch& batch, WriteBatch* /*new_batch*/,
         bool* /*batch_changed*/) override {
+=======
+    virtual WalProcessingOption LogRecordFound(unsigned long long log_number,
+      const std::string& log_file_name,
+      const WriteBatch& batch,
+      WriteBatch* new_batch,
+      bool* batch_changed) override {
+>>>>>>> blood in blood out
       class LogRecordBatchHandler : public WriteBatch::Handler {
       private:
         const std::map<uint32_t, uint64_t> & cf_log_number_map_;
@@ -1112,7 +1130,11 @@ TEST_F(DBTest2, PresetCompressionDict) {
 
       size_t out_bytes = 0;
       std::vector<std::string> files;
+<<<<<<< HEAD
       GetSstFiles(env_, dbname_, &files);
+=======
+      GetSstFiles(dbname_, &files);
+>>>>>>> blood in blood out
       for (const auto& file : files) {
         uint64_t curr_bytes;
         env_->GetFileSize(dbname_ + "/" + file, &curr_bytes);
@@ -1230,7 +1252,11 @@ class CompactionStallTestListener : public EventListener {
  public:
   CompactionStallTestListener() : compacted_files_cnt_(0) {}
 
+<<<<<<< HEAD
   void OnCompactionCompleted(DB* /*db*/, const CompactionJobInfo& ci) override {
+=======
+  void OnCompactionCompleted(DB* db, const CompactionJobInfo& ci) override {
+>>>>>>> blood in blood out
     ASSERT_EQ(ci.cf_name, "default");
     ASSERT_EQ(ci.base_input_level, 0);
     ASSERT_EQ(ci.compaction_reason, CompactionReason::kLevelL0FilesNum);
@@ -1691,7 +1717,11 @@ TEST_F(DBTest2, SyncPointMarker) {
   std::atomic<int> sync_point_called(0);
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBTest2::MarkedPoint",
+<<<<<<< HEAD
       [&](void* /*arg*/) { sync_point_called.fetch_add(1); });
+=======
+      [&](void* arg) { sync_point_called.fetch_add(1); });
+>>>>>>> blood in blood out
 
   // The first dependency enforces Marker can be loaded before MarkedPoint.
   // The second checks that thread 1's MarkedPoint should be disabled here.
@@ -1822,16 +1852,22 @@ TEST_F(DBTest2, ReadAmpBitmapLiveInCacheAfterDBClose) {
   {
     const int kIdBufLen = 100;
     char id_buf[kIdBufLen];
+<<<<<<< HEAD
 #ifndef OS_WIN
     // You can't open a directory on windows using random access file
     std::unique_ptr<RandomAccessFile> file;
     ASSERT_OK(env_->NewRandomAccessFile(dbname_, &file, EnvOptions()));
+=======
+    std::unique_ptr<RandomAccessFile> file;
+    env_->NewRandomAccessFile(dbname_, &file, EnvOptions());
+>>>>>>> blood in blood out
     if (file->GetUniqueId(id_buf, kIdBufLen) == 0) {
       // fs holding db directory doesn't support getting a unique file id,
       // this means that running this test will fail because lru_cache will load
       // the blocks again regardless of them being already in the cache
       return;
     }
+<<<<<<< HEAD
 #else
     std::unique_ptr<Directory> dir;
     ASSERT_OK(env_->NewDirectory(dbname_, &dir));
@@ -1842,6 +1878,8 @@ TEST_F(DBTest2, ReadAmpBitmapLiveInCacheAfterDBClose) {
       return;
     }
 #endif
+=======
+>>>>>>> blood in blood out
   }
   uint32_t bytes_per_bit[2] = {1, 16};
   for (size_t k = 0; k < 2; k++) {
@@ -1978,7 +2016,11 @@ TEST_F(DBTest2, AutomaticCompactionOverlapManualCompaction) {
   // can fit in L2, these 2 files will be moved to L2 and overlap with
   // the running compaction and break the LSM consistency.
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "CompactionJob::Run():Start", [&](void* /*arg*/) {
+=======
+      "CompactionJob::Run():Start", [&](void* arg) {
+>>>>>>> blood in blood out
         ASSERT_OK(
             dbfull()->SetOptions({{"level0_file_num_compaction_trigger", "2"},
                                   {"max_bytes_for_level_base", "1"}}));
@@ -2044,7 +2086,11 @@ TEST_F(DBTest2, ManualCompactionOverlapManualCompaction) {
   // the running compaction and break the LSM consistency.
   std::atomic<bool> flag(false);
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
+<<<<<<< HEAD
       "CompactionJob::Run():Start", [&](void* /*arg*/) {
+=======
+      "CompactionJob::Run():Start", [&](void* arg) {
+>>>>>>> blood in blood out
         if (flag.exchange(true)) {
           // We want to make sure to call this callback only once
           return;
@@ -2296,8 +2342,12 @@ TEST_F(DBTest2, RateLimitedCompactionReads) {
                              kBytesPerKey) /* rate_bytes_per_sec */,
         10 * 1000 /* refill_period_us */, 10 /* fairness */,
         RateLimiter::Mode::kReadsOnly));
+<<<<<<< HEAD
     options.use_direct_reads = options.use_direct_io_for_flush_and_compaction =
         use_direct_io;
+=======
+    options.use_direct_io_for_flush_and_compaction = use_direct_io;
+>>>>>>> blood in blood out
     BlockBasedTableOptions bbto;
     bbto.block_size = 16384;
     bbto.no_block_cache = true;
@@ -2319,7 +2369,11 @@ TEST_F(DBTest2, RateLimitedCompactionReads) {
     // chose 1MB as the upper bound on the total bytes read.
     size_t rate_limited_bytes =
         options.rate_limiter->GetTotalBytesThrough(Env::IO_LOW);
+<<<<<<< HEAD
     // Include the explicit prefetch of the footer in direct I/O case.
+=======
+    // Include the explict prefetch of the footer in direct I/O case.
+>>>>>>> blood in blood out
     size_t direct_io_extra = use_direct_io ? 512 * 1024 : 0;
     ASSERT_GE(rate_limited_bytes,
               static_cast<size_t>(kNumKeysPerFile * kBytesPerKey * kNumL0Files +
@@ -2422,7 +2476,11 @@ TEST_F(DBTest2, ReadCallbackTest) {
   class TestReadCallback : public ReadCallback {
    public:
     explicit TestReadCallback(SequenceNumber snapshot) : snapshot_(snapshot) {}
+<<<<<<< HEAD
     virtual bool IsVisible(SequenceNumber seq) override {
+=======
+    virtual bool IsCommitted(SequenceNumber seq) override {
+>>>>>>> blood in blood out
       return seq <= snapshot_;
     }
 
@@ -2479,7 +2537,11 @@ TEST_F(DBTest2, LiveFilesOmitObsoleteFiles) {
   });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::PurgeObsoleteFiles:Begin",
+<<<<<<< HEAD
       [&](void* /*arg*/) { env_->SleepForMicroseconds(1000000); });
+=======
+      [&](void* arg) { env_->SleepForMicroseconds(1000000); });
+>>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Put("key", "val");
@@ -2502,6 +2564,7 @@ TEST_F(DBTest2, LiveFilesOmitObsoleteFiles) {
 
 #endif  // ROCKSDB_LITE
 
+<<<<<<< HEAD
 TEST_F(DBTest2, PinnableSliceAndMmapReads) {
   Options options = CurrentOptions();
   options.allow_mmap_reads = true;
@@ -2547,6 +2610,8 @@ TEST_F(DBTest2, PinnableSliceAndMmapReads) {
 #endif
 }
 
+=======
+>>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char** argv) {

@@ -50,7 +50,11 @@ class FilterBitsBuilder {
 #pragma warning(push)
 #pragma warning(disable : 4702) // unreachable code
 #endif
+<<<<<<< HEAD
   virtual int CalculateNumEntry(const uint32_t /*space*/) {
+=======
+  virtual int CalculateNumEntry(const uint32_t space) {
+>>>>>>> blood in blood out
 #ifndef ROCKSDB_LITE
     throw std::runtime_error("CalculateNumEntry not Implemented");
 #else
@@ -122,8 +126,12 @@ class FilterPolicy {
   // Get the FilterBitsReader, which is ONLY used for full filter block
   // It contains interface to tell if key can be in filter
   // The input slice should NOT be deleted by FilterPolicy
+<<<<<<< HEAD
   virtual FilterBitsReader* GetFilterBitsReader(
       const Slice& /*contents*/) const {
+=======
+  virtual FilterBitsReader* GetFilterBitsReader(const Slice& contents) const {
+>>>>>>> blood in blood out
     return nullptr;
   }
 };

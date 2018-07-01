@@ -24,11 +24,15 @@ class TwoLevelIterator : public InternalIterator {
   explicit TwoLevelIterator(TwoLevelIteratorState* state,
                             InternalIterator* first_level_iter);
 
+<<<<<<< HEAD
   virtual ~TwoLevelIterator() {
     first_level_iter_.DeleteIter(false /* is_arena_mode */);
     second_level_iter_.DeleteIter(false /* is_arena_mode */);
     delete state_;
   }
+=======
+  virtual ~TwoLevelIterator() { delete state_; }
+>>>>>>> blood in blood out
 
   virtual void Seek(const Slice& target) override;
   virtual void SeekForPrev(const Slice& target) override;
@@ -47,8 +51,13 @@ class TwoLevelIterator : public InternalIterator {
     return second_level_iter_.value();
   }
   virtual Status status() const override {
+<<<<<<< HEAD
     if (!first_level_iter_.status().ok()) {
       assert(second_level_iter_.iter() == nullptr);
+=======
+    // It'd be nice if status() returned a const Status& instead of a Status
+    if (!first_level_iter_.status().ok()) {
+>>>>>>> blood in blood out
       return first_level_iter_.status();
     } else if (second_level_iter_.iter() != nullptr &&
                !second_level_iter_.status().ok()) {
@@ -58,7 +67,12 @@ class TwoLevelIterator : public InternalIterator {
     }
   }
   virtual void SetPinnedItersMgr(
+<<<<<<< HEAD
       PinnedIteratorsManager* /*pinned_iters_mgr*/) override {}
+=======
+      PinnedIteratorsManager* pinned_iters_mgr) override {
+  }
+>>>>>>> blood in blood out
   virtual bool IsKeyPinned() const override { return false; }
   virtual bool IsValuePinned() const override { return false; }
 
@@ -101,7 +115,11 @@ void TwoLevelIterator::SeekForPrev(const Slice& target) {
     second_level_iter_.SeekForPrev(target);
   }
   if (!Valid()) {
+<<<<<<< HEAD
     if (!first_level_iter_.Valid() && first_level_iter_.status().ok()) {
+=======
+    if (!first_level_iter_.Valid()) {
+>>>>>>> blood in blood out
       first_level_iter_.SeekToLast();
       InitDataBlock();
       if (second_level_iter_.iter() != nullptr) {
@@ -144,7 +162,12 @@ void TwoLevelIterator::Prev() {
 
 void TwoLevelIterator::SkipEmptyDataBlocksForward() {
   while (second_level_iter_.iter() == nullptr ||
+<<<<<<< HEAD
          (!second_level_iter_.Valid() && second_level_iter_.status().ok())) {
+=======
+         (!second_level_iter_.Valid() &&
+          !second_level_iter_.status().IsIncomplete())) {
+>>>>>>> blood in blood out
     // Move to next block
     if (!first_level_iter_.Valid()) {
       SetSecondLevelIterator(nullptr);
@@ -160,7 +183,12 @@ void TwoLevelIterator::SkipEmptyDataBlocksForward() {
 
 void TwoLevelIterator::SkipEmptyDataBlocksBackward() {
   while (second_level_iter_.iter() == nullptr ||
+<<<<<<< HEAD
          (!second_level_iter_.Valid() && second_level_iter_.status().ok())) {
+=======
+         (!second_level_iter_.Valid() &&
+          !second_level_iter_.status().IsIncomplete())) {
+>>>>>>> blood in blood out
     // Move to next block
     if (!first_level_iter_.Valid()) {
       SetSecondLevelIterator(nullptr);
@@ -175,6 +203,12 @@ void TwoLevelIterator::SkipEmptyDataBlocksBackward() {
 }
 
 void TwoLevelIterator::SetSecondLevelIterator(InternalIterator* iter) {
+<<<<<<< HEAD
+=======
+  if (second_level_iter_.iter() != nullptr) {
+    SaveError(second_level_iter_.status());
+  }
+>>>>>>> blood in blood out
   InternalIterator* old_iter = second_level_iter_.Set(iter);
   delete old_iter;
 }

@@ -35,9 +35,19 @@ BlobFile::BlobFile()
       compression_(kNoCompression),
       has_ttl_(false),
       blob_count_(0),
+<<<<<<< HEAD
       file_size_(0),
       closed_(false),
       obsolete_(false),
+=======
+      gc_epoch_(-1),
+      file_size_(0),
+      deleted_count_(0),
+      deleted_size_(0),
+      closed_(false),
+      obsolete_(false),
+      gc_once_after_open_(false),
+>>>>>>> blood in blood out
       expiration_range_({0, 0}),
       last_access_(-1),
       last_fsync_(0),
@@ -54,9 +64,19 @@ BlobFile::BlobFile(const BlobDBImpl* p, const std::string& bdir, uint64_t fn,
       compression_(kNoCompression),
       has_ttl_(false),
       blob_count_(0),
+<<<<<<< HEAD
       file_size_(0),
       closed_(false),
       obsolete_(false),
+=======
+      gc_epoch_(-1),
+      file_size_(0),
+      deleted_count_(0),
+      deleted_size_(0),
+      closed_(false),
+      obsolete_(false),
+      gc_once_after_open_(false),
+>>>>>>> blood in blood out
       expiration_range_({0, 0}),
       last_access_(-1),
       last_fsync_(0),
@@ -80,6 +100,7 @@ std::string BlobFile::PathName() const {
   return BlobFileName(path_to_dir_, file_number_);
 }
 
+<<<<<<< HEAD
 std::shared_ptr<Reader> BlobFile::OpenRandomAccessReader(
     Env* env, const DBOptions& db_options,
     const EnvOptions& env_options) const {
@@ -87,14 +108,27 @@ std::shared_ptr<Reader> BlobFile::OpenRandomAccessReader(
   std::unique_ptr<RandomAccessFile> sfile;
   std::string path_name(PathName());
   Status s = env->NewRandomAccessFile(path_name, &sfile, env_options);
+=======
+std::shared_ptr<Reader> BlobFile::OpenSequentialReader(
+    Env* env, const DBOptions& db_options,
+    const EnvOptions& env_options) const {
+  std::unique_ptr<SequentialFile> sfile;
+  Status s = env->NewSequentialFile(PathName(), &sfile, env_options);
+>>>>>>> blood in blood out
   if (!s.ok()) {
     // report something here.
     return nullptr;
   }
+<<<<<<< HEAD
   sfile = NewReadaheadRandomAccessFile(std::move(sfile), kReadaheadSize);
 
   std::unique_ptr<RandomAccessFileReader> sfile_reader;
   sfile_reader.reset(new RandomAccessFileReader(std::move(sfile), path_name));
+=======
+
+  std::unique_ptr<SequentialFileReader> sfile_reader;
+  sfile_reader.reset(new SequentialFileReader(std::move(sfile)));
+>>>>>>> blood in blood out
 
   std::shared_ptr<Reader> log_reader = std::make_shared<Reader>(
       std::move(sfile_reader), db_options.env, db_options.statistics.get());
@@ -104,6 +138,7 @@ std::shared_ptr<Reader> BlobFile::OpenRandomAccessReader(
 
 std::string BlobFile::DumpState() const {
   char str[1000];
+<<<<<<< HEAD
   snprintf(
       str, sizeof(str),
       "path: %s fn: %" PRIu64 " blob_count: %" PRIu64 " file_size: %" PRIu64
@@ -112,6 +147,18 @@ std::string BlobFile::DumpState() const {
       path_to_dir_.c_str(), file_number_, blob_count_.load(), file_size_.load(),
       closed_.load(), obsolete_.load(), expiration_range_.first,
       expiration_range_.second, (!!log_writer_), (!!ra_file_reader_));
+=======
+  snprintf(str, sizeof(str),
+           "path: %s fn: %" PRIu64 " blob_count: %" PRIu64 " gc_epoch: %" PRIu64
+           " file_size: %" PRIu64 " deleted_count: %" PRIu64
+           " deleted_size: %" PRIu64
+           " closed: %d obsolete: %d expiration_range: (%" PRIu64 ", %" PRIu64
+           "), writer: %d reader: %d",
+           path_to_dir_.c_str(), file_number_, blob_count_.load(),
+           gc_epoch_.load(), file_size_.load(), deleted_count_, deleted_size_,
+           closed_.load(), obsolete_.load(), expiration_range_.first,
+           expiration_range_.second, (!!log_writer_), (!!ra_file_reader_));
+>>>>>>> blood in blood out
   return str;
 }
 

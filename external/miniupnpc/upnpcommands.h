@@ -1,13 +1,26 @@
+<<<<<<< HEAD
 /* $Id: upnpcommands.h,v 1.32 2018/03/13 23:34:47 nanard Exp $ */
 /* Miniupnp project : http://miniupnp.free.fr/
  * Author : Thomas Bernard
  * Copyright (c) 2005-2018 Thomas Bernard
+=======
+/* $Id: upnpcommands.h,v 1.27 2014/02/17 15:38:26 nanard Exp $ */
+/* Miniupnp project : http://miniupnp.free.fr/
+ * Author : Thomas Bernard
+ * Copyright (c) 2005-2014 Thomas Bernard
+>>>>>>> blood in blood out
  * This software is subject to the conditions detailed in the
  * LICENCE file provided within this distribution */
 #ifndef UPNPCOMMANDS_H_INCLUDED
 #define UPNPCOMMANDS_H_INCLUDED
 
+<<<<<<< HEAD
 #include "miniupnpc_declspec.h"
+=======
+#include "upnpreplyparse.h"
+#include "portlistingparse.h"
+#include "declspec.h"
+>>>>>>> blood in blood out
 #include "miniupnpctypes.h"
 
 /* MiniUPnPc return codes : */
@@ -15,13 +28,17 @@
 #define UPNPCOMMAND_UNKNOWN_ERROR (-1)
 #define UPNPCOMMAND_INVALID_ARGS (-2)
 #define UPNPCOMMAND_HTTP_ERROR (-3)
+<<<<<<< HEAD
 #define UPNPCOMMAND_INVALID_RESPONSE (-4)
 #define UPNPCOMMAND_MEM_ALLOC_ERROR (-5)
+=======
+>>>>>>> blood in blood out
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+<<<<<<< HEAD
 struct PortMappingParserData;
 
 MINIUPNP_LIBSPEC UNSIGNED_INTEGER
@@ -37,6 +54,21 @@ UPNP_GetTotalPacketsSent(const char * controlURL,
 					const char * servicetype);
 
 MINIUPNP_LIBSPEC UNSIGNED_INTEGER
+=======
+LIBSPEC UNSIGNED_INTEGER
+UPNP_GetTotalBytesSent(const char * controlURL,
+					const char * servicetype);
+
+LIBSPEC UNSIGNED_INTEGER
+UPNP_GetTotalBytesReceived(const char * controlURL,
+						const char * servicetype);
+
+LIBSPEC UNSIGNED_INTEGER
+UPNP_GetTotalPacketsSent(const char * controlURL,
+					const char * servicetype);
+
+LIBSPEC UNSIGNED_INTEGER
+>>>>>>> blood in blood out
 UPNP_GetTotalPacketsReceived(const char * controlURL,
 					const char * servicetype);
 
@@ -45,7 +77,11 @@ UPNP_GetTotalPacketsReceived(const char * controlURL,
  * Return values :
  * UPNPCOMMAND_SUCCESS, UPNPCOMMAND_INVALID_ARGS, UPNPCOMMAND_UNKNOWN_ERROR
  * or a UPnP Error code */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetStatusInfo(const char * controlURL,
 			       const char * servicetype,
 				   char * status,
@@ -57,7 +93,11 @@ UPNP_GetStatusInfo(const char * controlURL,
  * Return Values :
  * UPNPCOMMAND_SUCCESS, UPNPCOMMAND_INVALID_ARGS, UPNPCOMMAND_UNKNOWN_ERROR
  * or a UPnP Error code */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetConnectionTypeInfo(const char * controlURL,
                            const char * servicetype,
 						   char * connectionType);
@@ -73,7 +113,11 @@ UPNP_GetConnectionTypeInfo(const char * controlURL,
  * possible UPnP Errors :
  * 402 Invalid Args - See UPnP Device Architecture section on Control.
  * 501 Action Failed - See UPnP Device Architecture section on Control. */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetExternalIPAddress(const char * controlURL,
                           const char * servicetype,
                           char * extIpAdd);
@@ -84,7 +128,11 @@ UPNP_GetExternalIPAddress(const char * controlURL,
  * return values :
  * UPNPCOMMAND_SUCCESS, UPNPCOMMAND_INVALID_ARGS, UPNPCOMMAND_UNKNOWN_ERROR
  * or a UPnP Error Code. */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetLinkLayerMaxBitRates(const char* controlURL,
 							const char* servicetype,
 							unsigned int * bitrateDown,
@@ -123,6 +171,7 @@ UPNP_GetLinkLayerMaxBitRates(const char* controlURL,
  *                                   due to conflict with other mechanisms.
  * 732 WildCardNotPermittedInIntPort - The internal port cannot be wild-carded
  */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
 UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
 		    const char * extPort,
@@ -166,6 +215,17 @@ UPNP_AddAnyPortMapping(const char * controlURL, const char * servicetype,
 		       const char * remoteHost,
 		       const char * leaseDuration,
 		       char * reservedPort);
+=======
+LIBSPEC int
+UPNP_AddPortMapping(const char * controlURL, const char * servicetype,
+                    const char * extPort,
+				    const char * inPort,
+					const char * inClient,
+					const char * desc,
+                    const char * proto,
+                    const char * remoteHost,
+                    const char * leaseDuration);
+>>>>>>> blood in blood out
 
 /* UPNP_DeletePortMapping()
  * Use same argument values as what was used for AddPortMapping().
@@ -179,6 +239,7 @@ UPNP_AddAnyPortMapping(const char * controlURL, const char * servicetype,
  * 606 Action not authorized - The action requested REQUIRES authorization
  *                             and the sender was not authorized.
  * 714 NoSuchEntryInArray - The specified value does not exist in the array */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
 UPNP_DeletePortMapping(const char * controlURL, const char * servicetype,
 		       const char * extPort, const char * proto,
@@ -206,6 +267,16 @@ UPNP_DeletePortMappingRange(const char * controlURL, const char * servicetype,
 /* UPNP_GetPortMappingNumberOfEntries()
  * not supported by all routers */
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+UPNP_DeletePortMapping(const char * controlURL, const char * servicetype,
+                       const char * extPort, const char * proto,
+                       const char * remoteHost);
+
+/* UPNP_GetPortMappingNumberOfEntries()
+ * not supported by all routers */
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetPortMappingNumberOfEntries(const char* controlURL,
                                    const char* servicetype,
                                    unsigned int * num);
@@ -233,7 +304,11 @@ UPNP_GetPortMappingNumberOfEntries(const char* controlURL,
  *                             and the sender was not authorized.
  * 714 NoSuchEntryInArray - The specified value does not exist in the array.
  */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetSpecificPortMappingEntry(const char * controlURL,
                                  const char * servicetype,
                                  const char * extPort,
@@ -267,7 +342,11 @@ UPNP_GetSpecificPortMappingEntry(const char * controlURL,
  *                             and the sender was not authorized.
  * 713 SpecifiedArrayIndexInvalid - The specified array index is out of bounds
  */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetGenericPortMappingEntry(const char * controlURL,
                                 const char * servicetype,
 								const char * index,
@@ -289,7 +368,11 @@ UPNP_GetGenericPortMappingEntry(const char * controlURL,
  * 733 InconsistantParameters - NewStartPort and NewEndPort values are not
  *                              consistent.
  */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetListOfPortMappings(const char * controlURL,
                            const char * servicetype,
                            const char * startPort,
@@ -299,13 +382,21 @@ UPNP_GetListOfPortMappings(const char * controlURL,
                            struct PortMappingParserData * data);
 
 /* IGD:2, functions for service WANIPv6FirewallControl:1 */
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetFirewallStatus(const char * controlURL,
 				const char * servicetype,
 				int * firewallEnabled,
 				int * inboundPinholeAllowed);
 
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetOutboundPinholeTimeout(const char * controlURL, const char * servicetype,
                     const char * remoteHost,
                     const char * remotePort,
@@ -314,7 +405,11 @@ UPNP_GetOutboundPinholeTimeout(const char * controlURL, const char * servicetype
                     const char * proto,
                     int * opTimeout);
 
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_AddPinhole(const char * controlURL, const char * servicetype,
                     const char * remoteHost,
                     const char * remotePort,
@@ -324,11 +419,16 @@ UPNP_AddPinhole(const char * controlURL, const char * servicetype,
                     const char * leaseTime,
                     char * uniqueID);
 
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_UpdatePinhole(const char * controlURL, const char * servicetype,
                     const char * uniqueID,
                     const char * leaseTime);
 
+<<<<<<< HEAD
 MINIUPNP_LIBSPEC int
 UPNP_DeletePinhole(const char * controlURL, const char * servicetype, const char * uniqueID);
 
@@ -337,6 +437,16 @@ UPNP_CheckPinholeWorking(const char * controlURL, const char * servicetype,
                                  const char * uniqueID, int * isWorking);
 
 MINIUPNP_LIBSPEC int
+=======
+LIBSPEC int
+UPNP_DeletePinhole(const char * controlURL, const char * servicetype, const char * uniqueID);
+
+LIBSPEC int
+UPNP_CheckPinholeWorking(const char * controlURL, const char * servicetype,
+                                 const char * uniqueID, int * isWorking);
+
+LIBSPEC int
+>>>>>>> blood in blood out
 UPNP_GetPinholePackets(const char * controlURL, const char * servicetype,
                                  const char * uniqueID, int * packets);
 

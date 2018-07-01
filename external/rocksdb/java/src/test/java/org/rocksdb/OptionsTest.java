@@ -1000,6 +1000,7 @@ public class OptionsTest {
   }
 
   @Test
+<<<<<<< HEAD
   public void sstFileManager() throws RocksDBException {
     try (final Options options = new Options();
          final SstFileManager sstFileManager =
@@ -1009,6 +1010,8 @@ public class OptionsTest {
   }
 
   @Test
+=======
+>>>>>>> blood in blood out
   public void shouldSetTestPrefixExtractor() {
     try (final Options options = new Options()) {
       options.useFixedLengthPrefixExtractor(100);

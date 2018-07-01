@@ -644,6 +644,7 @@ public class DBOptionsTest {
   }
 
   @Test
+<<<<<<< HEAD
   public void sstFileManager() throws RocksDBException {
     try (final DBOptions options = new DBOptions();
          final SstFileManager sstFileManager =
@@ -653,6 +654,8 @@ public class DBOptionsTest {
   }
 
   @Test
+=======
+>>>>>>> blood in blood out
   public void statistics() {
     try(final DBOptions options = new DBOptions()) {
       final Statistics statistics = options.statistics();

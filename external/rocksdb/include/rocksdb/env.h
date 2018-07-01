@@ -42,7 +42,10 @@ class SequentialFile;
 class Slice;
 class WritableFile;
 class RandomRWFile;
+<<<<<<< HEAD
 class MemoryMappedFileBuffer;
+=======
+>>>>>>> blood in blood out
 class Directory;
 struct DBOptions;
 struct ImmutableDBOptions;
@@ -182,9 +185,15 @@ class Env {
   // returns non-OK.
   //
   // The returned file will only be accessed by one thread at a time.
+<<<<<<< HEAD
   virtual Status ReopenWritableFile(const std::string& /*fname*/,
                                     unique_ptr<WritableFile>* /*result*/,
                                     const EnvOptions& /*options*/) {
+=======
+  virtual Status ReopenWritableFile(const std::string& fname,
+                                    unique_ptr<WritableFile>* result,
+                                    const EnvOptions& options) {
+>>>>>>> blood in blood out
     return Status::NotSupported();
   }
 
@@ -199,6 +208,7 @@ class Env {
   // *result and returns OK.  On failure returns non-OK.
   //
   // The returned file will only be accessed by one thread at a time.
+<<<<<<< HEAD
   virtual Status NewRandomRWFile(const std::string& /*fname*/,
                                  unique_ptr<RandomRWFile>* /*result*/,
                                  const EnvOptions& /*options*/) {
@@ -215,6 +225,14 @@ class Env {
         "MemoryMappedFileBuffer is not implemented in this Env");
   }
 
+=======
+  virtual Status NewRandomRWFile(const std::string& fname,
+                                 unique_ptr<RandomRWFile>* result,
+                                 const EnvOptions& options) {
+    return Status::NotSupported("RandomRWFile is not implemented in this Env");
+  }
+
+>>>>>>> blood in blood out
   // Create an object that represents a directory. Will fail if directory
   // doesn't exist. If the directory exists, it will open the directory
   // and create a new Directory object.
@@ -258,11 +276,14 @@ class Env {
   // Delete the named file.
   virtual Status DeleteFile(const std::string& fname) = 0;
 
+<<<<<<< HEAD
   // Truncate the named file to the specified size.
   virtual Status Truncate(const std::string& /*fname*/, size_t /*size*/) {
     return Status::NotSupported("Truncate is not supported for this Env");
   }
 
+=======
+>>>>>>> blood in blood out
   // Create the specified directory. Returns error if directory exists.
   virtual Status CreateDir(const std::string& dirname) = 0;
 
@@ -284,6 +305,7 @@ class Env {
                             const std::string& target) = 0;
 
   // Hard Link file src to target.
+<<<<<<< HEAD
   virtual Status LinkFile(const std::string& /*src*/,
                           const std::string& /*target*/) {
     return Status::NotSupported("LinkFile is not supported for this Env");
@@ -297,6 +319,14 @@ class Env {
 
   virtual Status AreFilesSame(const std::string& /*first*/,
                               const std::string& /*second*/, bool* /*res*/) {
+=======
+  virtual Status LinkFile(const std::string& src, const std::string& target) {
+    return Status::NotSupported("LinkFile is not supported for this Env");
+  }
+
+  virtual Status AreFilesSame(const std::string& first,
+                              const std::string& second, bool* res) {
+>>>>>>> blood in blood out
     return Status::NotSupported("AreFilesSame is not supported for this Env");
   }
 
@@ -324,8 +354,11 @@ class Env {
   // Priority for scheduling job in thread pool
   enum Priority { BOTTOM, LOW, HIGH, TOTAL };
 
+<<<<<<< HEAD
   static std::string PriorityToString(Priority priority);
 
+=======
+>>>>>>> blood in blood out
   // Priority for requesting bytes in rate limiter scheduler
   enum IOPriority {
     IO_LOW = 0,
@@ -345,11 +378,19 @@ class Env {
   // registered at the time of Schedule is invoked with arg as a parameter.
   virtual void Schedule(void (*function)(void* arg), void* arg,
                         Priority pri = LOW, void* tag = nullptr,
+<<<<<<< HEAD
                         void (*unschedFunction)(void* arg) = nullptr) = 0;
 
   // Arrange to remove jobs for given arg from the queue_ if they are not
   // already scheduled. Caller is expected to have exclusive lock on arg.
   virtual int UnSchedule(void* /*arg*/, Priority /*pri*/) { return 0; }
+=======
+                        void (*unschedFunction)(void* arg) = 0) = 0;
+
+  // Arrange to remove jobs for given arg from the queue_ if they are not
+  // already scheduled. Caller is expected to have exclusive lock on arg.
+  virtual int UnSchedule(void* arg, Priority pri) { return 0; }
+>>>>>>> blood in blood out
 
   // Start a new thread, invoking "function(arg)" within the new thread.
   // When "function(arg)" returns, the thread will be destroyed.
@@ -359,7 +400,11 @@ class Env {
   virtual void WaitForJoin() {}
 
   // Get thread pool queue length for specific thread pool.
+<<<<<<< HEAD
   virtual unsigned int GetThreadPoolQueueLen(Priority /*pri*/ = LOW) const {
+=======
+  virtual unsigned int GetThreadPoolQueueLen(Priority pri = LOW) const {
+>>>>>>> blood in blood out
     return 0;
   }
 
@@ -387,7 +432,11 @@ class Env {
     return NowMicros() * 1000;
   }
 
+<<<<<<< HEAD
   // Sleep/delay the thread for the prescribed number of micro-seconds.
+=======
+  // Sleep/delay the thread for the perscribed number of micro-seconds.
+>>>>>>> blood in blood out
   virtual void SleepForMicroseconds(int micros) = 0;
 
   // Get the current host name.
@@ -407,20 +456,27 @@ class Env {
   virtual void SetBackgroundThreads(int number, Priority pri = LOW) = 0;
   virtual int GetBackgroundThreads(Priority pri = LOW) = 0;
 
+<<<<<<< HEAD
   virtual Status SetAllowNonOwnerAccess(bool /*allow_non_owner_access*/) {
     return Status::NotSupported("Not supported.");
   }
 
+=======
+>>>>>>> blood in blood out
   // Enlarge number of background worker threads of a specific thread pool
   // for this environment if it is smaller than specified. 'LOW' is the default
   // pool.
   virtual void IncBackgroundThreadsIfNeeded(int number, Priority pri) = 0;
 
   // Lower IO priority for threads from the specified pool.
+<<<<<<< HEAD
   virtual void LowerThreadPoolIOPriority(Priority /*pool*/ = LOW) {}
 
   // Lower CPU priority for threads from the specified pool.
   virtual void LowerThreadPoolCPUPriority(Priority /*pool*/ = LOW) {}
+=======
+  virtual void LowerThreadPoolIOPriority(Priority pool = LOW) {}
+>>>>>>> blood in blood out
 
   // Converts seconds-since-Jan-01-1970 to a printable string
   virtual std::string TimeToString(uint64_t time) = 0;
@@ -464,7 +520,11 @@ class Env {
       const ImmutableDBOptions& db_options) const;
 
   // Returns the status of all threads that belong to the current Env.
+<<<<<<< HEAD
   virtual Status GetThreadList(std::vector<ThreadStatus>* /*thread_list*/) {
+=======
+  virtual Status GetThreadList(std::vector<ThreadStatus>* thread_list) {
+>>>>>>> blood in blood out
     return Status::NotSupported("Not supported.");
   }
 
@@ -530,14 +590,23 @@ class SequentialFile {
   // Remove any kind of caching of data from the offset to offset+length
   // of this file. If the length is 0, then it refers to the end of file.
   // If the system is not caching the file contents, then this is a noop.
+<<<<<<< HEAD
   virtual Status InvalidateCache(size_t /*offset*/, size_t /*length*/) {
+=======
+  virtual Status InvalidateCache(size_t offset, size_t length) {
+>>>>>>> blood in blood out
     return Status::NotSupported("InvalidateCache not supported.");
   }
 
   // Positioned Read for direct I/O
   // If Direct I/O enabled, offset, n, and scratch should be properly aligned
+<<<<<<< HEAD
   virtual Status PositionedRead(uint64_t /*offset*/, size_t /*n*/,
                                 Slice* /*result*/, char* /*scratch*/) {
+=======
+  virtual Status PositionedRead(uint64_t offset, size_t n, Slice* result,
+                                char* scratch) {
+>>>>>>> blood in blood out
     return Status::NotSupported();
   }
 };
@@ -563,7 +632,11 @@ class RandomAccessFile {
                       char* scratch) const = 0;
 
   // Readahead the file starting from offset by n bytes for caching.
+<<<<<<< HEAD
   virtual Status Prefetch(uint64_t /*offset*/, size_t /*n*/) {
+=======
+  virtual Status Prefetch(uint64_t offset, size_t n) {
+>>>>>>> blood in blood out
     return Status::OK();
   }
 
@@ -582,14 +655,22 @@ class RandomAccessFile {
   // a single varint.
   //
   // Note: these IDs are only valid for the duration of the process.
+<<<<<<< HEAD
   virtual size_t GetUniqueId(char* /*id*/, size_t /*max_size*/) const {
+=======
+  virtual size_t GetUniqueId(char* id, size_t max_size) const {
+>>>>>>> blood in blood out
     return 0; // Default implementation to prevent issues with backwards
               // compatibility.
   };
 
   enum AccessPattern { NORMAL, RANDOM, SEQUENTIAL, WILLNEED, DONTNEED };
 
+<<<<<<< HEAD
   virtual void Hint(AccessPattern /*pattern*/) {}
+=======
+  virtual void Hint(AccessPattern pattern) {}
+>>>>>>> blood in blood out
 
   // Indicates the upper layers if the current RandomAccessFile implementation
   // uses direct IO.
@@ -602,7 +683,11 @@ class RandomAccessFile {
   // Remove any kind of caching of data from the offset to offset+length
   // of this file. If the length is 0, then it refers to the end of file.
   // If the system is not caching the file contents, then this is a noop.
+<<<<<<< HEAD
   virtual Status InvalidateCache(size_t /*offset*/, size_t /*length*/) {
+=======
+  virtual Status InvalidateCache(size_t offset, size_t length) {
+>>>>>>> blood in blood out
     return Status::NotSupported("InvalidateCache not supported.");
   }
 };
@@ -653,7 +738,13 @@ class WritableFile {
   // before closing. It is not always possible to keep track of the file
   // size due to whole pages writes. The behavior is undefined if called
   // with other writes to follow.
+<<<<<<< HEAD
   virtual Status Truncate(uint64_t /*size*/) { return Status::OK(); }
+=======
+  virtual Status Truncate(uint64_t size) {
+    return Status::OK();
+  }
+>>>>>>> blood in blood out
   virtual Status Close() = 0;
   virtual Status Flush() = 0;
   virtual Status Sync() = 0; // sync data
@@ -720,7 +811,11 @@ class WritableFile {
   }
 
   // For documentation, refer to RandomAccessFile::GetUniqueId()
+<<<<<<< HEAD
   virtual size_t GetUniqueId(char* /*id*/, size_t /*max_size*/) const {
+=======
+  virtual size_t GetUniqueId(char* id, size_t max_size) const {
+>>>>>>> blood in blood out
     return 0; // Default implementation to prevent issues with backwards
   }
 
@@ -728,7 +823,11 @@ class WritableFile {
   // of this file. If the length is 0, then it refers to the end of file.
   // If the system is not caching the file contents, then this is a noop.
   // This call has no effect on dirty pages in the cache.
+<<<<<<< HEAD
   virtual Status InvalidateCache(size_t /*offset*/, size_t /*length*/) {
+=======
+  virtual Status InvalidateCache(size_t offset, size_t length) {
+>>>>>>> blood in blood out
     return Status::NotSupported("InvalidateCache not supported.");
   }
 
@@ -738,9 +837,13 @@ class WritableFile {
   // This asks the OS to initiate flushing the cached data to disk,
   // without waiting for completion.
   // Default implementation does nothing.
+<<<<<<< HEAD
   virtual Status RangeSync(uint64_t /*offset*/, uint64_t /*nbytes*/) {
     return Status::OK();
   }
+=======
+  virtual Status RangeSync(uint64_t offset, uint64_t nbytes) { return Status::OK(); }
+>>>>>>> blood in blood out
 
   // PrepareWrite performs any necessary preparation for a write
   // before the write actually occurs.  This allows for pre-allocation
@@ -767,7 +870,11 @@ class WritableFile {
   }
 
   // Pre-allocates space for a file.
+<<<<<<< HEAD
   virtual Status Allocate(uint64_t /*offset*/, uint64_t /*len*/) {
+=======
+  virtual Status Allocate(uint64_t offset, uint64_t len) {
+>>>>>>> blood in blood out
     return Status::OK();
   }
 
@@ -826,6 +933,7 @@ class RandomRWFile {
   RandomRWFile& operator=(const RandomRWFile&) = delete;
 };
 
+<<<<<<< HEAD
 // MemoryMappedFileBuffer object represents a memory-mapped file's raw buffer.
 // Subclasses should release the mapping upon destruction.
 class MemoryMappedFileBuffer {
@@ -848,6 +956,8 @@ protected:
   const size_t length_;
 };
 
+=======
+>>>>>>> blood in blood out
 // Directory object represents collection of files and implements
 // filesystem operations that can be executed on directories.
 class Directory {
@@ -855,10 +965,13 @@ class Directory {
   virtual ~Directory() {}
   // Fsync directory. Can be called concurrently from multiple threads.
   virtual Status Fsync() = 0;
+<<<<<<< HEAD
 
   virtual size_t GetUniqueId(char* /*id*/, size_t /*max_size*/) const {
     return 0;
   }
+=======
+>>>>>>> blood in blood out
 };
 
 enum InfoLogLevel : unsigned char {
@@ -1070,10 +1183,13 @@ class EnvWrapper : public Env {
     return target_->LinkFile(s, t);
   }
 
+<<<<<<< HEAD
   Status NumFileLinks(const std::string& fname, uint64_t* count) override {
     return target_->NumFileLinks(fname, count);
   }
 
+=======
+>>>>>>> blood in blood out
   Status AreFilesSame(const std::string& first, const std::string& second,
                       bool* res) override {
     return target_->AreFilesSame(first, second, res);
@@ -1086,7 +1202,11 @@ class EnvWrapper : public Env {
   Status UnlockFile(FileLock* l) override { return target_->UnlockFile(l); }
 
   void Schedule(void (*f)(void* arg), void* a, Priority pri,
+<<<<<<< HEAD
                 void* tag = nullptr, void (*u)(void* arg) = nullptr) override {
+=======
+                void* tag = nullptr, void (*u)(void* arg) = 0) override {
+>>>>>>> blood in blood out
     return target_->Schedule(f, a, pri, tag, u);
   }
 
@@ -1131,10 +1251,13 @@ class EnvWrapper : public Env {
     return target_->GetBackgroundThreads(pri);
   }
 
+<<<<<<< HEAD
   Status SetAllowNonOwnerAccess(bool allow_non_owner_access) override {
     return target_->SetAllowNonOwnerAccess(allow_non_owner_access);
   }
 
+=======
+>>>>>>> blood in blood out
   void IncBackgroundThreadsIfNeeded(int num, Priority pri) override {
     return target_->IncBackgroundThreadsIfNeeded(num, pri);
   }
@@ -1143,10 +1266,13 @@ class EnvWrapper : public Env {
     target_->LowerThreadPoolIOPriority(pool);
   }
 
+<<<<<<< HEAD
   void LowerThreadPoolCPUPriority(Priority pool = LOW) override {
     target_->LowerThreadPoolCPUPriority(pool);
   }
 
+=======
+>>>>>>> blood in blood out
   std::string TimeToString(uint64_t time) override {
     return target_->TimeToString(time);
   }

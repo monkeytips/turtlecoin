@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #!/usr/bin/env bash
+=======
+#!/bin/sh
+>>>>>>> blood in blood out
 #
 # Detects OS we're compiling on and outputs a file specified by the first
 # argument, which in turn gets read while processing Makefile.
@@ -16,8 +20,11 @@
 #   PLATFORM_CXXFLAGS           C++ compiler flags.  Will contain:
 #   PLATFORM_SHARED_VERSIONED   Set to 'true' if platform supports versioned
 #                               shared libraries, empty otherwise.
+<<<<<<< HEAD
 #   FIND			Command for the find utility
 #   WATCH			Command for the watch utility
+=======
+>>>>>>> blood in blood out
 #
 # The PLATFORM_CCFLAGS and PLATFORM_CXXFLAGS might include the following:
 #
@@ -66,6 +73,7 @@ rm -f "$OUTPUT"
 touch "$OUTPUT"
 
 if test -z "$CC"; then
+<<<<<<< HEAD
     if [ -x "$(command -v cc)" ]; then
         CC=cc
     elif [ -x "$(command -v clang)" ]; then
@@ -83,6 +91,13 @@ if test -z "$CXX"; then
     else
         CXX=g++
     fi
+=======
+   CC=cc
+fi
+
+if test -z "$CXX"; then
+    CXX=g++
+>>>>>>> blood in blood out
 fi
 
 # Detect OS
@@ -99,6 +114,7 @@ if test -z "$CLANG_SCAN_BUILD"; then
 fi
 
 if test -z "$CLANG_ANALYZER"; then
+<<<<<<< HEAD
     CLANG_ANALYZER=$(command -v clang++ 2> /dev/null)
 fi
 
@@ -108,6 +124,9 @@ fi
 
 if test -z "$WATCH"; then
     WATCH=watch
+=======
+    CLANG_ANALYZER=$(which clang++ 2> /dev/null)
+>>>>>>> blood in blood out
 fi
 
 COMMON_FLAGS="$COMMON_FLAGS ${CFLAGS}"
@@ -144,8 +163,11 @@ case "$TARGET_OS" in
         COMMON_FLAGS="$COMMON_FLAGS -DOS_LINUX"
         if [ -z "$USE_CLANG" ]; then
             COMMON_FLAGS="$COMMON_FLAGS -fno-builtin-memcmp"
+<<<<<<< HEAD
         else
             PLATFORM_LDFLAGS="$PLATFORM_LDFLAGS -latomic"
+=======
+>>>>>>> blood in blood out
         fi
         PLATFORM_LDFLAGS="$PLATFORM_LDFLAGS -lpthread -lrt"
         # PORT_FILES=port/linux/linux_specific.cc
@@ -178,12 +200,18 @@ case "$TARGET_OS" in
         ;;
     OpenBSD)
         PLATFORM=OS_OPENBSD
+<<<<<<< HEAD
 	CXX=clang++
         COMMON_FLAGS="$COMMON_FLAGS -fno-builtin-memcmp -D_REENTRANT -DOS_OPENBSD"
         PLATFORM_LDFLAGS="$PLATFORM_LDFLAGS -pthread"
         # PORT_FILES=port/openbsd/openbsd_specific.cc
 	FIND=gfind
 	WATCH=gnuwatch
+=======
+        COMMON_FLAGS="$COMMON_FLAGS -fno-builtin-memcmp -D_REENTRANT -DOS_OPENBSD"
+        PLATFORM_LDFLAGS="$PLATFORM_LDFLAGS -pthread"
+        # PORT_FILES=port/openbsd/openbsd_specific.cc
+>>>>>>> blood in blood out
         ;;
     DragonFly)
         PLATFORM=OS_DRAGONFLYBSD
@@ -198,8 +226,11 @@ case "$TARGET_OS" in
         COMMON_FLAGS="$COMMON_FLAGS -DCYGWIN"
         if [ -z "$USE_CLANG" ]; then
             COMMON_FLAGS="$COMMON_FLAGS -fno-builtin-memcmp"
+<<<<<<< HEAD
         else
             PLATFORM_LDFLAGS="$PLATFORM_LDFLAGS -latomic"
+=======
+>>>>>>> blood in blood out
         fi
         PLATFORM_LDFLAGS="$PLATFORM_LDFLAGS -lpthread -lrt"
         # PORT_FILES=port/linux/linux_specific.cc
@@ -514,9 +545,13 @@ if test -z "$PORTABLE"; then
   elif test -n "`echo $TARGET_ARCHITECTURE | grep ^arm`"; then
     # TODO: Handle this with approprite options.
     COMMON_FLAGS="$COMMON_FLAGS"
+<<<<<<< HEAD
   elif [ "$TARGET_OS" == "IOS" ]; then
     COMMON_FLAGS="$COMMON_FLAGS"
   elif [ "$TARGET_OS" != "AIX" ] && [ "$TARGET_OS" != "SunOS" ]; then
+=======
+  elif [ "$TARGET_OS" != AIX ] && [ "$TARGET_OS" != SunOS ]; then
+>>>>>>> blood in blood out
     COMMON_FLAGS="$COMMON_FLAGS -march=native "
   elif test "$USE_SSE"; then
     COMMON_FLAGS="$COMMON_FLAGS -msse4.2 -mpclmul"
@@ -604,8 +639,11 @@ echo "ROCKSDB_PATCH=$ROCKSDB_PATCH" >> "$OUTPUT"
 echo "CLANG_SCAN_BUILD=$CLANG_SCAN_BUILD" >> "$OUTPUT"
 echo "CLANG_ANALYZER=$CLANG_ANALYZER" >> "$OUTPUT"
 echo "PROFILING_FLAGS=$PROFILING_FLAGS" >> "$OUTPUT"
+<<<<<<< HEAD
 echo "FIND=$FIND" >> "$OUTPUT"
 echo "WATCH=$WATCH" >> "$OUTPUT"
+=======
+>>>>>>> blood in blood out
 # This will enable some related identifiers for the preprocessor
 if test -n "$JEMALLOC"; then
   echo "JEMALLOC=1" >> "$OUTPUT"

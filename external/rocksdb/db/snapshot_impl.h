@@ -21,10 +21,13 @@ class SnapshotList;
 class SnapshotImpl : public Snapshot {
  public:
   SequenceNumber number_;  // const after creation
+<<<<<<< HEAD
   // It indicates the smallest uncommitted data at the time the snapshot was
   // taken. This is currently used by WritePrepared transactions to limit the
   // scope of queries to IsInSnpashot.
   SequenceNumber min_uncommitted_ = 0;
+=======
+>>>>>>> blood in blood out
 
   virtual SequenceNumber GetSequenceNumber() const override { return number_; }
 
@@ -56,15 +59,23 @@ class SnapshotList {
     count_ = 0;
   }
 
+<<<<<<< HEAD
   // No copy-construct.
   SnapshotList(const SnapshotList&) = delete;
 
+=======
+>>>>>>> blood in blood out
   bool empty() const { return list_.next_ == &list_; }
   SnapshotImpl* oldest() const { assert(!empty()); return list_.next_; }
   SnapshotImpl* newest() const { assert(!empty()); return list_.prev_; }
 
+<<<<<<< HEAD
   SnapshotImpl* New(SnapshotImpl* s, SequenceNumber seq, uint64_t unix_time,
                     bool is_write_conflict_boundary) {
+=======
+  const SnapshotImpl* New(SnapshotImpl* s, SequenceNumber seq,
+                          uint64_t unix_time, bool is_write_conflict_boundary) {
+>>>>>>> blood in blood out
     s->number_ = seq;
     s->unix_time_ = unix_time;
     s->is_write_conflict_boundary_ = is_write_conflict_boundary;

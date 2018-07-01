@@ -9,15 +9,19 @@
 
 #include "rocksdb/status.h"
 #include <stdio.h>
+<<<<<<< HEAD
 #ifdef OS_WIN
 #include <string.h>
 #endif
+=======
+>>>>>>> blood in blood out
 #include <cstring>
 #include "port/port.h"
 
 namespace rocksdb {
 
 const char* Status::CopyState(const char* state) {
+<<<<<<< HEAD
 #ifdef OS_WIN
   const size_t cch =
       std::strlen(state) + 1; // +1 for the null terminator
@@ -36,6 +40,16 @@ const char* Status::CopyState(const char* state) {
 
 Status::Status(Code _code, SubCode _subcode, const Slice& msg, const Slice& msg2)
     : code_(_code), subcode_(_subcode), sev_(kNoError) {
+=======
+  char* const result =
+      new char[std::strlen(state) + 1];  // +1 for the null terminator
+  std::strcpy(result, state);
+  return result;
+}
+
+Status::Status(Code _code, SubCode _subcode, const Slice& msg, const Slice& msg2)
+    : code_(_code), subcode_(_subcode) {
+>>>>>>> blood in blood out
   assert(code_ != kOk);
   assert(subcode_ != kMaxSubCode);
   const size_t len1 = msg.size();

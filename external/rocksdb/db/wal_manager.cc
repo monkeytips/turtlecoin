@@ -444,7 +444,11 @@ Status WalManager::ReadFirstLine(const std::string& fname,
   Status status = env_->NewSequentialFile(
       fname, &file, env_->OptimizeForLogRead(env_options_));
   unique_ptr<SequentialFileReader> file_reader(
+<<<<<<< HEAD
       new SequentialFileReader(std::move(file), fname));
+=======
+      new SequentialFileReader(std::move(file)));
+>>>>>>> blood in blood out
 
   if (!status.ok()) {
     return status;

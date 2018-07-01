@@ -22,7 +22,11 @@ extern Status CreateFile(Env* env, const std::string& destination,
                          const std::string& contents);
 
 extern Status DeleteSSTFile(const ImmutableDBOptions* db_options,
+<<<<<<< HEAD
                             const std::string& fname,
                             const std::string& path_to_sync);
+=======
+                            const std::string& fname, uint32_t path_id);
+>>>>>>> blood in blood out
 
 }  // namespace rocksdb

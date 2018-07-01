@@ -244,9 +244,20 @@ extern void InitOnce(OnceType* once, void (*initializer)());
 #endif
 
 #ifdef ROCKSDB_JEMALLOC
+<<<<<<< HEAD
 // Separate inlines so they can be replaced if needed
 void* jemalloc_aligned_alloc(size_t size, size_t alignment) ROCKSDB_NOEXCEPT;
 void jemalloc_aligned_free(void* p) ROCKSDB_NOEXCEPT;
+=======
+#include "jemalloc/jemalloc.h"
+// Separate inlines so they can be replaced if needed
+inline void* jemalloc_aligned_alloc( size_t size, size_t alignment) {
+  return je_aligned_alloc(alignment, size);
+}
+inline void jemalloc_aligned_free(void* p) {
+  je_free(p);
+}
+>>>>>>> blood in blood out
 #endif
 
 inline void *cacheline_aligned_alloc(size_t size) {

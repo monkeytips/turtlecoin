@@ -29,13 +29,21 @@
 namespace rocksdb {
 
 Status ExternalSstFileIngestionJob::Prepare(
+<<<<<<< HEAD
     const std::vector<std::string>& external_files_paths, SuperVersion* sv) {
+=======
+    const std::vector<std::string>& external_files_paths) {
+>>>>>>> blood in blood out
   Status status;
 
   // Read the information of files we are ingesting
   for (const std::string& file_path : external_files_paths) {
     IngestedFileInfo file_to_ingest;
+<<<<<<< HEAD
     status = GetIngestedFileInfo(file_path, &file_to_ingest, sv);
+=======
+    status = GetIngestedFileInfo(file_path, &file_to_ingest);
+>>>>>>> blood in blood out
     if (!status.ok()) {
       return status;
     }
@@ -78,7 +86,11 @@ Status ExternalSstFileIngestionJob::Prepare(
   }
 
   for (IngestedFileInfo& f : files_to_ingest_) {
+<<<<<<< HEAD
     if (f.num_entries == 0 && f.num_range_deletions == 0) {
+=======
+    if (f.num_entries == 0) {
+>>>>>>> blood in blood out
       return Status::InvalidArgument("File contain no entries");
     }
 
@@ -94,8 +106,12 @@ Status ExternalSstFileIngestionJob::Prepare(
 
     const std::string path_outside_db = f.external_file_path;
     const std::string path_inside_db =
+<<<<<<< HEAD
         TableFileName(cfd_->ioptions()->cf_paths, f.fd.GetNumber(),
                       f.fd.GetPathId());
+=======
+        TableFileName(db_options_.db_paths, f.fd.GetNumber(), f.fd.GetPathId());
+>>>>>>> blood in blood out
 
     if (ingestion_options_.move_files) {
       status = env_->LinkFile(path_outside_db, path_inside_db);
@@ -103,16 +119,24 @@ Status ExternalSstFileIngestionJob::Prepare(
         // Original file is on a different FS, use copy instead of hard linking
         status = CopyFile(env_, path_outside_db, path_inside_db, 0,
                           db_options_.use_fsync);
+<<<<<<< HEAD
         f.copy_file = true;
       } else {
         f.copy_file = false;
+=======
+>>>>>>> blood in blood out
       }
     } else {
       status = CopyFile(env_, path_outside_db, path_inside_db, 0,
                         db_options_.use_fsync);
+<<<<<<< HEAD
       f.copy_file = true;
     }
     TEST_SYNC_POINT("ExternalSstFileIngestionJob::Prepare:FileAdded");
+=======
+    }
+    TEST_SYNC_POINT("DBImpl::AddFile:FileCopied");
+>>>>>>> blood in blood out
     if (!status.ok()) {
       break;
     }
@@ -122,7 +146,11 @@ Status ExternalSstFileIngestionJob::Prepare(
   if (!status.ok()) {
     // We failed, remove all files that we copied into the db
     for (IngestedFileInfo& f : files_to_ingest_) {
+<<<<<<< HEAD
       if (f.internal_file_path.empty()) {
+=======
+      if (f.internal_file_path == "") {
+>>>>>>> blood in blood out
         break;
       }
       Status s = env_->DeleteFile(f.internal_file_path);
@@ -222,6 +250,7 @@ void ExternalSstFileIngestionJob::UpdateStats() {
   uint64_t total_l0_files = 0;
   uint64_t total_time = env_->NowMicros() - job_start_time_;
   for (IngestedFileInfo& f : files_to_ingest_) {
+<<<<<<< HEAD
     InternalStats::CompactionStats stats(CompactionReason::kExternalSstIngestion, 1);
     stats.micros = total_time;
     // If actual copy occured for this file, then we need to count the file
@@ -233,6 +262,11 @@ void ExternalSstFileIngestionJob::UpdateStats() {
     } else {
       stats.bytes_moved = f.fd.GetFileSize();
     }
+=======
+    InternalStats::CompactionStats stats(1);
+    stats.micros = total_time;
+    stats.bytes_written = f.fd.GetFileSize();
+>>>>>>> blood in blood out
     stats.num_output_files = 1;
     cfd_->internal_stats()->AddCompactionStats(f.picked_level, stats);
     cfd_->internal_stats()->AddCFStats(InternalStats::BYTES_INGESTED_ADD_FILE,
@@ -284,8 +318,12 @@ void ExternalSstFileIngestionJob::Cleanup(const Status& status) {
 }
 
 Status ExternalSstFileIngestionJob::GetIngestedFileInfo(
+<<<<<<< HEAD
     const std::string& external_file, IngestedFileInfo* file_to_ingest,
     SuperVersion* sv) {
+=======
+    const std::string& external_file, IngestedFileInfo* file_to_ingest) {
+>>>>>>> blood in blood out
   file_to_ingest->external_file_path = external_file;
 
   // Get external file size
@@ -307,9 +345,14 @@ Status ExternalSstFileIngestionJob::GetIngestedFileInfo(
                                                    external_file));
 
   status = cfd_->ioptions()->table_factory->NewTableReader(
+<<<<<<< HEAD
       TableReaderOptions(*cfd_->ioptions(),
                          sv->mutable_cf_options.prefix_extractor.get(),
                          env_options_, cfd_->internal_comparator()),
+=======
+      TableReaderOptions(*cfd_->ioptions(), env_options_,
+                         cfd_->internal_comparator()),
+>>>>>>> blood in blood out
       std::move(sst_file_reader), file_to_ingest->file_size, &table_reader);
   if (!status.ok()) {
     return status;
@@ -336,6 +379,7 @@ Status ExternalSstFileIngestionJob::GetIngestedFileInfo(
 
     // Set the global sequence number
     file_to_ingest->original_seqno = DecodeFixed64(seqno_iter->second.c_str());
+<<<<<<< HEAD
     auto offsets_iter = props->properties_offsets.find(
         ExternalSstFilePropertyNames::kGlobalSeqno);
     if (offsets_iter == props->properties_offsets.end() ||
@@ -344,6 +388,14 @@ Status ExternalSstFileIngestionJob::GetIngestedFileInfo(
       return Status::Corruption("Was not able to find file global seqno field");
     }
     file_to_ingest->global_seqno_offset = offsets_iter->second;
+=======
+    file_to_ingest->global_seqno_offset = props->properties_offsets.at(
+        ExternalSstFilePropertyNames::kGlobalSeqno);
+
+    if (file_to_ingest->global_seqno_offset == 0) {
+      return Status::Corruption("Was not able to find file global seqno field");
+    }
+>>>>>>> blood in blood out
   } else if (file_to_ingest->version == 1) {
     // SST file V1 should not have global seqno field
     assert(seqno_iter == uprops.end());
@@ -358,7 +410,10 @@ Status ExternalSstFileIngestionJob::GetIngestedFileInfo(
   }
   // Get number of entries in table
   file_to_ingest->num_entries = props->num_entries;
+<<<<<<< HEAD
   file_to_ingest->num_range_deletions = props->num_range_deletions;
+=======
+>>>>>>> blood in blood out
 
   ParsedInternalKey key;
   ReadOptions ro;
@@ -368,6 +423,7 @@ Status ExternalSstFileIngestionJob::GetIngestedFileInfo(
   // We need to disable fill_cache so that we read from the file without
   // updating the block cache.
   ro.fill_cache = false;
+<<<<<<< HEAD
   std::unique_ptr<InternalIterator> iter(table_reader->NewIterator(
       ro, sv->mutable_cf_options.prefix_extractor.get()));
   std::unique_ptr<InternalIterator> range_del_iter(
@@ -419,6 +475,29 @@ Status ExternalSstFileIngestionJob::GetIngestedFileInfo(
       bounds_set = true;
     }
   }
+=======
+  std::unique_ptr<InternalIterator> iter(table_reader->NewIterator(ro));
+
+  // Get first (smallest) key from file
+  iter->SeekToFirst();
+  if (!ParseInternalKey(iter->key(), &key)) {
+    return Status::Corruption("external file have corrupted keys");
+  }
+  if (key.sequence != 0) {
+    return Status::Corruption("external file have non zero sequence number");
+  }
+  file_to_ingest->smallest_user_key = key.user_key.ToString();
+
+  // Get last (largest) key from file
+  iter->SeekToLast();
+  if (!ParseInternalKey(iter->key(), &key)) {
+    return Status::Corruption("external file have corrupted keys");
+  }
+  if (key.sequence != 0) {
+    return Status::Corruption("external file have non zero sequence number");
+  }
+  file_to_ingest->largest_user_key = key.user_key.ToString();
+>>>>>>> blood in blood out
 
   file_to_ingest->cf_id = static_cast<uint32_t>(props->column_family_id);
 
@@ -455,9 +534,14 @@ Status ExternalSstFileIngestionJob::AssignLevelAndSeqnoForIngestedFile(
 
     if (vstorage->NumLevelFiles(lvl) > 0) {
       bool overlap_with_level = false;
+<<<<<<< HEAD
       status = sv->current->OverlapWithLevelIterator(ro, env_options_,
           file_to_ingest->smallest_user_key, file_to_ingest->largest_user_key,
           lvl, &overlap_with_level);
+=======
+      status = IngestedFileOverlapWithLevel(sv, file_to_ingest, lvl,
+        &overlap_with_level);
+>>>>>>> blood in blood out
       if (!status.ok()) {
         return status;
       }
@@ -567,6 +651,37 @@ Status ExternalSstFileIngestionJob::AssignGlobalSeqnoForIngestedFile(
   return status;
 }
 
+<<<<<<< HEAD
+=======
+Status ExternalSstFileIngestionJob::IngestedFileOverlapWithIteratorRange(
+    const IngestedFileInfo* file_to_ingest, InternalIterator* iter,
+    bool* overlap) {
+  auto* vstorage = cfd_->current()->storage_info();
+  auto* ucmp = vstorage->InternalComparator()->user_comparator();
+  InternalKey range_start(file_to_ingest->smallest_user_key, kMaxSequenceNumber,
+                          kValueTypeForSeek);
+  iter->Seek(range_start.Encode());
+  if (!iter->status().ok()) {
+    return iter->status();
+  }
+
+  *overlap = false;
+  if (iter->Valid()) {
+    ParsedInternalKey seek_result;
+    if (!ParseInternalKey(iter->key(), &seek_result)) {
+      return Status::Corruption("DB have corrupted keys");
+    }
+
+    if (ucmp->Compare(seek_result.user_key, file_to_ingest->largest_user_key) <=
+        0) {
+      *overlap = true;
+    }
+  }
+
+  return iter->status();
+}
+
+>>>>>>> blood in blood out
 bool ExternalSstFileIngestionJob::IngestedFileFitInLevel(
     const IngestedFileInfo* file_to_ingest, int level) {
   if (level == 0) {
@@ -595,6 +710,41 @@ bool ExternalSstFileIngestionJob::IngestedFileFitInLevel(
   return true;
 }
 
+<<<<<<< HEAD
+=======
+Status ExternalSstFileIngestionJob::IngestedFileOverlapWithLevel(
+    SuperVersion* sv, IngestedFileInfo* file_to_ingest, int lvl,
+    bool* overlap_with_level) {
+  Arena arena;
+  ReadOptions ro;
+  ro.total_order_seek = true;
+  MergeIteratorBuilder merge_iter_builder(&cfd_->internal_comparator(),
+                                          &arena);
+  // Files are opened lazily when the iterator needs them, thus range deletions
+  // are also added lazily to the aggregator. We need to check for range
+  // deletion overlap only in the case where there's no point-key overlap. Then,
+  // we've already opened the file with range containing the ingested file's
+  // begin key, and iterated through all files until the one containing the
+  // ingested file's end key. So any files maybe containing range deletions
+  // overlapping the ingested file must have been opened and had their range
+  // deletions added to the aggregator.
+  RangeDelAggregator range_del_agg(cfd_->internal_comparator(),
+                                   {} /* snapshots */,
+                                   false /* collapse_deletions */);
+  sv->current->AddIteratorsForLevel(ro, env_options_, &merge_iter_builder, lvl,
+                                    &range_del_agg);
+  ScopedArenaIterator level_iter(merge_iter_builder.Finish());
+  Status status = IngestedFileOverlapWithIteratorRange(
+      file_to_ingest, level_iter.get(), overlap_with_level);
+  if (status.ok() && *overlap_with_level == false &&
+      range_del_agg.IsRangeOverlapped(file_to_ingest->smallest_user_key,
+                                      file_to_ingest->largest_user_key)) {
+    *overlap_with_level = true;
+  }
+  return status;
+}
+
+>>>>>>> blood in blood out
 }  // namespace rocksdb
 
 #endif  // !ROCKSDB_LITE

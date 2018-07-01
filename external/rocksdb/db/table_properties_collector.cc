@@ -12,8 +12,13 @@
 namespace rocksdb {
 
 Status InternalKeyPropertiesCollector::InternalAdd(const Slice& key,
+<<<<<<< HEAD
                                                    const Slice& /*value*/,
                                                    uint64_t /*file_size*/) {
+=======
+                                                   const Slice& value,
+                                                   uint64_t file_size) {
+>>>>>>> blood in blood out
   ParsedInternalKey ikey;
   if (!ParseInternalKey(key, &ikey)) {
     return Status::InvalidArgument("Invalid internal key");

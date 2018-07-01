@@ -36,6 +36,7 @@ WinLogger::WinLogger(uint64_t (*gettid)(), Env* env, HANDLE file,
       log_size_(0),
       last_flush_micros_(0),
       env_(env),
+<<<<<<< HEAD
       flush_pending_(false) {
   assert(file_ != NULL);
   assert(file_ != INVALID_HANDLE_VALUE);
@@ -43,6 +44,11 @@ WinLogger::WinLogger(uint64_t (*gettid)(), Env* env, HANDLE file,
 
 void WinLogger::DebugWriter(const char* str, int len) {
   assert(file_ != INVALID_HANDLE_VALUE);
+=======
+      flush_pending_(false) {}
+
+void WinLogger::DebugWriter(const char* str, int len) {
+>>>>>>> blood in blood out
   DWORD bytesWritten = 0;
   BOOL ret = WriteFile(file_, str, len, &bytesWritten, NULL);
   if (ret == FALSE) {
@@ -51,6 +57,7 @@ void WinLogger::DebugWriter(const char* str, int len) {
   }
 }
 
+<<<<<<< HEAD
 WinLogger::~WinLogger() { 
   CloseInternal();
 }
@@ -83,6 +90,13 @@ Status WinLogger::CloseInternal() {
 
 void WinLogger::Flush() {
   assert(file_ != INVALID_HANDLE_VALUE);
+=======
+WinLogger::~WinLogger() { close(); }
+
+void WinLogger::close() { CloseHandle(file_); }
+
+void WinLogger::Flush() {
+>>>>>>> blood in blood out
   if (flush_pending_) {
     flush_pending_ = false;
     // With Windows API writes go to OS buffers directly so no fflush needed
@@ -95,7 +109,10 @@ void WinLogger::Flush() {
 
 void WinLogger::Logv(const char* format, va_list ap) {
   IOSTATS_TIMER_GUARD(logger_nanos);
+<<<<<<< HEAD
   assert(file_ != INVALID_HANDLE_VALUE);
+=======
+>>>>>>> blood in blood out
 
   const uint64_t thread_id = (*gettid_)();
 

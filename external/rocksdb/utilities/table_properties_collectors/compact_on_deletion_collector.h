@@ -60,7 +60,11 @@ class CompactOnDeletionCollector : public TablePropertiesCollector {
   // for writing the properties block.
   // @params properties  User will add their collected statistics to
   // `properties`.
+<<<<<<< HEAD
   virtual Status Finish(UserCollectedProperties* /*properties*/) override {
+=======
+  virtual Status Finish(UserCollectedProperties* properties) override {
+>>>>>>> blood in blood out
     finished_ = true;
     return Status::OK();
   }

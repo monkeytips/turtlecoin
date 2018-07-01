@@ -115,7 +115,11 @@ class PlainTableDBTest : public testing::Test,
 
   void SetUp() override {
     mmap_mode_ = GetParam();
+<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("plain_table_db_test");
+=======
+    dbname_ = test::TmpDir() + "/plain_table_db_test";
+>>>>>>> blood in blood out
     EXPECT_OK(DestroyDB(dbname_, Options()));
     db_ = nullptr;
     Reopen();
@@ -262,13 +266,20 @@ class TestPlainTableReader : public PlainTableReader {
                        const TableProperties* table_properties,
                        unique_ptr<RandomAccessFileReader>&& file,
                        const ImmutableCFOptions& ioptions,
+<<<<<<< HEAD
                        const SliceTransform* prefix_extractor,
+=======
+>>>>>>> blood in blood out
                        bool* expect_bloom_not_match, bool store_index_in_file,
                        uint32_t column_family_id,
                        const std::string& column_family_name)
       : PlainTableReader(ioptions, std::move(file), env_options, icomparator,
+<<<<<<< HEAD
                          encoding_type, file_size, table_properties,
                          prefix_extractor),
+=======
+                         encoding_type, file_size, table_properties),
+>>>>>>> blood in blood out
         expect_bloom_not_match_(expect_bloom_not_match) {
     Status s = MmapDataIfNeeded();
     EXPECT_TRUE(s.ok());
@@ -329,27 +340,43 @@ class TestPlainTableFactory : public PlainTableFactory {
       const TableReaderOptions& table_reader_options,
       unique_ptr<RandomAccessFileReader>&& file, uint64_t file_size,
       unique_ptr<TableReader>* table,
+<<<<<<< HEAD
       bool /*prefetch_index_and_filter_in_cache*/) const override {
     TableProperties* props = nullptr;
     auto s =
         ReadTableProperties(file.get(), file_size, kPlainTableMagicNumber,
                             table_reader_options.ioptions, &props,
                             true /* compression_type_missing */);
+=======
+      bool prefetch_index_and_filter_in_cache) const override {
+    TableProperties* props = nullptr;
+    auto s =
+        ReadTableProperties(file.get(), file_size, kPlainTableMagicNumber,
+                            table_reader_options.ioptions, &props);
+>>>>>>> blood in blood out
     EXPECT_TRUE(s.ok());
 
     if (store_index_in_file_) {
       BlockHandle bloom_block_handle;
       s = FindMetaBlock(file.get(), file_size, kPlainTableMagicNumber,
                         table_reader_options.ioptions,
+<<<<<<< HEAD
                         BloomBlockBuilder::kBloomBlock, &bloom_block_handle,
                         /* compression_type_missing */ true);
+=======
+                        BloomBlockBuilder::kBloomBlock, &bloom_block_handle);
+>>>>>>> blood in blood out
       EXPECT_TRUE(s.ok());
 
       BlockHandle index_block_handle;
       s = FindMetaBlock(file.get(), file_size, kPlainTableMagicNumber,
                         table_reader_options.ioptions,
                         PlainTableIndexBuilder::kPlainTableIndexBlock,
+<<<<<<< HEAD
                         &index_block_handle, /* compression_type_missing */ true);
+=======
+                        &index_block_handle);
+>>>>>>> blood in blood out
       EXPECT_TRUE(s.ok());
     }
 
@@ -364,8 +391,12 @@ class TestPlainTableFactory : public PlainTableFactory {
         table_reader_options.env_options,
         table_reader_options.internal_comparator, encoding_type, file_size,
         bloom_bits_per_key_, hash_table_ratio_, index_sparseness_, props,
+<<<<<<< HEAD
         std::move(file), table_reader_options.ioptions,
         table_reader_options.prefix_extractor, expect_bloom_not_match_,
+=======
+        std::move(file), table_reader_options.ioptions, expect_bloom_not_match_,
+>>>>>>> blood in blood out
         store_index_in_file_, column_family_id_, column_family_name_));
 
     *table = std::move(new_reader);
@@ -1175,7 +1206,11 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   fprintf(stderr, "SKIPPED as plain table is not supported in ROCKSDB_LITE\n");
   return 0;
 }

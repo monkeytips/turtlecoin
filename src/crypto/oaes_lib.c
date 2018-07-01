@@ -27,12 +27,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * ---------------------------------------------------------------------------
  */
+<<<<<<< HEAD
 #include <stddef.h>
 #include <time.h> 
+=======
+
+#include <stddef.h>
+#include <time.h> 
+#include <sys/timeb.h>
+#ifdef __APPLE__
+#include <malloc/malloc.h>
+#else 
+#include <malloc.h>
+#endif
+>>>>>>> blood in blood out
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+<<<<<<< HEAD
 // OS X, FreeBSD, and OpenBSD don't need malloc.h
 #if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__OpenBSD__) \
   && !defined(__DragonFly__)
@@ -47,6 +60,9 @@
 #endif
 
 #ifdef _WIN32
+=======
+#ifdef WIN32
+>>>>>>> blood in blood out
 #include <process.h>
 #else
 #include <sys/types.h>
@@ -467,7 +483,10 @@ OAES_RET oaes_sprintf(
 #ifdef OAES_HAVE_ISAAC
 static void oaes_get_seed( char buf[RANDSIZ + 1] )
 {
+<<<<<<< HEAD
         #if !defined(__FreeBSD__) && !defined(__OpenBSD__)
+=======
+>>>>>>> blood in blood out
 	struct timeb timer;
 	struct tm *gmTimer;
 	char * _test = NULL;
@@ -479,6 +498,7 @@ static void oaes_get_seed( char buf[RANDSIZ + 1] )
 		gmTimer->tm_year + 1900, gmTimer->tm_mon + 1, gmTimer->tm_mday,
 		gmTimer->tm_hour, gmTimer->tm_min, gmTimer->tm_sec, timer.millitm,
 		_test + timer.millitm, getpid() );
+<<<<<<< HEAD
 	#else
 	struct timeval timer;
 	struct tm *gmTimer;
@@ -493,13 +513,19 @@ static void oaes_get_seed( char buf[RANDSIZ + 1] )
 		_test + timer.tv_usec/1000, getpid() );
 	#endif
 		
+=======
+	
+>>>>>>> blood in blood out
 	if( _test )
 		free( _test );
 }
 #else
 static uint32_t oaes_get_seed(void)
 {
+<<<<<<< HEAD
         #if !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__ANDROID__)
+=======
+>>>>>>> blood in blood out
 	struct timeb timer;
 	struct tm *gmTimer;
 	char * _test = NULL;
@@ -508,6 +534,7 @@ static uint32_t oaes_get_seed(void)
 	ftime (&timer);
 	gmTimer = gmtime( &timer.time );
 	_test = (char *) calloc( sizeof( char ), timer.millitm );
+<<<<<<< HEAD
 	_ret = gmTimer->tm_year + 1900 + gmTimer->tm_mon + 1 + gmTimer->tm_mday +
 			gmTimer->tm_hour + gmTimer->tm_min + gmTimer->tm_sec + timer.millitm +
 			(uintptr_t) ( _test + timer.millitm ) + getpid();
@@ -524,6 +551,11 @@ static uint32_t oaes_get_seed(void)
 			gmTimer->tm_hour + gmTimer->tm_min + gmTimer->tm_sec + timer.tv_usec/1000 +
 			(uintptr_t) ( _test + timer.tv_usec/1000 ) + getpid();
 	#endif
+=======
+	_ret = (uint32_t)(gmTimer->tm_year + 1900 + gmTimer->tm_mon + 1 + gmTimer->tm_mday +
+			gmTimer->tm_hour + gmTimer->tm_min + gmTimer->tm_sec + timer.millitm +
+			(uintptr_t) ( _test + timer.millitm ) + getpid());
+>>>>>>> blood in blood out
 
 	if( _test )
 		free( _test );
@@ -640,10 +672,14 @@ static OAES_RET oaes_key_gen( OAES_CTX * ctx, size_t key_size )
 	_key->data = (uint8_t *) calloc( key_size, sizeof( uint8_t ));
 	
 	if( NULL == _key->data )
+<<<<<<< HEAD
 	{
 		free( _key );
 		return OAES_RET_MEM;
 	}
+=======
+		return OAES_RET_MEM;
+>>>>>>> blood in blood out
 	
 	for( _i = 0; _i < key_size; _i++ )
 #ifdef OAES_HAVE_ISAAC
@@ -707,7 +743,11 @@ OAES_RET oaes_key_export( OAES_CTX * ctx,
 	// header
 	memcpy( data, oaes_header, OAES_BLOCK_SIZE );
 	data[5] = 0x01;
+<<<<<<< HEAD
 	data[7] = _ctx->key->data_len;
+=======
+	data[7] = (uint8_t)_ctx->key->data_len;
+>>>>>>> blood in blood out
 	memcpy( data + OAES_BLOCK_SIZE, _ctx->key->data, _ctx->key->data_len );
 	
 	return OAES_RET_SUCCESS;
@@ -1300,7 +1340,11 @@ OAES_RET oaes_encrypt( OAES_CTX * ctx,
 		
 		// insert pad
 		for( _j = 0; _j < OAES_BLOCK_SIZE - _block_size; _j++ )
+<<<<<<< HEAD
 			_block[ _block_size + _j ] = _j + 1;
+=======
+			_block[ _block_size + _j ] = (uint8_t)(_j + 1);
+>>>>>>> blood in blood out
 	
 		// CBC
 		if( _ctx->options & OAES_OPTION_CBC )

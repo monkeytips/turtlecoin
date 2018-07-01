@@ -77,7 +77,10 @@ enum CompressionType : unsigned char {
 };
 
 struct Options;
+<<<<<<< HEAD
 struct DbPath;
+=======
+>>>>>>> blood in blood out
 
 struct ColumnFamilyOptions : public AdvancedColumnFamilyOptions {
   // The function recovers options to a previous version. Only 4.6 or later
@@ -198,12 +201,16 @@ struct ColumnFamilyOptions : public AdvancedColumnFamilyOptions {
   // Typical speeds of kSnappyCompression on an Intel(R) Core(TM)2 2.4GHz:
   //    ~200-500MB/s compression
   //    ~400-800MB/s decompression
+<<<<<<< HEAD
   //
+=======
+>>>>>>> blood in blood out
   // Note that these speeds are significantly faster than most
   // persistent storage speeds, and therefore it is typically never
   // worth switching to kNoCompression.  Even if the input data is
   // incompressible, the kSnappyCompression implementation will
   // efficiently detect that and will switch to uncompressed mode.
+<<<<<<< HEAD
   //
   // If you do not set `compression_opts.level`, or set it to
   // `CompressionOptions::kDefaultCompressionLevel`, we will attempt to pick the
@@ -213,6 +220,8 @@ struct ColumnFamilyOptions : public AdvancedColumnFamilyOptions {
   // - kZlibCompression: Z_DEFAULT_COMPRESSION (currently -1)
   // - kLZ4HCCompression: 0
   // - For all others, we do not specify a compression level
+=======
+>>>>>>> blood in blood out
   CompressionType compression;
 
   // Compression algorithm that will be used for the bottommost level that
@@ -221,11 +230,14 @@ struct ColumnFamilyOptions : public AdvancedColumnFamilyOptions {
   // Default: kDisableCompressionOption (Disabled)
   CompressionType bottommost_compression = kDisableCompressionOption;
 
+<<<<<<< HEAD
   // different options for compression algorithms used by bottommost_compression
   // if it is enabled. To enable it, please see the definition of
   // CompressionOptions.
   CompressionOptions bottommost_compression_opts;
 
+=======
+>>>>>>> blood in blood out
   // different options for compression algorithms
   CompressionOptions compression_opts;
 
@@ -279,6 +291,7 @@ struct ColumnFamilyOptions : public AdvancedColumnFamilyOptions {
   // BlockBasedTableOptions.
   std::shared_ptr<TableFactory> table_factory;
 
+<<<<<<< HEAD
   // A list of paths where SST files for this column family
   // can be put into, with its target size. Similar to db_paths,
   // newer data is placed into paths specified earlier in the
@@ -293,6 +306,8 @@ struct ColumnFamilyOptions : public AdvancedColumnFamilyOptions {
   // Default: empty
   std::vector<DbPath> cf_paths;
 
+=======
+>>>>>>> blood in blood out
   // Create ColumnFamilyOptions with default values for all fields
   ColumnFamilyOptions();
   // Create ColumnFamilyOptions from Options
@@ -438,7 +453,11 @@ struct DBOptions {
 
   // By default, writes to stable storage use fdatasync (on platforms
   // where this function is available). If this option is true,
+<<<<<<< HEAD
   // fsync is used instead.
+=======
+  // fsync is used instead. 
+>>>>>>> blood in blood out
   //
   // fsync and fdatasync are equally safe for our purposes and fdatasync is
   // faster, so it is rarely necessary to set this option. It is provided
@@ -573,9 +592,14 @@ struct DBOptions {
 
   // manifest file is rolled over on reaching this limit.
   // The older manifest file be deleted.
+<<<<<<< HEAD
   // The default value is 1GB so that the manifest file can grow, but not
   // reach the limit of storage capacity.
   uint64_t max_manifest_file_size = 1024 * 1024 * 1024;
+=======
+  // The default value is MAX_INT so that roll-over does not take place.
+  uint64_t max_manifest_file_size = std::numeric_limits<uint64_t>::max();
+>>>>>>> blood in blood out
 
   // Number of shards used for table cache.
   int table_cache_numshardbits = 6;
@@ -620,13 +644,22 @@ struct DBOptions {
   // buffered. The hardware buffer of the devices may however still
   // be used. Memory mapped files are not impacted by these parameters.
 
+<<<<<<< HEAD
   // Use O_DIRECT for user and compaction reads.
   // When true, we also force new_table_reader_for_compaction_inputs to true.
+=======
+  // Use O_DIRECT for user reads
+>>>>>>> blood in blood out
   // Default: false
   // Not supported in ROCKSDB_LITE mode!
   bool use_direct_reads = false;
 
+<<<<<<< HEAD
   // Use O_DIRECT for writes in background flush and compactions.
+=======
+  // Use O_DIRECT for both reads and writes in background flush and compactions
+  // When true, we also force new_table_reader_for_compaction_inputs to true.
+>>>>>>> blood in blood out
   // Default: false
   // Not supported in ROCKSDB_LITE mode!
   bool use_direct_io_for_flush_and_compaction = false;
@@ -769,7 +802,11 @@ struct DBOptions {
   // Default: 0, turned off
   uint64_t wal_bytes_per_sync = 0;
 
+<<<<<<< HEAD
   // A vector of EventListeners which callback functions will be called
+=======
+  // A vector of EventListeners which call-back functions will be called
+>>>>>>> blood in blood out
   // when specific RocksDB event happens.
   std::vector<std::shared_ptr<EventListener>> listeners;
 
@@ -1020,7 +1057,11 @@ struct ReadOptions {
   // can returns entries. Once the bound is reached, Valid() will be false.
   // "iterate_upper_bound" is exclusive ie the bound value is
   // not a valid entry.  If iterator_extractor is not null, the Seek target
+<<<<<<< HEAD
   // and iterate_upper_bound need to have the same prefix.
+=======
+  // and iterator_upper_bound need to have the same prefix.
+>>>>>>> blood in blood out
   // This is because ordering is not guaranteed outside of prefix domain.
   //
   // Default: nullptr
@@ -1049,11 +1090,18 @@ struct ReadOptions {
   // Default: true
   bool verify_checksums;
 
+<<<<<<< HEAD
   // Should the "data block"/"index block"" read for this iteration be placed in
   // block cache?
   // Callers may wish to set this field to false for bulk scans.
   // This would help not to the change eviction order of existing items in the
   // block cache. Default: true
+=======
+  // Should the "data block"/"index block"/"filter block" read for this
+  // iteration be cached in memory?
+  // Callers may wish to set this field to false for bulk scans.
+  // Default: true
+>>>>>>> blood in blood out
   bool fill_cache;
 
   // Specify to create a tailing iterator -- a special iterator that has a
@@ -1064,8 +1112,16 @@ struct ReadOptions {
   // Not supported in ROCKSDB_LITE mode!
   bool tailing;
 
+<<<<<<< HEAD
   // This options is not used anymore. It was to turn on a functionality that
   // has been removed.
+=======
+  // Specify to create a managed iterator -- a special iterator that
+  // uses less resources by having the ability to free its underlying
+  // resources on request.
+  // Default: false
+  // Not supported in ROCKSDB_LITE mode!
+>>>>>>> blood in blood out
   bool managed;
 
   // Enable a total order seek regardless of index format (e.g. hash index)
@@ -1198,6 +1254,7 @@ struct CompactionOptions {
   // Compaction will create files of size `output_file_size_limit`.
   // Default: MAX, which means that compaction will create a single file
   uint64_t output_file_size_limit;
+<<<<<<< HEAD
   // If > 0, it will replace the option in the DBOptions for this compaction.
   uint32_t max_subcompactions;
 
@@ -1205,6 +1262,12 @@ struct CompactionOptions {
       : compression(kSnappyCompression),
         output_file_size_limit(std::numeric_limits<uint64_t>::max()),
         max_subcompactions(0) {}
+=======
+
+  CompactionOptions()
+      : compression(kSnappyCompression),
+        output_file_size_limit(std::numeric_limits<uint64_t>::max()) {}
+>>>>>>> blood in blood out
 };
 
 // For level based compaction, we can configure if we want to skip/force
@@ -1240,8 +1303,11 @@ struct CompactRangeOptions {
   // If true, will execute immediately even if doing so would cause the DB to
   // enter write stall mode. Otherwise, it'll sleep until load is low enough.
   bool allow_write_stall = false;
+<<<<<<< HEAD
   // If > 0, it will replace the option in the DBOptions for this compaction.
   uint32_t max_subcompactions = 0;
+=======
+>>>>>>> blood in blood out
 };
 
 // IngestExternalFileOptions is used by IngestExternalFile()

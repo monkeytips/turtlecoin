@@ -37,6 +37,7 @@ Status Checkpoint::Create(DB* db, Checkpoint** checkpoint_ptr) {
   return Status::OK();
 }
 
+<<<<<<< HEAD
 Status Checkpoint::CreateCheckpoint(const std::string& /*checkpoint_dir*/,
                                     uint64_t /*log_size_for_flush*/) {
   return Status::NotSupported("");
@@ -64,6 +65,13 @@ void CheckpointImpl::CleanStagingDirectory(
                  full_private_path.c_str(), s.ToString().c_str());
 }
 
+=======
+Status Checkpoint::CreateCheckpoint(const std::string& checkpoint_dir,
+                                    uint64_t log_size_for_flush) {
+  return Status::NotSupported("");
+}
+
+>>>>>>> blood in blood out
 // Builds an openable snapshot of RocksDB
 Status CheckpointImpl::CreateCheckpoint(const std::string& checkpoint_dir,
                                         uint64_t log_size_for_flush) {
@@ -97,7 +105,10 @@ Status CheckpointImpl::CreateCheckpoint(const std::string& checkpoint_dir,
       db_options.info_log,
       "Snapshot process -- using temporary directory %s",
       full_private_path.c_str());
+<<<<<<< HEAD
   CleanStagingDirectory(full_private_path, db_options.info_log.get());
+=======
+>>>>>>> blood in blood out
   // create snapshot directory
   s = db_->GetEnv()->CreateDir(full_private_path);
   uint64_t sequence_number = 0;
@@ -148,7 +159,23 @@ Status CheckpointImpl::CreateCheckpoint(const std::string& checkpoint_dir,
     // clean all the files we might have created
     ROCKS_LOG_INFO(db_options.info_log, "Snapshot failed -- %s",
                    s.ToString().c_str());
+<<<<<<< HEAD
     CleanStagingDirectory(full_private_path, db_options.info_log.get());
+=======
+    // we have to delete the dir and all its children
+    std::vector<std::string> subchildren;
+    db_->GetEnv()->GetChildren(full_private_path, &subchildren);
+    for (auto& subchild : subchildren) {
+      std::string subchild_path = full_private_path + "/" + subchild;
+      Status s1 = db_->GetEnv()->DeleteFile(subchild_path);
+      ROCKS_LOG_INFO(db_options.info_log, "Delete file %s -- %s",
+                     subchild_path.c_str(), s1.ToString().c_str());
+    }
+    // finally delete the private dir
+    Status s1 = db_->GetEnv()->DeleteDir(full_private_path);
+    ROCKS_LOG_INFO(db_options.info_log, "Delete dir %s -- %s",
+                   full_private_path.c_str(), s1.ToString().c_str());
+>>>>>>> blood in blood out
   }
   return s;
 }
@@ -233,7 +260,13 @@ Status CheckpointImpl::CreateCustomCheckpoint(
 
     TEST_SYNC_POINT("CheckpointImpl::CreateCheckpoint:SavedLiveFiles1");
     TEST_SYNC_POINT("CheckpointImpl::CreateCheckpoint:SavedLiveFiles2");
+<<<<<<< HEAD
     db_->FlushWAL(false /* sync */);
+=======
+    if (db_options.manual_wal_flush) {
+      db_->FlushWAL(false /* sync */);
+    }
+>>>>>>> blood in blood out
   }
   // if we have more than one column family, we need to also get WAL files
   if (s.ok()) {

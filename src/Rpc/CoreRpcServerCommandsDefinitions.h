@@ -1,7 +1,11 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018, The TurtleCoin Developers
+<<<<<<< HEAD
 // Copyright (c) 2018, The Karai Developers
 //
+=======
+// 
+>>>>>>> blood in blood out
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -17,8 +21,11 @@
 #include "Serialization/BlockchainExplorerDataSerialization.h"
 #include <CryptoNoteCore/ICoreDefinitions.h>
 
+<<<<<<< HEAD
 #include <WalletTypes.h>
 
+=======
+>>>>>>> blood in blood out
 namespace CryptoNote {
 //-----------------------------------------------
 #define CORE_RPC_STATUS_OK "OK"
@@ -56,9 +63,15 @@ struct COMMAND_RPC_GET_BLOCKS_FAST {
 
   struct request {
     std::vector<Crypto::Hash> block_ids; //*first 10 blocks id goes sequential, next goes in pow(2,n) offset, like 2, 4, 8, 16, 32, 64 and so on, and the last one is always genesis block */
+<<<<<<< HEAD
 
     void serialize(ISerializer &s) {
       KV_MEMBER(block_ids);
+=======
+    
+    void serialize(ISerializer &s) {
+      serializeAsBinary(block_ids, "block_ids", s);
+>>>>>>> blood in blood out
     }
   };
 
@@ -87,7 +100,11 @@ struct COMMAND_RPC_GET_TRANSACTIONS {
     void serialize(ISerializer &s) {
       KV_MEMBER(txs_as_hex)
       KV_MEMBER(missed_tx)
+<<<<<<< HEAD
       KV_MEMBER(status)
+=======
+      KV_MEMBER(status)    
+>>>>>>> blood in blood out
     }
   };
 };
@@ -99,7 +116,11 @@ struct COMMAND_RPC_GET_POOL_CHANGES {
 
     void serialize(ISerializer &s) {
       KV_MEMBER(tailBlockId)
+<<<<<<< HEAD
       KV_MEMBER(knownTxsIds);
+=======
+      serializeAsBinary(knownTxsIds, "knownTxsIds", s);
+>>>>>>> blood in blood out
     }
   };
 
@@ -112,7 +133,11 @@ struct COMMAND_RPC_GET_POOL_CHANGES {
     void serialize(ISerializer &s) {
       KV_MEMBER(isTailBlockActual)
       KV_MEMBER(addedTxs)
+<<<<<<< HEAD
       KV_MEMBER(deletedTxsIds);
+=======
+      serializeAsBinary(deletedTxsIds, "deletedTxsIds", s);
+>>>>>>> blood in blood out
       KV_MEMBER(status)
     }
   };
@@ -125,7 +150,11 @@ struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
 
     void serialize(ISerializer &s) {
       KV_MEMBER(tailBlockId)
+<<<<<<< HEAD
       KV_MEMBER(knownTxsIds);
+=======
+      serializeAsBinary(knownTxsIds, "knownTxsIds", s);
+>>>>>>> blood in blood out
     }
   };
 
@@ -138,7 +167,11 @@ struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
     void serialize(ISerializer &s) {
       KV_MEMBER(isTailBlockActual)
       KV_MEMBER(addedTxs)
+<<<<<<< HEAD
       KV_MEMBER(deletedTxsIds);
+=======
+      serializeAsBinary(deletedTxsIds, "deletedTxsIds", s);
+>>>>>>> blood in blood out
       KV_MEMBER(status)
     }
   };
@@ -146,7 +179,11 @@ struct COMMAND_RPC_GET_POOL_CHANGES_LITE {
 
 //-----------------------------------------------
 struct COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES {
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> blood in blood out
   struct request {
     Crypto::Hash txid;
 
@@ -165,6 +202,7 @@ struct COMMAND_RPC_GET_TX_GLOBAL_OUTPUTS_INDEXES {
     }
   };
 };
+<<<<<<< HEAD
 
 struct COMMAND_RPC_GET_GLOBAL_INDEXES_FOR_RANGE
 {
@@ -268,6 +306,52 @@ struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS
         KV_MEMBER(status)
       }
     };
+=======
+//-----------------------------------------------
+struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request {
+  std::vector<uint64_t> amounts;
+  uint16_t outs_count;
+
+  void serialize(ISerializer &s) {
+    KV_MEMBER(amounts)
+    KV_MEMBER(outs_count)
+  }
+};
+
+#pragma pack(push, 1)
+struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_out_entry {
+  uint32_t global_amount_index;
+  Crypto::PublicKey out_key;
+};
+#pragma pack(pop)
+
+struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount {
+  uint64_t amount;
+  std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_out_entry> outs;
+
+  void serialize(ISerializer &s) {
+    KV_MEMBER(amount)
+    serializeAsBinary(outs, "outs", s);
+  }
+};
+
+struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response {
+  std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount> outs;
+  std::string status;
+
+  void serialize(ISerializer &s) {
+    KV_MEMBER(outs);
+    KV_MEMBER(status)
+  }
+};
+
+struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS {
+  typedef COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_request request;
+  typedef COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_response response;
+
+  typedef COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_out_entry out_entry;
+  typedef COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS_outs_for_amount outs_for_amount;
+>>>>>>> blood in blood out
 };
 
 //-----------------------------------------------
@@ -451,7 +535,11 @@ struct block_header_response {
   uint32_t height;
   uint32_t depth;
   std::string hash;
+<<<<<<< HEAD
   uint64_t difficulty;
+=======
+  Difficulty difficulty;
+>>>>>>> blood in blood out
   uint64_t reward;
   uint32_t num_txes;
   uint64_t block_size;
@@ -536,7 +624,11 @@ struct f_transaction_short_response {
 
 struct f_transaction_details_response {
   std::string hash;
+<<<<<<< HEAD
   uint64_t size;
+=======
+  size_t size;
+>>>>>>> blood in blood out
   std::string paymentId;
   uint64_t mixin;
   uint64_t fee;
@@ -572,7 +664,11 @@ struct f_block_short_response {
 
 struct f_block_details_response {
   uint8_t major_version;
+<<<<<<< HEAD
   uint8_t minor_version;
+=======
+  uint8_t minor_version;  
+>>>>>>> blood in blood out
   uint64_t timestamp;
   std::string prev_hash;
   uint32_t nonce;
@@ -583,7 +679,11 @@ struct f_block_details_response {
   uint64_t difficulty;
   uint64_t reward;
   uint64_t blockSize;
+<<<<<<< HEAD
   uint64_t sizeMedian;
+=======
+  size_t sizeMedian;
+>>>>>>> blood in blood out
   uint64_t effectiveSizeMedian;
   uint64_t transactionsCumulativeSize;
   std::string alreadyGeneratedCoins;
@@ -729,7 +829,11 @@ struct COMMAND_RPC_QUERY_BLOCKS {
     uint64_t timestamp;
 
     void serialize(ISerializer &s) {
+<<<<<<< HEAD
       KV_MEMBER(block_ids);
+=======
+      serializeAsBinary(block_ids, "block_ids", s);
+>>>>>>> blood in blood out
       KV_MEMBER(timestamp)
     }
   };
@@ -757,7 +861,11 @@ struct COMMAND_RPC_QUERY_BLOCKS_LITE {
     uint64_t timestamp;
 
     void serialize(ISerializer &s) {
+<<<<<<< HEAD
       KV_MEMBER(blockIds);
+=======
+      serializeAsBinary(blockIds, "block_ids", s);
+>>>>>>> blood in blood out
       KV_MEMBER(timestamp)
     }
   };
@@ -779,6 +887,7 @@ struct COMMAND_RPC_QUERY_BLOCKS_LITE {
   };
 };
 
+<<<<<<< HEAD
 struct COMMAND_RPC_QUERY_BLOCKS_DETAILED {
   struct request {
     std::vector<Crypto::Hash> blockIds;
@@ -871,12 +980,18 @@ struct COMMAND_RPC_GET_TRANSACTIONS_STATUS
     };
 };
 
+=======
+>>>>>>> blood in blood out
 struct COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HEIGHTS {
   struct request {
     std::vector<uint32_t> blockHeights;
 
     void serialize(ISerializer& s) {
+<<<<<<< HEAD
       KV_MEMBER(blockHeights);
+=======
+      serializeAsBinary(blockHeights, "blockHeights", s);
+>>>>>>> blood in blood out
     }
   };
 
@@ -896,7 +1011,11 @@ struct COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES {
     std::vector<Crypto::Hash> blockHashes;
 
     void serialize(ISerializer& s) {
+<<<<<<< HEAD
       KV_MEMBER(blockHashes);
+=======
+      serializeAsBinary(blockHashes, "blockHashes", s);
+>>>>>>> blood in blood out
     }
   };
 
@@ -968,7 +1087,11 @@ struct COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID {
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)
+<<<<<<< HEAD
       KV_MEMBER(transactionHashes);
+=======
+      serializeAsBinary(transactionHashes, "transactionHashes", s);
+>>>>>>> blood in blood out
     }
   };
 };
@@ -978,7 +1101,11 @@ struct COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES {
     std::vector<Crypto::Hash> transactionHashes;
 
     void serialize(ISerializer &s) {
+<<<<<<< HEAD
       KV_MEMBER(transactionHashes);
+=======
+      serializeAsBinary(transactionHashes, "transactionHashes", s);
+>>>>>>> blood in blood out
     }
   };
 
@@ -994,17 +1121,25 @@ struct COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES {
 };
 
 struct COMMAND_RPC_GET_PEERS {
+<<<<<<< HEAD
   // TODO: rename peers to white_peers - do at v1
+=======
+  //TODO useful to add option to get gray peers ?
+>>>>>>> blood in blood out
   typedef EMPTY_STRUCT request;
 
   struct response {
     std::string status;
     std::vector<std::string> peers;
+<<<<<<< HEAD
     std::vector<std::string> gray_peers;
+=======
+>>>>>>> blood in blood out
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)
       KV_MEMBER(peers)
+<<<<<<< HEAD
       KV_MEMBER(gray_peers)
     }
   };
@@ -1022,6 +1157,8 @@ struct COMMAND_RPC_GET_FEE_ADDRESS {
       KV_MEMBER(address)
       KV_MEMBER(amount)
       KV_MEMBER(status)
+=======
+>>>>>>> blood in blood out
     }
   };
 };

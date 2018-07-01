@@ -192,6 +192,7 @@ TEST_F(FormatTest, UpdateInternalKey) {
   ASSERT_EQ(new_val_type, decoded.type);
 }
 
+<<<<<<< HEAD
 TEST_F(FormatTest, RangeTombstoneSerializeEndKey) {
   RangeTombstone t("a", "b", 2);
   InternalKey k("b", 3, kTypeValue);
@@ -199,6 +200,8 @@ TEST_F(FormatTest, RangeTombstoneSerializeEndKey) {
   ASSERT_LT(cmp.Compare(t.SerializeEndKey(), k), 0);
 }
 
+=======
+>>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char** argv) {

@@ -44,4 +44,8 @@ _getmcontext:
 	
 	movq	32(%rdi), %rcx	/* restore %rcx */
 	movq	$0, %rax
+<<<<<<< HEAD
 	ret
+=======
+	ret
+>>>>>>> blood in blood out

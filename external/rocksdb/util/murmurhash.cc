@@ -10,7 +10,10 @@
   is under the MIT license.
 */
 #include "murmurhash.h"
+<<<<<<< HEAD
 #include "util/util.h"
+=======
+>>>>>>> blood in blood out
 
 #if defined(__x86_64__)
 
@@ -54,12 +57,21 @@ uint64_t MurmurHash64A ( const void * key, int len, unsigned int seed )
 
     switch(len & 7)
     {
+<<<<<<< HEAD
     case 7: h ^= ((uint64_t)data2[6]) << 48; FALLTHROUGH_INTENDED;
     case 6: h ^= ((uint64_t)data2[5]) << 40; FALLTHROUGH_INTENDED;
     case 5: h ^= ((uint64_t)data2[4]) << 32; FALLTHROUGH_INTENDED;
     case 4: h ^= ((uint64_t)data2[3]) << 24; FALLTHROUGH_INTENDED;
     case 3: h ^= ((uint64_t)data2[2]) << 16; FALLTHROUGH_INTENDED;
     case 2: h ^= ((uint64_t)data2[1]) << 8;  FALLTHROUGH_INTENDED;
+=======
+    case 7: h ^= ((uint64_t)data2[6]) << 48; // fallthrough
+    case 6: h ^= ((uint64_t)data2[5]) << 40; // fallthrough
+    case 5: h ^= ((uint64_t)data2[4]) << 32; // fallthrough
+    case 4: h ^= ((uint64_t)data2[3]) << 24; // fallthrough
+    case 3: h ^= ((uint64_t)data2[2]) << 16; // fallthrough
+    case 2: h ^= ((uint64_t)data2[1]) << 8; // fallthrough
+>>>>>>> blood in blood out
     case 1: h ^= ((uint64_t)data2[0]);
         h *= m;
     };
@@ -121,8 +133,13 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed )
 
     switch(len)
     {
+<<<<<<< HEAD
     case 3: h ^= data[2] << 16; FALLTHROUGH_INTENDED;
     case 2: h ^= data[1] << 8;  FALLTHROUGH_INTENDED;
+=======
+    case 3: h ^= data[2] << 16; // fallthrough
+    case 2: h ^= data[1] << 8; // fallthrough
+>>>>>>> blood in blood out
     case 1: h ^= data[0];
         h *= m;
     };
@@ -175,8 +192,13 @@ unsigned int MurmurHashNeutral2 ( const void * key, int len, unsigned int seed )
 
     switch(len)
     {
+<<<<<<< HEAD
     case 3: h ^= data[2] << 16; FALLTHROUGH_INTENDED;
     case 2: h ^= data[1] << 8;  FALLTHROUGH_INTENDED;
+=======
+    case 3: h ^= data[2] << 16; // fallthrough
+    case 2: h ^= data[1] << 8; // fallthrough
+>>>>>>> blood in blood out
     case 1: h ^= data[0];
         h *= m;
     };

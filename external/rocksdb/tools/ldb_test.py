@@ -76,7 +76,11 @@ class LDBTestCase(unittest.TestCase):
 
             my_check_output("./ldb %s >/dev/null 2>&1 |grep -v \"Created bg \
                 thread\"" % params, shell=True)
+<<<<<<< HEAD
         except Exception:
+=======
+        except Exception, e:
+>>>>>>> blood in blood out
             return
         self.fail(
             "Exception should have been raised for command with params: %s" %
@@ -146,6 +150,7 @@ class LDBTestCase(unittest.TestCase):
     def loadDb(self, params, dumpFile):
         return 0 == run_err_null("cat %s | ./ldb load %s" % (dumpFile, params))
 
+<<<<<<< HEAD
     def writeExternSst(self, params, inputDumpFile, outputSst):
         return 0 == run_err_null("cat %s | ./ldb write_extern_sst %s %s"
                 % (inputDumpFile, outputSst, params))
@@ -154,6 +159,8 @@ class LDBTestCase(unittest.TestCase):
         return 0 == run_err_null("./ldb ingest_extern_sst %s %s"
                                      % (inputSst, params))
 
+=======
+>>>>>>> blood in blood out
     def testStringBatchPut(self):
         print "Running testStringBatchPut..."
         self.assertRunOK("batchput x1 y1 --create_if_missing", "OK")
@@ -555,6 +562,7 @@ class LDBTestCase(unittest.TestCase):
         # non-existing column family.
         self.assertRunFAIL("get cf3_1 --column_family=four")
 
+<<<<<<< HEAD
     def testIngestExternalSst(self):
         print "Running testIngestExternalSst..."
 
@@ -588,5 +596,7 @@ class LDBTestCase(unittest.TestCase):
         self.assertRunOKFull("scan --db=%s" % dbPath,
                              "x1 : y10\nx2 : y20\nx3 : y30\nx4 : y40")
 
+=======
+>>>>>>> blood in blood out
 if __name__ == "__main__":
     unittest.main()

@@ -56,8 +56,13 @@ namespace rocksdb {
 
 const char* GetFlushReasonString (FlushReason flush_reason) {
   switch (flush_reason) {
+<<<<<<< HEAD
     case FlushReason::kOthers:
       return "Other Reasons";
+=======
+    case FlushReason::kUnknown:
+      return "Unknown";
+>>>>>>> blood in blood out
     case FlushReason::kGetLiveFiles:
       return "Get Live Files";
     case FlushReason::kShutDown:
@@ -72,12 +77,17 @@ const char* GetFlushReasonString (FlushReason flush_reason) {
       return "Write Buffer Full";
     case FlushReason::kTest:
       return "Test";
+<<<<<<< HEAD
     case FlushReason::kDeleteFiles:
       return "Delete Files";
     case FlushReason::kAutoCompaction:
       return "Auto Compaction";
     case FlushReason::kManualFlush:
       return "Manual Flush";
+=======
+    case FlushReason::kSuperVersionChange:
+      return "SuperVersion Change";
+>>>>>>> blood in blood out
     default:
       return "Invalid";
   }
@@ -185,9 +195,13 @@ void FlushJob::PickMemTable() {
   base_->Ref();  // it is likely that we do not need this reference
 }
 
+<<<<<<< HEAD
 Status FlushJob::Run(LogsWithPrepTracker* prep_tracker,
                      FileMetaData* file_meta) {
   TEST_SYNC_POINT("FlushJob::Start");
+=======
+Status FlushJob::Run(FileMetaData* file_meta) {
+>>>>>>> blood in blood out
   db_mutex_->AssertHeld();
   assert(pick_memtable_called);
   AutoThreadOperationStageUpdater stage_run(
@@ -228,7 +242,11 @@ Status FlushJob::Run(LogsWithPrepTracker* prep_tracker,
     TEST_SYNC_POINT("FlushJob::InstallResults");
     // Replace immutable memtable with the generated Table
     s = cfd_->imm()->InstallMemtableFlushResults(
+<<<<<<< HEAD
         cfd_, mutable_cf_options_, mems_, prep_tracker, versions_, db_mutex_,
+=======
+        cfd_, mutable_cf_options_, mems_, versions_, db_mutex_,
+>>>>>>> blood in blood out
         meta_.fd.GetNumber(), &job_context_->memtables_to_free, db_directory_,
         log_buffer_);
   }
@@ -394,7 +412,11 @@ Status FlushJob::WriteLevel0Table() {
   }
 
   // Note that here we treat flush as level 0 compaction in internal stats
+<<<<<<< HEAD
   InternalStats::CompactionStats stats(CompactionReason::kFlush, 1);
+=======
+  InternalStats::CompactionStats stats(1);
+>>>>>>> blood in blood out
   stats.micros = db_options_.env->NowMicros() - start_micros;
   stats.bytes_written = meta_.fd.GetFileSize();
   MeasureTime(stats_, FLUSH_TIME, stats.micros);

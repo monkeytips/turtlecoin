@@ -19,7 +19,11 @@ namespace rocksdb {
 
 class MemoryTest : public testing::Test {
  public:
+<<<<<<< HEAD
   MemoryTest() : kDbDir(test::PerThreadDBPath("memory_test")), rnd_(301) {
+=======
+  MemoryTest() : kDbDir(test::TmpDir() + "/memory_test"), rnd_(301) {
+>>>>>>> blood in blood out
     assert(Env::Default()->CreateDirIfMissing(kDbDir).ok());
   }
 
@@ -269,7 +273,11 @@ int main(int argc, char** argv) {
 #else
 #include <cstdio>
 
+<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
+=======
+int main(int argc, char** argv) {
+>>>>>>> blood in blood out
   printf("Skipped in RocksDBLite as utilities are not supported.\n");
   return 0;
 }

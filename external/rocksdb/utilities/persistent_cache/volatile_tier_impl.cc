@@ -106,7 +106,11 @@ Status VolatileCacheTier::Lookup(const Slice& page_key,
   return Status::NotFound("key not found in volatile cache");
 }
 
+<<<<<<< HEAD
 bool VolatileCacheTier::Erase(const Slice& /*key*/) {
+=======
+bool VolatileCacheTier::Erase(const Slice& key) {
+>>>>>>> blood in blood out
   assert(!"not supported");
   return true;
 }

@@ -20,7 +20,11 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+<<<<<<< HEAD
 #if defined(OS_LINUX) || defined(OS_SOLARIS)
+=======
+#ifdef OS_LINUX
+>>>>>>> blood in blood out
 #include <sys/statfs.h>
 #include <sys/syscall.h>
 #include <sys/sysmacros.h>
@@ -49,7 +53,10 @@
 #include "rocksdb/options.h"
 #include "rocksdb/slice.h"
 #include "util/coding.h"
+<<<<<<< HEAD
 #include "util/compression_context_cache.h"
+=======
+>>>>>>> blood in blood out
 #include "util/logging.h"
 #include "util/random.h"
 #include "util/string_util.h"
@@ -75,15 +82,43 @@ ThreadStatusUpdater* CreateThreadStatusUpdater() {
   return new ThreadStatusUpdater();
 }
 
+<<<<<<< HEAD
 inline mode_t GetDBFileMode(bool allow_non_owner_access) {
   return allow_non_owner_access ? 0644 : 0600;
 }
 
+=======
+>>>>>>> blood in blood out
 // list of pathnames that are locked
 static std::set<std::string> lockedFiles;
 static port::Mutex mutex_lockedFiles;
 
+<<<<<<< HEAD
 static int LockOrUnlock(int fd, bool lock) {
+=======
+static int LockOrUnlock(const std::string& fname, int fd, bool lock) {
+  mutex_lockedFiles.Lock();
+  if (lock) {
+    // If it already exists in the lockedFiles set, then it is already locked,
+    // and fail this lock attempt. Otherwise, insert it into lockedFiles.
+    // This check is needed because fcntl() does not detect lock conflict
+    // if the fcntl is issued by the same thread that earlier acquired
+    // this lock.
+    if (lockedFiles.insert(fname).second == false) {
+      mutex_lockedFiles.Unlock();
+      errno = ENOLCK;
+      return -1;
+    }
+  } else {
+    // If we are unlocking, then verify that we had locked it earlier,
+    // it should already exist in lockedFiles. Remove it from lockedFiles.
+    if (lockedFiles.erase(fname) != 1) {
+      mutex_lockedFiles.Unlock();
+      errno = ENOLCK;
+      return -1;
+    }
+  }
+>>>>>>> blood in blood out
   errno = 0;
   struct flock f;
   memset(&f, 0, sizeof(f));
@@ -92,7 +127,15 @@ static int LockOrUnlock(int fd, bool lock) {
   f.l_start = 0;
   f.l_len = 0;        // Lock/unlock entire file
   int value = fcntl(fd, F_SETLK, &f);
+<<<<<<< HEAD
 
+=======
+  if (value == -1 && lock) {
+    // if there is an error in locking, then remove the pathname from lockedfiles
+    lockedFiles.erase(fname);
+  }
+  mutex_lockedFiles.Unlock();
+>>>>>>> blood in blood out
   return value;
 }
 
@@ -147,7 +190,11 @@ class PosixEnv : public Env {
 
     do {
       IOSTATS_TIMER_GUARD(open_nanos);
+<<<<<<< HEAD
       fd = open(fname.c_str(), flags, GetDBFileMode(allow_non_owner_access_));
+=======
+      fd = open(fname.c_str(), flags, 0644);
+>>>>>>> blood in blood out
     } while (fd < 0 && errno == EINTR);
     if (fd < 0) {
       return IOError("While opening a file for sequentially reading", fname,
@@ -197,7 +244,11 @@ class PosixEnv : public Env {
 
     do {
       IOSTATS_TIMER_GUARD(open_nanos);
+<<<<<<< HEAD
       fd = open(fname.c_str(), flags, GetDBFileMode(allow_non_owner_access_));
+=======
+      fd = open(fname.c_str(), flags, 0644);
+>>>>>>> blood in blood out
     } while (fd < 0 && errno == EINTR);
     if (fd < 0) {
       return IOError("While open a file for random read", fname, errno);
@@ -217,9 +268,15 @@ class PosixEnv : public Env {
                                                   size, options));
         } else {
           s = IOError("while mmap file for read", fname, errno);
+<<<<<<< HEAD
           close(fd);
         }
       }
+=======
+        }
+      }
+      close(fd);
+>>>>>>> blood in blood out
     } else {
       if (options.use_direct_reads && !options.use_mmap_reads) {
 #ifdef OS_MACOSX
@@ -268,7 +325,11 @@ class PosixEnv : public Env {
 
     do {
       IOSTATS_TIMER_GUARD(open_nanos);
+<<<<<<< HEAD
       fd = open(fname.c_str(), flags, GetDBFileMode(allow_non_owner_access_));
+=======
+      fd = open(fname.c_str(), flags, 0644);
+>>>>>>> blood in blood out
     } while (fd < 0 && errno == EINTR);
 
     if (fd < 0) {
@@ -356,8 +417,12 @@ class PosixEnv : public Env {
 
     do {
       IOSTATS_TIMER_GUARD(open_nanos);
+<<<<<<< HEAD
       fd = open(old_fname.c_str(), flags,
                 GetDBFileMode(allow_non_owner_access_));
+=======
+      fd = open(old_fname.c_str(), flags, 0644);
+>>>>>>> blood in blood out
     } while (fd < 0 && errno == EINTR);
     if (fd < 0) {
       s = IOError("while reopen file for write", fname, errno);
@@ -417,7 +482,11 @@ class PosixEnv : public Env {
     int fd = -1;
     while (fd < 0) {
       IOSTATS_TIMER_GUARD(open_nanos);
+<<<<<<< HEAD
       fd = open(fname.c_str(), O_RDWR, GetDBFileMode(allow_non_owner_access_));
+=======
+      fd = open(fname.c_str(), O_CREAT | O_RDWR, 0644);
+>>>>>>> blood in blood out
       if (fd < 0) {
         // Error while opening the file
         if (errno == EINTR) {
@@ -432,6 +501,7 @@ class PosixEnv : public Env {
     return Status::OK();
   }
 
+<<<<<<< HEAD
   virtual Status NewMemoryMappedFileBuffer(
       const std::string& fname,
       unique_ptr<MemoryMappedFileBuffer>* result) override {
@@ -473,6 +543,8 @@ class PosixEnv : public Env {
     return status;
   }
 
+=======
+>>>>>>> blood in blood out
   virtual Status NewDirectory(const std::string& name,
                               unique_ptr<Directory>* result) override {
     result->reset();
@@ -613,6 +685,7 @@ class PosixEnv : public Env {
     return result;
   }
 
+<<<<<<< HEAD
   Status NumFileLinks(const std::string& fname, uint64_t* count) override {
     struct stat s;
     if (stat(fname.c_str(), &s) != 0) {
@@ -622,6 +695,8 @@ class PosixEnv : public Env {
     return Status::OK();
   }
 
+=======
+>>>>>>> blood in blood out
   virtual Status AreFilesSame(const std::string& first,
                               const std::string& second, bool* res) override {
     struct stat statbuf[2];
@@ -645,6 +720,7 @@ class PosixEnv : public Env {
   virtual Status LockFile(const std::string& fname, FileLock** lock) override {
     *lock = nullptr;
     Status result;
+<<<<<<< HEAD
 
     mutex_lockedFiles.Lock();
     // If it already exists in the lockedFiles set, then it is already locked,
@@ -662,6 +738,8 @@ class PosixEnv : public Env {
       return IOError("lock ", fname, errno);
     }
 
+=======
+>>>>>>> blood in blood out
     int fd;
     {
       IOSTATS_TIMER_GUARD(open_nanos);
@@ -669,9 +747,13 @@ class PosixEnv : public Env {
     }
     if (fd < 0) {
       result = IOError("while open a file for lock", fname, errno);
+<<<<<<< HEAD
     } else if (LockOrUnlock(fd, true) == -1) {
       // if there is an error in locking, then remove the pathname from lockedfiles
       lockedFiles.erase(fname);
+=======
+    } else if (LockOrUnlock(fname, fd, true) == -1) {
+>>>>>>> blood in blood out
       result = IOError("While lock file", fname, errno);
       close(fd);
     } else {
@@ -681,14 +763,18 @@ class PosixEnv : public Env {
       my_lock->filename = fname;
       *lock = my_lock;
     }
+<<<<<<< HEAD
 
     mutex_lockedFiles.Unlock();
+=======
+>>>>>>> blood in blood out
     return result;
   }
 
   virtual Status UnlockFile(FileLock* lock) override {
     PosixFileLock* my_lock = reinterpret_cast<PosixFileLock*>(lock);
     Status result;
+<<<<<<< HEAD
     mutex_lockedFiles.Lock();
     // If we are unlocking, then verify that we had locked it earlier,
     // it should already exist in lockedFiles. Remove it from lockedFiles.
@@ -696,17 +782,27 @@ class PosixEnv : public Env {
       errno = ENOLCK;
       result = IOError("unlock", my_lock->filename, errno);
     } else if (LockOrUnlock(my_lock->fd_, false) == -1) {
+=======
+    if (LockOrUnlock(my_lock->filename, my_lock->fd_, false) == -1) {
+>>>>>>> blood in blood out
       result = IOError("unlock", my_lock->filename, errno);
     }
     close(my_lock->fd_);
     delete my_lock;
+<<<<<<< HEAD
     mutex_lockedFiles.Unlock();
+=======
+>>>>>>> blood in blood out
     return result;
   }
 
   virtual void Schedule(void (*function)(void* arg1), void* arg,
                         Priority pri = LOW, void* tag = nullptr,
+<<<<<<< HEAD
                         void (*unschedFunction)(void* arg) = nullptr) override;
+=======
+                        void (*unschedFunction)(void* arg) = 0) override;
+>>>>>>> blood in blood out
 
   virtual int UnSchedule(void* arg, Priority pri) override;
 
@@ -848,11 +944,14 @@ class PosixEnv : public Env {
     return thread_pools_[pri].GetBackgroundThreads();
   }
 
+<<<<<<< HEAD
   virtual Status SetAllowNonOwnerAccess(bool allow_non_owner_access) override {
     allow_non_owner_access_ = allow_non_owner_access;
     return Status::OK();
   }
 
+=======
+>>>>>>> blood in blood out
   // Allow increasing the number of worker threads.
   virtual void IncBackgroundThreadsIfNeeded(int num, Priority pri) override {
     assert(pri >= Priority::BOTTOM && pri <= Priority::HIGH);
@@ -863,6 +962,7 @@ class PosixEnv : public Env {
     assert(pool >= Priority::BOTTOM && pool <= Priority::HIGH);
 #ifdef OS_LINUX
     thread_pools_[pool].LowerIOPriority();
+<<<<<<< HEAD
 #else
     (void)pool;
 #endif
@@ -874,6 +974,8 @@ class PosixEnv : public Env {
     thread_pools_[pool].LowerCPUPriority();
 #else
     (void)pool;
+=======
+>>>>>>> blood in blood out
 #endif
   }
 
@@ -951,7 +1053,10 @@ class PosixEnv : public Env {
         return false;
     }
 #else
+<<<<<<< HEAD
     (void)path;
+=======
+>>>>>>> blood in blood out
     return false;
 #endif
   }
@@ -961,17 +1066,24 @@ class PosixEnv : public Env {
   std::vector<ThreadPoolImpl> thread_pools_;
   pthread_mutex_t mu_;
   std::vector<pthread_t> threads_to_join_;
+<<<<<<< HEAD
   // If true, allow non owner read access for db files. Otherwise, non-owner
   //  has no access to db files.
   bool allow_non_owner_access_;
+=======
+>>>>>>> blood in blood out
 };
 
 PosixEnv::PosixEnv()
     : checkedDiskForMmap_(false),
       forceMmapOff_(false),
       page_size_(getpagesize()),
+<<<<<<< HEAD
       thread_pools_(Priority::TOTAL),
       allow_non_owner_access_(true) {
+=======
+      thread_pools_(Priority::TOTAL) {
+>>>>>>> blood in blood out
   ThreadPoolImpl::PthreadCall("mutex_init", pthread_mutex_init(&mu_, nullptr));
   for (int pool_id = 0; pool_id < Env::Priority::TOTAL; ++pool_id) {
     thread_pools_[pool_id].SetThreadPriority(
@@ -1070,8 +1182,11 @@ Env* Env::Default() {
   // the destructor of static PosixEnv will go first, then the
   // the singletons of ThreadLocalPtr.
   ThreadLocalPtr::InitSingletons();
+<<<<<<< HEAD
   CompressionContextCache::InitSingleton();
   INIT_SYNC_POINT_SINGLETONS();
+=======
+>>>>>>> blood in blood out
   static PosixEnv default_env;
   return &default_env;
 }

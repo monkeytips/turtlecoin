@@ -37,7 +37,11 @@ public:
   virtual bool beginObject(Common::StringView name) override;
   virtual void endObject() override;
 
+<<<<<<< HEAD
   virtual bool beginArray(uint64_t& size, Common::StringView name) override;
+=======
+  virtual bool beginArray(size_t& size, Common::StringView name) override;
+>>>>>>> blood in blood out
   virtual void endArray() override;
 
   virtual bool operator()(uint8_t& value, Common::StringView name) override;
@@ -50,7 +54,11 @@ public:
   virtual bool operator()(double& value, Common::StringView name) override;
   virtual bool operator()(bool& value, Common::StringView name) override;
   virtual bool operator()(std::string& value, Common::StringView name) override;
+<<<<<<< HEAD
   virtual bool binary(void* value, uint64_t size, Common::StringView name) override;
+=======
+  virtual bool binary(void* value, size_t size, Common::StringView name) override;
+>>>>>>> blood in blood out
   virtual bool binary(std::string& value, Common::StringView name) override;
 
   template<typename T>
@@ -75,12 +83,20 @@ private:
   struct Level {
     State state;
     std::string name;
+<<<<<<< HEAD
     uint64_t count;
+=======
+    size_t count;
+>>>>>>> blood in blood out
 
     Level(Common::StringView nm) :
       name(nm), state(State::Object), count(0) {}
 
+<<<<<<< HEAD
     Level(Common::StringView nm, uint64_t arraySize) :
+=======
+    Level(Common::StringView nm, size_t arraySize) :
+>>>>>>> blood in blood out
       name(nm), state(State::ArrayPrefix), count(arraySize) {}
 
     Level(Level&& rv) {

@@ -9,7 +9,10 @@
 
 #pragma once
 #include <memory>
+<<<<<<< HEAD
 #include "rocksdb/slice_transform.h"
+=======
+>>>>>>> blood in blood out
 #include "table/internal_iterator.h"
 
 namespace rocksdb {
@@ -40,6 +43,7 @@ class TableReader {
   // skip_filters: disables checking the bloom filters even if they exist. This
   //               option is effective only for block-based table format.
   virtual InternalIterator* NewIterator(const ReadOptions&,
+<<<<<<< HEAD
                                         const SliceTransform* prefix_extractor,
                                         Arena* arena = nullptr,
                                         bool skip_filters = false,
@@ -47,6 +51,13 @@ class TableReader {
 
   virtual InternalIterator* NewRangeTombstoneIterator(
       const ReadOptions& /*read_options*/) {
+=======
+                                        Arena* arena = nullptr,
+                                        bool skip_filters = false) = 0;
+
+  virtual InternalIterator* NewRangeTombstoneIterator(
+      const ReadOptions& read_options) {
+>>>>>>> blood in blood out
     return nullptr;
   }
 
@@ -65,7 +76,11 @@ class TableReader {
   virtual std::shared_ptr<const TableProperties> GetTableProperties() const = 0;
 
   // Prepare work that can be done before the real Get()
+<<<<<<< HEAD
   virtual void Prepare(const Slice& /*target*/) {}
+=======
+  virtual void Prepare(const Slice& target) {}
+>>>>>>> blood in blood out
 
   // Report an approximation of how much memory has been used.
   virtual size_t ApproximateMemoryUsage() const = 0;
@@ -82,9 +97,13 @@ class TableReader {
   // skip_filters: disables checking the bloom filters even if they exist. This
   //               option is effective only for block-based table format.
   virtual Status Get(const ReadOptions& readOptions, const Slice& key,
+<<<<<<< HEAD
                      GetContext* get_context,
                      const SliceTransform* prefix_extractor,
                      bool skip_filters = false) = 0;
+=======
+                     GetContext* get_context, bool skip_filters = false) = 0;
+>>>>>>> blood in blood out
 
   // Prefetch data corresponding to a give range of keys
   // Typically this functionality is required for table implementations that
@@ -99,8 +118,12 @@ class TableReader {
   }
 
   // convert db file to a human readable form
+<<<<<<< HEAD
   virtual Status DumpTable(WritableFile* /*out_file*/,
                            const SliceTransform* /*prefix_extractor*/) {
+=======
+  virtual Status DumpTable(WritableFile* out_file) {
+>>>>>>> blood in blood out
     return Status::NotSupported("DumpTable() not supported");
   }
 

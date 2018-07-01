@@ -456,11 +456,7 @@ const JsonValue::String& JsonValue::getString() const {
   return *reinterpret_cast<const String*>(valueString);
 }
 
-uint64_t JsonValue::size() const {
   switch (type) {
-  case ARRAY:
-    return reinterpret_cast<const Array*>(valueArray)->size();
-  case OBJECT:
     return reinterpret_cast<const Object*>(valueObject)->size();
   default:
     throw std::runtime_error("JsonValue type is not ARRAY or OBJECT");

@@ -53,7 +53,11 @@ Status ShardedCache::Insert(const Slice& key, void* value, size_t charge,
       ->Insert(key, hash, value, charge, deleter, handle, priority);
 }
 
+<<<<<<< HEAD
 Cache::Handle* ShardedCache::Lookup(const Slice& key, Statistics* /*stats*/) {
+=======
+Cache::Handle* ShardedCache::Lookup(const Slice& key, Statistics* stats) {
+>>>>>>> blood in blood out
   uint32_t hash = HashSlice(key);
   return GetShard(Shard(hash))->Lookup(key, hash);
 }

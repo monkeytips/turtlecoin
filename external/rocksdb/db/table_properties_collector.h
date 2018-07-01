@@ -73,7 +73,11 @@ class InternalKeyPropertiesCollectorFactory
     : public IntTblPropCollectorFactory {
  public:
   virtual IntTblPropCollector* CreateIntTblPropCollector(
+<<<<<<< HEAD
       uint32_t /*column_family_id*/) override {
+=======
+      uint32_t column_family_id) override {
+>>>>>>> blood in blood out
     return new InternalKeyPropertiesCollector();
   }
 

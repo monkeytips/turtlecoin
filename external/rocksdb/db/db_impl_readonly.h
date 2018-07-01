@@ -36,6 +36,7 @@ class DBImplReadOnly : public DBImpl {
       std::vector<Iterator*>* iterators) override;
 
   using DBImpl::Put;
+<<<<<<< HEAD
   virtual Status Put(const WriteOptions& /*options*/,
                      ColumnFamilyHandle* /*column_family*/,
                      const Slice& /*key*/, const Slice& /*value*/) override {
@@ -68,17 +69,57 @@ class DBImplReadOnly : public DBImpl {
                               ColumnFamilyHandle* /*column_family*/,
                               const Slice* /*begin*/,
                               const Slice* /*end*/) override {
+=======
+  virtual Status Put(const WriteOptions& options,
+                     ColumnFamilyHandle* column_family, const Slice& key,
+                     const Slice& value) override {
+    return Status::NotSupported("Not supported operation in read only mode.");
+  }
+  using DBImpl::Merge;
+  virtual Status Merge(const WriteOptions& options,
+                       ColumnFamilyHandle* column_family, const Slice& key,
+                       const Slice& value) override {
+    return Status::NotSupported("Not supported operation in read only mode.");
+  }
+  using DBImpl::Delete;
+  virtual Status Delete(const WriteOptions& options,
+                        ColumnFamilyHandle* column_family,
+                        const Slice& key) override {
+    return Status::NotSupported("Not supported operation in read only mode.");
+  }
+  using DBImpl::SingleDelete;
+  virtual Status SingleDelete(const WriteOptions& options,
+                              ColumnFamilyHandle* column_family,
+                              const Slice& key) override {
+    return Status::NotSupported("Not supported operation in read only mode.");
+  }
+  virtual Status Write(const WriteOptions& options,
+                       WriteBatch* updates) override {
+    return Status::NotSupported("Not supported operation in read only mode.");
+  }
+  using DBImpl::CompactRange;
+  virtual Status CompactRange(const CompactRangeOptions& options,
+                              ColumnFamilyHandle* column_family,
+                              const Slice* begin, const Slice* end) override {
+>>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation in read only mode.");
   }
 
   using DBImpl::CompactFiles;
   virtual Status CompactFiles(
+<<<<<<< HEAD
       const CompactionOptions& /*compact_options*/,
       ColumnFamilyHandle* /*column_family*/,
       const std::vector<std::string>& /*input_file_names*/,
       const int /*output_level*/, const int /*output_path_id*/ = -1,
       std::vector<std::string>* const /*output_file_names*/ = nullptr
       ) override {
+=======
+      const CompactionOptions& compact_options,
+      ColumnFamilyHandle* column_family,
+      const std::vector<std::string>& input_file_names,
+      const int output_level, const int output_path_id = -1) override {
+>>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation in read only mode.");
   }
 
@@ -86,18 +127,32 @@ class DBImplReadOnly : public DBImpl {
     return Status::NotSupported("Not supported operation in read only mode.");
   }
 
+<<<<<<< HEAD
   virtual Status EnableFileDeletions(bool /*force*/) override {
     return Status::NotSupported("Not supported operation in read only mode.");
   }
   virtual Status GetLiveFiles(std::vector<std::string>&,
                               uint64_t* /*manifest_file_size*/,
                               bool /*flush_memtable*/ = true) override {
+=======
+  virtual Status EnableFileDeletions(bool force) override {
+    return Status::NotSupported("Not supported operation in read only mode.");
+  }
+  virtual Status GetLiveFiles(std::vector<std::string>&,
+                              uint64_t* manifest_file_size,
+                              bool flush_memtable = true) override {
+>>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation in read only mode.");
   }
 
   using DBImpl::Flush;
+<<<<<<< HEAD
   virtual Status Flush(const FlushOptions& /*options*/,
                        ColumnFamilyHandle* /*column_family*/) override {
+=======
+  virtual Status Flush(const FlushOptions& options,
+                       ColumnFamilyHandle* column_family) override {
+>>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation in read only mode.");
   }
 
@@ -108,9 +163,15 @@ class DBImplReadOnly : public DBImpl {
 
   using DB::IngestExternalFile;
   virtual Status IngestExternalFile(
+<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/,
       const std::vector<std::string>& /*external_files*/,
       const IngestExternalFileOptions& /*ingestion_options*/) override {
+=======
+      ColumnFamilyHandle* column_family,
+      const std::vector<std::string>& external_files,
+      const IngestExternalFileOptions& ingestion_options) override {
+>>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation in read only mode.");
   }
 

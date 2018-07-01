@@ -98,6 +98,7 @@ class BytewiseComparatorImpl : public Comparator {
     }
     // *key is a run of 0xffs.  Leave it alone.
   }
+<<<<<<< HEAD
 
   virtual bool IsSameLengthImmediateSuccessor(const Slice& s,
                                               const Slice& t) const override {
@@ -124,6 +125,8 @@ class BytewiseComparatorImpl : public Comparator {
       return false;
     }
   }
+=======
+>>>>>>> blood in blood out
 };
 
 class ReverseBytewiseComparatorImpl : public BytewiseComparatorImpl {
@@ -137,6 +140,7 @@ class ReverseBytewiseComparatorImpl : public BytewiseComparatorImpl {
   virtual int Compare(const Slice& a, const Slice& b) const override {
     return -a.compare(b);
   }
+<<<<<<< HEAD
 
   void FindShortestSeparator(std::string* start,
                              const Slice& limit) const override {
@@ -189,6 +193,10 @@ class ReverseBytewiseComparatorImpl : public BytewiseComparatorImpl {
     // Don't do anything for simplicity.
   }
 };
+=======
+};
+
+>>>>>>> blood in blood out
 }// namespace
 
 const Comparator* BytewiseComparator() {

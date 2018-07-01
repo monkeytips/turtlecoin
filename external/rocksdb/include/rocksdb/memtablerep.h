@@ -39,26 +39,37 @@
 #include <stdexcept>
 #include <stdint.h>
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <rocksdb/slice.h>
+=======
+>>>>>>> blood in blood out
 
 namespace rocksdb {
 
 class Arena;
 class Allocator;
 class LookupKey;
+<<<<<<< HEAD
+=======
+class Slice;
+>>>>>>> blood in blood out
 class SliceTransform;
 class Logger;
 
 typedef void* KeyHandle;
 
+<<<<<<< HEAD
 extern Slice GetLengthPrefixedSlice(const char* data);
 
+=======
+>>>>>>> blood in blood out
 class MemTableRep {
  public:
   // KeyComparator provides a means to compare keys, which are internal keys
   // concatenated with values.
   class KeyComparator {
    public:
+<<<<<<< HEAD
     typedef rocksdb::Slice DecodedType;
 
     virtual DecodedType decode_key(const char* key) const {
@@ -67,6 +78,8 @@ class MemTableRep {
       return GetLengthPrefixedSlice(key);
     }
 
+=======
+>>>>>>> blood in blood out
     // Compare a and b. Return a negative value if a is less than b, 0 if they
     // are equal, and a positive value if a is greater than b
     virtual int operator()(const char* prefix_len_key1,
@@ -107,7 +120,11 @@ class MemTableRep {
   //
   // Currently only skip-list based memtable implement the interface. Other
   // implementations will fallback to Insert() by default.
+<<<<<<< HEAD
   virtual void InsertWithHint(KeyHandle handle, void** /*hint*/) {
+=======
+  virtual void InsertWithHint(KeyHandle handle, void** hint) {
+>>>>>>> blood in blood out
     // Ignore the hint by default.
     Insert(handle);
   }
@@ -159,8 +176,13 @@ class MemTableRep {
   virtual void Get(const LookupKey& k, void* callback_args,
                    bool (*callback_func)(void* arg, const char* entry));
 
+<<<<<<< HEAD
   virtual uint64_t ApproximateNumEntries(const Slice& /*start_ikey*/,
                                          const Slice& /*end_key*/) {
+=======
+  virtual uint64_t ApproximateNumEntries(const Slice& start_ikey,
+                                         const Slice& end_key) {
+>>>>>>> blood in blood out
     return 0;
   }
 
@@ -356,7 +378,11 @@ extern MemTableRepFactory* NewHashLinkListRepFactory(
 
 // This factory creates a cuckoo-hashing based mem-table representation.
 // Cuckoo-hash is a closed-hash strategy, in which all key/value pairs
+<<<<<<< HEAD
 // are stored in the bucket array itself instead of in some data structures
+=======
+// are stored in the bucket array itself intead of in some data structures
+>>>>>>> blood in blood out
 // external to the bucket array.  In addition, each key in cuckoo hash
 // has a constant number of possible buckets in the bucket array.  These
 // two properties together makes cuckoo hash more memory efficient and

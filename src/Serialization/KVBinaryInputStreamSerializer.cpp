@@ -48,10 +48,17 @@ JsonValue readIntegerJson(Common::IInputStream& s) {
   return readPodJson<T, int64_t>(s);
 }
 
+<<<<<<< HEAD
 uint64_t readVarint(Common::IInputStream& s) {
   uint8_t b = read<uint8_t>(s);
   uint8_t size_mask = b & PORTABLE_RAW_SIZE_MARK_MASK;
   uint64_t bytesLeft = 0;
+=======
+size_t readVarint(Common::IInputStream& s) {
+  uint8_t b = read<uint8_t>(s);
+  uint8_t size_mask = b & PORTABLE_RAW_SIZE_MARK_MASK;
+  size_t bytesLeft = 0;
+>>>>>>> blood in blood out
 
   switch (size_mask){
   case PORTABLE_RAW_SIZE_MARK_BYTE:
@@ -68,10 +75,17 @@ uint64_t readVarint(Common::IInputStream& s) {
     break;
   }
 
+<<<<<<< HEAD
   uint64_t value = b;
 
   for (uint64_t i = 1; i <= bytesLeft; ++i) {
     uint64_t n = read<uint8_t>(s);
+=======
+  size_t value = b;
+
+  for (size_t i = 1; i <= bytesLeft; ++i) {
+    size_t n = read<uint8_t>(s);
+>>>>>>> blood in blood out
     value |= n << (i * 8);
   }
 
@@ -109,7 +123,11 @@ JsonValue loadArray(Common::IInputStream& stream, uint8_t itemType);
 
 JsonValue loadSection(Common::IInputStream& stream) {
   JsonValue sec(JsonValue::OBJECT);
+<<<<<<< HEAD
   uint64_t count = readVarint(stream);
+=======
+  size_t count = readVarint(stream);
+>>>>>>> blood in blood out
   std::string name;
 
   while (count--) {
@@ -154,7 +172,11 @@ JsonValue loadEntry(Common::IInputStream& stream) {
 
 JsonValue loadArray(Common::IInputStream& stream, uint8_t itemType) {
   JsonValue arr(JsonValue::ARRAY);
+<<<<<<< HEAD
   uint64_t count = readVarint(stream);
+=======
+  size_t count = readVarint(stream);
+>>>>>>> blood in blood out
 
   while (count--) {
     arr.pushBack(loadValue(stream, itemType));
@@ -185,7 +207,11 @@ JsonValue parseBinary(Common::IInputStream& stream) {
 KVBinaryInputStreamSerializer::KVBinaryInputStreamSerializer(Common::IInputStream& strm) : JsonInputValueSerializer(parseBinary(strm)) {
 }
 
+<<<<<<< HEAD
 bool KVBinaryInputStreamSerializer::binary(void* value, uint64_t size, Common::StringView name) {
+=======
+bool KVBinaryInputStreamSerializer::binary(void* value, size_t size, Common::StringView name) {
+>>>>>>> blood in blood out
   std::string str;
 
   if (!(*this)(str, name)) {

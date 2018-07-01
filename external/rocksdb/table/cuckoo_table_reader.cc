@@ -57,7 +57,11 @@ CuckooTableReader::CuckooTableReader(
   }
   TableProperties* props = nullptr;
   status_ = ReadTableProperties(file_.get(), file_size, kCuckooTableMagicNumber,
+<<<<<<< HEAD
       ioptions, &props, true /* compression_type_missing */);
+=======
+      ioptions, &props);
+>>>>>>> blood in blood out
   if (!status_.ok()) {
     return;
   }
@@ -139,10 +143,15 @@ CuckooTableReader::CuckooTableReader(
   status_ = file_->Read(0, file_size, &file_data_, nullptr);
 }
 
+<<<<<<< HEAD
 Status CuckooTableReader::Get(const ReadOptions& /*readOptions*/,
                               const Slice& key, GetContext* get_context,
                               const SliceTransform* /* prefix_extractor */,
                               bool /*skip_filters*/) {
+=======
+Status CuckooTableReader::Get(const ReadOptions& readOptions, const Slice& key,
+                              GetContext* get_context, bool skip_filters) {
+>>>>>>> blood in blood out
   assert(key.size() == key_length_ + (is_last_level_ ? 8 : 0));
   Slice user_key = ExtractUserKey(key);
   for (uint32_t hash_cnt = 0; hash_cnt < num_hash_func_; ++hash_cnt) {
@@ -171,8 +180,12 @@ Status CuckooTableReader::Get(const ReadOptions& /*readOptions*/,
           Slice full_key(bucket, key_length_);
           ParsedInternalKey found_ikey;
           ParseInternalKey(full_key, &found_ikey);
+<<<<<<< HEAD
           bool dont_care __attribute__((__unused__));
           get_context->SaveValue(found_ikey, value, &dont_care);
+=======
+          get_context->SaveValue(found_ikey, value);
+>>>>>>> blood in blood out
         }
         // We don't support merge operations. So, we return here.
         return Status::OK();
@@ -207,7 +220,11 @@ class CuckooTableIterator : public InternalIterator {
   void Prev() override;
   Slice key() const override;
   Slice value() const override;
+<<<<<<< HEAD
   Status status() const override { return Status::OK(); }
+=======
+  Status status() const override { return status_; }
+>>>>>>> blood in blood out
   void InitIfNeeded();
 
  private:
@@ -242,6 +259,10 @@ class CuckooTableIterator : public InternalIterator {
   void PrepareKVAtCurrIdx();
   CuckooTableReader* reader_;
   bool initialized_;
+<<<<<<< HEAD
+=======
+  Status status_;
+>>>>>>> blood in blood out
   // Contains a map of keys to bucket_id sorted in key order.
   std::vector<uint32_t> sorted_bucket_ids_;
   // We assume that the number of items can be stored in uint32 (4 Billion).
@@ -313,7 +334,11 @@ void CuckooTableIterator::Seek(const Slice& target) {
   PrepareKVAtCurrIdx();
 }
 
+<<<<<<< HEAD
 void CuckooTableIterator::SeekForPrev(const Slice& /*target*/) {
+=======
+void CuckooTableIterator::SeekForPrev(const Slice& target) {
+>>>>>>> blood in blood out
   // Not supported
   assert(false);
 }
@@ -378,9 +403,13 @@ extern InternalIterator* NewErrorInternalIterator(const Status& status,
                                                   Arena* arena);
 
 InternalIterator* CuckooTableReader::NewIterator(
+<<<<<<< HEAD
     const ReadOptions& /*read_options*/,
     const SliceTransform* /* prefix_extractor */, Arena* arena,
     bool /*skip_filters*/, bool /*for_compaction*/) {
+=======
+    const ReadOptions& read_options, Arena* arena, bool skip_filters) {
+>>>>>>> blood in blood out
   if (!status().ok()) {
     return NewErrorInternalIterator(
         Status::Corruption("CuckooTableReader status is not okay."), arena);
