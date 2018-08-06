@@ -167,6 +167,8 @@ const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          //
 const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
 const char* const SEED_NODES[] = {
+  "seed-mtip-0.triforcecoin.com:13001",
+  "seed-mtip-1.triforcecoin.com:13001",
   "35.237.5.160:13001",
   "104.155.39.18:13001",
   "45.76.3.17:13001",
