@@ -232,6 +232,7 @@ const static  boost::uuids::uuid CRYPTONOTE_NETWORK          =
 };
 
 const char* const SEED_NODES[] = {
+  "78.46.49.89:13001", // dicktip-explorer.getm.tips
   "35.227.111.188:13001", //crappy
   "35.190.197.131:13001", //crappy
 //  "seed-mtip-0.triforcecoin.com:13001",
