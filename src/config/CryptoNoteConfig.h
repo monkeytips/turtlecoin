@@ -141,15 +141,15 @@ const uint64_t FORK_HEIGHTS[] = {
     170000,//4
     250000,//5
     440000,//6
-    620000,//probably will never happen and coin will die!
-    800000,
+    620000,//7 Sorry bro, we move to another fork.
+    800000,//8 probably will never happen and coin will die!
     1000000,
     1200000,
     1400000
 };
 
 /* MAKE SURE TO UPDATE THIS VALUE WITH EVERY MAJOR RELEASE BEFORE A FORK */
-const uint64_t SOFTWARE_SUPPORTED_FORK_INDEX                 = 3;
+const uint64_t SOFTWARE_SUPPORTED_FORK_INDEX                 = 8;
 
 const uint64_t FORK_HEIGHTS_SIZE = sizeof(FORK_HEIGHTS) / sizeof(*FORK_HEIGHTS);
 
