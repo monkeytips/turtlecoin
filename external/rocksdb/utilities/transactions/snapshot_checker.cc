@@ -15,17 +15,10 @@ namespace rocksdb {
 
 #ifdef ROCKSDB_LITE
 WritePreparedSnapshotChecker::WritePreparedSnapshotChecker(
-<<<<<<< HEAD
     WritePreparedTxnDB* /*txn_db*/) {}
 
 bool WritePreparedSnapshotChecker::IsInSnapshot(
     SequenceNumber /*sequence*/, SequenceNumber /*snapshot_sequence*/) const {
-=======
-    WritePreparedTxnDB* txn_db) {}
-
-bool WritePreparedSnapshotChecker::IsInSnapshot(
-    SequenceNumber sequence, SequenceNumber snapshot_sequence) const {
->>>>>>> blood in blood out
   // Should never be called in LITE mode.
   assert(false);
   return true;

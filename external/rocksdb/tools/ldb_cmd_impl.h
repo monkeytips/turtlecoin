@@ -276,15 +276,10 @@ class WALDumperCommand : public LDBCommand {
   bool print_header_;
   std::string wal_file_;
   bool print_values_;
-<<<<<<< HEAD
   bool is_write_committed_;  // default will be set to true
 
   static const std::string ARG_WAL_FILE;
   static const std::string ARG_WRITE_COMMITTED;
-=======
-
-  static const std::string ARG_WAL_FILE;
->>>>>>> blood in blood out
   static const std::string ARG_PRINT_HEADER;
   static const std::string ARG_PRINT_VALUE;
 };
@@ -527,7 +522,6 @@ class RestoreCommand : public BackupableCommand {
   static void Help(std::string& ret);
 };
 
-<<<<<<< HEAD
 class WriteExternalSstFilesCommand : public LDBCommand {
  public:
   static std::string Name() { return "write_extern_sst"; }
@@ -579,6 +573,4 @@ class IngestExternalSstFilesCommand : public LDBCommand {
   static const std::string ARG_INGEST_BEHIND;
 };
 
-=======
->>>>>>> blood in blood out
 }  // namespace rocksdb

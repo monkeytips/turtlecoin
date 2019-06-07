@@ -8,11 +8,7 @@
 namespace rocksdb {
 
 namespace {
-<<<<<<< HEAD
 template <class T>
-=======
-template<class T>
->>>>>>> blood in blood out
 inline T SafeDivide(T a, T b) {
   return b == 0 ? 0 : a / b;
 }
@@ -21,12 +17,8 @@ inline T SafeDivide(T a, T b) {
 void EventHelpers::AppendCurrentTime(JSONWriter* jwriter) {
   *jwriter << "time_micros"
            << std::chrono::duration_cast<std::chrono::microseconds>(
-<<<<<<< HEAD
                   std::chrono::system_clock::now().time_since_epoch())
                   .count();
-=======
-                  std::chrono::system_clock::now().time_since_epoch()).count();
->>>>>>> blood in blood out
 }
 
 #ifndef ROCKSDB_LITE
@@ -61,14 +53,11 @@ void EventHelpers::NotifyOnBackgroundError(
     listener->OnBackgroundError(reason, bg_error);
   }
   db_mutex->Lock();
-<<<<<<< HEAD
 #else
   (void)listeners;
   (void)reason;
   (void)bg_error;
   (void)db_mutex;
-=======
->>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
 }
 
@@ -134,20 +123,16 @@ void EventHelpers::LogAndNotifyTableFileCreationFinished(
   for (auto& listener : listeners) {
     listener->OnTableFileCreated(info);
   }
-<<<<<<< HEAD
 #else
   (void)listeners;
   (void)db_name;
   (void)cf_name;
   (void)file_path;
   (void)reason;
-=======
->>>>>>> blood in blood out
 #endif  // !ROCKSDB_LITE
 }
 
 void EventHelpers::LogAndNotifyTableFileDeletion(
-<<<<<<< HEAD
     EventLogger* event_logger, int job_id, uint64_t file_number,
     const std::string& file_path, const Status& status,
     const std::string& dbname,
@@ -157,18 +142,6 @@ void EventHelpers::LogAndNotifyTableFileDeletion(
 
   jwriter << "job" << job_id << "event"
           << "table_file_deletion"
-=======
-    EventLogger* event_logger, int job_id,
-    uint64_t file_number, const std::string& file_path,
-    const Status& status, const std::string& dbname,
-    const std::vector<std::shared_ptr<EventListener>>& listeners) {
-
-  JSONWriter jwriter;
-  AppendCurrentTime(&jwriter);
-
-  jwriter << "job" << job_id
-          << "event" << "table_file_deletion"
->>>>>>> blood in blood out
           << "file_number" << file_number;
   if (!status.ok()) {
     jwriter << "status" << status.ToString();
@@ -187,13 +160,10 @@ void EventHelpers::LogAndNotifyTableFileDeletion(
   for (auto& listener : listeners) {
     listener->OnTableFileDeleted(info);
   }
-<<<<<<< HEAD
 #else
   (void)file_path;
   (void)dbname;
   (void)listeners;
-=======
->>>>>>> blood in blood out
 #endif  // !ROCKSDB_LITE
 }
 

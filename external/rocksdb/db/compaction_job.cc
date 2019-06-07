@@ -25,15 +25,10 @@
 #include <vector>
 
 #include "db/builder.h"
-<<<<<<< HEAD
 #include "db/db_impl.h"
 #include "db/db_iter.h"
 #include "db/dbformat.h"
 #include "db/error_handler.h"
-=======
-#include "db/db_iter.h"
-#include "db/dbformat.h"
->>>>>>> blood in blood out
 #include "db/event_helpers.h"
 #include "db/log_reader.h"
 #include "db/log_writer.h"
@@ -69,7 +64,6 @@
 
 namespace rocksdb {
 
-<<<<<<< HEAD
 const char* GetCompactionReasonString(CompactionReason compaction_reason) {
   switch (compaction_reason) {
     case CompactionReason::kUnknown:
@@ -110,8 +104,6 @@ const char* GetCompactionReasonString(CompactionReason compaction_reason) {
   }
 }
 
-=======
->>>>>>> blood in blood out
 // Maintains state for each sub-compaction
 struct CompactionJob::SubcompactionState {
   const Compaction* compaction;
@@ -317,11 +309,7 @@ CompactionJob::CompactionJob(
     const std::atomic<bool>* shutting_down,
     const SequenceNumber preserve_deletes_seqnum, LogBuffer* log_buffer,
     Directory* db_directory, Directory* output_directory, Statistics* stats,
-<<<<<<< HEAD
     InstrumentedMutex* db_mutex, ErrorHandler* db_error_handler,
-=======
-    InstrumentedMutex* db_mutex, Status* db_bg_error,
->>>>>>> blood in blood out
     std::vector<SequenceNumber> existing_snapshots,
     SequenceNumber earliest_write_conflict_snapshot,
     const SnapshotChecker* snapshot_checker, std::shared_ptr<Cache> table_cache,
@@ -330,11 +318,7 @@ CompactionJob::CompactionJob(
     : job_id_(job_id),
       compact_(new CompactionState(compaction)),
       compaction_job_stats_(compaction_job_stats),
-<<<<<<< HEAD
       compaction_stats_(compaction->compaction_reason(), 1),
-=======
-      compaction_stats_(1),
->>>>>>> blood in blood out
       dbname_(dbname),
       db_options_(db_options),
       env_options_(env_options),
@@ -349,11 +333,7 @@ CompactionJob::CompactionJob(
       output_directory_(output_directory),
       stats_(stats),
       db_mutex_(db_mutex),
-<<<<<<< HEAD
       db_error_handler_(db_error_handler),
-=======
-      db_bg_error_(db_bg_error),
->>>>>>> blood in blood out
       existing_snapshots_(std::move(existing_snapshots)),
       earliest_write_conflict_snapshot_(earliest_write_conflict_snapshot),
       snapshot_checker_(snapshot_checker),
@@ -376,24 +356,13 @@ CompactionJob::~CompactionJob() {
   ThreadStatusUtil::ResetThreadStatus();
 }
 
-<<<<<<< HEAD
 void CompactionJob::ReportStartedCompaction(Compaction* compaction) {
-=======
-void CompactionJob::ReportStartedCompaction(
-    Compaction* compaction) {
->>>>>>> blood in blood out
   const auto* cfd = compact_->compaction->column_family_data();
   ThreadStatusUtil::SetColumnFamily(cfd, cfd->ioptions()->env,
                                     db_options_.enable_thread_tracking);
 
-<<<<<<< HEAD
   ThreadStatusUtil::SetThreadOperationProperty(ThreadStatus::COMPACTION_JOB_ID,
                                                job_id_);
-=======
-  ThreadStatusUtil::SetThreadOperationProperty(
-      ThreadStatus::COMPACTION_JOB_ID,
-      job_id_);
->>>>>>> blood in blood out
 
   ThreadStatusUtil::SetThreadOperationProperty(
       ThreadStatus::COMPACTION_INPUT_OUTPUT_LEVEL,
@@ -423,12 +392,7 @@ void CompactionJob::ReportStartedCompaction(
 
   // Set the thread operation after operation properties
   // to ensure GetThreadList() can always show them all together.
-<<<<<<< HEAD
   ThreadStatusUtil::SetThreadOperation(ThreadStatus::OP_COMPACTION);
-=======
-  ThreadStatusUtil::SetThreadOperation(
-      ThreadStatus::OP_COMPACTION);
->>>>>>> blood in blood out
 
   if (compaction_job_stats_) {
     compaction_job_stats_->is_manual_compaction =
@@ -443,19 +407,11 @@ void CompactionJob::Prepare() {
   // Generate file_levels_ for compaction berfore making Iterator
   auto* c = compact_->compaction;
   assert(c->column_family_data() != nullptr);
-<<<<<<< HEAD
   assert(c->column_family_data()->current()->storage_info()->NumLevelFiles(
              compact_->compaction->level()) > 0);
 
   write_hint_ =
       c->column_family_data()->CalculateSSTWriteHint(c->output_level());
-=======
-  assert(c->column_family_data()->current()->storage_info()
-      ->NumLevelFiles(compact_->compaction->level()) > 0);
-
-  write_hint_ = c->column_family_data()->CalculateSSTWriteHint(
-    c->output_level());
->>>>>>> blood in blood out
   // Is this compaction producing files at the bottommost level?
   bottommost_level_ = c->bottommost_level();
 
@@ -538,7 +494,6 @@ void CompactionJob::GenSubcompactionBoundaries() {
   }
 
   std::sort(bounds.begin(), bounds.end(),
-<<<<<<< HEAD
             [cfd_comparator](const Slice& a, const Slice& b) -> bool {
               return cfd_comparator->Compare(ExtractUserKey(a),
                                              ExtractUserKey(b)) < 0;
@@ -551,16 +506,6 @@ void CompactionJob::GenSubcompactionBoundaries() {
                                                    ExtractUserKey(b)) == 0;
                   }),
       bounds.end());
-=======
-    [cfd_comparator] (const Slice& a, const Slice& b) -> bool {
-      return cfd_comparator->Compare(ExtractUserKey(a), ExtractUserKey(b)) < 0;
-    });
-  // Remove duplicated entries from bounds
-  bounds.erase(std::unique(bounds.begin(), bounds.end(),
-    [cfd_comparator] (const Slice& a, const Slice& b) -> bool {
-      return cfd_comparator->Compare(ExtractUserKey(a), ExtractUserKey(b)) == 0;
-    }), bounds.end());
->>>>>>> blood in blood out
 
   // Combine consecutive pairs of boundaries into ranges with an approximate
   // size of data covered by keys in that range
@@ -583,7 +528,6 @@ void CompactionJob::GenSubcompactionBoundaries() {
 
   // Group the ranges into subcompactions
   const double min_file_fill_percent = 4.0 / 5;
-<<<<<<< HEAD
   int base_level = v->storage_info()->base_level();
   uint64_t max_output_files = static_cast<uint64_t>(std::ceil(
       sum / min_file_fill_percent /
@@ -593,14 +537,6 @@ void CompactionJob::GenSubcompactionBoundaries() {
   uint64_t subcompactions =
       std::min({static_cast<uint64_t>(ranges.size()),
                 static_cast<uint64_t>(c->max_subcompactions()),
-=======
-  uint64_t max_output_files = static_cast<uint64_t>(
-      std::ceil(sum / min_file_fill_percent /
-                c->mutable_cf_options()->MaxFileSizeForLevel(out_lvl)));
-  uint64_t subcompactions =
-      std::min({static_cast<uint64_t>(ranges.size()),
-                static_cast<uint64_t>(db_options_.max_subcompactions),
->>>>>>> blood in blood out
                 max_output_files});
 
   if (subcompactions > 1) {
@@ -673,7 +609,6 @@ Status CompactionJob::Run() {
     }
   }
 
-<<<<<<< HEAD
   if (status.ok()) {
     thread_pool.clear();
     std::vector<const FileMetaData*> files_meta;
@@ -743,13 +678,6 @@ Status CompactionJob::Run() {
       auto fn =
           TableFileName(state.compaction->immutable_cf_options()->cf_paths,
                         output.meta.fd.GetNumber(), output.meta.fd.GetPathId());
-=======
-  TablePropertiesCollection tp;
-  for (const auto& state : compact_->sub_compact_states) {
-    for (const auto& output : state.outputs) {
-      auto fn = TableFileName(db_options_.db_paths, output.meta.fd.GetNumber(),
-                              output.meta.fd.GetPathId());
->>>>>>> blood in blood out
       tp[fn] = output.table_properties;
     }
   }
@@ -897,7 +825,6 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
   // zstd's dictionary trainer, or just use them directly. Then, the dictionary
   // is used for compressing subsequent output files in the same subcompaction.
   const bool kUseZstdTrainer =
-<<<<<<< HEAD
       sub_compact->compaction->output_compression_opts().zstd_max_train_bytes >
       0;
   const size_t kSampleBytes =
@@ -905,39 +832,23 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
           ? sub_compact->compaction->output_compression_opts()
                 .zstd_max_train_bytes
           : sub_compact->compaction->output_compression_opts().max_dict_bytes;
-=======
-      cfd->ioptions()->compression_opts.zstd_max_train_bytes > 0;
-  const size_t kSampleBytes =
-      kUseZstdTrainer ? cfd->ioptions()->compression_opts.zstd_max_train_bytes
-                      : cfd->ioptions()->compression_opts.max_dict_bytes;
->>>>>>> blood in blood out
   const int kSampleLenShift = 6;  // 2^6 = 64-byte samples
   std::set<size_t> sample_begin_offsets;
   if (bottommost_level_ && kSampleBytes > 0) {
     const size_t kMaxSamples = kSampleBytes >> kSampleLenShift;
-<<<<<<< HEAD
     const size_t kOutFileLen =
         static_cast<size_t>(MaxFileSizeForLevel(*mutable_cf_options,
             compact_->compaction->output_level(),
             cfd->ioptions()->compaction_style,
             compact_->compaction->GetInputBaseLevel(),
             cfd->ioptions()->level_compaction_dynamic_level_bytes));
-=======
-    const size_t kOutFileLen = mutable_cf_options->MaxFileSizeForLevel(
-        compact_->compaction->output_level());
->>>>>>> blood in blood out
     if (kOutFileLen != port::kMaxSizet) {
       const size_t kOutFileNumSamples = kOutFileLen >> kSampleLenShift;
       Random64 generator{versions_->NewFileNumber()};
       for (size_t i = 0; i < kMaxSamples; ++i) {
-<<<<<<< HEAD
         sample_begin_offsets.insert(
             static_cast<size_t>(generator.Uniform(kOutFileNumSamples))
             << kSampleLenShift);
-=======
-        sample_begin_offsets.insert(generator.Uniform(kOutFileNumSamples)
-                                    << kSampleLenShift);
->>>>>>> blood in blood out
       }
     }
   }
@@ -969,25 +880,10 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
     input->SeekToFirst();
   }
 
-<<<<<<< HEAD
-=======
-  // we allow only 1 compaction event listener. Used by blob storage
-  CompactionEventListener* comp_event_listener = nullptr;
-#ifndef ROCKSDB_LITE
-  for (auto& celitr : cfd->ioptions()->listeners) {
-    comp_event_listener = celitr->GetCompactionEventListener();
-    if (comp_event_listener != nullptr) {
-      break;
-    }
-  }
-#endif  // ROCKSDB_LITE
-
->>>>>>> blood in blood out
   Status status;
   sub_compact->c_iter.reset(new CompactionIterator(
       input.get(), cfd->user_comparator(), &merge, versions_->LastSequence(),
       &existing_snapshots_, earliest_write_conflict_snapshot_,
-<<<<<<< HEAD
       snapshot_checker_, env_, ShouldReportDetailedTime(env_, stats_), false,
       range_del_agg.get(), sub_compact->compaction, compaction_filter,
       shutting_down_, preserve_deletes_seqnum_));
@@ -999,20 +895,6 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
     // first key. So we do that here.
     sub_compact->ShouldStopBefore(c_iter->key(),
                                   sub_compact->current_output_file_size);
-=======
-      snapshot_checker_, env_, false, range_del_agg.get(),
-      sub_compact->compaction, compaction_filter, comp_event_listener,
-      shutting_down_, preserve_deletes_seqnum_));
-  auto c_iter = sub_compact->c_iter.get();
-  c_iter->SeekToFirst();
-  if (c_iter->Valid() &&
-      sub_compact->compaction->output_level() != 0) {
-    // ShouldStopBefore() maintains state based on keys processed so far. The
-    // compaction loop always calls it on the "next" key, thus won't tell it the
-    // first key. So we do that here.
-    sub_compact->ShouldStopBefore(
-      c_iter->key(), sub_compact->current_output_file_size);
->>>>>>> blood in blood out
   }
   const auto& c_iter_stats = c_iter->iter_stats();
   auto sample_begin_offset_iter = sample_begin_offsets.cbegin();
@@ -1126,13 +1008,8 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
     c_iter->Next();
     if (!output_file_ended && c_iter->Valid() &&
         sub_compact->compaction->output_level() != 0 &&
-<<<<<<< HEAD
         sub_compact->ShouldStopBefore(c_iter->key(),
                                       sub_compact->current_output_file_size) &&
-=======
-        sub_compact->ShouldStopBefore(
-          c_iter->key(), sub_compact->current_output_file_size) &&
->>>>>>> blood in blood out
         sub_compact->builder != nullptr) {
       // (2) this key belongs to the next file. For historical reasons, the
       // iterator status after advancing will be given to
@@ -1157,12 +1034,8 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
         if (kUseZstdTrainer) {
           sub_compact->compression_dict = ZSTD_TrainDictionary(
               dict_sample_data, kSampleLenShift,
-<<<<<<< HEAD
               sub_compact->compaction->output_compression_opts()
                   .max_dict_bytes);
-=======
-              cfd->ioptions()->compression_opts.max_dict_bytes);
->>>>>>> blood in blood out
         } else {
           sub_compact->compression_dict = std::move(dict_sample_data);
         }
@@ -1189,13 +1062,8 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
   RecordDroppedKeys(c_iter_stats, &sub_compact->compaction_job_stats);
   RecordCompactionIOStats();
 
-<<<<<<< HEAD
   if (status.ok() &&
       (shutting_down_->load(std::memory_order_relaxed) || cfd->IsDropped())) {
-=======
-  if (status.ok() && (shutting_down_->load(std::memory_order_relaxed) ||
-                      cfd->IsDropped())) {
->>>>>>> blood in blood out
     status = Status::ShutdownInProgress(
         "Database shutdown or Column family drop during compaction");
   }
@@ -1208,11 +1076,7 @@ void CompactionJob::ProcessKeyValueCompaction(SubcompactionState* sub_compact) {
 
   if (status.ok() && sub_compact->builder == nullptr &&
       sub_compact->outputs.size() == 0 &&
-<<<<<<< HEAD
       !range_del_agg->IsEmpty()) {
-=======
-      range_del_agg->ShouldAddTombstones(bottommost_level_)) {
->>>>>>> blood in blood out
     // handle subcompaction containing only range deletions
     status = OpenCompactionOutputFile(sub_compact);
   }
@@ -1300,7 +1164,6 @@ Status CompactionJob::FinishCompactionOutputFile(
   uint64_t output_number = sub_compact->current_output()->meta.fd.GetNumber();
   assert(output_number != 0);
 
-<<<<<<< HEAD
   ColumnFamilyData* cfd = sub_compact->compaction->column_family_data();
   const Comparator* ucmp = cfd->user_comparator();
 
@@ -1308,11 +1171,6 @@ Status CompactionJob::FinishCompactionOutputFile(
   Status s = input_status;
   auto meta = &sub_compact->current_output()->meta;
   assert(meta != nullptr);
-=======
-  // Check for iterator errors
-  Status s = input_status;
-  auto meta = &sub_compact->current_output()->meta;
->>>>>>> blood in blood out
   if (s.ok()) {
     Slice lower_bound_guard, upper_bound_guard;
     std::string smallest_user_key;
@@ -1341,7 +1199,6 @@ Status CompactionJob::FinishCompactionOutputFile(
       // subcompaction ends.
       upper_bound = sub_compact->end;
     }
-<<<<<<< HEAD
     auto earliest_snapshot = kMaxSequenceNumber;
     if (existing_snapshots_.size() > 0) {
       earliest_snapshot = existing_snapshots_[0];
@@ -1407,11 +1264,6 @@ Status CompactionJob::FinishCompactionOutputFile(
                                      tombstone.seq_,
                                      cfd->internal_comparator());
     }
-=======
-    range_del_agg->AddToBuilder(sub_compact->builder.get(), lower_bound,
-                                upper_bound, meta, range_del_out_stats,
-                                bottommost_level_);
->>>>>>> blood in blood out
     meta->marked_for_compaction = sub_compact->builder->NeedCompact();
   }
   const uint64_t current_entries = sub_compact->builder->NumEntries();
@@ -1437,7 +1289,6 @@ Status CompactionJob::FinishCompactionOutputFile(
   }
   sub_compact->outfile.reset();
 
-<<<<<<< HEAD
   TableProperties tp;
   if (s.ok()) {
     tp = sub_compact->builder->GetTableProperties();
@@ -1450,14 +1301,6 @@ Status CompactionJob::FinishCompactionOutputFile(
     std::string fname =
         TableFileName(sub_compact->compaction->immutable_cf_options()->cf_paths,
                       meta->fd.GetNumber(), meta->fd.GetPathId());
-=======
-  if (s.ok() && current_entries == 0) {
-    // If there is nothing to output, no necessary to generate a sst file.
-    // This happens when the output level is bottom level, at the same time
-    // the sub_compact output nothing.
-    std::string fname = TableFileName(
-        db_options_.db_paths, meta->fd.GetNumber(), meta->fd.GetPathId());
->>>>>>> blood in blood out
     env_->DeleteFile(fname);
 
     // Also need to remove the file from outputs, or it will be added to the
@@ -1469,7 +1312,6 @@ Status CompactionJob::FinishCompactionOutputFile(
     return s;
   }
 
-<<<<<<< HEAD
   if (s.ok() && (current_entries > 0 || tp.num_range_deletions > 0)) {
     // Output to event logger and fire events.
     sub_compact->current_output()->table_properties =
@@ -1480,57 +1322,13 @@ Status CompactionJob::FinishCompactionOutputFile(
                    cfd->GetName().c_str(), job_id_, output_number,
                    current_entries, current_bytes,
                    meta->marked_for_compaction ? " (need compaction)" : "");
-=======
-  ColumnFamilyData* cfd = sub_compact->compaction->column_family_data();
-  TableProperties tp;
-  if (s.ok() && current_entries > 0) {
-    // Verify that the table is usable
-    // We set for_compaction to false and don't OptimizeForCompactionTableRead
-    // here because this is a special case after we finish the table building
-    // No matter whether use_direct_io_for_flush_and_compaction is true,
-    // we will regrad this verification as user reads since the goal is
-    // to cache it here for further user reads
-    InternalIterator* iter = cfd->table_cache()->NewIterator(
-        ReadOptions(), env_options_, cfd->internal_comparator(), meta->fd,
-        nullptr /* range_del_agg */, nullptr,
-        cfd->internal_stats()->GetFileReadHist(
-            compact_->compaction->output_level()),
-        false, nullptr /* arena */, false /* skip_filters */,
-        compact_->compaction->output_level());
-    s = iter->status();
-
-    if (s.ok() && paranoid_file_checks_) {
-      for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {}
-      s = iter->status();
-    }
-
-    delete iter;
-
-    // Output to event logger and fire events.
-    if (s.ok()) {
-      tp = sub_compact->builder->GetTableProperties();
-      sub_compact->current_output()->table_properties =
-          std::make_shared<TableProperties>(tp);
-      ROCKS_LOG_INFO(db_options_.info_log,
-                     "[%s] [JOB %d] Generated table #%" PRIu64 ": %" PRIu64
-                     " keys, %" PRIu64 " bytes%s",
-                     cfd->GetName().c_str(), job_id_, output_number,
-                     current_entries, current_bytes,
-                     meta->marked_for_compaction ? " (need compaction)" : "");
-    }
->>>>>>> blood in blood out
   }
   std::string fname;
   FileDescriptor output_fd;
   if (meta != nullptr) {
-<<<<<<< HEAD
     fname =
         TableFileName(sub_compact->compaction->immutable_cf_options()->cf_paths,
                       meta->fd.GetNumber(), meta->fd.GetPathId());
-=======
-    fname = TableFileName(db_options_.db_paths, meta->fd.GetNumber(),
-                          meta->fd.GetPathId());
->>>>>>> blood in blood out
     output_fd = meta->fd;
   } else {
     fname = "(nil)";
@@ -1544,41 +1342,19 @@ Status CompactionJob::FinishCompactionOutputFile(
   auto sfm =
       static_cast<SstFileManagerImpl*>(db_options_.sst_file_manager.get());
   if (sfm && meta != nullptr && meta->fd.GetPathId() == 0) {
-<<<<<<< HEAD
     auto fn =
         TableFileName(sub_compact->compaction->immutable_cf_options()->cf_paths,
                       meta->fd.GetNumber(), meta->fd.GetPathId());
-=======
-    auto fn = TableFileName(cfd->ioptions()->db_paths, meta->fd.GetNumber(),
-                            meta->fd.GetPathId());
->>>>>>> blood in blood out
     sfm->OnAddFile(fn);
     if (sfm->IsMaxAllowedSpaceReached()) {
       // TODO(ajkr): should we return OK() if max space was reached by the final
       // compaction output file (similarly to how flush works when full)?
-<<<<<<< HEAD
       s = Status::SpaceLimit("Max allowed space was reached");
-=======
-      s = Status::IOError("Max allowed space was reached");
->>>>>>> blood in blood out
       TEST_SYNC_POINT(
           "CompactionJob::FinishCompactionOutputFile:"
           "MaxAllowedSpaceReached");
       InstrumentedMutexLock l(db_mutex_);
-<<<<<<< HEAD
       db_error_handler_->SetBGError(s, BackgroundErrorReason::kCompaction);
-=======
-      if (db_bg_error_->ok()) {
-        Status new_bg_error = s;
-        // may temporarily unlock and lock the mutex.
-        EventHelpers::NotifyOnBackgroundError(
-            cfd->ioptions()->listeners, BackgroundErrorReason::kCompaction,
-            &new_bg_error, db_mutex_);
-        if (!new_bg_error.ok()) {
-          *db_bg_error_ = new_bg_error;
-        }
-      }
->>>>>>> blood in blood out
     }
   }
 #endif
@@ -1614,11 +1390,7 @@ Status CompactionJob::InstallCompactionResults(
         compaction->InputLevelSummary(&inputs_summary), compact_->total_bytes);
   }
 
-<<<<<<< HEAD
   // Add compaction inputs
-=======
-  // Add compaction outputs
->>>>>>> blood in blood out
   compaction->AddInputDeletions(compact_->compaction->edit());
 
   for (const auto& sub_compact : compact_->sub_compact_states) {
@@ -1648,14 +1420,9 @@ Status CompactionJob::OpenCompactionOutputFile(
   assert(sub_compact->builder == nullptr);
   // no need to lock because VersionSet::next_file_number_ is atomic
   uint64_t file_number = versions_->NewFileNumber();
-<<<<<<< HEAD
   std::string fname =
       TableFileName(sub_compact->compaction->immutable_cf_options()->cf_paths,
                     file_number, sub_compact->compaction->output_path_id());
-=======
-  std::string fname = TableFileName(db_options_.db_paths, file_number,
-                                    sub_compact->compaction->output_path_id());
->>>>>>> blood in blood out
   // Fire events.
   ColumnFamilyData* cfd = sub_compact->compaction->column_family_data();
 #ifndef ROCKSDB_LITE
@@ -1722,18 +1489,11 @@ Status CompactionJob::OpenCompactionOutputFile(
   }
 
   sub_compact->builder.reset(NewTableBuilder(
-<<<<<<< HEAD
       *cfd->ioptions(), *(sub_compact->compaction->mutable_cf_options()),
       cfd->internal_comparator(), cfd->int_tbl_prop_collector_factories(),
       cfd->GetID(), cfd->GetName(), sub_compact->outfile.get(),
       sub_compact->compaction->output_compression(),
       sub_compact->compaction->output_compression_opts(),
-=======
-      *cfd->ioptions(), cfd->internal_comparator(),
-      cfd->int_tbl_prop_collector_factories(), cfd->GetID(), cfd->GetName(),
-      sub_compact->outfile.get(), sub_compact->compaction->output_compression(),
-      cfd->ioptions()->compression_opts,
->>>>>>> blood in blood out
       sub_compact->compaction->output_level(), &sub_compact->compression_dict,
       skip_filters, output_file_creation_time));
   LogFlush(db_options_.info_log);
@@ -1765,12 +1525,7 @@ void CompactionJob::CleanupCompaction() {
 
 #ifndef ROCKSDB_LITE
 namespace {
-<<<<<<< HEAD
 void CopyPrefix(const Slice& src, size_t prefix_length, std::string* dst) {
-=======
-void CopyPrefix(
-    const Slice& src, size_t prefix_length, std::string* dst) {
->>>>>>> blood in blood out
   assert(prefix_length > 0);
   size_t length = src.size() > prefix_length ? prefix_length : src.size();
   dst->assign(src.data(), length);
@@ -1789,21 +1544,11 @@ void CompactionJob::UpdateCompactionStats() {
     if (compaction->level(input_level) != compaction->output_level()) {
       UpdateCompactionInputStatsHelper(
           &compaction_stats_.num_input_files_in_non_output_levels,
-<<<<<<< HEAD
           &compaction_stats_.bytes_read_non_output_levels, input_level);
     } else {
       UpdateCompactionInputStatsHelper(
           &compaction_stats_.num_input_files_in_output_level,
           &compaction_stats_.bytes_read_output_level, input_level);
-=======
-          &compaction_stats_.bytes_read_non_output_levels,
-          input_level);
-    } else {
-      UpdateCompactionInputStatsHelper(
-          &compaction_stats_.num_input_files_in_output_level,
-          &compaction_stats_.bytes_read_output_level,
-          input_level);
->>>>>>> blood in blood out
     }
   }
 
@@ -1826,14 +1571,9 @@ void CompactionJob::UpdateCompactionStats() {
   }
 }
 
-<<<<<<< HEAD
 void CompactionJob::UpdateCompactionInputStatsHelper(int* num_files,
                                                      uint64_t* bytes_read,
                                                      int input_level) {
-=======
-void CompactionJob::UpdateCompactionInputStatsHelper(
-    int* num_files, uint64_t* bytes_read, int input_level) {
->>>>>>> blood in blood out
   const Compaction* compaction = compact_->compaction;
   auto num_input_files = compaction->num_input_files(input_level);
   *num_files += static_cast<int>(num_input_files);
@@ -1854,15 +1594,8 @@ void CompactionJob::UpdateCompactionJobStats(
 
     // input information
     compaction_job_stats_->total_input_bytes =
-<<<<<<< HEAD
         stats.bytes_read_non_output_levels + stats.bytes_read_output_level;
     compaction_job_stats_->num_input_records = compact_->num_input_records;
-=======
-        stats.bytes_read_non_output_levels +
-        stats.bytes_read_output_level;
-    compaction_job_stats_->num_input_records =
-        compact_->num_input_records;
->>>>>>> blood in blood out
     compaction_job_stats_->num_input_files =
         stats.num_input_files_in_non_output_levels +
         stats.num_input_files_in_output_level;
@@ -1871,7 +1604,6 @@ void CompactionJob::UpdateCompactionJobStats(
 
     // output information
     compaction_job_stats_->total_output_bytes = stats.bytes_written;
-<<<<<<< HEAD
     compaction_job_stats_->num_output_records = compact_->num_output_records;
     compaction_job_stats_->num_output_files = stats.num_output_files;
 
@@ -1886,23 +1618,6 @@ void CompactionJob::UpdateCompactionJobStats(
   }
 #else
   (void)stats;
-=======
-    compaction_job_stats_->num_output_records =
-        compact_->num_output_records;
-    compaction_job_stats_->num_output_files = stats.num_output_files;
-
-    if (compact_->NumOutputFiles() > 0U) {
-      CopyPrefix(
-          compact_->SmallestUserKey(),
-          CompactionJobStats::kMaxPrefixLength,
-          &compaction_job_stats_->smallest_output_key_prefix);
-      CopyPrefix(
-          compact_->LargestUserKey(),
-          CompactionJobStats::kMaxPrefixLength,
-          &compaction_job_stats_->largest_output_key_prefix);
-    }
-  }
->>>>>>> blood in blood out
 #endif  // !ROCKSDB_LITE
 }
 
@@ -1925,13 +1640,9 @@ void CompactionJob::LogCompaction() {
     // build event logger report
     auto stream = event_logger_->Log();
     stream << "job" << job_id_ << "event"
-<<<<<<< HEAD
            << "compaction_started"
            << "compaction_reason"
            << GetCompactionReasonString(compaction->compaction_reason());
-=======
-           << "compaction_started";
->>>>>>> blood in blood out
     for (size_t i = 0; i < compaction->num_input_levels(); ++i) {
       stream << ("files_L" + ToString(compaction->level(i)));
       stream.StartArray();

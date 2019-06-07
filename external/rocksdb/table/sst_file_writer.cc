@@ -50,11 +50,7 @@ struct SstFileWriter::Rep {
   std::string column_family_name;
   ColumnFamilyHandle* cfh;
   // If true, We will give the OS a hint that this file pages is not needed
-<<<<<<< HEAD
   // every time we write 1MB to the file.
-=======
-  // everytime we write 1MB to the file.
->>>>>>> blood in blood out
   bool invalidate_page_cache;
   // The size of the file during the last time we called Fadvise to remove
   // cached pages from page cache.
@@ -105,7 +101,6 @@ struct SstFileWriter::Rep {
     return Status::OK();
   }
 
-<<<<<<< HEAD
   Status DeleteRange(const Slice& begin_key, const Slice& end_key) {
     if (!builder) {
       return Status::InvalidArgument("File is not opened");
@@ -142,8 +137,6 @@ struct SstFileWriter::Rep {
     return Status::OK();
   }
 
-=======
->>>>>>> blood in blood out
   void InvalidatePageCache(bool closing) {
     if (invalidate_page_cache == false) {
       // Fadvise disabled
@@ -193,7 +186,6 @@ Status SstFileWriter::Open(const std::string& file_path) {
   sst_file->SetIOPriority(r->io_priority);
 
   CompressionType compression_type;
-<<<<<<< HEAD
   CompressionOptions compression_opts;
   if (r->ioptions.bottommost_compression != kDisableCompressionOption) {
     compression_type = r->ioptions.bottommost_compression;
@@ -209,15 +201,6 @@ Status SstFileWriter::Open(const std::string& file_path) {
   } else {
     compression_type = r->mutable_cf_options.compression;
     compression_opts = r->ioptions.compression_opts;
-=======
-  if (r->ioptions.bottommost_compression != kDisableCompressionOption) {
-    compression_type = r->ioptions.bottommost_compression;
-  } else if (!r->ioptions.compression_per_level.empty()) {
-    // Use the compression of the last level if we have per level compression
-    compression_type = *(r->ioptions.compression_per_level.rbegin());
-  } else {
-    compression_type = r->mutable_cf_options.compression;
->>>>>>> blood in blood out
   }
 
   std::vector<std::unique_ptr<IntTblPropCollectorFactory>>
@@ -250,13 +233,8 @@ Status SstFileWriter::Open(const std::string& file_path) {
   }
 
   TableBuilderOptions table_builder_options(
-<<<<<<< HEAD
       r->ioptions, r->mutable_cf_options, r->internal_comparator,
       &int_tbl_prop_collector_factories, compression_type, compression_opts,
-=======
-      r->ioptions, r->internal_comparator, &int_tbl_prop_collector_factories,
-      compression_type, r->ioptions.compression_opts,
->>>>>>> blood in blood out
       nullptr /* compression_dict */, r->skip_filters, r->column_family_name,
       unknown_level);
   r->file_writer.reset(
@@ -267,15 +245,8 @@ Status SstFileWriter::Open(const std::string& file_path) {
   r->builder.reset(r->ioptions.table_factory->NewTableBuilder(
       table_builder_options, cf_id, r->file_writer.get()));
 
-<<<<<<< HEAD
   r->file_info = ExternalSstFileInfo();
   r->file_info.file_path = file_path;
-=======
-  r->file_info.file_path = file_path;
-  r->file_info.file_size = 0;
-  r->file_info.num_entries = 0;
-  r->file_info.sequence_number = 0;
->>>>>>> blood in blood out
   r->file_info.version = 2;
   return s;
 }
@@ -296,25 +267,18 @@ Status SstFileWriter::Delete(const Slice& user_key) {
   return rep_->Add(user_key, Slice(), ValueType::kTypeDeletion);
 }
 
-<<<<<<< HEAD
 Status SstFileWriter::DeleteRange(const Slice& begin_key,
                                   const Slice& end_key) {
   return rep_->DeleteRange(begin_key, end_key);
 }
 
-=======
->>>>>>> blood in blood out
 Status SstFileWriter::Finish(ExternalSstFileInfo* file_info) {
   Rep* r = rep_.get();
   if (!r->builder) {
     return Status::InvalidArgument("File is not opened");
   }
-<<<<<<< HEAD
   if (r->file_info.num_entries == 0 &&
       r->file_info.num_range_del_entries == 0) {
-=======
-  if (r->file_info.num_entries == 0) {
->>>>>>> blood in blood out
     return Status::InvalidArgument("Cannot create sst file with no entries");
   }
 

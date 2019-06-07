@@ -1,27 +1,9 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-<<<<<<< HEAD
 // Copyright (c) 2018, The BBSCoin Developers
 // Copyright (c) 2018, The Karbo Developers
 // Copyright (c) 2018, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
-=======
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> blood in blood out
 
 #include "TransfersSynchronizer.h"
 #include "TransfersConsumer.h"
@@ -39,11 +21,7 @@ namespace CryptoNote {
 
 const uint32_t TRANSFERS_STORAGE_ARCHIVE_VERSION = 0;
 
-<<<<<<< HEAD
 TransfersSyncronizer::TransfersSyncronizer(const CryptoNote::Currency& currency, std::shared_ptr<Logging::ILogger> logger, IBlockchainSynchronizer& sync, INode& node) :
-=======
-TransfersSyncronizer::TransfersSyncronizer(const CryptoNote::Currency& currency, Logging::ILogger& logger, IBlockchainSynchronizer& sync, INode& node) :
->>>>>>> blood in blood out
   m_currency(currency), m_logger(logger, "TransfersSyncronizer"), m_sync(sync), m_node(node) {
 }
 
@@ -71,11 +49,7 @@ ITransfersSubscription& TransfersSyncronizer::addSubscription(const AccountSubsc
     consumer->addObserver(this);
     it = m_consumers.insert(std::make_pair(acc.keys.address.viewPublicKey, std::move(consumer))).first;
   }
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> blood in blood out
   return it->second->addSubscription(acc);
 }
 
@@ -105,7 +79,6 @@ ITransfersSubscription* TransfersSyncronizer::getSubscription(const AccountPubli
   return (it == m_consumers.end()) ? nullptr : it->second->getSubscription(acc);
 }
 
-<<<<<<< HEAD
 void TransfersSyncronizer::addPublicKeysSeen(const AccountPublicAddress& acc, const Crypto::Hash& transactionHash, const Crypto::PublicKey& outputKey) {
   auto it = m_consumers.find(acc.viewPublicKey);
   if (it != m_consumers.end()) {
@@ -113,8 +86,6 @@ void TransfersSyncronizer::addPublicKeysSeen(const AccountPublicAddress& acc, co
   }
 }
 
-=======
->>>>>>> blood in blood out
 std::vector<Crypto::Hash> TransfersSyncronizer::getViewKeyKnownBlocks(const Crypto::PublicKey& publicViewKey) {
   auto it = m_consumers.find(publicViewKey);
   if (it == m_consumers.end()) {
@@ -183,11 +154,7 @@ void TransfersSyncronizer::save(std::ostream& os) {
   CryptoNote::BinaryOutputStreamSerializer s(stream);
   s(const_cast<uint32_t&>(TRANSFERS_STORAGE_ARCHIVE_VERSION), "version");
 
-<<<<<<< HEAD
   uint64_t subscriptionCount = m_consumers.size();
-=======
-  size_t subscriptionCount = m_consumers.size();
->>>>>>> blood in blood out
 
   s.beginArray(subscriptionCount, "consumers");
 
@@ -201,17 +168,10 @@ void TransfersSyncronizer::save(std::ostream& os) {
 
     std::string blob = consumerState.str();
     s(blob, "state");
-<<<<<<< HEAD
 
     std::vector<AccountPublicAddress> subscriptions;
     consumer.second->getSubscriptions(subscriptions);
     uint64_t subCount = subscriptions.size();
-=======
-    
-    std::vector<AccountPublicAddress> subscriptions;
-    consumer.second->getSubscriptions(subscriptions);
-    size_t subCount = subscriptions.size();
->>>>>>> blood in blood out
 
     s.beginArray(subCount, "subscriptions");
 
@@ -274,11 +234,7 @@ void TransfersSyncronizer::load(std::istream& is) {
   std::vector<ConsumerState> updatedStates;
 
   try {
-<<<<<<< HEAD
     uint64_t subscriptionCount = 0;
-=======
-    size_t subscriptionCount = 0;
->>>>>>> blood in blood out
     s.beginArray(subscriptionCount, "consumers");
 
     while (subscriptionCount--) {
@@ -303,11 +259,7 @@ void TransfersSyncronizer::load(std::istream& is) {
         }
 
         // load subscriptions
-<<<<<<< HEAD
         uint64_t subCount = 0;
-=======
-        size_t subCount = 0;
->>>>>>> blood in blood out
         s.beginArray(subCount, "subscriptions");
 
         while (subCount--) {

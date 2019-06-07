@@ -32,12 +32,9 @@ class SequentialFileReader;
 
 namespace test {
 
-<<<<<<< HEAD
 extern const uint32_t kDefaultFormatVersion;
 extern const uint32_t kLatestFormatVersion;
 
-=======
->>>>>>> blood in blood out
 // Store in *dst a random string of length "len" and return a Slice that
 // references the generated data.
 extern Slice RandomString(Random* rnd, int len, std::string* dst);
@@ -93,16 +90,6 @@ class PlainInternalKeyComparator : public InternalKeyComparator {
   virtual int Compare(const Slice& a, const Slice& b) const override {
     return user_comparator()->Compare(a, b);
   }
-<<<<<<< HEAD
-=======
-  virtual void FindShortestSeparator(std::string* start,
-                                     const Slice& limit) const override {
-    user_comparator()->FindShortestSeparator(start, limit);
-  }
-  virtual void FindShortSuccessor(std::string* key) const override {
-    user_comparator()->FindShortSuccessor(key);
-  }
->>>>>>> blood in blood out
 };
 #endif
 
@@ -132,17 +119,10 @@ class SimpleSuffixReverseComparator : public Comparator {
       return -(suffix_a.compare(suffix_b));
     }
   }
-<<<<<<< HEAD
   virtual void FindShortestSeparator(std::string* /*start*/,
                                      const Slice& /*limit*/) const override {}
 
   virtual void FindShortSuccessor(std::string* /*key*/) const override {}
-=======
-  virtual void FindShortestSeparator(std::string* start,
-                                     const Slice& limit) const override {}
-
-  virtual void FindShortSuccessor(std::string* key) const override {}
->>>>>>> blood in blood out
 };
 
 // Returns a user key comparator that can be used for comparing two uint64_t
@@ -195,12 +175,9 @@ class VectorIterator : public InternalIterator {
 
   virtual Status status() const override { return Status::OK(); }
 
-<<<<<<< HEAD
   virtual bool IsKeyPinned() const override { return true; }
   virtual bool IsValuePinned() const override { return true; }
 
-=======
->>>>>>> blood in blood out
  private:
   std::vector<std::string> keys_;
   std::vector<std::string> values_;
@@ -210,12 +187,8 @@ extern WritableFileWriter* GetWritableFileWriter(WritableFile* wf);
 
 extern RandomAccessFileReader* GetRandomAccessFileReader(RandomAccessFile* raf);
 
-<<<<<<< HEAD
 extern SequentialFileReader* GetSequentialFileReader(SequentialFile* se,
                                                      const std::string& fname);
-=======
-extern SequentialFileReader* GetSequentialFileReader(SequentialFile* se);
->>>>>>> blood in blood out
 
 class StringSink: public WritableFile {
  public:
@@ -274,11 +247,7 @@ class RandomRWStringSink : public RandomRWFile {
  public:
   explicit RandomRWStringSink(StringSink* ss) : ss_(ss) {}
 
-<<<<<<< HEAD
   Status Write(uint64_t offset, const Slice& data) override {
-=======
-  Status Write(uint64_t offset, const Slice& data) {
->>>>>>> blood in blood out
     if (offset + data.size() > ss_->contents_.size()) {
       ss_->contents_.resize(offset + data.size(), '\0');
     }
@@ -288,12 +257,8 @@ class RandomRWStringSink : public RandomRWFile {
     return Status::OK();
   }
 
-<<<<<<< HEAD
   Status Read(uint64_t offset, size_t n, Slice* result,
               char* /*scratch*/) const override {
-=======
-  Status Read(uint64_t offset, size_t n, Slice* result, char* scratch) const {
->>>>>>> blood in blood out
     *result = Slice(nullptr, 0);
     if (offset < ss_->contents_.size()) {
       size_t str_res_sz =
@@ -303,19 +268,11 @@ class RandomRWStringSink : public RandomRWFile {
     return Status::OK();
   }
 
-<<<<<<< HEAD
   Status Flush() override { return Status::OK(); }
 
   Status Sync() override { return Status::OK(); }
 
   Status Close() override { return Status::OK(); }
-=======
-  Status Flush() { return Status::OK(); }
-
-  Status Sync() { return Status::OK(); }
-
-  Status Close() { return Status::OK(); }
->>>>>>> blood in blood out
 
   const std::string& contents() const { return ss_->contents(); }
 
@@ -422,11 +379,7 @@ class StringSource: public RandomAccessFile {
 class NullLogger : public Logger {
  public:
   using Logger::Logv;
-<<<<<<< HEAD
   virtual void Logv(const char* /*format*/, va_list /*ap*/) override {}
-=======
-  virtual void Logv(const char* format, va_list ap) override {}
->>>>>>> blood in blood out
   virtual size_t GetLogFileSize() const override { return 0; }
 };
 
@@ -507,25 +460,16 @@ class FilterNumber : public CompactionFilter {
 
   std::string last_merge_operand_key() { return last_merge_operand_key_; }
 
-<<<<<<< HEAD
   bool Filter(int /*level*/, const rocksdb::Slice& /*key*/,
               const rocksdb::Slice& value, std::string* /*new_value*/,
               bool* /*value_changed*/) const override {
-=======
-  bool Filter(int level, const rocksdb::Slice& key, const rocksdb::Slice& value,
-              std::string* new_value, bool* value_changed) const override {
->>>>>>> blood in blood out
     if (value.size() == sizeof(uint64_t)) {
       return num_ == DecodeFixed64(value.data());
     }
     return true;
   }
 
-<<<<<<< HEAD
   bool FilterMergeOperand(int /*level*/, const rocksdb::Slice& key,
-=======
-  bool FilterMergeOperand(int level, const rocksdb::Slice& key,
->>>>>>> blood in blood out
                           const rocksdb::Slice& value) const override {
     last_merge_operand_key_ = key.ToString();
     if (value.size() == sizeof(uint64_t)) {
@@ -623,11 +567,7 @@ class StringEnv : public EnvWrapper {
 
   // The following text is boilerplate that forwards all methods to target()
   Status NewSequentialFile(const std::string& f, unique_ptr<SequentialFile>* r,
-<<<<<<< HEAD
                            const EnvOptions& /*options*/) override {
-=======
-                           const EnvOptions& options) override {
->>>>>>> blood in blood out
     auto iter = files_.find(f);
     if (iter == files_.end()) {
       return Status::NotFound("The specified file does not exist", f);
@@ -635,7 +575,6 @@ class StringEnv : public EnvWrapper {
     r->reset(new SeqStringSource(iter->second));
     return Status::OK();
   }
-<<<<<<< HEAD
   Status NewRandomAccessFile(const std::string& /*f*/,
                              unique_ptr<RandomAccessFile>* /*r*/,
                              const EnvOptions& /*options*/) override {
@@ -643,15 +582,6 @@ class StringEnv : public EnvWrapper {
   }
   Status NewWritableFile(const std::string& f, unique_ptr<WritableFile>* r,
                          const EnvOptions& /*options*/) override {
-=======
-  Status NewRandomAccessFile(const std::string& f,
-                             unique_ptr<RandomAccessFile>* r,
-                             const EnvOptions& options) override {
-    return Status::NotSupported();
-  }
-  Status NewWritableFile(const std::string& f, unique_ptr<WritableFile>* r,
-                         const EnvOptions& options) override {
->>>>>>> blood in blood out
     auto iter = files_.find(f);
     if (iter != files_.end()) {
       return Status::IOError("The specified file already exists", f);
@@ -659,13 +589,8 @@ class StringEnv : public EnvWrapper {
     r->reset(new StringSink(&files_[f]));
     return Status::OK();
   }
-<<<<<<< HEAD
   virtual Status NewDirectory(const std::string& /*name*/,
                               unique_ptr<Directory>* /*result*/) override {
-=======
-  virtual Status NewDirectory(const std::string& name,
-                              unique_ptr<Directory>* result) override {
->>>>>>> blood in blood out
     return Status::NotSupported();
   }
   Status FileExists(const std::string& f) override {
@@ -674,20 +599,14 @@ class StringEnv : public EnvWrapper {
     }
     return Status::OK();
   }
-<<<<<<< HEAD
   Status GetChildren(const std::string& /*dir*/,
                      std::vector<std::string>* /*r*/) override {
-=======
-  Status GetChildren(const std::string& dir,
-                     std::vector<std::string>* r) override {
->>>>>>> blood in blood out
     return Status::NotSupported();
   }
   Status DeleteFile(const std::string& f) override {
     files_.erase(f);
     return Status::OK();
   }
-<<<<<<< HEAD
   Status CreateDir(const std::string& /*d*/) override {
     return Status::NotSupported();
   }
@@ -695,15 +614,6 @@ class StringEnv : public EnvWrapper {
     return Status::NotSupported();
   }
   Status DeleteDir(const std::string& /*d*/) override {
-=======
-  Status CreateDir(const std::string& d) override {
-    return Status::NotSupported();
-  }
-  Status CreateDirIfMissing(const std::string& d) override {
-    return Status::NotSupported();
-  }
-  Status DeleteDir(const std::string& d) override {
->>>>>>> blood in blood out
     return Status::NotSupported();
   }
   Status GetFileSize(const std::string& f, uint64_t* s) override {
@@ -715,7 +625,6 @@ class StringEnv : public EnvWrapper {
     return Status::OK();
   }
 
-<<<<<<< HEAD
   Status GetFileModificationTime(const std::string& /*fname*/,
                                  uint64_t* /*file_mtime*/) override {
     return Status::NotSupported();
@@ -735,26 +644,6 @@ class StringEnv : public EnvWrapper {
   }
 
   Status UnlockFile(FileLock* /*l*/) override { return Status::NotSupported(); }
-=======
-  Status GetFileModificationTime(const std::string& fname,
-                                 uint64_t* file_mtime) override {
-    return Status::NotSupported();
-  }
-
-  Status RenameFile(const std::string& s, const std::string& t) override {
-    return Status::NotSupported();
-  }
-
-  Status LinkFile(const std::string& s, const std::string& t) override {
-    return Status::NotSupported();
-  }
-
-  Status LockFile(const std::string& f, FileLock** l) override {
-    return Status::NotSupported();
-  }
-
-  Status UnlockFile(FileLock* l) override { return Status::NotSupported(); }
->>>>>>> blood in blood out
 
  protected:
   std::unordered_map<std::string, std::string> files_;
@@ -777,7 +666,6 @@ class ChanglingMergeOperator : public MergeOperator {
 
   void SetName(const std::string& name) { name_ = name; }
 
-<<<<<<< HEAD
   virtual bool FullMergeV2(const MergeOperationInput& /*merge_in*/,
                            MergeOperationOutput* /*merge_out*/) const override {
     return false;
@@ -786,16 +674,6 @@ class ChanglingMergeOperator : public MergeOperator {
                                  const std::deque<Slice>& /*operand_list*/,
                                  std::string* /*new_value*/,
                                  Logger* /*logger*/) const override {
-=======
-  virtual bool FullMergeV2(const MergeOperationInput& merge_in,
-                           MergeOperationOutput* merge_out) const override {
-    return false;
-  }
-  virtual bool PartialMergeMulti(const Slice& key,
-                                 const std::deque<Slice>& operand_list,
-                                 std::string* new_value,
-                                 Logger* logger) const override {
->>>>>>> blood in blood out
     return false;
   }
   virtual const char* Name() const override { return name_.c_str(); }
@@ -816,14 +694,9 @@ class ChanglingCompactionFilter : public CompactionFilter {
 
   void SetName(const std::string& name) { name_ = name; }
 
-<<<<<<< HEAD
   bool Filter(int /*level*/, const Slice& /*key*/,
               const Slice& /*existing_value*/, std::string* /*new_value*/,
               bool* /*value_changed*/) const override {
-=======
-  bool Filter(int level, const Slice& key, const Slice& existing_value,
-              std::string* new_value, bool* value_changed) const override {
->>>>>>> blood in blood out
     return false;
   }
 
@@ -846,11 +719,7 @@ class ChanglingCompactionFilterFactory : public CompactionFilterFactory {
   void SetName(const std::string& name) { name_ = name; }
 
   std::unique_ptr<CompactionFilter> CreateCompactionFilter(
-<<<<<<< HEAD
       const CompactionFilter::Context& /*context*/) override {
-=======
-      const CompactionFilter::Context& context) override {
->>>>>>> blood in blood out
     return std::unique_ptr<CompactionFilter>();
   }
 

@@ -55,13 +55,8 @@ struct TableFileCreationInfo : public TableFileCreationBriefInfo {
   Status status;
 };
 
-<<<<<<< HEAD
 enum class CompactionReason : int {
   kUnknown = 0,
-=======
-enum class CompactionReason {
-  kUnknown,
->>>>>>> blood in blood out
   // [Level] number of L0 files > level0_file_num_compaction_trigger
   kLevelL0FilesNum,
   // [Level] total size of level > MaxBytesForLevel()
@@ -85,7 +80,6 @@ enum class CompactionReason {
   // [Level] Automatic compaction within bottommost level to cleanup duplicate
   // versions of same user key, usually due to a released snapshot.
   kBottommostFiles,
-<<<<<<< HEAD
   // Compaction based on TTL
   kTtl,
   // According to the comments in flush_job.cc, RocksDB treats flush as
@@ -99,12 +93,6 @@ enum class CompactionReason {
 
 enum class FlushReason : int {
   kOthers = 0x00,
-=======
-};
-
-enum class FlushReason : int {
-  kUnknown = 0x00,
->>>>>>> blood in blood out
   kGetLiveFiles = 0x01,
   kShutDown = 0x02,
   kExternalFileIngestion = 0x03,
@@ -112,13 +100,9 @@ enum class FlushReason : int {
   kWriteBufferManager = 0x05,
   kWriteBufferFull = 0x06,
   kTest = 0x07,
-<<<<<<< HEAD
   kDeleteFiles = 0x08,
   kAutoCompaction = 0x09,
   kManualFlush = 0x0a,
-=======
-  kSuperVersionChange = 0x08,
->>>>>>> blood in blood out
 };
 
 enum class BackgroundErrorReason {
@@ -254,44 +238,12 @@ struct ExternalFileIngestionInfo {
   TableProperties table_properties;
 };
 
-<<<<<<< HEAD
 // EventListener class contains a set of callback functions that will
-=======
-// A call-back function to RocksDB which will be called when the compaction
-// iterator is compacting values. It is meant to be returned from
-// EventListner::GetCompactionEventListner() at the beginning of compaction
-// job.
-class CompactionEventListener {
- public:
-  enum CompactionListenerValueType {
-    kValue,
-    kMergeOperand,
-    kDelete,
-    kSingleDelete,
-    kRangeDelete,
-    kBlobIndex,
-    kInvalid,
-  };
-
-  virtual void OnCompaction(int level, const Slice& key,
-                            CompactionListenerValueType value_type,
-                            const Slice& existing_value,
-                            const SequenceNumber& sn, bool is_new) = 0;
-
-  virtual ~CompactionEventListener() = default;
-};
-
-// EventListener class contains a set of call-back functions that will
->>>>>>> blood in blood out
 // be called when specific RocksDB event happens such as flush.  It can
 // be used as a building block for developing custom features such as
 // stats-collector or external compaction algorithm.
 //
-<<<<<<< HEAD
 // Note that callback functions should not run for an extended period of
-=======
-// Note that call-back functions should not run for an extended period of
->>>>>>> blood in blood out
 // time before the function returns, otherwise RocksDB may be blocked.
 // For example, it is not suggested to do DB::CompactFiles() (as it may
 // run for a long while) or issue many of DB::Put() (as Put may be blocked
@@ -307,24 +259,10 @@ class CompactionEventListener {
 // [Locking] All EventListener callbacks are designed to be called without
 // the current thread holding any DB mutex. This is to prevent potential
 // deadlock and performance issue when using EventListener callback
-<<<<<<< HEAD
 // in a complex way.
 class EventListener {
  public:
   // A callback function to RocksDB which will be called whenever a
-=======
-// in a complex way. However, all EventListener call-back functions
-// should not run for an extended period of time before the function
-// returns, otherwise RocksDB may be blocked. For example, it is not
-// suggested to do DB::CompactFiles() (as it may run for a long while)
-// or issue many of DB::Put() (as Put may be blocked in certain cases)
-// in the same thread in the EventListener callback. However, doing
-// DB::CompactFiles() and DB::Put() in a thread other than the
-// EventListener callback thread is considered safe.
-class EventListener {
- public:
-  // A call-back function to RocksDB which will be called whenever a
->>>>>>> blood in blood out
   // registered RocksDB flushes a file.  The default implementation is
   // no-op.
   //
@@ -334,11 +272,7 @@ class EventListener {
   virtual void OnFlushCompleted(DB* /*db*/,
                                 const FlushJobInfo& /*flush_job_info*/) {}
 
-<<<<<<< HEAD
   // A callback function to RocksDB which will be called before a
-=======
-  // A call-back function to RocksDB which will be called before a
->>>>>>> blood in blood out
   // RocksDB starts to flush memtables.  The default implementation is
   // no-op.
   //
@@ -348,15 +282,9 @@ class EventListener {
   virtual void OnFlushBegin(DB* /*db*/,
                             const FlushJobInfo& /*flush_job_info*/) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called whenever
   // a SST file is deleted.  Different from OnCompactionCompleted and
   // OnFlushCompleted, this callback is designed for external logging
-=======
-  // A call-back function for RocksDB which will be called whenever
-  // a SST file is deleted.  Different from OnCompactionCompleted and
-  // OnFlushCompleted, this call-back is designed for external logging
->>>>>>> blood in blood out
   // service and thus only provide string parameters instead
   // of a pointer to DB.  Applications that build logic basic based
   // on file creations and deletions is suggested to implement
@@ -367,11 +295,7 @@ class EventListener {
   // returned value.
   virtual void OnTableFileDeleted(const TableFileDeletionInfo& /*info*/) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called whenever
-=======
-  // A call-back function for RocksDB which will be called whenever
->>>>>>> blood in blood out
   // a registered RocksDB compacts a file. The default implementation
   // is a no-op.
   //
@@ -387,15 +311,9 @@ class EventListener {
   virtual void OnCompactionCompleted(DB* /*db*/,
                                      const CompactionJobInfo& /*ci*/) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called whenever
   // a SST file is created.  Different from OnCompactionCompleted and
   // OnFlushCompleted, this callback is designed for external logging
-=======
-  // A call-back function for RocksDB which will be called whenever
-  // a SST file is created.  Different from OnCompactionCompleted and
-  // OnFlushCompleted, this call-back is designed for external logging
->>>>>>> blood in blood out
   // service and thus only provide string parameters instead
   // of a pointer to DB.  Applications that build logic basic based
   // on file creations and deletions is suggested to implement
@@ -410,11 +328,7 @@ class EventListener {
   // returned value.
   virtual void OnTableFileCreated(const TableFileCreationInfo& /*info*/) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called before
-=======
-  // A call-back function for RocksDB which will be called before
->>>>>>> blood in blood out
   // a SST file is being created. It will follow by OnTableFileCreated after
   // the creation finishes.
   //
@@ -424,11 +338,7 @@ class EventListener {
   virtual void OnTableFileCreationStarted(
       const TableFileCreationBriefInfo& /*info*/) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called before
-=======
-  // A call-back function for RocksDB which will be called before
->>>>>>> blood in blood out
   // a memtable is made immutable.
   //
   // Note that the this function must be implemented in a way such that
@@ -441,11 +351,7 @@ class EventListener {
   virtual void OnMemTableSealed(
     const MemTableInfo& /*info*/) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called before
-=======
-  // A call-back function for RocksDB which will be called before
->>>>>>> blood in blood out
   // a column family handle is deleted.
   //
   // Note that the this function must be implemented in a way such that
@@ -453,17 +359,10 @@ class EventListener {
   // returns.  Otherwise, RocksDB may be blocked.
   // @param handle is a pointer to the column family handle to be deleted
   // which will become a dangling pointer after the deletion.
-<<<<<<< HEAD
   virtual void OnColumnFamilyHandleDeletionStarted(
       ColumnFamilyHandle* /*handle*/) {}
 
   // A callback function for RocksDB which will be called after an external
-=======
-  virtual void OnColumnFamilyHandleDeletionStarted(ColumnFamilyHandle* handle) {
-  }
-
-  // A call-back function for RocksDB which will be called after an external
->>>>>>> blood in blood out
   // file is ingested using IngestExternalFile.
   //
   // Note that the this function will run on the same thread as
@@ -472,11 +371,7 @@ class EventListener {
   virtual void OnExternalFileIngested(
       DB* /*db*/, const ExternalFileIngestionInfo& /*info*/) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called before setting the
-=======
-  // A call-back function for RocksDB which will be called before setting the
->>>>>>> blood in blood out
   // background error status to a non-OK value. The new background error status
   // is provided in `bg_error` and can be modified by the callback. E.g., a
   // callback can suppress errors by resetting it to Status::OK(), thus
@@ -490,11 +385,7 @@ class EventListener {
   virtual void OnBackgroundError(BackgroundErrorReason /* reason */,
                                  Status* /* bg_error */) {}
 
-<<<<<<< HEAD
   // A callback function for RocksDB which will be called whenever a change
-=======
-  // A call-back function for RocksDB which will be called whenever a change
->>>>>>> blood in blood out
   // of superversion triggers a change of the stall conditions.
   //
   // Note that the this function must be implemented in a way such that
@@ -502,15 +393,6 @@ class EventListener {
   // returns.  Otherwise, RocksDB may be blocked.
   virtual void OnStallConditionsChanged(const WriteStallInfo& /*info*/) {}
 
-<<<<<<< HEAD
-=======
-  // Factory method to return CompactionEventListener. If multiple listeners
-  // provides CompactionEventListner, only the first one will be used.
-  virtual CompactionEventListener* GetCompactionEventListener() {
-    return nullptr;
-  }
-
->>>>>>> blood in blood out
   virtual ~EventListener() {}
 };
 

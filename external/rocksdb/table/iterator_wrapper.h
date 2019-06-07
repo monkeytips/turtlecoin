@@ -87,10 +87,7 @@ class IteratorWrapper {
     valid_ = iter_->Valid();
     if (valid_) {
       key_ = iter_->key();
-<<<<<<< HEAD
       assert(iter_->status().ok());
-=======
->>>>>>> blood in blood out
     }
   }
 

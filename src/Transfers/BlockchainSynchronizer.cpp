@@ -36,13 +36,6 @@ namespace {
 
 const int RETRY_TIMEOUT = 5;
 
-<<<<<<< HEAD
-=======
-std::ostream& operator<<(std::ostream& os, const CryptoNote::IBlockchainConsumer* consumer) {
-  return os << "0x" << std::setw(8) << std::setfill('0') << std::hex << reinterpret_cast<uintptr_t>(consumer) << std::dec << std::setfill(' ');
-}
-
->>>>>>> blood in blood out
 class TransactionReaderListFormatter {
 public:
   explicit TransactionReaderListFormatter(const std::vector<std::unique_ptr<CryptoNote::ITransactionReader>>& transactionList) :
@@ -75,11 +68,7 @@ private:
 
 namespace CryptoNote {
 
-<<<<<<< HEAD
 BlockchainSynchronizer::BlockchainSynchronizer(INode& node, std::shared_ptr<Logging::ILogger> logger, const Hash& genesisBlockHash) :
-=======
-BlockchainSynchronizer::BlockchainSynchronizer(INode& node, Logging::ILogger& logger, const Hash& genesisBlockHash) :
->>>>>>> blood in blood out
   m_logger(logger, "BlockchainSynchronizer"),
   m_node(node),
   m_genesisBlockHash(genesisBlockHash),
@@ -549,14 +538,8 @@ void BlockchainSynchronizer::processBlocks(GetBlocksResponse& response) {
       if (m_node.getKnownBlockCount() != m_node.getLocalBlockCount()) {
         m_logger(DEBUGGING) << "Blockchain updated, resume blockchain synchronization";
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-<<<<<<< HEAD
       } 
       break;
-=======
-      } else {
-        break;
-      }
->>>>>>> blood in blood out
 
     case UpdateConsumersResult::addedNewBlocks:
       setFutureState(State::blockchainSync);
@@ -669,11 +652,7 @@ void BlockchainSynchronizer::removeOutdatedTransactions() {
       }
     }
   } else {
-<<<<<<< HEAD
     m_logger(DEBUGGING, BRIGHT_RED) << "Failed to query outdated pool transaction: " << ec << ", " << ec.message();
-=======
-    m_logger(ERROR, BRIGHT_RED) << "Failed to query outdated pool transaction: " << ec << ", " << ec.message();
->>>>>>> blood in blood out
   }
 
   if (!ec) {

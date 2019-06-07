@@ -15,10 +15,7 @@
 
 #include "rocksdb/options.h"
 #include "util/coding.h"
-<<<<<<< HEAD
 #include "util/compression_context_cache.h"
-=======
->>>>>>> blood in blood out
 
 #ifdef SNAPPY
 #include <snappy.h>
@@ -42,7 +39,6 @@
 #if ZSTD_VERSION_NUMBER >= 800  // v0.8.0+
 #include <zdict.h>
 #endif  // ZSTD_VERSION_NUMBER >= 800
-<<<<<<< HEAD
 namespace rocksdb {
 // Need this for the context allocation override
 // On windows we need to do this explicitly
@@ -131,17 +127,12 @@ class ZSTDUncompressCachedData {
 }  // namespace rocksdb
 #endif
 
-=======
-#endif  // ZSTD
-
->>>>>>> blood in blood out
 #if defined(XPRESS)
 #include "port/xpress.h"
 #endif
 
 namespace rocksdb {
 
-<<<<<<< HEAD
 // Instantiate this class and pass it to the uncompression API below
 class CompressionContext {
  private:
@@ -236,8 +227,6 @@ class UncompressionContext {
   Slice& dict() { return dict_; }
 };
 
-=======
->>>>>>> blood in blood out
 inline bool Snappy_Supported() {
 #ifdef SNAPPY
   return true;
@@ -354,14 +343,9 @@ inline std::string CompressionTypeToString(CompressionType compression_type) {
 // 2 -- Zlib, BZip2 and LZ4 encode decompressed size as Varint32 just before the
 // start of compressed block. Snappy format is the same as version 1.
 
-<<<<<<< HEAD
 inline bool Snappy_Compress(const CompressionContext& /*ctx*/,
                             const char* input, size_t length,
                             ::std::string* output) {
-=======
-inline bool Snappy_Compress(const CompressionOptions& opts, const char* input,
-                            size_t length, ::std::string* output) {
->>>>>>> blood in blood out
 #ifdef SNAPPY
   output->resize(snappy::MaxCompressedLength(length));
   size_t outlen;
@@ -369,12 +353,9 @@ inline bool Snappy_Compress(const CompressionOptions& opts, const char* input,
   output->resize(outlen);
   return true;
 #else
-<<<<<<< HEAD
   (void)input;
   (void)length;
   (void)output;
-=======
->>>>>>> blood in blood out
   return false;
 #endif
 }
@@ -384,17 +365,13 @@ inline bool Snappy_GetUncompressedLength(const char* input, size_t length,
 #ifdef SNAPPY
   return snappy::GetUncompressedLength(input, length, result);
 #else
-<<<<<<< HEAD
   (void)input;
   (void)length;
   (void)result;
-=======
->>>>>>> blood in blood out
   return false;
 #endif
 }
 
-<<<<<<< HEAD
 inline bool Snappy_Uncompress(const char* input, size_t length, char* output) {
 #ifdef SNAPPY
   return snappy::RawUncompress(input, length, output);
@@ -402,13 +379,6 @@ inline bool Snappy_Uncompress(const char* input, size_t length, char* output) {
   (void)input;
   (void)length;
   (void)output;
-=======
-inline bool Snappy_Uncompress(const char* input, size_t length,
-                              char* output) {
-#ifdef SNAPPY
-  return snappy::RawUncompress(input, length, output);
-#else
->>>>>>> blood in blood out
   return false;
 #endif
 }
@@ -440,16 +410,9 @@ inline bool GetDecompressedSizeInfo(const char** input_data,
 // header in varint32 format
 // @param compression_dict Data for presetting the compression library's
 //    dictionary.
-<<<<<<< HEAD
 inline bool Zlib_Compress(const CompressionContext& ctx,
                           uint32_t compress_format_version, const char* input,
                           size_t length, ::std::string* output) {
-=======
-inline bool Zlib_Compress(const CompressionOptions& opts,
-                          uint32_t compress_format_version, const char* input,
-                          size_t length, ::std::string* output,
-                          const Slice& compression_dict = Slice()) {
->>>>>>> blood in blood out
 #ifdef ZLIB
   if (length > std::numeric_limits<uint32_t>::max()) {
     // Can't compress more than 4GB
@@ -471,7 +434,6 @@ inline bool Zlib_Compress(const CompressionOptions& opts,
   // memLevel=9 uses maximum memory for optimal speed.
   // The default value is 8. See zconf.h for more details.
   static const int memLevel = 8;
-<<<<<<< HEAD
   int level;
   if (ctx.options().level == CompressionOptions::kDefaultCompressionLevel) {
     level = Z_DEFAULT_COMPRESSION;
@@ -482,29 +444,15 @@ inline bool Zlib_Compress(const CompressionOptions& opts,
   memset(&_stream, 0, sizeof(z_stream));
   int st = deflateInit2(&_stream, level, Z_DEFLATED, ctx.options().window_bits,
                         memLevel, ctx.options().strategy);
-=======
-  z_stream _stream;
-  memset(&_stream, 0, sizeof(z_stream));
-  int st = deflateInit2(&_stream, opts.level, Z_DEFLATED, opts.window_bits,
-                        memLevel, opts.strategy);
->>>>>>> blood in blood out
   if (st != Z_OK) {
     return false;
   }
 
-<<<<<<< HEAD
   if (ctx.dict().size()) {
     // Initialize the compression library's dictionary
     st = deflateSetDictionary(&_stream,
                               reinterpret_cast<const Bytef*>(ctx.dict().data()),
                               static_cast<unsigned int>(ctx.dict().size()));
-=======
-  if (compression_dict.size()) {
-    // Initialize the compression library's dictionary
-    st = deflateSetDictionary(
-        &_stream, reinterpret_cast<const Bytef*>(compression_dict.data()),
-        static_cast<unsigned int>(compression_dict.size()));
->>>>>>> blood in blood out
     if (st != Z_OK) {
       deflateEnd(&_stream);
       return false;
@@ -512,11 +460,7 @@ inline bool Zlib_Compress(const CompressionOptions& opts,
   }
 
   // Compress the input, and put compressed data in output.
-<<<<<<< HEAD
   _stream.next_in = (Bytef*)input;
-=======
-  _stream.next_in = (Bytef *)input;
->>>>>>> blood in blood out
   _stream.avail_in = static_cast<unsigned int>(length);
 
   // Initialize the output size.
@@ -536,14 +480,11 @@ inline bool Zlib_Compress(const CompressionOptions& opts,
   deflateEnd(&_stream);
   return compressed;
 #else
-<<<<<<< HEAD
   (void)ctx;
   (void)compress_format_version;
   (void)input;
   (void)length;
   (void)output;
-=======
->>>>>>> blood in blood out
   return false;
 #endif
 }
@@ -554,17 +495,10 @@ inline bool Zlib_Compress(const CompressionOptions& opts,
 // header in varint32 format
 // @param compression_dict Data for presetting the compression library's
 //    dictionary.
-<<<<<<< HEAD
 inline char* Zlib_Uncompress(const UncompressionContext& ctx,
                              const char* input_data, size_t input_length,
                              int* decompress_size,
                              uint32_t compress_format_version,
-=======
-inline char* Zlib_Uncompress(const char* input_data, size_t input_length,
-                             int* decompress_size,
-                             uint32_t compress_format_version,
-                             const Slice& compression_dict = Slice(),
->>>>>>> blood in blood out
                              int windowBits = -14) {
 #ifdef ZLIB
   uint32_t output_len = 0;
@@ -588,49 +522,28 @@ inline char* Zlib_Uncompress(const char* input_data, size_t input_length,
   // For raw inflate, the windowBits should be -8..-15.
   // If windowBits is bigger than zero, it will use either zlib
   // header or gzip header. Adding 32 to it will do automatic detection.
-<<<<<<< HEAD
   int st =
       inflateInit2(&_stream, windowBits > 0 ? windowBits + 32 : windowBits);
-=======
-  int st = inflateInit2(&_stream,
-      windowBits > 0 ? windowBits + 32 : windowBits);
->>>>>>> blood in blood out
   if (st != Z_OK) {
     return nullptr;
   }
 
-<<<<<<< HEAD
   if (ctx.dict().size()) {
     // Initialize the compression library's dictionary
     st = inflateSetDictionary(&_stream,
                               reinterpret_cast<const Bytef*>(ctx.dict().data()),
                               static_cast<unsigned int>(ctx.dict().size()));
-=======
-  if (compression_dict.size()) {
-    // Initialize the compression library's dictionary
-    st = inflateSetDictionary(
-        &_stream, reinterpret_cast<const Bytef*>(compression_dict.data()),
-        static_cast<unsigned int>(compression_dict.size()));
->>>>>>> blood in blood out
     if (st != Z_OK) {
       return nullptr;
     }
   }
 
-<<<<<<< HEAD
   _stream.next_in = (Bytef*)input_data;
-=======
-  _stream.next_in = (Bytef *)input_data;
->>>>>>> blood in blood out
   _stream.avail_in = static_cast<unsigned int>(input_length);
 
   char* output = new char[output_len];
 
-<<<<<<< HEAD
   _stream.next_out = (Bytef*)output;
-=======
-  _stream.next_out = (Bytef *)output;
->>>>>>> blood in blood out
   _stream.avail_out = static_cast<unsigned int>(output_len);
 
   bool done = false;
@@ -646,11 +559,7 @@ inline char* Zlib_Uncompress(const char* input_data, size_t input_length,
         // compress_format_version == 2
         assert(compress_format_version != 2);
         size_t old_sz = output_len;
-<<<<<<< HEAD
         uint32_t output_len_delta = output_len / 5;
-=======
-        uint32_t output_len_delta = output_len/5;
->>>>>>> blood in blood out
         output_len += output_len_delta < 10 ? 10 : output_len_delta;
         char* tmp = new char[output_len];
         memcpy(tmp, output, old_sz);
@@ -658,11 +567,7 @@ inline char* Zlib_Uncompress(const char* input_data, size_t input_length,
         output = tmp;
 
         // Set more output.
-<<<<<<< HEAD
         _stream.next_out = (Bytef*)(output + old_sz);
-=======
-        _stream.next_out = (Bytef *)(output + old_sz);
->>>>>>> blood in blood out
         _stream.avail_out = static_cast<unsigned int>(output_len - old_sz);
         break;
       }
@@ -680,15 +585,12 @@ inline char* Zlib_Uncompress(const char* input_data, size_t input_length,
   inflateEnd(&_stream);
   return output;
 #else
-<<<<<<< HEAD
   (void)ctx;
   (void)input_data;
   (void)input_length;
   (void)decompress_size;
   (void)compress_format_version;
   (void)windowBits;
-=======
->>>>>>> blood in blood out
   return nullptr;
 #endif
 }
@@ -697,16 +599,9 @@ inline char* Zlib_Uncompress(const char* input_data, size_t input_length,
 // block header
 // compress_format_version == 2 -- decompressed size is included in the block
 // header in varint32 format
-<<<<<<< HEAD
 inline bool BZip2_Compress(const CompressionContext& /*ctx*/,
                            uint32_t compress_format_version, const char* input,
                            size_t length, ::std::string* output) {
-=======
-inline bool BZip2_Compress(const CompressionOptions& opts,
-                           uint32_t compress_format_version,
-                           const char* input, size_t length,
-                           ::std::string* output) {
->>>>>>> blood in blood out
 #ifdef BZIP2
   if (length > std::numeric_limits<uint32_t>::max()) {
     // Can't compress more than 4GB
@@ -721,10 +616,6 @@ inline bool BZip2_Compress(const CompressionOptions& opts,
   // This may not be big enough if the compression actually expands data.
   output->resize(output_header_len + length);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> blood in blood out
   bz_stream _stream;
   memset(&_stream, 0, sizeof(bz_stream));
 
@@ -737,11 +628,7 @@ inline bool BZip2_Compress(const CompressionOptions& opts,
   }
 
   // Compress the input, and put compressed data in output.
-<<<<<<< HEAD
   _stream.next_in = (char*)input;
-=======
-  _stream.next_in = (char *)input;
->>>>>>> blood in blood out
   _stream.avail_in = static_cast<unsigned int>(length);
 
   // Initialize the output size.
@@ -761,13 +648,10 @@ inline bool BZip2_Compress(const CompressionOptions& opts,
   BZ2_bzCompressEnd(&_stream);
   return compressed;
 #else
-<<<<<<< HEAD
   (void)compress_format_version;
   (void)input;
   (void)length;
   (void)output;
-=======
->>>>>>> blood in blood out
   return false;
 #endif
 }
@@ -803,20 +687,12 @@ inline char* BZip2_Uncompress(const char* input_data, size_t input_length,
     return nullptr;
   }
 
-<<<<<<< HEAD
   _stream.next_in = (char*)input_data;
-=======
-  _stream.next_in = (char *)input_data;
->>>>>>> blood in blood out
   _stream.avail_in = static_cast<unsigned int>(input_length);
 
   char* output = new char[output_len];
 
-<<<<<<< HEAD
   _stream.next_out = (char*)output;
-=======
-  _stream.next_out = (char *)output;
->>>>>>> blood in blood out
   _stream.avail_out = static_cast<unsigned int>(output_len);
 
   bool done = false;
@@ -839,11 +715,7 @@ inline char* BZip2_Uncompress(const char* input_data, size_t input_length,
         output = tmp;
 
         // Set more output.
-<<<<<<< HEAD
         _stream.next_out = (char*)(output + old_sz);
-=======
-        _stream.next_out = (char *)(output + old_sz);
->>>>>>> blood in blood out
         _stream.avail_out = static_cast<unsigned int>(output_len - old_sz);
         break;
       }
@@ -860,13 +732,10 @@ inline char* BZip2_Uncompress(const char* input_data, size_t input_length,
   BZ2_bzDecompressEnd(&_stream);
   return output;
 #else
-<<<<<<< HEAD
   (void)input_data;
   (void)input_length;
   (void)decompress_size;
   (void)compress_format_version;
-=======
->>>>>>> blood in blood out
   return nullptr;
 #endif
 }
@@ -877,16 +746,9 @@ inline char* BZip2_Uncompress(const char* input_data, size_t input_length,
 // header in varint32 format
 // @param compression_dict Data for presetting the compression library's
 //    dictionary.
-<<<<<<< HEAD
 inline bool LZ4_Compress(const CompressionContext& ctx,
                          uint32_t compress_format_version, const char* input,
                          size_t length, ::std::string* output) {
-=======
-inline bool LZ4_Compress(const CompressionOptions& opts,
-                         uint32_t compress_format_version, const char* input,
-                         size_t length, ::std::string* output,
-                         const Slice compression_dict = Slice()) {
->>>>>>> blood in blood out
 #ifdef LZ4
   if (length > std::numeric_limits<uint32_t>::max()) {
     // Can't compress more than 4GB
@@ -912,7 +774,6 @@ inline bool LZ4_Compress(const CompressionOptions& opts,
   int outlen;
 #if LZ4_VERSION_NUMBER >= 10400  // r124+
   LZ4_stream_t* stream = LZ4_createStream();
-<<<<<<< HEAD
   if (ctx.dict().size()) {
     LZ4_loadDict(stream, ctx.dict().data(),
                  static_cast<int>(ctx.dict().size()));
@@ -921,16 +782,6 @@ inline bool LZ4_Compress(const CompressionOptions& opts,
   outlen =
       LZ4_compress_fast_continue(stream, input, &(*output)[output_header_len],
                                  static_cast<int>(length), compress_bound, 1);
-=======
-  if (compression_dict.size()) {
-    LZ4_loadDict(stream, compression_dict.data(),
-                 static_cast<int>(compression_dict.size()));
-  }
-#if LZ4_VERSION_NUMBER >= 10700  // r129+
-  outlen = LZ4_compress_fast_continue(
-      stream, input, &(*output)[output_header_len], static_cast<int>(length),
-      compress_bound, 1);
->>>>>>> blood in blood out
 #else  // up to r128
   outlen = LZ4_compress_limitedOutput_continue(
       stream, input, &(*output)[output_header_len], static_cast<int>(length),
@@ -948,14 +799,11 @@ inline bool LZ4_Compress(const CompressionOptions& opts,
   output->resize(static_cast<size_t>(output_header_len + outlen));
   return true;
 #else  // LZ4
-<<<<<<< HEAD
   (void)ctx;
   (void)compress_format_version;
   (void)input;
   (void)length;
   (void)output;
-=======
->>>>>>> blood in blood out
   return false;
 #endif
 }
@@ -966,17 +814,10 @@ inline bool LZ4_Compress(const CompressionOptions& opts,
 // header in varint32 format
 // @param compression_dict Data for presetting the compression library's
 //    dictionary.
-<<<<<<< HEAD
 inline char* LZ4_Uncompress(const UncompressionContext& ctx,
                             const char* input_data, size_t input_length,
                             int* decompress_size,
                             uint32_t compress_format_version) {
-=======
-inline char* LZ4_Uncompress(const char* input_data, size_t input_length,
-                            int* decompress_size,
-                            uint32_t compress_format_version,
-                            const Slice& compression_dict = Slice()) {
->>>>>>> blood in blood out
 #ifdef LZ4
   uint32_t output_len = 0;
   if (compress_format_version == 2) {
@@ -999,15 +840,9 @@ inline char* LZ4_Uncompress(const char* input_data, size_t input_length,
   char* output = new char[output_len];
 #if LZ4_VERSION_NUMBER >= 10400  // r124+
   LZ4_streamDecode_t* stream = LZ4_createStreamDecode();
-<<<<<<< HEAD
   if (ctx.dict().size()) {
     LZ4_setStreamDecode(stream, ctx.dict().data(),
                         static_cast<int>(ctx.dict().size()));
-=======
-  if (compression_dict.size()) {
-    LZ4_setStreamDecode(stream, compression_dict.data(),
-                        static_cast<int>(compression_dict.size()));
->>>>>>> blood in blood out
   }
   *decompress_size = LZ4_decompress_safe_continue(
       stream, input_data, output, static_cast<int>(input_length),
@@ -1026,14 +861,11 @@ inline char* LZ4_Uncompress(const char* input_data, size_t input_length,
   assert(*decompress_size == static_cast<int>(output_len));
   return output;
 #else  // LZ4
-<<<<<<< HEAD
   (void)ctx;
   (void)input_data;
   (void)input_length;
   (void)decompress_size;
   (void)compress_format_version;
-=======
->>>>>>> blood in blood out
   return nullptr;
 #endif
 }
@@ -1044,16 +876,9 @@ inline char* LZ4_Uncompress(const char* input_data, size_t input_length,
 // header in varint32 format
 // @param compression_dict Data for presetting the compression library's
 //    dictionary.
-<<<<<<< HEAD
 inline bool LZ4HC_Compress(const CompressionContext& ctx,
                            uint32_t compress_format_version, const char* input,
                            size_t length, ::std::string* output) {
-=======
-inline bool LZ4HC_Compress(const CompressionOptions& opts,
-                           uint32_t compress_format_version, const char* input,
-                           size_t length, ::std::string* output,
-                           const Slice& compression_dict = Slice()) {
->>>>>>> blood in blood out
 #ifdef LZ4
   if (length > std::numeric_limits<uint32_t>::max()) {
     // Can't compress more than 4GB
@@ -1077,7 +902,6 @@ inline bool LZ4HC_Compress(const CompressionOptions& opts,
   output->resize(static_cast<size_t>(output_header_len + compress_bound));
 
   int outlen;
-<<<<<<< HEAD
   int level;
   if (ctx.options().level == CompressionOptions::kDefaultCompressionLevel) {
     level = 0;  // lz4hc.h says any value < 1 will be sanitized to default
@@ -1090,14 +914,6 @@ inline bool LZ4HC_Compress(const CompressionOptions& opts,
   const char* compression_dict_data =
       ctx.dict().size() > 0 ? ctx.dict().data() : nullptr;
   size_t compression_dict_size = ctx.dict().size();
-=======
-#if LZ4_VERSION_NUMBER >= 10400  // r124+
-  LZ4_streamHC_t* stream = LZ4_createStreamHC();
-  LZ4_resetStreamHC(stream, opts.level);
-  const char* compression_dict_data =
-      compression_dict.size() > 0 ? compression_dict.data() : nullptr;
-  size_t compression_dict_size = compression_dict.size();
->>>>>>> blood in blood out
   LZ4_loadDictHC(stream, compression_dict_data,
                  static_cast<int>(compression_dict_size));
 
@@ -1115,11 +931,7 @@ inline bool LZ4HC_Compress(const CompressionOptions& opts,
 #elif LZ4_VERSION_MAJOR  // r113-r123
   outlen = LZ4_compressHC2_limitedOutput(input, &(*output)[output_header_len],
                                          static_cast<int>(length),
-<<<<<<< HEAD
                                          compress_bound, level);
-=======
-                                         compress_bound, opts.level);
->>>>>>> blood in blood out
 #else                    // up to r112
   outlen =
       LZ4_compressHC_limitedOutput(input, &(*output)[output_header_len],
@@ -1132,19 +944,15 @@ inline bool LZ4HC_Compress(const CompressionOptions& opts,
   output->resize(static_cast<size_t>(output_header_len + outlen));
   return true;
 #else  // LZ4
-<<<<<<< HEAD
   (void)ctx;
   (void)compress_format_version;
   (void)input;
   (void)length;
   (void)output;
-=======
->>>>>>> blood in blood out
   return false;
 #endif
 }
 
-<<<<<<< HEAD
 #ifdef XPRESS
 inline bool XPRESS_Compress(const char* input, size_t length,
                             std::string* output) {
@@ -1174,31 +982,6 @@ inline char* XPRESS_Uncompress(const char* /*input_data*/,
 //    dictionary.
 inline bool ZSTD_Compress(const CompressionContext& ctx, const char* input,
                           size_t length, ::std::string* output) {
-=======
-inline bool XPRESS_Compress(const char* input, size_t length, std::string* output) {
-#ifdef XPRESS
-  return port::xpress::Compress(input, length, output);
-#else
-  return false;
-#endif
-}
-
-inline char* XPRESS_Uncompress(const char* input_data, size_t input_length,
-  int* decompress_size) {
-#ifdef XPRESS
-  return port::xpress::Decompress(input_data, input_length, decompress_size);
-#else
-  return nullptr;
-#endif
-}
-
-
-// @param compression_dict Data for presetting the compression library's
-//    dictionary.
-inline bool ZSTD_Compress(const CompressionOptions& opts, const char* input,
-                          size_t length, ::std::string* output,
-                          const Slice& compression_dict = Slice()) {
->>>>>>> blood in blood out
 #ifdef ZSTD
   if (length > std::numeric_limits<uint32_t>::max()) {
     // Can't compress more than 4GB
@@ -1210,7 +993,6 @@ inline bool ZSTD_Compress(const CompressionOptions& opts, const char* input,
 
   size_t compressBound = ZSTD_compressBound(length);
   output->resize(static_cast<size_t>(output_header_len + compressBound));
-<<<<<<< HEAD
   size_t outlen = 0;
   int level;
   if (ctx.options().level == CompressionOptions::kDefaultCompressionLevel) {
@@ -1229,48 +1011,26 @@ inline bool ZSTD_Compress(const CompressionOptions& opts, const char* input,
 #else   // up to v0.4.x
   outlen = ZSTD_compress(&(*output)[output_header_len], compressBound, input,
                          length, level);
-=======
-  size_t outlen;
-#if ZSTD_VERSION_NUMBER >= 500  // v0.5.0+
-  ZSTD_CCtx* context = ZSTD_createCCtx();
-  outlen = ZSTD_compress_usingDict(
-      context, &(*output)[output_header_len], compressBound, input, length,
-      compression_dict.data(), compression_dict.size(), opts.level);
-  ZSTD_freeCCtx(context);
-#else  // up to v0.4.x
-  outlen = ZSTD_compress(&(*output)[output_header_len], compressBound, input,
-                         length, opts.level);
->>>>>>> blood in blood out
 #endif  // ZSTD_VERSION_NUMBER >= 500
   if (outlen == 0) {
     return false;
   }
   output->resize(output_header_len + outlen);
   return true;
-<<<<<<< HEAD
 #else  // ZSTD
   (void)ctx;
   (void)input;
   (void)length;
   (void)output;
-=======
-#else // ZSTD
->>>>>>> blood in blood out
   return false;
 #endif
 }
 
 // @param compression_dict Data for presetting the compression library's
 //    dictionary.
-<<<<<<< HEAD
 inline char* ZSTD_Uncompress(const UncompressionContext& ctx,
                              const char* input_data, size_t input_length,
                              int* decompress_size) {
-=======
-inline char* ZSTD_Uncompress(const char* input_data, size_t input_length,
-                             int* decompress_size,
-                             const Slice& compression_dict = Slice()) {
->>>>>>> blood in blood out
 #ifdef ZSTD
   uint32_t output_len = 0;
   if (!compression::GetDecompressedSizeInfo(&input_data, &input_length,
@@ -1281,36 +1041,23 @@ inline char* ZSTD_Uncompress(const char* input_data, size_t input_length,
   char* output = new char[output_len];
   size_t actual_output_length;
 #if ZSTD_VERSION_NUMBER >= 500  // v0.5.0+
-<<<<<<< HEAD
   ZSTD_DCtx* context = ctx.GetZSTDContext();
   assert(context != nullptr);
   actual_output_length = ZSTD_decompress_usingDict(
       context, output, output_len, input_data, input_length, ctx.dict().data(),
       ctx.dict().size());
 #else   // up to v0.4.x
-=======
-  ZSTD_DCtx* context = ZSTD_createDCtx();
-  actual_output_length = ZSTD_decompress_usingDict(
-      context, output, output_len, input_data, input_length,
-      compression_dict.data(), compression_dict.size());
-  ZSTD_freeDCtx(context);
-#else  // up to v0.4.x
->>>>>>> blood in blood out
   actual_output_length =
       ZSTD_decompress(output, output_len, input_data, input_length);
 #endif  // ZSTD_VERSION_NUMBER >= 500
   assert(actual_output_length == output_len);
   *decompress_size = static_cast<int>(actual_output_length);
   return output;
-<<<<<<< HEAD
 #else  // ZSTD
   (void)ctx;
   (void)input_data;
   (void)input_length;
   (void)decompress_size;
-=======
-#else // ZSTD
->>>>>>> blood in blood out
   return nullptr;
 #endif
 }
@@ -1333,12 +1080,9 @@ inline std::string ZSTD_TrainDictionary(const std::string& samples,
   return dict_data;
 #else   // up to v0.7.x
   assert(false);
-<<<<<<< HEAD
   (void)samples;
   (void)sample_lens;
   (void)max_dict_bytes;
-=======
->>>>>>> blood in blood out
   return "";
 #endif  // ZSTD_VERSION_NUMBER >= 800
 }
@@ -1351,7 +1095,6 @@ inline std::string ZSTD_TrainDictionary(const std::string& samples,
 #if ZSTD_VERSION_NUMBER >= 800  // v0.8.0+
   // skips potential partial sample at the end of "samples"
   size_t num_samples = samples.size() >> sample_len_shift;
-<<<<<<< HEAD
   std::vector<size_t> sample_lens(num_samples, size_t(1) << sample_len_shift);
   return ZSTD_TrainDictionary(samples, sample_lens, max_dict_bytes);
 #else   // up to v0.7.x
@@ -1359,12 +1102,6 @@ inline std::string ZSTD_TrainDictionary(const std::string& samples,
   (void)samples;
   (void)sample_len_shift;
   (void)max_dict_bytes;
-=======
-  std::vector<size_t> sample_lens(num_samples, 1 << sample_len_shift);
-  return ZSTD_TrainDictionary(samples, sample_lens, max_dict_bytes);
-#else   // up to v0.7.x
-  assert(false);
->>>>>>> blood in blood out
   return "";
 #endif  // ZSTD_VERSION_NUMBER >= 800
 }

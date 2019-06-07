@@ -19,21 +19,13 @@ public class BackupInfo {
    * @param size size of backup
    * @param numberFiles number of files related to this backup.
    */
-<<<<<<< HEAD
   BackupInfo(final int backupId, final long timestamp, final long size, final int numberFiles,
       final String app_metadata) {
-=======
-  BackupInfo(final int backupId, final long timestamp, final long size,
-      final int numberFiles) {
->>>>>>> blood in blood out
     backupId_ = backupId;
     timestamp_ = timestamp;
     size_ = size;
     numberFiles_ = numberFiles;
-<<<<<<< HEAD
     app_metadata_ = app_metadata;
-=======
->>>>>>> blood in blood out
   }
 
   /**
@@ -68,7 +60,6 @@ public class BackupInfo {
     return numberFiles_;
   }
 
-<<<<<<< HEAD
   /**
    *
    * @return the associated application metadata, or null
@@ -77,14 +68,9 @@ public class BackupInfo {
     return app_metadata_;
   }
 
-=======
->>>>>>> blood in blood out
   private int backupId_;
   private long timestamp_;
   private long size_;
   private int numberFiles_;
-<<<<<<< HEAD
   private String app_metadata_;
-=======
->>>>>>> blood in blood out
 }

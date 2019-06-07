@@ -20,11 +20,7 @@
 #include <vector>
 #include <CryptoNote.h>
 #include <CryptoTypes.h>
-<<<<<<< HEAD
 #include <WalletTypes.h>
-=======
-//#include <Serialization/ISerializer.h>
->>>>>>> blood in blood out
 
 namespace CryptoNote {
 
@@ -47,12 +43,9 @@ void serialize(BlockFullInfo&, ISerializer&);
 void serialize(TransactionPrefixInfo&, ISerializer&);
 void serialize(BlockShortInfo&, ISerializer&);
 
-<<<<<<< HEAD
 void serialize(WalletTypes::WalletBlockInfo &walletBlockInfo, ISerializer &s);
 void serialize(WalletTypes::RawTransaction &rawTransaction, ISerializer &s);
 void serialize(WalletTypes::RawCoinbaseTransaction &rawCoinbaseTransaction, ISerializer &s);
 void serialize(WalletTypes::KeyOutput &keyOutput, ISerializer &s);
 
-=======
->>>>>>> blood in blood out
 }

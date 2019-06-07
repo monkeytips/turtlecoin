@@ -1,22 +1,13 @@
-<<<<<<< HEAD
 /* $Id: minissdpc.h,v 1.6 2015/09/18 12:45:16 nanard Exp $ */
 /* Project: miniupnp
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * Author: Thomas Bernard
  * Copyright (c) 2005-2015 Thomas Bernard
-=======
-/* $Id: minissdpc.h,v 1.2 2012/09/27 15:42:10 nanard Exp $ */
-/* Project: miniupnp
- * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
- * Author: Thomas Bernard
- * Copyright (c) 2005-2007 Thomas Bernard
->>>>>>> blood in blood out
  * This software is subjects to the conditions detailed
  * in the LICENCE file provided within this distribution */
 #ifndef MINISSDPC_H_INCLUDED
 #define MINISSDPC_H_INCLUDED
 
-<<<<<<< HEAD
 #include "miniupnpc_declspec.h"
 #include "upnpdev.h"
 
@@ -62,10 +53,6 @@ ssdpDiscoverDevices(const char * const deviceTypes[],
 #ifdef __cplusplus
 }
 #endif
-=======
-struct UPNPDev *
-getDevicesFromMiniSSDPD(const char * devtype, const char * socketpath);
->>>>>>> blood in blood out
 
 #endif
 

@@ -37,11 +37,7 @@ class BlockchainSynchronizer :
   public INodeObserver {
 public:
 
-<<<<<<< HEAD
   BlockchainSynchronizer(INode& node, std::shared_ptr<Logging::ILogger> logger, const Crypto::Hash& genesisBlockHash);
-=======
-  BlockchainSynchronizer(INode& node, Logging::ILogger& logger, const Crypto::Hash& genesisBlockHash);
->>>>>>> blood in blood out
   ~BlockchainSynchronizer();
 
   // IBlockchainSynchronizer

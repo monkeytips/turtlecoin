@@ -10,10 +10,7 @@
 #include "db/db_test_util.h"
 #include "port/stack_trace.h"
 #if !defined(ROCKSDB_LITE)
-<<<<<<< HEAD
 #include "rocksdb/utilities/table_properties_collectors.h"
-=======
->>>>>>> blood in blood out
 #include "util/sync_point.h"
 
 namespace rocksdb {
@@ -44,15 +41,12 @@ class DBTestUniversalCompaction : public DBTestUniversalCompactionBase {
       DBTestUniversalCompactionBase("/db_universal_compaction_test") {}
 };
 
-<<<<<<< HEAD
 class DBTestUniversalDeleteTrigCompaction : public DBTestBase {
  public:
   DBTestUniversalDeleteTrigCompaction()
       : DBTestBase("/db_universal_compaction_test") {}
 };
 
-=======
->>>>>>> blood in blood out
 namespace {
 void VerifyCompactionResult(
     const ColumnFamilyMetaData& cf_meta,
@@ -69,15 +63,9 @@ void VerifyCompactionResult(
 
 class KeepFilter : public CompactionFilter {
  public:
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value, bool* value_changed) const
-      override {
->>>>>>> blood in blood out
     return false;
   }
 
@@ -107,15 +95,9 @@ class KeepFilterFactory : public CompactionFilterFactory {
 class DelayFilter : public CompactionFilter {
  public:
   explicit DelayFilter(DBTestBase* d) : db_test(d) {}
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value,
-                      bool* value_changed) const override {
->>>>>>> blood in blood out
     db_test->env_->addon_time_.fetch_add(1000);
     return true;
   }
@@ -130,11 +112,7 @@ class DelayFilterFactory : public CompactionFilterFactory {
  public:
   explicit DelayFilterFactory(DBTestBase* d) : db_test(d) {}
   virtual std::unique_ptr<CompactionFilter> CreateCompactionFilter(
-<<<<<<< HEAD
       const CompactionFilter::Context& /*context*/) override {
-=======
-      const CompactionFilter::Context& context) override {
->>>>>>> blood in blood out
     return std::unique_ptr<CompactionFilter>(new DelayFilter(db_test));
   }
 
@@ -684,11 +662,7 @@ TEST_P(DBTestUniversalCompaction, UniversalCompactionTargetLevel) {
   ASSERT_EQ("0,0,0,0,1", FilesPerLevel(0));
 }
 
-<<<<<<< HEAD
 #ifndef ROCKSDB_VALGRIND_RUN
-=======
-
->>>>>>> blood in blood out
 class DBTestUniversalCompactionMultiLevels
     : public DBTestUniversalCompactionBase {
  public:
@@ -724,21 +698,14 @@ TEST_P(DBTestUniversalCompactionMultiLevels, UniversalCompactionMultiLevels) {
     ASSERT_EQ(Get(1, Key(i % num_keys)), Key(i));
   }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> blood in blood out
 // Tests universal compaction with trivial move enabled
 TEST_P(DBTestUniversalCompactionMultiLevels, UniversalCompactionTrivialMove) {
   int32_t trivial_move = 0;
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
-<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
-=======
-      [&](void* arg) { trivial_move++; });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial", [&](void* arg) {
         non_trivial_move++;
@@ -810,11 +777,7 @@ TEST_P(DBTestUniversalCompactionParallel, UniversalCompactionParallel) {
   std::atomic<int> num_compactions_running(0);
   std::atomic<bool> has_parallel(false);
   rocksdb::SyncPoint::GetInstance()->SetCallBack("CompactionJob::Run():Start",
-<<<<<<< HEAD
                                                  [&](void* /*arg*/) {
-=======
-                                                 [&](void* arg) {
->>>>>>> blood in blood out
     if (num_compactions_running.fetch_add(1) > 0) {
       has_parallel.store(true);
       return;
@@ -829,11 +792,7 @@ TEST_P(DBTestUniversalCompactionParallel, UniversalCompactionParallel) {
   });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "CompactionJob::Run():End",
-<<<<<<< HEAD
       [&](void* /*arg*/) { num_compactions_running.fetch_add(-1); });
-=======
-      [&](void* arg) { num_compactions_running.fetch_add(-1); });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   options = CurrentOptions(options);
@@ -982,10 +941,7 @@ INSTANTIATE_TEST_CASE_P(DBTestUniversalCompactionParallel,
                         DBTestUniversalCompactionParallel,
                         ::testing::Combine(::testing::Values(1, 10),
                                            ::testing::Values(false)));
-<<<<<<< HEAD
 #endif  // ROCKSDB_VALGRIND_RUN
-=======
->>>>>>> blood in blood out
 
 TEST_P(DBTestUniversalCompaction, UniversalCompactionOptions) {
   Options options = CurrentOptions();
@@ -1201,21 +1157,14 @@ TEST_P(DBTestUniversalCompaction, UniversalCompactionCompressRatio2) {
   ASSERT_LT(TotalSize(), 120000U * 12 * 0.8 + 120000 * 2);
 }
 
-<<<<<<< HEAD
 #ifndef ROCKSDB_VALGRIND_RUN
-=======
->>>>>>> blood in blood out
 // Test that checks trivial move in universal compaction
 TEST_P(DBTestUniversalCompaction, UniversalCompactionTrivialMoveTest1) {
   int32_t trivial_move = 0;
   int32_t non_trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
-<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
-=======
-      [&](void* arg) { trivial_move++; });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial", [&](void* arg) {
         non_trivial_move++;
@@ -1261,11 +1210,7 @@ TEST_P(DBTestUniversalCompaction, UniversalCompactionTrivialMoveTest2) {
   int32_t trivial_move = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:TrivialMove",
-<<<<<<< HEAD
       [&](void* /*arg*/) { trivial_move++; });
-=======
-      [&](void* arg) { trivial_move++; });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BackgroundCompaction:NonTrivial", [&](void* arg) {
         ASSERT_TRUE(arg != nullptr);
@@ -1305,10 +1250,7 @@ TEST_P(DBTestUniversalCompaction, UniversalCompactionTrivialMoveTest2) {
 
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
 }
-<<<<<<< HEAD
 #endif  // ROCKSDB_VALGRIND_RUN
-=======
->>>>>>> blood in blood out
 
 TEST_P(DBTestUniversalCompaction, UniversalCompactionFourPaths) {
   Options options = CurrentOptions();
@@ -1412,7 +1354,6 @@ TEST_P(DBTestUniversalCompaction, UniversalCompactionFourPaths) {
   Destroy(options);
 }
 
-<<<<<<< HEAD
 TEST_P(DBTestUniversalCompaction, UniversalCompactionCFPathUse) {
   Options options = CurrentOptions();
   options.db_paths.emplace_back(dbname_, 300 * 1024);
@@ -1553,8 +1494,6 @@ TEST_P(DBTestUniversalCompaction, UniversalCompactionCFPathUse) {
   Destroy(options, true);
 }
 
-=======
->>>>>>> blood in blood out
 TEST_P(DBTestUniversalCompaction, IncreaseUniversalCompactionNumLevels) {
   std::function<void(int)> verify_func = [&](int num_keys_in_db) {
     std::string keys_in_db;
@@ -1752,53 +1691,6 @@ TEST_P(DBTestUniversalCompaction, UniversalCompactionSecondPathRatio) {
   Destroy(options);
 }
 
-<<<<<<< HEAD
-=======
-TEST_P(DBTestUniversalCompaction, FullCompactionInBottomPriThreadPool) {
-  const int kNumFilesTrigger = 3;
-  Env::Default()->SetBackgroundThreads(1, Env::Priority::BOTTOM);
-  for (bool allow_ingest_behind : {false, true}) {
-    Options options = CurrentOptions();
-    options.allow_ingest_behind = allow_ingest_behind;
-    options.compaction_style = kCompactionStyleUniversal;
-    options.num_levels = num_levels_;
-    options.write_buffer_size = 100 << 10;     // 100KB
-    options.target_file_size_base = 32 << 10;  // 32KB
-    options.level0_file_num_compaction_trigger = kNumFilesTrigger;
-    // Trigger compaction if size amplification exceeds 110%
-    options.compaction_options_universal.max_size_amplification_percent = 110;
-    DestroyAndReopen(options);
-
-    int num_bottom_pri_compactions = 0;
-    SyncPoint::GetInstance()->SetCallBack(
-        "DBImpl::BGWorkBottomCompaction",
-        [&](void* arg) { ++num_bottom_pri_compactions; });
-    SyncPoint::GetInstance()->EnableProcessing();
-
-    Random rnd(301);
-    for (int num = 0; num < kNumFilesTrigger; num++) {
-      ASSERT_EQ(NumSortedRuns(), num);
-      int key_idx = 0;
-      GenerateNewFile(&rnd, &key_idx);
-    }
-    dbfull()->TEST_WaitForCompact();
-
-    if (allow_ingest_behind || num_levels_ > 1) {
-      // allow_ingest_behind increases number of levels while sanitizing.
-      ASSERT_EQ(1, num_bottom_pri_compactions);
-    } else {
-      // for single-level universal, everything's bottom level so nothing should
-      // be executed in bottom-pri thread pool.
-      ASSERT_EQ(0, num_bottom_pri_compactions);
-    }
-    // Verify that size amplification did occur
-    ASSERT_EQ(NumSortedRuns(), 1);
-    rocksdb::SyncPoint::GetInstance()->DisableProcessing();
-  }
-  Env::Default()->SetBackgroundThreads(0, Env::Priority::BOTTOM);
-}
-
->>>>>>> blood in blood out
 TEST_P(DBTestUniversalCompaction, ConcurrentBottomPriLowPriCompactions) {
   if (num_levels_ == 1) {
     // for single-level universal, everything's bottom level so nothing should
@@ -1871,11 +1763,7 @@ TEST_P(DBTestUniversalCompaction, RecalculateScoreAfterPicking) {
 
   std::atomic<int> num_compactions_attempted(0);
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:Start", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:Start", [&](void* arg) {
->>>>>>> blood in blood out
         ++num_compactions_attempted;
       });
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
@@ -1893,7 +1781,6 @@ TEST_P(DBTestUniversalCompaction, RecalculateScoreAfterPicking) {
   ASSERT_EQ(NumSortedRuns(), 5);
 }
 
-<<<<<<< HEAD
 TEST_P(DBTestUniversalCompaction, FinalSortedRunCompactFilesConflict) {
   // Regression test for conflict between:
   // (1) Running CompactFiles including file in the final sorted run; and
@@ -1951,8 +1838,6 @@ TEST_P(DBTestUniversalCompaction, FinalSortedRunCompactFilesConflict) {
   compact_files_thread.join();
 }
 
-=======
->>>>>>> blood in blood out
 INSTANTIATE_TEST_CASE_P(UniversalCompactionNumLevels, DBTestUniversalCompaction,
                         ::testing::Combine(::testing::Values(1, 3, 5),
                                            ::testing::Bool()));
@@ -2028,7 +1913,6 @@ INSTANTIATE_TEST_CASE_P(DBTestUniversalManualCompactionOutputPathId,
                         ::testing::Combine(::testing::Values(1, 8),
                                            ::testing::Bool()));
 
-<<<<<<< HEAD
 TEST_F(DBTestUniversalDeleteTrigCompaction, BasicL0toL1) {
   const int kNumKeys = 3000;
   const int kWindowSize = 100;
@@ -2264,8 +2148,6 @@ TEST_F(DBTestUniversalDeleteTrigCompaction, IngestBehind) {
   ASSERT_GT(NumTableFilesAtLevel(5), 0);
 }
 
-=======
->>>>>>> blood in blood out
 }  // namespace rocksdb
 
 #endif  // !defined(ROCKSDB_LITE)
@@ -2276,11 +2158,8 @@ int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 #else
-<<<<<<< HEAD
   (void) argc;
   (void) argv;
-=======
->>>>>>> blood in blood out
   return 0;
 #endif
 }

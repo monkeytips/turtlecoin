@@ -19,7 +19,6 @@
 
 namespace Logging {
 
-<<<<<<< HEAD
 LoggerRef::LoggerRef(std::shared_ptr<ILogger> logger, const std::string& category) : logger(logger), category(category) {
 }
 
@@ -29,17 +28,6 @@ LoggerMessage LoggerRef::operator()(Level level, const std::string& color) const
 
 std::shared_ptr<ILogger> LoggerRef::getLogger() const {
   return logger;
-=======
-LoggerRef::LoggerRef(ILogger& logger, const std::string& category) : logger(&logger), category(category) {
-}
-
-LoggerMessage LoggerRef::operator()(Level level, const std::string& color) const {
-  return LoggerMessage(*logger, category, level, color);
-}
-
-ILogger& LoggerRef::getLogger() const {
-  return *logger;
->>>>>>> blood in blood out
 }
 
 }

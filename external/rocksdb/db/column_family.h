@@ -139,12 +139,9 @@ extern Status CheckCompressionSupported(const ColumnFamilyOptions& cf_options);
 extern Status CheckConcurrentWritesSupported(
     const ColumnFamilyOptions& cf_options);
 
-<<<<<<< HEAD
 extern Status CheckCFPathsSupported(const DBOptions& db_options,
                                     const ColumnFamilyOptions& cf_options);
 
-=======
->>>>>>> blood in blood out
 extern ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
                                            const ColumnFamilyOptions& src);
 // Wrap user defined table proproties collector factories `from cf_options`
@@ -250,10 +247,7 @@ class ColumnFamilyData {
   void SetCurrent(Version* _current);
   uint64_t GetNumLiveVersions() const;  // REQUIRE: DB mutex held
   uint64_t GetTotalSstFilesSize() const;  // REQUIRE: DB mutex held
-<<<<<<< HEAD
   uint64_t GetLiveSstFilesSize() const;   // REQUIRE: DB mutex held
-=======
->>>>>>> blood in blood out
   void SetMemtable(MemTable* new_mem) {
     uint64_t memtable_id = last_memtable_id_.fetch_add(1) + 1;
     new_mem->SetID(memtable_id);
@@ -302,15 +296,9 @@ class ColumnFamilyData {
   // REQUIRES: DB mutex held
   Compaction* CompactRange(const MutableCFOptions& mutable_cf_options,
                            int input_level, int output_level,
-<<<<<<< HEAD
                            uint32_t output_path_id, uint32_t max_subcompactions,
                            const InternalKey* begin, const InternalKey* end,
                            InternalKey** compaction_end, bool* manual_conflict);
-=======
-                           uint32_t output_path_id, const InternalKey* begin,
-                           const InternalKey* end, InternalKey** compaction_end,
-                           bool* manual_conflict);
->>>>>>> blood in blood out
 
   CompactionPicker* compaction_picker() { return compaction_picker_.get(); }
   // thread-safe
@@ -357,17 +345,10 @@ class ColumnFamilyData {
   void ResetThreadLocalSuperVersions();
 
   // Protected by DB mutex
-<<<<<<< HEAD
   void set_queued_for_flush(bool value) { queued_for_flush_ = value; }
   void set_queued_for_compaction(bool value) { queued_for_compaction_ = value; }
   bool queued_for_flush() { return queued_for_flush_; }
   bool queued_for_compaction() { return queued_for_compaction_; }
-=======
-  void set_pending_flush(bool value) { pending_flush_ = value; }
-  void set_pending_compaction(bool value) { pending_compaction_ = value; }
-  bool pending_flush() { return pending_flush_; }
-  bool pending_compaction() { return pending_compaction_; }
->>>>>>> blood in blood out
 
   enum class WriteStallCause {
     kNone,
@@ -392,7 +373,6 @@ class ColumnFamilyData {
 
   bool initialized() const { return initialized_.load(); }
 
-<<<<<<< HEAD
   const ColumnFamilyOptions& initial_cf_options() {
     return initial_cf_options_;
   }
@@ -403,10 +383,6 @@ class ColumnFamilyData {
 
   Directory* GetDataDir(size_t path_id) const;
 
-=======
-  Env::WriteLifeTimeHint CalculateSSTWriteHint(int level);
-
->>>>>>> blood in blood out
  private:
   friend class ColumnFamilySet;
   ColumnFamilyData(uint32_t id, const std::string& name,
@@ -477,19 +453,11 @@ class ColumnFamilyData {
   std::unique_ptr<WriteControllerToken> write_controller_token_;
 
   // If true --> this ColumnFamily is currently present in DBImpl::flush_queue_
-<<<<<<< HEAD
   bool queued_for_flush_;
 
   // If true --> this ColumnFamily is currently present in
   // DBImpl::compaction_queue_
   bool queued_for_compaction_;
-=======
-  bool pending_flush_;
-
-  // If true --> this ColumnFamily is currently present in
-  // DBImpl::compaction_queue_
-  bool pending_compaction_;
->>>>>>> blood in blood out
 
   uint64_t prev_compaction_needed_bytes_;
 
@@ -498,12 +466,9 @@ class ColumnFamilyData {
 
   // Memtable id to track flush.
   std::atomic<uint64_t> last_memtable_id_;
-<<<<<<< HEAD
 
   // Directories corresponding to cf_paths.
   std::vector<std::unique_ptr<Directory>> data_dirs_;
-=======
->>>>>>> blood in blood out
 };
 
 // ColumnFamilySet has interesting thread-safety requirements

@@ -78,11 +78,8 @@ std::string TableProperties::ToString(
   AppendProperty(result, "# data blocks", num_data_blocks, prop_delim,
                  kv_delim);
   AppendProperty(result, "# entries", num_entries, prop_delim, kv_delim);
-<<<<<<< HEAD
   AppendProperty(result, "# range deletions", num_range_deletions, prop_delim,
                  kv_delim);
-=======
->>>>>>> blood in blood out
 
   AppendProperty(result, "raw key size", raw_key_size, prop_delim, kv_delim);
   AppendProperty(result, "raw average key size",
@@ -95,16 +92,12 @@ std::string TableProperties::ToString(
                  prop_delim, kv_delim);
 
   AppendProperty(result, "data block size", data_size, prop_delim, kv_delim);
-<<<<<<< HEAD
   char index_block_size_str[80];
   snprintf(index_block_size_str, sizeof(index_block_size_str),
            "index block size (user-key? %d)",
            static_cast<int>(index_key_is_user_key));
   AppendProperty(result, index_block_size_str, index_size, prop_delim,
                  kv_delim);
-=======
-  AppendProperty(result, "index block size", index_size, prop_delim, kv_delim);
->>>>>>> blood in blood out
   if (index_partitions != 0) {
     AppendProperty(result, "# index partitions", index_partitions, prop_delim,
                    kv_delim);
@@ -121,14 +114,11 @@ std::string TableProperties::ToString(
       filter_policy_name.empty() ? std::string("N/A") : filter_policy_name,
       prop_delim, kv_delim);
 
-<<<<<<< HEAD
   AppendProperty(result, "prefix extractor name",
                  prefix_extractor_name.empty() ? std::string("N/A")
                                                : prefix_extractor_name,
                  prop_delim, kv_delim);
 
-=======
->>>>>>> blood in blood out
   AppendProperty(result, "column family ID",
                  column_family_id == rocksdb::TablePropertiesCollectorFactory::
                                          Context::kUnknownColumnFamily
@@ -172,19 +162,13 @@ void TableProperties::Add(const TableProperties& tp) {
   index_size += tp.index_size;
   index_partitions += tp.index_partitions;
   top_level_index_size += tp.top_level_index_size;
-<<<<<<< HEAD
   index_key_is_user_key += tp.index_key_is_user_key;
-=======
->>>>>>> blood in blood out
   filter_size += tp.filter_size;
   raw_key_size += tp.raw_key_size;
   raw_value_size += tp.raw_value_size;
   num_data_blocks += tp.num_data_blocks;
   num_entries += tp.num_entries;
-<<<<<<< HEAD
   num_range_deletions += tp.num_range_deletions;
-=======
->>>>>>> blood in blood out
 }
 
 const std::string TablePropertiesNames::kDataSize  =
@@ -195,11 +179,8 @@ const std::string TablePropertiesNames::kIndexPartitions =
     "rocksdb.index.partitions";
 const std::string TablePropertiesNames::kTopLevelIndexSize =
     "rocksdb.top-level.index.size";
-<<<<<<< HEAD
 const std::string TablePropertiesNames::kIndexKeyIsUserKey =
     "rocksdb.index.key.is.user.key";
-=======
->>>>>>> blood in blood out
 const std::string TablePropertiesNames::kFilterSize =
     "rocksdb.filter.size";
 const std::string TablePropertiesNames::kRawKeySize =
@@ -210,11 +191,8 @@ const std::string TablePropertiesNames::kNumDataBlocks =
     "rocksdb.num.data.blocks";
 const std::string TablePropertiesNames::kNumEntries =
     "rocksdb.num.entries";
-<<<<<<< HEAD
 const std::string TablePropertiesNames::kNumRangeDeletions =
     "rocksdb.num.range-deletions";
-=======
->>>>>>> blood in blood out
 const std::string TablePropertiesNames::kFilterPolicy =
     "rocksdb.filter.policy";
 const std::string TablePropertiesNames::kFormatVersion =

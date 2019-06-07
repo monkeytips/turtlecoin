@@ -131,7 +131,6 @@ struct FileMetaData {
     smallest_seqno = std::min(smallest_seqno, seqno);
     largest_seqno = std::max(largest_seqno, seqno);
   }
-<<<<<<< HEAD
 
   // Unlike UpdateBoundaries, ranges do not need to be presented in any
   // particular order.
@@ -147,8 +146,6 @@ struct FileMetaData {
     smallest_seqno = std::min(smallest_seqno, seqno);
     largest_seqno = std::max(largest_seqno, seqno);
   }
-=======
->>>>>>> blood in blood out
 };
 
 // A compressed copy of file meta data that just contain minimum data needed
@@ -217,7 +214,6 @@ class VersionEdit {
     has_max_column_family_ = true;
     max_column_family_ = max_column_family;
   }
-<<<<<<< HEAD
   void SetMinLogNumberToKeep(uint64_t num) {
     has_min_log_number_to_keep_ = true;
     min_log_number_to_keep_ = num;
@@ -226,8 +222,6 @@ class VersionEdit {
   bool has_log_number() { return has_log_number_; }
 
   uint64_t log_number() { return log_number_; }
-=======
->>>>>>> blood in blood out
 
   // Add the specified file at the specified number.
   // REQUIRES: This version has not been saved (see VersionSet::SaveTo)
@@ -314,11 +308,8 @@ class VersionEdit {
   uint64_t prev_log_number_;
   uint64_t next_file_number_;
   uint32_t max_column_family_;
-<<<<<<< HEAD
   // The most recent WAL log number that is deleted
   uint64_t min_log_number_to_keep_;
-=======
->>>>>>> blood in blood out
   SequenceNumber last_sequence_;
   bool has_comparator_;
   bool has_log_number_;
@@ -326,10 +317,7 @@ class VersionEdit {
   bool has_next_file_number_;
   bool has_last_sequence_;
   bool has_max_column_family_;
-<<<<<<< HEAD
   bool has_min_log_number_to_keep_;
-=======
->>>>>>> blood in blood out
 
   DeletedFileSet deleted_files_;
   std::vector<std::pair<int, FileMetaData>> new_files_;

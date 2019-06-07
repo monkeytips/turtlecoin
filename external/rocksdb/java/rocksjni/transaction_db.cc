@@ -11,10 +11,6 @@
 #include <memory>
 #include <utility>
 
-<<<<<<< HEAD
-=======
-
->>>>>>> blood in blood out
 #include "include/org_rocksdb_TransactionDB.h"
 
 #include "rocksdb/options.h"
@@ -28,15 +24,9 @@
  * Method:    open
  * Signature: (JJLjava/lang/String;)J
  */
-<<<<<<< HEAD
 jlong Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2(
     JNIEnv* env, jclass /*jcls*/, jlong joptions_handle,
     jlong jtxn_db_options_handle, jstring jdb_path) {
-=======
-jlong Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2(JNIEnv* env,
-    jclass jcls, jlong joptions_handle, jlong jtxn_db_options_handle,
-    jstring jdb_path) {
->>>>>>> blood in blood out
   auto* options = reinterpret_cast<rocksdb::Options*>(joptions_handle);
   auto* txn_db_options =
       reinterpret_cast<rocksdb::TransactionDBOptions*>(jtxn_db_options_handle);
@@ -64,14 +54,8 @@ jlong Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2(JNIEnv* env,
  * Signature: (JJLjava/lang/String;[[B[J)[J
  */
 jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
-<<<<<<< HEAD
     JNIEnv* env, jclass /*jcls*/, jlong jdb_options_handle,
     jlong jtxn_db_options_handle, jstring jdb_path, jobjectArray jcolumn_names,
-=======
-    JNIEnv* env, jclass jcls, jlong jdb_options_handle,
-    jlong jtxn_db_options_handle, jstring jdb_path,
-    jobjectArray jcolumn_names,
->>>>>>> blood in blood out
     jlongArray jcolumn_options_handles) {
   const char* db_path = env->GetStringUTFChars(jdb_path, nullptr);
   if (db_path == nullptr) {
@@ -88,31 +72,18 @@ jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
 
   jlong* jco = env->GetLongArrayElements(jcolumn_options_handles, nullptr);
   if (jco == nullptr) {
-<<<<<<< HEAD
     // exception thrown: OutOfMemoryError
     env->ReleaseStringUTFChars(jdb_path, db_path);
     return nullptr;
-=======
-      // exception thrown: OutOfMemoryError
-      env->ReleaseStringUTFChars(jdb_path, db_path);
-      return nullptr;
->>>>>>> blood in blood out
   }
   std::vector<rocksdb::ColumnFamilyDescriptor> column_families;
   for (int i = 0; i < len_cols; i++) {
     const jobject jcn = env->GetObjectArrayElement(jcolumn_names, i);
     if (env->ExceptionCheck()) {
-<<<<<<< HEAD
       // exception thrown: ArrayIndexOutOfBoundsException
       env->ReleaseLongArrayElements(jcolumn_options_handles, jco, JNI_ABORT);
       env->ReleaseStringUTFChars(jdb_path, db_path);
       return nullptr;
-=======
-        // exception thrown: ArrayIndexOutOfBoundsException
-        env->ReleaseLongArrayElements(jcolumn_options_handles, jco, JNI_ABORT);
-        env->ReleaseStringUTFChars(jdb_path, db_path);
-        return nullptr;
->>>>>>> blood in blood out
     }
     const jbyteArray jcn_ba = reinterpret_cast<jbyteArray>(jcn);
     jbyte* jcf_name = env->GetByteArrayElements(jcn_ba, nullptr);
@@ -126,7 +97,6 @@ jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
 
     const int jcf_name_len = env->GetArrayLength(jcn_ba);
     if (env->EnsureLocalCapacity(jcf_name_len) != 0) {
-<<<<<<< HEAD
       // out of memory
       env->ReleaseByteArrayElements(jcn_ba, jcf_name, JNI_ABORT);
       env->DeleteLocalRef(jcn);
@@ -139,20 +109,6 @@ jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
         reinterpret_cast<rocksdb::ColumnFamilyOptions*>(jco[i]);
     column_families.push_back(
         rocksdb::ColumnFamilyDescriptor(cf_name, *cf_options));
-=======
-        // out of memory
-        env->ReleaseByteArrayElements(jcn_ba, jcf_name, JNI_ABORT);
-        env->DeleteLocalRef(jcn);
-        env->ReleaseLongArrayElements(jcolumn_options_handles, jco, JNI_ABORT);
-        env->ReleaseStringUTFChars(jdb_path, db_path);
-        return nullptr;
-    }
-    const std::string cf_name(reinterpret_cast<char *>(jcf_name), jcf_name_len);
-    const rocksdb::ColumnFamilyOptions* cf_options =
-      reinterpret_cast<rocksdb::ColumnFamilyOptions*>(jco[i]);
-    column_families.push_back(
-      rocksdb::ColumnFamilyDescriptor(cf_name, *cf_options));
->>>>>>> blood in blood out
 
     env->ReleaseByteArrayElements(jcn_ba, jcf_name, JNI_ABORT);
     env->DeleteLocalRef(jcn);
@@ -164,13 +120,8 @@ jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
       reinterpret_cast<rocksdb::TransactionDBOptions*>(jtxn_db_options_handle);
   std::vector<rocksdb::ColumnFamilyHandle*> handles;
   rocksdb::TransactionDB* tdb = nullptr;
-<<<<<<< HEAD
   const rocksdb::Status s = rocksdb::TransactionDB::Open(
       *db_options, *txn_db_options, db_path, column_families, &handles, &tdb);
-=======
-  const rocksdb::Status s = rocksdb::TransactionDB::Open(*db_options, *txn_db_options,
-      db_path, column_families, &handles, &tdb);
->>>>>>> blood in blood out
 
   // check if open operation was successful
   if (s.ok()) {
@@ -184,7 +135,6 @@ jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
 
     jlongArray jresults = env->NewLongArray(resultsLen);
     if (jresults == nullptr) {
-<<<<<<< HEAD
       // exception thrown: OutOfMemoryError
       return nullptr;
     }
@@ -193,16 +143,6 @@ jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
       // exception thrown: ArrayIndexOutOfBoundsException
       env->DeleteLocalRef(jresults);
       return nullptr;
-=======
-        // exception thrown: OutOfMemoryError
-        return nullptr;
-    }
-    env->SetLongArrayRegion(jresults, 0, resultsLen, results.get());
-    if (env->ExceptionCheck()) {
-        // exception thrown: ArrayIndexOutOfBoundsException
-        env->DeleteLocalRef(jresults);
-        return nullptr;
->>>>>>> blood in blood out
     }
     return jresults;
   } else {
@@ -216,14 +156,9 @@ jlongArray Java_org_rocksdb_TransactionDB_open__JJLjava_lang_String_2_3_3B_3J(
  * Method:    beginTransaction
  * Signature: (JJ)J
  */
-<<<<<<< HEAD
 jlong Java_org_rocksdb_TransactionDB_beginTransaction__JJ(
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jlong jwrite_options_handle) {
-=======
-jlong Java_org_rocksdb_TransactionDB_beginTransaction__JJ(JNIEnv* env,
-    jobject jobj, jlong jhandle, jlong jwrite_options_handle) {
->>>>>>> blood in blood out
   auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
   auto* write_options =
       reinterpret_cast<rocksdb::WriteOptions*>(jwrite_options_handle);
@@ -236,15 +171,9 @@ jlong Java_org_rocksdb_TransactionDB_beginTransaction__JJ(JNIEnv* env,
  * Method:    beginTransaction
  * Signature: (JJJ)J
  */
-<<<<<<< HEAD
 jlong Java_org_rocksdb_TransactionDB_beginTransaction__JJJ(
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jlong jwrite_options_handle, jlong jtxn_options_handle) {
-=======
-jlong Java_org_rocksdb_TransactionDB_beginTransaction__JJJ(JNIEnv* env,
-    jobject jobj, jlong jhandle, jlong jwrite_options_handle,
-    jlong jtxn_options_handle) {
->>>>>>> blood in blood out
   auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
   auto* write_options =
       reinterpret_cast<rocksdb::WriteOptions*>(jwrite_options_handle);
@@ -261,13 +190,8 @@ jlong Java_org_rocksdb_TransactionDB_beginTransaction__JJJ(JNIEnv* env,
  * Signature: (JJJ)J
  */
 jlong Java_org_rocksdb_TransactionDB_beginTransaction_1withOld__JJJ(
-<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jlong jwrite_options_handle, jlong jold_txn_handle) {
-=======
-    JNIEnv* env, jobject jobj, jlong jhandle, jlong jwrite_options_handle,
-    jlong jold_txn_handle) {
->>>>>>> blood in blood out
   auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
   auto* write_options =
       reinterpret_cast<rocksdb::WriteOptions*>(jwrite_options_handle);
@@ -290,27 +214,17 @@ jlong Java_org_rocksdb_TransactionDB_beginTransaction_1withOld__JJJ(
  * Signature: (JJJJ)J
  */
 jlong Java_org_rocksdb_TransactionDB_beginTransaction_1withOld__JJJJ(
-<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jlong jwrite_options_handle, jlong jtxn_options_handle,
     jlong jold_txn_handle) {
-=======
-    JNIEnv* env, jobject jobj, jlong jhandle, jlong jwrite_options_handle,
-    jlong jtxn_options_handle, jlong jold_txn_handle) {
->>>>>>> blood in blood out
   auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
   auto* write_options =
       reinterpret_cast<rocksdb::WriteOptions*>(jwrite_options_handle);
   auto* txn_options =
       reinterpret_cast<rocksdb::TransactionOptions*>(jtxn_options_handle);
   auto* old_txn = reinterpret_cast<rocksdb::Transaction*>(jold_txn_handle);
-<<<<<<< HEAD
   rocksdb::Transaction* txn =
       txn_db->BeginTransaction(*write_options, *txn_options, old_txn);
-=======
-  rocksdb::Transaction* txn = txn_db->BeginTransaction(*write_options,
-      *txn_options, old_txn);
->>>>>>> blood in blood out
 
   // RocksJava relies on the assumption that
   // we do not allocate a new Transaction object
@@ -326,7 +240,6 @@ jlong Java_org_rocksdb_TransactionDB_beginTransaction_1withOld__JJJJ(
  * Signature: (JLjava/lang/String;)J
  */
 jlong Java_org_rocksdb_TransactionDB_getTransactionByName(JNIEnv* env,
-<<<<<<< HEAD
                                                           jobject /*jobj*/,
                                                           jlong jhandle,
                                                           jstring jname) {
@@ -335,14 +248,6 @@ jlong Java_org_rocksdb_TransactionDB_getTransactionByName(JNIEnv* env,
   if (name == nullptr) {
     // exception thrown: OutOfMemoryError
     return 0;
-=======
-    jobject jobj, jlong jhandle, jstring jname) {
-  auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
-  const char* name = env->GetStringUTFChars(jname, nullptr);
-  if (name == nullptr) {
-      // exception thrown: OutOfMemoryError
-      return 0;
->>>>>>> blood in blood out
   }
   rocksdb::Transaction* txn = txn_db->GetTransactionByName(name);
   env->ReleaseStringUTFChars(jname, name);
@@ -355,11 +260,7 @@ jlong Java_org_rocksdb_TransactionDB_getTransactionByName(JNIEnv* env,
  * Signature: (J)[J
  */
 jlongArray Java_org_rocksdb_TransactionDB_getAllPreparedTransactions(
-<<<<<<< HEAD
     JNIEnv* env, jobject /*jobj*/, jlong jhandle) {
-=======
-    JNIEnv* env, jobject jobj, jlong jhandle) {
->>>>>>> blood in blood out
   auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
   std::vector<rocksdb::Transaction*> txns;
   txn_db->GetAllPreparedTransactions(&txns);
@@ -368,20 +269,13 @@ jlongArray Java_org_rocksdb_TransactionDB_getAllPreparedTransactions(
   assert(size < UINT32_MAX);  // does it fit in a jint?
 
   const jsize len = static_cast<jsize>(size);
-<<<<<<< HEAD
   std::vector<jlong> tmp(len);
   for (jsize i = 0; i < len; ++i) {
     tmp[i] = reinterpret_cast<jlong>(txns[i]);
-=======
-  jlong tmp[len];
-  for (jsize i = 0; i < len; ++i) {
-      tmp[i] = reinterpret_cast<jlong>(txns[i]);
->>>>>>> blood in blood out
   }
 
   jlongArray jtxns = env->NewLongArray(len);
   if (jtxns == nullptr) {
-<<<<<<< HEAD
     // exception thrown: OutOfMemoryError
     return nullptr;
   }
@@ -390,16 +284,6 @@ jlongArray Java_org_rocksdb_TransactionDB_getAllPreparedTransactions(
     // exception thrown: ArrayIndexOutOfBoundsException
     env->DeleteLocalRef(jtxns);
     return nullptr;
-=======
-      // exception thrown: OutOfMemoryError
-      return nullptr;
-  }
-  env->SetLongArrayRegion(jtxns, 0, len, tmp);
-  if (env->ExceptionCheck()) {
-      // exception thrown: ArrayIndexOutOfBoundsException
-      env->DeleteLocalRef(jtxns);
-      return nullptr;
->>>>>>> blood in blood out
   }
 
   return jtxns;
@@ -410,7 +294,6 @@ jlongArray Java_org_rocksdb_TransactionDB_getAllPreparedTransactions(
  * Method:    getLockStatusData
  * Signature: (J)Ljava/util/Map;
  */
-<<<<<<< HEAD
 jobject Java_org_rocksdb_TransactionDB_getLockStatusData(JNIEnv* env,
                                                          jobject /*jobj*/,
                                                          jlong jhandle) {
@@ -449,40 +332,6 @@ jobject Java_org_rocksdb_TransactionDB_getLockStatusData(JNIEnv* env,
   if (!rocksdb::HashMapJni::putAll(env, jlock_status_data,
                                    lock_status_data.begin(),
                                    lock_status_data.end(), fn_map_kv)) {
-=======
-jobject Java_org_rocksdb_TransactionDB_getLockStatusData(
-    JNIEnv* env, jobject jobj, jlong jhandle) {
-  auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
-  const std::unordered_multimap<uint32_t, rocksdb::KeyLockInfo> lock_status_data =
-      txn_db->GetLockStatusData();
-  const jobject jlock_status_data = rocksdb::HashMapJni::construct(env,
-        static_cast<uint32_t>(lock_status_data.size()));
-  if (jlock_status_data == nullptr) {
-      // exception occurred
-      return nullptr;
-  }
-
-  const rocksdb::HashMapJni::FnMapKV<const int32_t, const rocksdb::KeyLockInfo> fn_map_kv =
-      [env, txn_db, &lock_status_data](const std::pair<const int32_t, const rocksdb::KeyLockInfo>& pair) {
-          const jobject jlong_column_family_id =
-              rocksdb::LongJni::valueOf(env, pair.first);
-          if (jlong_column_family_id == nullptr) {
-              // an error occurred
-              return std::unique_ptr<std::pair<jobject, jobject>>(nullptr);
-          }
-          const jobject jkey_lock_info =
-              rocksdb::KeyLockInfoJni::construct(env, pair.second);
-          if (jkey_lock_info == nullptr) {
-             // an error occurred
-             return std::unique_ptr<std::pair<jobject, jobject>>(nullptr);
-          }
-          return std::unique_ptr<std::pair<jobject, jobject>>(new std::pair<jobject, jobject>(jlong_column_family_id,
-              jkey_lock_info));
-      };
-
-  if(!rocksdb::HashMapJni::putAll(env, jlock_status_data,
-      lock_status_data.begin(), lock_status_data.end(), fn_map_kv)) {
->>>>>>> blood in blood out
     // exception occcurred
     return nullptr;
   }
@@ -491,17 +340,10 @@ jobject Java_org_rocksdb_TransactionDB_getLockStatusData(
 }
 
 /*
-<<<<<<< HEAD
  * Class:     org_rocksdb_TransactionDB
  * Method:    getDeadlockInfoBuffer
  * Signature: (J)[Lorg/rocksdb/TransactionDB/DeadlockPath;
  */
-=======
-* Class:     org_rocksdb_TransactionDB
-* Method:    getDeadlockInfoBuffer
-* Signature: (J)[Lorg/rocksdb/TransactionDB/DeadlockPath;
-*/
->>>>>>> blood in blood out
 jobjectArray Java_org_rocksdb_TransactionDB_getDeadlockInfoBuffer(
     JNIEnv* env, jobject jobj, jlong jhandle) {
   auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
@@ -512,22 +354,14 @@ jobjectArray Java_org_rocksdb_TransactionDB_getDeadlockInfoBuffer(
       static_cast<jsize>(deadlock_info_buffer.size());
   jobjectArray jdeadlock_info_buffer =
       env->NewObjectArray(deadlock_info_buffer_len,
-<<<<<<< HEAD
                           rocksdb::DeadlockPathJni::getJClass(env), nullptr);
   if (jdeadlock_info_buffer == nullptr) {
     // exception thrown: OutOfMemoryError
     return nullptr;
-=======
-        rocksdb::DeadlockPathJni::getJClass(env), nullptr);
-  if (jdeadlock_info_buffer == nullptr) {
-      // exception thrown: OutOfMemoryError
-      return nullptr;
->>>>>>> blood in blood out
   }
   jsize jdeadlock_info_buffer_offset = 0;
 
   auto buf_end = deadlock_info_buffer.end();
-<<<<<<< HEAD
   for (auto buf_it = deadlock_info_buffer.begin(); buf_it != buf_end;
        ++buf_it) {
     const rocksdb::DeadlockPath deadlock_path = *buf_it;
@@ -541,25 +375,10 @@ jobjectArray Java_org_rocksdb_TransactionDB_getDeadlockInfoBuffer(
       // exception thrown: OutOfMemoryError
       env->DeleteLocalRef(jdeadlock_info_buffer);
       return nullptr;
-=======
-  for (auto buf_it = deadlock_info_buffer.begin(); buf_it != buf_end; ++buf_it) {
-    const rocksdb::DeadlockPath deadlock_path = *buf_it;
-    const std::vector<rocksdb::DeadlockInfo> deadlock_infos
-        = deadlock_path.path;
-    const jsize deadlock_infos_len =
-        static_cast<jsize>(deadlock_info_buffer.size());
-    jobjectArray jdeadlock_infos = env->NewObjectArray(deadlock_infos_len,
-        rocksdb::DeadlockInfoJni::getJClass(env), nullptr);
-    if (jdeadlock_infos == nullptr) {
-        // exception thrown: OutOfMemoryError
-        env->DeleteLocalRef(jdeadlock_info_buffer);
-        return nullptr;
->>>>>>> blood in blood out
     }
     jsize jdeadlock_infos_offset = 0;
 
     auto infos_end = deadlock_infos.end();
-<<<<<<< HEAD
     for (auto infos_it = deadlock_infos.begin(); infos_it != infos_end;
          ++infos_it) {
       const rocksdb::DeadlockInfo deadlock_info = *infos_it;
@@ -596,41 +415,6 @@ jobjectArray Java_org_rocksdb_TransactionDB_getDeadlockInfoBuffer(
       env->DeleteLocalRef(jdeadlock_path);
       env->DeleteLocalRef(jdeadlock_info_buffer);
       return nullptr;
-=======
-    for (auto infos_it = deadlock_infos.begin(); infos_it != infos_end; ++infos_it) {
-        const rocksdb::DeadlockInfo deadlock_info = *infos_it;
-        const jobject jdeadlock_info = rocksdb::TransactionDBJni::newDeadlockInfo(
-            env, jobj, deadlock_info.m_txn_id, deadlock_info.m_cf_id,
-            deadlock_info.m_waiting_key, deadlock_info.m_exclusive);
-        if (jdeadlock_info == nullptr) {
-            // exception occcurred
-            env->DeleteLocalRef(jdeadlock_info_buffer);
-            return nullptr;
-        }
-        env->SetObjectArrayElement(jdeadlock_infos, jdeadlock_infos_offset++, jdeadlock_info);
-        if (env->ExceptionCheck()) {
-            // exception thrown: ArrayIndexOutOfBoundsException or ArrayStoreException
-            env->DeleteLocalRef(jdeadlock_info);
-            env->DeleteLocalRef(jdeadlock_info_buffer);
-            return nullptr;
-        }
-    }
-
-    const jobject jdeadlock_path =
-        rocksdb::DeadlockPathJni::construct(env, jdeadlock_infos,
-            deadlock_path.limit_exceeded);
-    if(jdeadlock_path == nullptr) {
-        // exception occcurred
-        env->DeleteLocalRef(jdeadlock_info_buffer);
-        return nullptr;
-    }
-    env->SetObjectArrayElement(jdeadlock_info_buffer, jdeadlock_info_buffer_offset++, jdeadlock_path);
-    if (env->ExceptionCheck()) {
-        // exception thrown: ArrayIndexOutOfBoundsException or ArrayStoreException
-        env->DeleteLocalRef(jdeadlock_path);
-        env->DeleteLocalRef(jdeadlock_info_buffer);
-        return nullptr;
->>>>>>> blood in blood out
     }
   }
 
@@ -638,7 +422,6 @@ jobjectArray Java_org_rocksdb_TransactionDB_getDeadlockInfoBuffer(
 }
 
 /*
-<<<<<<< HEAD
  * Class:     org_rocksdb_TransactionDB
  * Method:    setDeadlockInfoBufferSize
  * Signature: (JI)V
@@ -646,14 +429,6 @@ jobjectArray Java_org_rocksdb_TransactionDB_getDeadlockInfoBuffer(
 void Java_org_rocksdb_TransactionDB_setDeadlockInfoBufferSize(
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle,
     jint jdeadlock_info_buffer_size) {
-=======
-* Class:     org_rocksdb_TransactionDB
-* Method:    setDeadlockInfoBufferSize
-* Signature: (JI)V
-*/
-void Java_org_rocksdb_TransactionDB_setDeadlockInfoBufferSize(
-    JNIEnv* env, jobject jobj, jlong jhandle, jint jdeadlock_info_buffer_size) {
->>>>>>> blood in blood out
   auto* txn_db = reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
   txn_db->SetDeadlockInfoBufferSize(jdeadlock_info_buffer_size);
 }
@@ -663,13 +438,8 @@ void Java_org_rocksdb_TransactionDB_setDeadlockInfoBufferSize(
  * Method:    disposeInternal
  * Signature: (J)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_TransactionDB_disposeInternal(JNIEnv* /*env*/,
                                                     jobject /*jobj*/,
                                                     jlong jhandle) {
-=======
-void Java_org_rocksdb_TransactionDB_disposeInternal(JNIEnv* env, jobject jobj,
-    jlong jhandle) {
->>>>>>> blood in blood out
   delete reinterpret_cast<rocksdb::TransactionDB*>(jhandle);
 }

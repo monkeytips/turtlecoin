@@ -3,7 +3,6 @@
 //  COPYING file in the root directory) and Apache 2.0 License
 //  (found in the LICENSE.Apache file in the root directory).
 
-<<<<<<< HEAD
 #include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,23 +18,6 @@
 #include "rocksdb/statistics.h"
 #include "rocksdb/table.h"
 #include "rocksjni/portal.h"
-=======
-#include <stdio.h>
-#include <stdlib.h>
-#include <jni.h>
-#include <string>
-#include <memory>
-
-#include "include/org_rocksdb_CassandraValueMergeOperator.h"
-#include "rocksjni/portal.h"
-#include "rocksdb/db.h"
-#include "rocksdb/options.h"
-#include "rocksdb/statistics.h"
-#include "rocksdb/memtablerep.h"
-#include "rocksdb/table.h"
-#include "rocksdb/slice_transform.h"
-#include "rocksdb/merge_operator.h"
->>>>>>> blood in blood out
 #include "utilities/cassandra/merge_operator.h"
 
 /*
@@ -44,11 +26,7 @@
  * Signature: (II)J
  */
 jlong Java_org_rocksdb_CassandraValueMergeOperator_newSharedCassandraValueMergeOperator(
-<<<<<<< HEAD
     JNIEnv* /*env*/, jclass /*jclazz*/, jint gcGracePeriodInSeconds,
-=======
-    JNIEnv* env, jclass jclazz, jint gcGracePeriodInSeconds,
->>>>>>> blood in blood out
     jint operands_limit) {
   auto* op = new std::shared_ptr<rocksdb::MergeOperator>(
       new rocksdb::cassandra::CassandraValueMergeOperator(
@@ -62,11 +40,7 @@ jlong Java_org_rocksdb_CassandraValueMergeOperator_newSharedCassandraValueMergeO
  * Signature: (J)V
  */
 void Java_org_rocksdb_CassandraValueMergeOperator_disposeInternal(
-<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle) {
-=======
-    JNIEnv* env, jobject jobj, jlong jhandle) {
->>>>>>> blood in blood out
   auto* op =
       reinterpret_cast<std::shared_ptr<rocksdb::MergeOperator>*>(jhandle);
   delete op;

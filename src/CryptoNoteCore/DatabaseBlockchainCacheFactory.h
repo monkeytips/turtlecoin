@@ -26,11 +26,7 @@ class IDataBase;
 
 class DatabaseBlockchainCacheFactory: public IBlockchainCacheFactory {
 public:
-<<<<<<< HEAD
   explicit DatabaseBlockchainCacheFactory(IDataBase& database, std::shared_ptr<Logging::ILogger> logger);
-=======
-  explicit DatabaseBlockchainCacheFactory(IDataBase& database, Logging::ILogger& logger);
->>>>>>> blood in blood out
   virtual ~DatabaseBlockchainCacheFactory();
 
   virtual std::unique_ptr<IBlockchainCache> createRootBlockchainCache(const Currency& currency) override;
@@ -38,11 +34,7 @@ public:
 
 private:
   IDataBase& database;
-<<<<<<< HEAD
   std::shared_ptr<Logging::ILogger> logger;
-=======
-  Logging::ILogger& logger;
->>>>>>> blood in blood out
 };
 
 } //namespace CryptoNote

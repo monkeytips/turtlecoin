@@ -11,10 +11,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.util.List;
-<<<<<<< HEAD
 import java.util.concurrent.ThreadLocalRandom;
-=======
->>>>>>> blood in blood out
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -209,7 +206,6 @@ public class BackupEngineTest {
     }
   }
 
-<<<<<<< HEAD
   @Test
   public void backupDbWithMetadata() throws RocksDBException {
     // Open empty database.
@@ -230,8 +226,6 @@ public class BackupEngineTest {
     }
   }
 
-=======
->>>>>>> blood in blood out
   /**
    * Verify backups.
    *

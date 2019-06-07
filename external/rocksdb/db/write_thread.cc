@@ -7,10 +7,7 @@
 #include <chrono>
 #include <thread>
 #include "db/column_family.h"
-<<<<<<< HEAD
 #include "monitoring/perf_context_imp.h"
-=======
->>>>>>> blood in blood out
 #include "port/port.h"
 #include "util/random.h"
 #include "util/sync_point.h"
@@ -77,13 +74,10 @@ uint8_t WriteThread::AwaitState(Writer* w, uint8_t goal_mask,
     port::AsmVolatilePause();
   }
 
-<<<<<<< HEAD
   // This is below the fast path, so that the stat is zero when all writes are
   // from the same thread.
   PERF_TIMER_GUARD(write_thread_wait_nanos);
 
-=======
->>>>>>> blood in blood out
   // If we're only going to end up waiting a short period of time,
   // it can be a lot more efficient to call std::this_thread::yield()
   // in a loop than to block in StateMutex().  For reference, on my 4.0
@@ -269,7 +263,6 @@ void WriteThread::CreateMissingNewerLinks(Writer* head) {
   }
 }
 
-<<<<<<< HEAD
 WriteThread::Writer* WriteThread::FindNextLeader(Writer* from,
                                                  Writer* boundary) {
   assert(from != nullptr && from != boundary);
@@ -281,8 +274,6 @@ WriteThread::Writer* WriteThread::FindNextLeader(Writer* from,
   return current;
 }
 
-=======
->>>>>>> blood in blood out
 void WriteThread::CompleteLeader(WriteGroup& write_group) {
   assert(write_group.size > 0);
   Writer* leader = write_group.leader;
@@ -338,10 +329,7 @@ void WriteThread::JoinBatchGroup(Writer* w) {
      * 3.2) an existing memtable writer group leader tell us to finish memtable
      *      writes in parallel.
      */
-<<<<<<< HEAD
     TEST_SYNC_POINT_CALLBACK("WriteThread::JoinBatchGroup:BeganWaiting", w);
-=======
->>>>>>> blood in blood out
     AwaitState(w, STATE_GROUP_LEADER | STATE_MEMTABLE_WRITER_LEADER |
                       STATE_PARALLEL_MEMTABLE_WRITER | STATE_COMPLETED,
                &jbg_ctx);
@@ -485,12 +473,8 @@ void WriteThread::EnterAsMemTableWriter(Writer* leader,
       last_writer->sequence + WriteBatchInternal::Count(last_writer->batch) - 1;
 }
 
-<<<<<<< HEAD
 void WriteThread::ExitAsMemTableWriter(Writer* /*self*/,
                                        WriteGroup& write_group) {
-=======
-void WriteThread::ExitAsMemTableWriter(Writer* self, WriteGroup& write_group) {
->>>>>>> blood in blood out
   Writer* leader = write_group.leader;
   Writer* last_writer = write_group.last_writer;
 
@@ -585,7 +569,6 @@ void WriteThread::ExitAsBatchGroupLeader(WriteGroup& write_group,
     if (!leader->ShouldWriteToMemtable()) {
       CompleteLeader(write_group);
     }
-<<<<<<< HEAD
 
     Writer* next_leader = nullptr;
 
@@ -607,16 +590,12 @@ void WriteThread::ExitAsBatchGroupLeader(WriteGroup& write_group,
     // We have to link our group to memtable writer queue before wake up the
     // next leader or set newest_writer_ to null, otherwise the next leader
     // can run ahead of us and link to memtable writer queue before we do.
-=======
-    // Link the ramaining of the group to memtable writer list.
->>>>>>> blood in blood out
     if (write_group.size > 0) {
       if (LinkGroup(write_group, &newest_memtable_writer_)) {
         // The leader can now be different from current writer.
         SetState(write_group.leader, STATE_MEMTABLE_WRITER_LEADER);
       }
     }
-<<<<<<< HEAD
 
     // If we have inserted dummy in the queue, remove it now and check if there
     // are pending writer join the queue since we insert the dummy. If so,
@@ -633,16 +612,6 @@ void WriteThread::ExitAsBatchGroupLeader(WriteGroup& write_group,
     }
 
     if (next_leader != nullptr) {
-=======
-    // Reset newest_writer_ and wake up the next leader.
-    Writer* newest_writer = last_writer;
-    if (!newest_writer_.compare_exchange_strong(newest_writer, nullptr)) {
-      Writer* next_leader = newest_writer;
-      while (next_leader->link_older != last_writer) {
-        next_leader = next_leader->link_older;
-        assert(next_leader != nullptr);
-      }
->>>>>>> blood in blood out
       next_leader->link_older = nullptr;
       SetState(next_leader, STATE_GROUP_LEADER);
     }

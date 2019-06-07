@@ -181,7 +181,6 @@ TEST_F(VersionEditTest, ColumnFamilyTest) {
   TestEncodeDecode(edit);
 }
 
-<<<<<<< HEAD
 TEST_F(VersionEditTest, MinLogNumberToKeep) {
   VersionEdit edit;
   edit.SetMinLogNumberToKeep(13);
@@ -192,8 +191,6 @@ TEST_F(VersionEditTest, MinLogNumberToKeep) {
   TestEncodeDecode(edit);
 }
 
-=======
->>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char** argv) {

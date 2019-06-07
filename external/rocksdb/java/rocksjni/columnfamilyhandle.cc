@@ -6,15 +6,9 @@
 // This file implements the "bridge" between Java and C++ for
 // rocksdb::ColumnFamilyHandle.
 
-<<<<<<< HEAD
 #include <jni.h>
 #include <stdio.h>
 #include <stdlib.h>
-=======
-#include <stdio.h>
-#include <stdlib.h>
-#include <jni.h>
->>>>>>> blood in blood out
 
 #include "include/org_rocksdb_ColumnFamilyHandle.h"
 #include "rocksjni/portal.h"
@@ -24,21 +18,15 @@
  * Method:    getName
  * Signature: (J)[B
  */
-<<<<<<< HEAD
 jbyteArray Java_org_rocksdb_ColumnFamilyHandle_getName(JNIEnv* env,
                                                        jobject /*jobj*/,
                                                        jlong jhandle) {
-=======
-jbyteArray Java_org_rocksdb_ColumnFamilyHandle_getName(
-    JNIEnv* env, jobject jobj, jlong jhandle) {
->>>>>>> blood in blood out
   auto* cfh = reinterpret_cast<rocksdb::ColumnFamilyHandle*>(jhandle);
   std::string cf_name = cfh->GetName();
   return rocksdb::JniUtil::copyBytes(env, cf_name);
 }
 
 /*
-<<<<<<< HEAD
  * Class:     org_rocksdb_ColumnFamilyHandle
  * Method:    getID
  * Signature: (J)I
@@ -46,14 +34,6 @@ jbyteArray Java_org_rocksdb_ColumnFamilyHandle_getName(
 jint Java_org_rocksdb_ColumnFamilyHandle_getID(JNIEnv* /*env*/,
                                                jobject /*jobj*/,
                                                jlong jhandle) {
-=======
-* Class:     org_rocksdb_ColumnFamilyHandle
-* Method:    getID
-* Signature: (J)I
-*/
-jint Java_org_rocksdb_ColumnFamilyHandle_getID(
-    JNIEnv* env, jobject jobj, jlong jhandle) {
->>>>>>> blood in blood out
   auto* cfh = reinterpret_cast<rocksdb::ColumnFamilyHandle*>(jhandle);
   const int32_t id = cfh->GetID();
   return static_cast<jint>(id);
@@ -64,14 +44,9 @@ jint Java_org_rocksdb_ColumnFamilyHandle_getID(
  * Method:    getDescriptor
  * Signature: (J)Lorg/rocksdb/ColumnFamilyDescriptor;
  */
-<<<<<<< HEAD
 jobject Java_org_rocksdb_ColumnFamilyHandle_getDescriptor(JNIEnv* env,
                                                           jobject /*jobj*/,
                                                           jlong jhandle) {
-=======
-jobject Java_org_rocksdb_ColumnFamilyHandle_getDescriptor(
-    JNIEnv* env, jobject jobj, jlong jhandle) {
->>>>>>> blood in blood out
   auto* cfh = reinterpret_cast<rocksdb::ColumnFamilyHandle*>(jhandle);
   rocksdb::ColumnFamilyDescriptor desc;
   rocksdb::Status s = cfh->GetDescriptor(&desc);
@@ -88,14 +63,9 @@ jobject Java_org_rocksdb_ColumnFamilyHandle_getDescriptor(
  * Method:    disposeInternal
  * Signature: (J)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_ColumnFamilyHandle_disposeInternal(JNIEnv* /*env*/,
                                                          jobject /*jobj*/,
                                                          jlong jhandle) {
-=======
-void Java_org_rocksdb_ColumnFamilyHandle_disposeInternal(
-    JNIEnv* env, jobject jobj, jlong jhandle) {
->>>>>>> blood in blood out
   auto* cfh = reinterpret_cast<rocksdb::ColumnFamilyHandle*>(jhandle);
   assert(cfh != nullptr);
   delete cfh;

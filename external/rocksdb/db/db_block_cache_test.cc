@@ -47,11 +47,7 @@ class DBBlockCacheTest : public DBTestBase {
     return options;
   }
 
-<<<<<<< HEAD
   void InitTable(const Options& /*options*/) {
-=======
-  void InitTable(const Options& options) {
->>>>>>> blood in blood out
     std::string value(kValueSize, 'a');
     for (size_t i = 0; i < kNumBlocks; i++) {
       ASSERT_OK(Put(ToString(i), value.c_str()));
@@ -309,7 +305,6 @@ TEST_F(DBBlockCacheTest, IndexAndFilterBlocksOfNewTableAddedToCache) {
             TestGetTickerCount(options, BLOCK_CACHE_INDEX_HIT));
 }
 
-<<<<<<< HEAD
 // With fill_cache = false, fills up the cache, then iterates over the entire
 // db, verify dummy entries inserted in `BlockBasedTable::NewDataBlockIterator`
 // does not cause heap-use-after-free errors in COMPILE_WITH_ASAN=1 runs
@@ -345,8 +340,6 @@ TEST_F(DBBlockCacheTest, FillCacheAndIterateDB) {
   iter = nullptr;
 }
 
-=======
->>>>>>> blood in blood out
 TEST_F(DBBlockCacheTest, IndexAndFilterBlocksStats) {
   Options options = CurrentOptions();
   options.create_if_missing = true;
@@ -397,14 +390,10 @@ class MockCache : public LRUCache {
   static uint32_t high_pri_insert_count;
   static uint32_t low_pri_insert_count;
 
-<<<<<<< HEAD
   MockCache()
       : LRUCache((size_t)1 << 25 /*capacity*/, 0 /*num_shard_bits*/,
                  false /*strict_capacity_limit*/, 0.0 /*high_pri_pool_ratio*/) {
   }
-=======
-  MockCache() : LRUCache(1 << 25, 0, false, 0.0) {}
->>>>>>> blood in blood out
 
   virtual Status Insert(const Slice& key, void* value, size_t charge,
                         void (*deleter)(const Slice& key, void* value),

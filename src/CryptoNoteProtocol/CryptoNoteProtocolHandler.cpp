@@ -1,26 +1,8 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-<<<<<<< HEAD
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
-=======
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> blood in blood out
 
 #include "CryptoNoteProtocolHandler.h"
 
@@ -31,7 +13,6 @@
 
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 #include "CryptoNoteCore/CryptoNoteFormatUtils.h"
-<<<<<<< HEAD
 #include "Common/CryptoNoteTools.h"
 #include "CryptoNoteCore/Currency.h"
 #include "P2p/LevinProtocol.h"
@@ -44,13 +25,6 @@
 #include <config/CryptoNoteConfig.h>
 #include <config/WalletConfig.h>
 
-=======
-#include "CryptoNoteCore/CryptoNoteTools.h"
-#include "CryptoNoteCore/Currency.h"
-#include "CryptoNoteCore/VerificationContext.h"
-#include "P2p/LevinProtocol.h"
-
->>>>>>> blood in blood out
 using namespace Logging;
 using namespace Common;
 
@@ -64,13 +38,8 @@ bool post_notify(IP2pEndpoint& p2p, typename t_parametr::request& arg, const Cry
 }
 
 template<class t_parametr>
-<<<<<<< HEAD
 void relay_post_notify(IP2pEndpoint& p2p, typename t_parametr::request& arg, const boost::uuids::uuid* excludeConnection = nullptr) {
   p2p.externalRelayNotifyToAll(t_parametr::ID, LevinProtocol::encode(arg), excludeConnection);
-=======
-void relay_post_notify(IP2pEndpoint& p2p, typename t_parametr::request& arg, const net_connection_id* excludeConnection = nullptr) {
-  p2p.relay_notify_to_all(t_parametr::ID, LevinProtocol::encode(arg), excludeConnection);
->>>>>>> blood in blood out
 }
 
 std::vector<RawBlockLegacy> convertRawBlocksToRawBlocksLegacy(const std::vector<RawBlock>& rawBlocks) {
@@ -89,11 +58,7 @@ std::vector<RawBlock> convertRawBlocksLegacyToRawBlocks(const std::vector<RawBlo
   rawBlocks.reserve(legacy.size());
 
   for (const auto& legacyBlock: legacy) {
-<<<<<<< HEAD
     rawBlocks.emplace_back(RawBlock{legacyBlock.blockTemplate, legacyBlock.transactions});
-=======
-    rawBlocks.emplace_back(RawBlock{legacyBlock.block, legacyBlock.transactions});
->>>>>>> blood in blood out
   }
 
   return rawBlocks;
@@ -108,28 +73,16 @@ static inline void serialize(RawBlockLegacy& rawBlock, ISerializer& serializer) 
   if (serializer.type() == ISerializer::INPUT) {
     serializer(block, "block");
     serializer(transactions, "txs");
-<<<<<<< HEAD
     rawBlock.blockTemplate.reserve(block.size());
     rawBlock.transactions.reserve(transactions.size());
     std::copy(block.begin(), block.end(), std::back_inserter(rawBlock.blockTemplate));
-=======
-    rawBlock.block.reserve(block.size());
-    rawBlock.transactions.reserve(transactions.size());
-    std::copy(block.begin(), block.end(), std::back_inserter(rawBlock.block));
->>>>>>> blood in blood out
     std::transform(transactions.begin(), transactions.end(), std::back_inserter(rawBlock.transactions), [] (const std::string& s) {
       return BinaryArray(s.begin(), s.end());
     });
   } else {
-<<<<<<< HEAD
     block.reserve(rawBlock.blockTemplate.size());
     transactions.reserve(rawBlock.transactions.size());
     std::copy(rawBlock.blockTemplate.begin(), rawBlock.blockTemplate.end(), std::back_inserter(block));
-=======
-    block.reserve(rawBlock.block.size());
-    transactions.reserve(rawBlock.transactions.size());
-    std::copy(rawBlock.block.begin(), rawBlock.block.end(), std::back_inserter(block));
->>>>>>> blood in blood out
     std::transform(rawBlock.transactions.begin(), rawBlock.transactions.end(), std::back_inserter(transactions), [] (BinaryArray& s) {
       return std::string(s.begin(), s.end());
     });
@@ -139,11 +92,7 @@ static inline void serialize(RawBlockLegacy& rawBlock, ISerializer& serializer) 
 }
 
 static inline void serialize(NOTIFY_NEW_BLOCK_request& request, ISerializer& s) {
-<<<<<<< HEAD
   s(request.block, "b");
-=======
-  s(request.b, "b");
->>>>>>> blood in blood out
   s(request.current_blockchain_height, "current_blockchain_height");
   s(request.hop, "hop");
 }
@@ -173,7 +122,6 @@ static inline void serialize(NOTIFY_RESPONSE_GET_OBJECTS_request& request, ISeri
   s(request.current_blockchain_height, "current_blockchain_height");
 }
 
-<<<<<<< HEAD
 static inline void serialize(NOTIFY_NEW_LITE_BLOCK_request& request, ISerializer& s) {
   std::string blockTemplate;
 
@@ -198,9 +146,6 @@ static inline void serialize(NOTIFY_MISSING_TXS_request& request, ISerializer& s
 }
 
 CryptoNoteProtocolHandler::CryptoNoteProtocolHandler(const Currency& currency, System::Dispatcher& dispatcher, ICore& rcore, IP2pEndpoint* p_net_layout, std::shared_ptr<Logging::ILogger> log) :
-=======
-CryptoNoteProtocolHandler::CryptoNoteProtocolHandler(const Currency& currency, System::Dispatcher& dispatcher, ICore& rcore, IP2pEndpoint* p_net_layout, Logging::ILogger& log) :
->>>>>>> blood in blood out
   m_dispatcher(dispatcher),
   m_currency(currency),
   m_core(rcore),
@@ -286,11 +231,7 @@ void CryptoNoteProtocolHandler::log_connections() {
     << std::setw(25) << "State"
     << std::setw(20) << "Lifetime(seconds)" << ENDL;
 
-<<<<<<< HEAD
   m_p2p->for_each_connection([&](const CryptoNoteConnectionContext& cntxt, uint64_t peer_id) {
-=======
-  m_p2p->for_each_connection([&](const CryptoNoteConnectionContext& cntxt, PeerIdType peer_id) {
->>>>>>> blood in blood out
     ss << std::setw(25) << std::left << std::string(cntxt.m_is_income ? "[INCOMING]" : "[OUTGOING]") +
       Common::ipAddressToString(cntxt.m_remote_ip) + ":" + std::to_string(cntxt.m_remote_port)
       << std::setw(20) << std::hex << peer_id
@@ -305,29 +246,19 @@ uint32_t CryptoNoteProtocolHandler::get_current_blockchain_height() {
   return m_core.getTopBlockIndex() + 1;
 }
 
-<<<<<<< HEAD
 bool CryptoNoteProtocolHandler::process_payload_sync_data(const CORE_SYNC_DATA& hshd, CryptoNoteConnectionContext& context, bool is_initial) {
   if (context.m_state == CryptoNoteConnectionContext::state_befor_handshake && !is_initial)
-=======
-bool CryptoNoteProtocolHandler::process_payload_sync_data(const CORE_SYNC_DATA& hshd, CryptoNoteConnectionContext& context, bool is_inital) {
-  if (context.m_state == CryptoNoteConnectionContext::state_befor_handshake && !is_inital)
->>>>>>> blood in blood out
     return true;
 
   if (context.m_state == CryptoNoteConnectionContext::state_synchronizing) {
   } else if (m_core.hasBlock(hshd.top_id)) {
-<<<<<<< HEAD
     if (is_initial) {
-=======
-    if (is_inital) {
->>>>>>> blood in blood out
       on_connection_synchronized();
       context.m_state = CryptoNoteConnectionContext::state_pool_sync_required;
     } else {
       context.m_state = CryptoNoteConnectionContext::state_normal;
     }
   } else {
-<<<<<<< HEAD
     uint64_t currentHeight = get_current_blockchain_height();
 
     uint64_t remoteHeight = hshd.current_height;
@@ -373,15 +304,6 @@ bool CryptoNoteProtocolHandler::process_payload_sync_data(const CORE_SYNC_DATA& 
         }
     }
     logger(logLevel, Logging::BRIGHT_GREEN) << context << ss.str();
-=======
-    int64_t diff = static_cast<int64_t>(hshd.current_height) - static_cast<int64_t>(get_current_blockchain_height());
-
-    logger(diff >= 0 ? (is_inital ? Logging::INFO : Logging::DEBUGGING) : Logging::TRACE, Logging::BRIGHT_GREEN) << context <<
-      "Your monkeytips node is syncing with the network. You are "
-      // << get_current_blockchain_height() << " -> " << hshd.current_height
-      << std::abs(diff) << " blocks (" << std::abs(diff) / (24 * 60 * 60 / m_currency.difficultyTarget()) << " days) "
-      << (diff >= 0 ? std::string("behind") : std::string("ahead of")) << " the Hare. Slow and steady wins the race! " << std::endl;
->>>>>>> blood in blood out
 
     logger(Logging::DEBUGGING) << "Remote top block height: " << hshd.current_height << ", id: " << hshd.top_id;
     //let the socket to send response to handshake, but request callback, to let send request data after response
@@ -392,11 +314,7 @@ bool CryptoNoteProtocolHandler::process_payload_sync_data(const CORE_SYNC_DATA& 
   updateObservedHeight(hshd.current_height, context);
   context.m_remote_blockchain_height = hshd.current_height;
 
-<<<<<<< HEAD
   if (is_initial) {
-=======
-  if (is_inital) {
->>>>>>> blood in blood out
     m_peersCount++;
     m_observerManager.notify(&ICryptoNoteProtocolObserver::peerCountUpdated, m_peersCount.load());
   }
@@ -439,11 +357,8 @@ int CryptoNoteProtocolHandler::handleCommand(bool is_notify, int command, const 
     HANDLE_NOTIFY(NOTIFY_REQUEST_CHAIN, handle_request_chain)
     HANDLE_NOTIFY(NOTIFY_RESPONSE_CHAIN_ENTRY, handle_response_chain_entry)
     HANDLE_NOTIFY(NOTIFY_REQUEST_TX_POOL, handleRequestTxPool)
-<<<<<<< HEAD
     HANDLE_NOTIFY(NOTIFY_NEW_LITE_BLOCK, handle_notify_new_lite_block)
     HANDLE_NOTIFY(NOTIFY_MISSING_TXS,handle_notify_missing_txs)
-=======
->>>>>>> blood in blood out
 
   default:
     handled = false;
@@ -462,30 +377,18 @@ int CryptoNoteProtocolHandler::handle_notify_new_block(int command, NOTIFY_NEW_B
     return 1;
   }
 
-<<<<<<< HEAD
   auto result = m_core.addBlock(RawBlock{ arg.block.blockTemplate, arg.block.transactions });
-=======
-  auto result = m_core.addBlock(RawBlock{ arg.b.block, arg.b.transactions });
->>>>>>> blood in blood out
   if (result == error::AddBlockErrorCondition::BLOCK_ADDED) {
     if (result == error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE_AND_SWITCHED) {
       ++arg.hop;
       //TODO: Add here announce protocol usage
-<<<<<<< HEAD
       relayBlock(arg);
-=======
-      relay_post_notify<NOTIFY_NEW_BLOCK>(*m_p2p, arg, &context.m_connection_id);
->>>>>>> blood in blood out
       // relay_block(arg, context);
       requestMissingPoolTransactions(context);
     } else if (result == error::AddBlockErrorCode::ADDED_TO_MAIN) {
       ++arg.hop;
       //TODO: Add here announce protocol usage
-<<<<<<< HEAD
       relayBlock(arg);
-=======
-      relay_post_notify<NOTIFY_NEW_BLOCK>(*m_p2p, arg, &context.m_connection_id);
->>>>>>> blood in blood out
       // relay_block(arg, context);
     } else if (result == error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE) {
       logger(Logging::TRACE) << context << "Block added as alternative";
@@ -512,7 +415,6 @@ int CryptoNoteProtocolHandler::handle_notify_new_transactions(int command, NOTIF
   if (context.m_state != CryptoNoteConnectionContext::state_normal)
     return 1;
 
-<<<<<<< HEAD
   if(context.m_pending_lite_block.has_value()) {
       logger(Logging::TRACE) << context << " Pending lite block detected, handling request as missing lite block transactions response";
       return doPushLiteBlock(context.m_pending_lite_block->request, context, std::move(arg.txs));
@@ -537,20 +439,6 @@ int CryptoNoteProtocolHandler::handle_notify_new_transactions(int command, NOTIF
         //TODO: add announce usage here
         relay_post_notify<NOTIFY_NEW_TRANSACTIONS>(*m_p2p, arg, &context.m_connection_id);
       }
-=======
-  for (auto tx_blob_it = arg.txs.begin(); tx_blob_it != arg.txs.end();) {
-    if (!m_core.addTransactionToPool(*tx_blob_it)) {
-      logger(Logging::DEBUGGING) << context << "Tx verification failed";
-      tx_blob_it = arg.txs.erase(tx_blob_it);
-    } else {
-      ++tx_blob_it;
-    }
-  }
-
-  if (arg.txs.size()) {
-    //TODO: add announce usage here
-    relay_post_notify<NOTIFY_NEW_TRANSACTIONS>(*m_p2p, arg, &context.m_connection_id);
->>>>>>> blood in blood out
   }
 
   return true;
@@ -693,7 +581,6 @@ int CryptoNoteProtocolHandler::processObjects(CryptoNoteConnectionContext& conte
   return 0;
 }
 
-<<<<<<< HEAD
 int CryptoNoteProtocolHandler::doPushLiteBlock(NOTIFY_NEW_LITE_BLOCK::request arg, CryptoNoteConnectionContext &context, std::vector<BinaryArray> missingTxs)
 {
     BlockTemplate newBlockTemplate;
@@ -809,27 +696,17 @@ int CryptoNoteProtocolHandler::doPushLiteBlock(NOTIFY_NEW_LITE_BLOCK::request ar
     return 1;
 }
 
-=======
->>>>>>> blood in blood out
 int CryptoNoteProtocolHandler::handle_request_chain(int command, NOTIFY_REQUEST_CHAIN::request& arg, CryptoNoteConnectionContext& context) {
   logger(Logging::TRACE) << context << "NOTIFY_REQUEST_CHAIN: m_block_ids.size()=" << arg.block_ids.size();
 
   if (arg.block_ids.empty()) {
-<<<<<<< HEAD
     logger(Logging::DEBUGGING, Logging::BRIGHT_RED) << context << "Failed to handle NOTIFY_REQUEST_CHAIN. block_ids is empty";
-=======
-    logger(Logging::ERROR, Logging::BRIGHT_RED) << context << "Failed to handle NOTIFY_REQUEST_CHAIN. block_ids is empty";
->>>>>>> blood in blood out
     context.m_state = CryptoNoteConnectionContext::state_shutdown;
     return 1;
   }
 
   if (arg.block_ids.back() != m_core.getBlockHashByIndex(0)) {
-<<<<<<< HEAD
     logger(Logging::DEBUGGING) << context << "Failed to handle NOTIFY_REQUEST_CHAIN. block_ids doesn't end with genesis block ID";
-=======
-    logger(Logging::ERROR) << context << "Failed to handle NOTIFY_REQUEST_CHAIN. block_ids doesn't end with genesis block ID";
->>>>>>> blood in blood out
     context.m_state = CryptoNoteConnectionContext::state_shutdown;
     return 1;
   }
@@ -883,12 +760,8 @@ bool CryptoNoteProtocolHandler::request_missing_objects(CryptoNoteConnectionCont
     requestMissingPoolTransactions(context);
 
     context.m_state = CryptoNoteConnectionContext::state_normal;
-<<<<<<< HEAD
     logger(Logging::INFO, Logging::BRIGHT_GREEN) << context << "Successfully synchronized with the "
                                                  << CryptoNote::CRYPTONOTE_NAME << " Network.";
-=======
-    logger(Logging::INFO, Logging::BRIGHT_GREEN) << context << "Successfully synchronized with the monkeytips Network.";
->>>>>>> blood in blood out
     on_connection_synchronized();
   }
   return true;
@@ -899,7 +772,6 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
   if (m_synchronized.compare_exchange_strong(val_expected, true)) {
     logger(Logging::INFO)
       << ENDL ;
-<<<<<<< HEAD
       logger(INFO, BRIGHT_MAGENTA) << "===[ " + std::string(CryptoNote::CRYPTONOTE_NAME) + " Tip! ]=============================" << ENDL ;
       logger(INFO, WHITE) << " Always exit " + WalletConfig::daemonName + " and " + WalletConfig::walletName + " with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
       logger(INFO, WHITE) << " Use the \"help\" command to see a list of available commands." << ENDL ;
@@ -908,22 +780,6 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
       logger(INFO, BRIGHT_MAGENTA) << "===================================================" << ENDL << ENDL ;
 
       logger(INFO, BRIGHT_GREEN) << asciiArt << ENDL;
-=======
-      logger(INFO, BRIGHT_MAGENTA) << "===[ monkeytips ]=============================" << ENDL ;
-      logger(INFO, WHITE) << " Always exit monkeytipsd and ZedWallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
-      logger(INFO, WHITE) << " Use the \"help\" command to see a list of available commands." << ENDL ;
-      logger(INFO, WHITE) << " Use the \"export_keys\" command in ZedWallet to display your keys for restoring a corrupted wallet." << ENDL ;
-      logger(INFO, WHITE) << " If you need more assistance, visit the #HELP channel in the monkeytips Discord Chat - https://discord.gg/EAaKcCy" << ENDL ;
-      logger(INFO, BRIGHT_MAGENTA) << "===================================================" << ENDL << ENDL ;
-
-      logger(INFO, BRIGHT_GREEN) <<
-
-      #ifdef _WIN32
-      "\n dicKtips\n"<< ENDL;
-      #else
-      "\n dicKtips\n"<< ENDL;
-      #endif
->>>>>>> blood in blood out
 
     m_observerManager.notify(&ICryptoNoteProtocolObserver::blockchainSynchronized, m_core.getTopBlockIndex());
   }
@@ -993,7 +849,6 @@ int CryptoNoteProtocolHandler::handleRequestTxPool(int command, NOTIFY_REQUEST_T
   return 1;
 }
 
-<<<<<<< HEAD
 int CryptoNoteProtocolHandler::handle_notify_new_lite_block(int command, NOTIFY_NEW_LITE_BLOCK::request& arg,
                                                      CryptoNoteConnectionContext& context) {
   logger(Logging::TRACE) << context << "NOTIFY_NEW_LITE_BLOCK (hop " << arg.hop << ")";
@@ -1075,29 +930,15 @@ void CryptoNoteProtocolHandler::relayBlock(NOTIFY_NEW_BLOCK::request& arg) {
   if (!normalBlockConnections.empty()) {
     m_p2p->externalRelayNotifyToList(NOTIFY_NEW_BLOCK::ID, buf, normalBlockConnections);
   }
-=======
-
-void CryptoNoteProtocolHandler::relayBlock(NOTIFY_NEW_BLOCK::request& arg) {
-  auto buf = LevinProtocol::encode(arg);
-  m_p2p->externalRelayNotifyToAll(NOTIFY_NEW_BLOCK::ID, buf);
->>>>>>> blood in blood out
 }
 
 void CryptoNoteProtocolHandler::relayTransactions(const std::vector<BinaryArray>& transactions) {
   auto buf = LevinProtocol::encode(NOTIFY_NEW_TRANSACTIONS::request{transactions});
-<<<<<<< HEAD
   m_p2p->externalRelayNotifyToAll(NOTIFY_NEW_TRANSACTIONS::ID, buf, nullptr);
 }
 
 void CryptoNoteProtocolHandler::requestMissingPoolTransactions(const CryptoNoteConnectionContext& context) {
   if (context.version < 1) {
-=======
-  m_p2p->externalRelayNotifyToAll(NOTIFY_NEW_TRANSACTIONS::ID, buf);
-}
-
-void CryptoNoteProtocolHandler::requestMissingPoolTransactions(const CryptoNoteConnectionContext& context) {
-  if (context.version < P2PProtocolVersion::V1) {
->>>>>>> blood in blood out
     return;
   }
 
@@ -1153,11 +994,7 @@ void CryptoNoteProtocolHandler::updateObservedHeight(uint32_t peerHeight, const 
 void CryptoNoteProtocolHandler::recalculateMaxObservedHeight(const CryptoNoteConnectionContext& context) {
   //should be locked outside
   uint32_t peerHeight = 0;
-<<<<<<< HEAD
   m_p2p->for_each_connection([&peerHeight, &context](const CryptoNoteConnectionContext& ctx, uint64_t peerId) {
-=======
-  m_p2p->for_each_connection([&peerHeight, &context](const CryptoNoteConnectionContext& ctx, PeerIdType peerId) {
->>>>>>> blood in blood out
     if (ctx.m_connection_id != context.m_connection_id) {
       peerHeight = std::max(peerHeight, ctx.m_remote_blockchain_height);
     }

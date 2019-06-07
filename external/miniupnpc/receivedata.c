@@ -1,32 +1,17 @@
-<<<<<<< HEAD
 /* $Id: receivedata.c,v 1.7 2015/11/09 21:51:41 nanard Exp $ */
 /* Project : miniupnp
  * Website : http://miniupnp.free.fr/
  * Author : Thomas Bernard
  * Copyright (c) 2011-2014 Thomas Bernard
-=======
-/* $Id: receivedata.c,v 1.5 2013/10/07 09:48:36 nanard Exp $ */
-/* Project : miniupnp
- * Website : http://miniupnp.free.fr/
- * Author : Thomas Bernard
- * Copyright (c) 2011-2012 Thomas Bernard
->>>>>>> blood in blood out
  * This software is subject to the conditions detailed in the
  * LICENCE file provided in this distribution. */
 
 #include <stdio.h>
-<<<<<<< HEAD
 #include <string.h>
 #ifdef _WIN32
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #else /* _WIN32 */
-=======
-#ifdef _WIN32
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#else
->>>>>>> blood in blood out
 #include <unistd.h>
 #if defined(__amigaos__) && !defined(__amigaos4__)
 #define socklen_t int
@@ -37,28 +22,14 @@
 #include <netinet/in.h>
 #if !defined(__amigaos__) && !defined(__amigaos4__)
 #include <poll.h>
-<<<<<<< HEAD
 #endif	/* !defined(__amigaos__) && !defined(__amigaos4__) */
 #include <errno.h>
 #define MINIUPNPC_IGNORE_EINTR
 #endif /* _WIN32 */
-=======
-#endif
-#include <errno.h>
-#define MINIUPNPC_IGNORE_EINTR
-#endif
-
-#ifdef _WIN32
-#define PRINT_SOCKET_ERROR(x)    printf("Socket error: %s, %d\n", x, WSAGetLastError());
-#else
-#define PRINT_SOCKET_ERROR(x) perror(x)
-#endif
->>>>>>> blood in blood out
 
 #include "receivedata.h"
 
 int
-<<<<<<< HEAD
 receivedata(SOCKET socket,
             char * data, int length,
             int timeout, unsigned int * scope_id)
@@ -67,42 +38,19 @@ receivedata(SOCKET socket,
 	struct sockaddr_storage src_addr;
 	socklen_t src_addr_len = sizeof(src_addr);
 #endif	/* MINIUPNPC_GET_SRC_ADDR */
-=======
-receivedata(int socket,
-            char * data, int length,
-            int timeout, unsigned int * scope_id)
-{
-#if MINIUPNPC_GET_SRC_ADDR
-#ifdef DEBUG
-	/* to shut up valgrind about uninit value */
-	struct sockaddr_storage src_addr = {0};
-#else
-	struct sockaddr_storage src_addr;
-#endif
-	socklen_t src_addr_len = sizeof(src_addr);
-#endif
->>>>>>> blood in blood out
     int n;
 #if !defined(_WIN32) && !defined(__amigaos__) && !defined(__amigaos4__)
 	/* using poll */
     struct pollfd fds[1]; /* for the poll */
 #ifdef MINIUPNPC_IGNORE_EINTR
     do {
-<<<<<<< HEAD
 #endif	/* MINIUPNPC_IGNORE_EINTR */
-=======
-#endif
->>>>>>> blood in blood out
         fds[0].fd = socket;
         fds[0].events = POLLIN;
         n = poll(fds, 1, timeout);
 #ifdef MINIUPNPC_IGNORE_EINTR
     } while(n < 0 && errno == EINTR);
-<<<<<<< HEAD
 #endif	/* MINIUPNPC_IGNORE_EINTR */
-=======
-#endif
->>>>>>> blood in blood out
     if(n < 0) {
         PRINT_SOCKET_ERROR("poll");
         return -1;
@@ -110,11 +58,7 @@ receivedata(int socket,
 		/* timeout */
         return 0;
     }
-<<<<<<< HEAD
 #else	/* !defined(_WIN32) && !defined(__amigaos__) && !defined(__amigaos4__) */
-=======
-#else /* !defined(_WIN32) && !defined(__amigaos__) && !defined(__amigaos4__) */
->>>>>>> blood in blood out
 	/* using select under _WIN32 and amigaos */
     fd_set socketSet;
     TIMEVAL timeval;
@@ -129,7 +73,6 @@ receivedata(int socket,
     } else if(n == 0) {
         return 0;
     }
-<<<<<<< HEAD
 #endif	/* !defined(_WIN32) && !defined(__amigaos__) && !defined(__amigaos4__) */
 #ifdef MINIUPNPC_GET_SRC_ADDR
 	memset(&src_addr, 0, sizeof(src_addr));
@@ -142,24 +85,10 @@ receivedata(int socket,
 		PRINT_SOCKET_ERROR("recv");
 	}
 #ifdef MINIUPNPC_GET_SRC_ADDR
-=======
-#endif
-#if MINIUPNPC_GET_SRC_ADDR
-	n = recvfrom(socket, data, length, 0,
-	             (struct sockaddr *)&src_addr, &src_addr_len);
-#else
-	n = recv(socket, data, length, 0);
-#endif
-	if(n<0) {
-		PRINT_SOCKET_ERROR("recv");
-	}
-#if MINIUPNPC_GET_SRC_ADDR
->>>>>>> blood in blood out
 	if (src_addr.ss_family == AF_INET6) {
 		const struct sockaddr_in6 * src_addr6 = (struct sockaddr_in6 *)&src_addr;
 #ifdef DEBUG
 		printf("scope_id=%u\n", src_addr6->sin6_scope_id);
-<<<<<<< HEAD
 #endif	/* DEBUG */
 		if(scope_id)
 			*scope_id = src_addr6->sin6_scope_id;
@@ -168,14 +97,3 @@ receivedata(int socket,
 	return n;
 }
 
-=======
-#endif
-		if(scope_id)
-			*scope_id = src_addr6->sin6_scope_id;
-	}
-#endif
-	return n;
-}
-
-
->>>>>>> blood in blood out

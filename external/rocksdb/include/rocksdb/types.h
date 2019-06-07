@@ -22,10 +22,7 @@ enum EntryType {
   kEntryDelete,
   kEntrySingleDelete,
   kEntryMerge,
-<<<<<<< HEAD
   kEntryRangeDeletion,
-=======
->>>>>>> blood in blood out
   kEntryOther,
 };
 

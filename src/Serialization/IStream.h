@@ -24,20 +24,12 @@ namespace CryptoNote {
 
 class IInputStream {
 public:
-<<<<<<< HEAD
   virtual uint64_t read(char* data, uint64_t size) = 0;
-=======
-  virtual size_t read(char* data, size_t size) = 0;
->>>>>>> blood in blood out
 };
 
 class IOutputStream {
 public:
-<<<<<<< HEAD
   virtual void write(const char* data, uint64_t size) = 0;
-=======
-  virtual void write(const char* data, size_t size) = 0;
->>>>>>> blood in blood out
 };
 
 }

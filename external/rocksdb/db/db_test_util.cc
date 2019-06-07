@@ -63,11 +63,7 @@ DBTestBase::DBTestBase(const std::string path)
       option_config_(kDefault) {
   env_->SetBackgroundThreads(1, Env::LOW);
   env_->SetBackgroundThreads(1, Env::HIGH);
-<<<<<<< HEAD
   dbname_ = test::PerThreadDBPath(env_, path);
-=======
-  dbname_ = test::TmpDir(env_) + path;
->>>>>>> blood in blood out
   alternative_wal_dir_ = dbname_ + "/wal";
   alternative_db_log_dir_ = dbname_ + "/db_log_dir";
   auto options = CurrentOptions();
@@ -122,12 +118,8 @@ bool DBTestBase::ShouldSkipOptions(int option_config, int skip_mask) {
 
     if ((skip_mask & kSkipUniversalCompaction) &&
         (option_config == kUniversalCompaction ||
-<<<<<<< HEAD
          option_config == kUniversalCompactionMultiLevel ||
          option_config == kUniversalSubcompactions)) {
-=======
-         option_config == kUniversalCompactionMultiLevel)) {
->>>>>>> blood in blood out
       return true;
     }
     if ((skip_mask & kSkipMergePut) && option_config == kMergePut) {
@@ -355,7 +347,6 @@ Options DBTestBase::GetOptions(
           NewHashCuckooRepFactory(options.write_buffer_size));
       options.allow_concurrent_memtable_write = false;
       break;
-<<<<<<< HEAD
       case kDirectIO: {
         options.use_direct_reads = true;
         options.use_direct_io_for_flush_and_compaction = true;
@@ -376,8 +367,6 @@ Options DBTestBase::GetOptions(
   #endif
         break;
       }
-=======
->>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
     case kMergePut:
       options.merge_operator = MergeOperators::CreatePutOperator();
@@ -460,7 +449,6 @@ Options DBTestBase::GetOptions(
       options.prefix_extractor.reset(NewNoopTransform());
       break;
     }
-<<<<<<< HEAD
     case kBlockBasedTableWithPartitionedIndexFormat3: {
       table_options.format_version = 3;
       // Format 3 changes the binary index format. Since partitioned index is a
@@ -472,8 +460,6 @@ Options DBTestBase::GetOptions(
       table_options.partition_filters = true;
       break;
     }
-=======
->>>>>>> blood in blood out
     case kBlockBasedTableWithIndexRestartInterval: {
       table_options.index_block_restart_interval = 8;
       break;
@@ -506,29 +492,6 @@ Options DBTestBase::GetOptions(
       options.enable_write_thread_adaptive_yield = true;
       break;
     }
-<<<<<<< HEAD
-=======
-    case kDirectIO: {
-      options.use_direct_reads = true;
-      options.use_direct_io_for_flush_and_compaction = true;
-      options.compaction_readahead_size = 2 * 1024 * 1024;
-#if !defined(OS_MACOSX) && !defined(OS_WIN) && !defined(OS_SOLARIS) && \
-    !defined(OS_AIX) && !defined(OS_OPENBSD)
-      rocksdb::SyncPoint::GetInstance()->SetCallBack(
-          "NewWritableFile:O_DIRECT", [&](void* arg) {
-            int* val = static_cast<int*>(arg);
-            *val &= ~O_DIRECT;
-          });
-      rocksdb::SyncPoint::GetInstance()->SetCallBack(
-          "NewRandomAccessFile:O_DIRECT", [&](void* arg) {
-            int* val = static_cast<int*>(arg);
-            *val &= ~O_DIRECT;
-          });
-      rocksdb::SyncPoint::GetInstance()->EnableProcessing();
-#endif
-      break;
-    }
->>>>>>> blood in blood out
     case kPipelinedWrite: {
       options.enable_pipelined_write = true;
       break;
@@ -624,7 +587,6 @@ void DBTestBase::DestroyAndReopen(const Options& options) {
   ASSERT_OK(TryReopen(options));
 }
 
-<<<<<<< HEAD
 void DBTestBase::Destroy(const Options& options, bool delete_cf_paths) {
   std::vector<ColumnFamilyDescriptor> column_families;
   if (delete_cf_paths) {
@@ -636,11 +598,6 @@ void DBTestBase::Destroy(const Options& options, bool delete_cf_paths) {
   }
   Close();
   ASSERT_OK(DestroyDB(dbname_, options, column_families));
-=======
-void DBTestBase::Destroy(const Options& options) {
-  Close();
-  ASSERT_OK(DestroyDB(dbname_, options));
->>>>>>> blood in blood out
 }
 
 Status DBTestBase::ReadOnlyReopen(const Options& options) {
@@ -1080,15 +1037,9 @@ std::string DBTestBase::DumpSSTableList() {
   return property;
 }
 
-<<<<<<< HEAD
 void DBTestBase::GetSstFiles(Env* env, std::string path,
                              std::vector<std::string>* files) {
   env->GetChildren(path, files);
-=======
-void DBTestBase::GetSstFiles(std::string path,
-                             std::vector<std::string>* files) {
-  env_->GetChildren(path, files);
->>>>>>> blood in blood out
 
   files->erase(
       std::remove_if(files->begin(), files->end(), [](std::string name) {
@@ -1100,11 +1051,7 @@ void DBTestBase::GetSstFiles(std::string path,
 
 int DBTestBase::GetSstFileCount(std::string path) {
   std::vector<std::string> files;
-<<<<<<< HEAD
   DBTestBase::GetSstFiles(env_, path, &files);
-=======
-  GetSstFiles(path, &files);
->>>>>>> blood in blood out
   return static_cast<int>(files.size());
 }
 
@@ -1216,29 +1163,18 @@ UpdateStatus DBTestBase::updateInPlaceSmallerVarintSize(char* prevValue,
   }
 }
 
-<<<<<<< HEAD
 UpdateStatus DBTestBase::updateInPlaceLargerSize(char* /*prevValue*/,
                                                  uint32_t* /*prevSize*/,
-=======
-UpdateStatus DBTestBase::updateInPlaceLargerSize(char* prevValue,
-                                                 uint32_t* prevSize,
->>>>>>> blood in blood out
                                                  Slice delta,
                                                  std::string* newValue) {
   *newValue = std::string(delta.size(), 'c');
   return UpdateStatus::UPDATED;
 }
 
-<<<<<<< HEAD
 UpdateStatus DBTestBase::updateInPlaceNoAction(char* /*prevValue*/,
                                                uint32_t* /*prevSize*/,
                                                Slice /*delta*/,
                                                std::string* /*newValue*/) {
-=======
-UpdateStatus DBTestBase::updateInPlaceNoAction(char* prevValue,
-                                               uint32_t* prevSize, Slice delta,
-                                               std::string* newValue) {
->>>>>>> blood in blood out
   return UpdateStatus::UPDATE_FAILED;
 }
 

@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 /* $Id: upnpreplyparse.c,v 1.19 2015/07/15 10:29:11 nanard Exp $ */
 /* vim: tabstop=4 shiftwidth=4 noexpandtab
  * MiniUPnP project
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * (c) 2006-2017 Thomas Bernard
-=======
-/* $Id: upnpreplyparse.c,v 1.16 2014/10/27 16:33:19 nanard Exp $ */
-/* MiniUPnP project
- * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
- * (c) 2006-2013 Thomas Bernard
->>>>>>> blood in blood out
  * This software is subject to the conditions detailed
  * in the LICENCE file provided within the distribution */
 
@@ -34,20 +27,12 @@ NameValueParserStartElt(void * d, const char * name, int l)
 }
 
 static void
-<<<<<<< HEAD
 NameValueParserEndElt(void * d, const char * name, int namelen)
-=======
-NameValueParserEndElt(void * d, const char * name, int l)
->>>>>>> blood in blood out
 {
     struct NameValueParserData * data = (struct NameValueParserData *)d;
     struct NameValue * nv;
 	(void)name;
-<<<<<<< HEAD
 	(void)namelen;
-=======
-	(void)l;
->>>>>>> blood in blood out
 	if(!data->topelt)
 		return;
 	if(strcmp(data->curelt, "NewPortListing") != 0)
@@ -56,7 +41,6 @@ NameValueParserEndElt(void * d, const char * name, int l)
 		/* standard case. Limited to n chars strings */
 		l = data->cdatalen;
 	    nv = malloc(sizeof(struct NameValue));
-<<<<<<< HEAD
 		if(nv == NULL)
 		{
 			/* malloc error */
@@ -66,8 +50,6 @@ NameValueParserEndElt(void * d, const char * name, int l)
 #endif /* DEBUG */
 			return;
 		}
-=======
->>>>>>> blood in blood out
 	    if(l>=(int)sizeof(nv->value))
 	        l = sizeof(nv->value) - 1;
 	    strncpy(nv->name, data->curelt, 64);
@@ -100,13 +82,10 @@ NameValueParserGetData(void * d, const char * datas, int l)
 		if(!data->portListing)
 		{
 			/* malloc error */
-<<<<<<< HEAD
 #ifdef DEBUG
 			fprintf(stderr, "%s: error allocating memory",
 			        "NameValueParserGetData");
 #endif /* DEBUG */
-=======
->>>>>>> blood in blood out
 			return;
 		}
 		memcpy(data->portListing, datas, l);
@@ -126,13 +105,7 @@ ParseNameValue(const char * buffer, int bufsize,
                struct NameValueParserData * data)
 {
 	struct xmlparser parser;
-<<<<<<< HEAD
 	memset(data, 0, sizeof(struct NameValueParserData));
-=======
-	data->l_head = NULL;
-	data->portListing = NULL;
-	data->portListingLength = 0;
->>>>>>> blood in blood out
 	/* init xmlparser object */
 	parser.xmlstart = buffer;
 	parser.xmlsize = bufsize;
@@ -211,23 +184,13 @@ DisplayNameValueList(char * buffer, int bufsize)
     struct NameValueParserData pdata;
     struct NameValue * nv;
     ParseNameValue(buffer, bufsize, &pdata);
-<<<<<<< HEAD
     for(nv = pdata.l_head;
         nv != NULL;
         nv = nv->l_next)
-=======
-    for(nv = pdata.head.lh_first;
-        nv != NULL;
-        nv = nv->entries.le_next)
->>>>>>> blood in blood out
     {
         printf("%s = %s\n", nv->name, nv->value);
     }
     ClearNameValueList(&pdata);
 }
-<<<<<<< HEAD
 #endif /* DEBUG */
-=======
-#endif
->>>>>>> blood in blood out
 

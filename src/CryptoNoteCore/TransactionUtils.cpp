@@ -22,11 +22,7 @@
 #include "crypto/crypto.h"
 #include "CryptoNoteCore/Account.h"
 #include "CryptoNoteFormatUtils.h"
-<<<<<<< HEAD
 #include "Common/TransactionExtra.h"
-=======
-#include "TransactionExtra.h"
->>>>>>> blood in blood out
 
 using namespace Crypto;
 
@@ -118,15 +114,6 @@ const TransactionOutput& getOutputChecked(const CryptoNote::TransactionPrefix& t
   return output;
 }
 
-<<<<<<< HEAD
-=======
-bool isOutToKey(const Crypto::PublicKey& spendPublicKey, const Crypto::PublicKey& outKey, const Crypto::KeyDerivation& derivation, size_t keyIndex) {
-  Crypto::PublicKey pk;
-  derive_public_key(derivation, keyIndex, spendPublicKey, pk);
-  return pk == outKey;
-}
-
->>>>>>> blood in blood out
 bool findOutputsToAccount(const CryptoNote::TransactionPrefix& transaction, const AccountPublicAddress& addr,
                           const SecretKey& viewSecretKey, std::vector<uint32_t>& out, uint64_t& amount) {
   AccountKeys keys;

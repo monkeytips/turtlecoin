@@ -26,10 +26,7 @@
 #include "utilities/transactions/pessimistic_transaction.h"
 #include "utilities/transactions/transaction_db_mutex_impl.h"
 #include "utilities/transactions/write_prepared_txn_db.h"
-<<<<<<< HEAD
 #include "utilities/transactions/write_unprepared_txn_db.h"
-=======
->>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -127,14 +124,10 @@ Status PessimisticTransactionDB::Initialize(
   for (auto it = rtrxs.begin(); it != rtrxs.end(); it++) {
     auto recovered_trx = it->second;
     assert(recovered_trx);
-<<<<<<< HEAD
     assert(recovered_trx->batches_.size() == 1);
     const auto& seq = recovered_trx->batches_.begin()->first;
     const auto& batch_info = recovered_trx->batches_.begin()->second;
     assert(batch_info.log_number_);
-=======
-    assert(recovered_trx->log_number_);
->>>>>>> blood in blood out
     assert(recovered_trx->name_.length());
 
     WriteOptions w_options;
@@ -143,30 +136,20 @@ Status PessimisticTransactionDB::Initialize(
 
     Transaction* real_trx = BeginTransaction(w_options, t_options, nullptr);
     assert(real_trx);
-<<<<<<< HEAD
     real_trx->SetLogNumber(batch_info.log_number_);
     assert(seq != kMaxSequenceNumber);
     real_trx->SetId(seq);
-=======
-    real_trx->SetLogNumber(recovered_trx->log_number_);
-    assert(recovered_trx->seq_ != kMaxSequenceNumber);
-    real_trx->SetId(recovered_trx->seq_);
->>>>>>> blood in blood out
 
     s = real_trx->SetName(recovered_trx->name_);
     if (!s.ok()) {
       break;
     }
 
-<<<<<<< HEAD
     s = real_trx->RebuildFromWriteBatch(batch_info.batch_);
     // WriteCommitted set this to to disable this check that is specific to
     // WritePrepared txns
     assert(batch_info.batch_cnt_ == 0 ||
            real_trx->GetWriteBatch()->SubBatchCnt() == batch_info.batch_cnt_);
-=======
-    s = real_trx->RebuildFromWriteBatch(recovered_trx->batch_);
->>>>>>> blood in blood out
     real_trx->SetState(Transaction::PREPARED);
     if (!s.ok()) {
       break;
@@ -227,11 +210,7 @@ Status TransactionDB::Open(
     const std::vector<ColumnFamilyDescriptor>& column_families,
     std::vector<ColumnFamilyHandle*>* handles, TransactionDB** dbptr) {
   Status s;
-<<<<<<< HEAD
   DB* db = nullptr;
-=======
-  DB* db;
->>>>>>> blood in blood out
 
   ROCKS_LOG_WARN(db_options.info_log, "Transaction write_policy is %" PRId32,
                  static_cast<int>(txn_db_options.write_policy));
@@ -240,7 +219,6 @@ Status TransactionDB::Open(
   DBOptions db_options_2pc = db_options;
   PrepareWrap(&db_options_2pc, &column_families_copy,
               &compaction_enabled_cf_indices);
-<<<<<<< HEAD
   const bool use_seq_per_batch =
       txn_db_options.write_policy == WRITE_PREPARED ||
       txn_db_options.write_policy == WRITE_UNPREPARED;
@@ -249,22 +227,14 @@ Status TransactionDB::Open(
       txn_db_options.write_policy == WRITE_PREPARED;
   s = DBImpl::Open(db_options_2pc, dbname, column_families_copy, handles, &db,
                    use_seq_per_batch, use_batch_per_txn);
-=======
-  const bool use_seq_per_batch = txn_db_options.write_policy == WRITE_PREPARED;
-  s = DBImpl::Open(db_options_2pc, dbname, column_families_copy, handles, &db,
-                   use_seq_per_batch);
->>>>>>> blood in blood out
   if (s.ok()) {
     s = WrapDB(db, txn_db_options, compaction_enabled_cf_indices, *handles,
                dbptr);
   }
-<<<<<<< HEAD
   if (!s.ok()) {
     // just in case it was not deleted (and not set to nullptr).
     delete db;
   }
-=======
->>>>>>> blood in blood out
   return s;
 }
 
@@ -296,7 +266,6 @@ Status TransactionDB::WrapDB(
     DB* db, const TransactionDBOptions& txn_db_options,
     const std::vector<size_t>& compaction_enabled_cf_indices,
     const std::vector<ColumnFamilyHandle*>& handles, TransactionDB** dbptr) {
-<<<<<<< HEAD
   assert(db != nullptr);
   assert(dbptr != nullptr);
   *dbptr = nullptr;
@@ -322,30 +291,11 @@ Status TransactionDB::WrapDB(
   if (s.ok()) {
     *dbptr = txn_db.release();
   }
-=======
-  PessimisticTransactionDB* txn_db;
-  switch (txn_db_options.write_policy) {
-    case WRITE_UNPREPARED:
-      return Status::NotSupported("WRITE_UNPREPARED is not implemented yet");
-    case WRITE_PREPARED:
-      txn_db = new WritePreparedTxnDB(
-          db, PessimisticTransactionDB::ValidateTxnDBOptions(txn_db_options));
-      break;
-    case WRITE_COMMITTED:
-    default:
-      txn_db = new WriteCommittedTxnDB(
-          db, PessimisticTransactionDB::ValidateTxnDBOptions(txn_db_options));
-  }
-  txn_db->UpdateCFComparatorMap(handles);
-  *dbptr = txn_db;
-  Status s = txn_db->Initialize(compaction_enabled_cf_indices, handles);
->>>>>>> blood in blood out
   return s;
 }
 
 Status TransactionDB::WrapStackableDB(
     // make sure this stackable_db is already opened with memtable history
-<<<<<<< HEAD
     // enabled, auto compaction distabled and 2 phase commit enabled
     StackableDB* db, const TransactionDBOptions& txn_db_options,
     const std::vector<size_t>& compaction_enabled_cf_indices,
@@ -376,29 +326,6 @@ Status TransactionDB::WrapStackableDB(
   if (s.ok()) {
     *dbptr = txn_db.release();
   }
-=======
-    // enabled,
-    // auto compaction distabled and 2 phase commit enabled
-    StackableDB* db, const TransactionDBOptions& txn_db_options,
-    const std::vector<size_t>& compaction_enabled_cf_indices,
-    const std::vector<ColumnFamilyHandle*>& handles, TransactionDB** dbptr) {
-  PessimisticTransactionDB* txn_db;
-  switch (txn_db_options.write_policy) {
-    case WRITE_UNPREPARED:
-      return Status::NotSupported("WRITE_UNPREPARED is not implemented yet");
-    case WRITE_PREPARED:
-      txn_db = new WritePreparedTxnDB(
-          db, PessimisticTransactionDB::ValidateTxnDBOptions(txn_db_options));
-      break;
-    case WRITE_COMMITTED:
-    default:
-      txn_db = new WriteCommittedTxnDB(
-          db, PessimisticTransactionDB::ValidateTxnDBOptions(txn_db_options));
-  }
-  txn_db->UpdateCFComparatorMap(handles);
-  *dbptr = txn_db;
-  Status s = txn_db->Initialize(compaction_enabled_cf_indices, handles);
->>>>>>> blood in blood out
   return s;
 }
 
@@ -476,11 +403,7 @@ Transaction* PessimisticTransactionDB::BeginInternalTransaction(
 //
 // Put(), Merge(), and Delete() only lock a single key per call.  Write() will
 // sort its keys before locking them.  This guarantees that TransactionDB write
-<<<<<<< HEAD
 // methods cannot deadlock with each other (but still could deadlock with a
-=======
-// methods cannot deadlock with eachother (but still could deadlock with a
->>>>>>> blood in blood out
 // Transaction).
 Status PessimisticTransactionDB::Put(const WriteOptions& options,
                                      ColumnFamilyHandle* column_family,

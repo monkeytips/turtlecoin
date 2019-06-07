@@ -13,11 +13,7 @@ namespace rocksdb {
 LDBOptions::LDBOptions() {}
 
 void LDBCommandRunner::PrintHelp(const LDBOptions& ldb_options,
-<<<<<<< HEAD
                                  const char* /*exec_name*/) {
-=======
-                                 const char* exec_name) {
->>>>>>> blood in blood out
   std::string ret;
 
   ret.append(ldb_options.print_help_header);
@@ -92,11 +88,8 @@ void LDBCommandRunner::PrintHelp(const LDBOptions& ldb_options,
   BackupCommand::Help(ret);
   RestoreCommand::Help(ret);
   CheckPointCommand::Help(ret);
-<<<<<<< HEAD
   WriteExternalSstFilesCommand::Help(ret);
   IngestExternalSstFilesCommand::Help(ret);
-=======
->>>>>>> blood in blood out
 
   fprintf(stderr, "%s\n", ret.c_str());
 }

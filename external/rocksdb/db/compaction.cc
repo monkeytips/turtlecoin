@@ -134,11 +134,8 @@ Compaction::Compaction(VersionStorageInfo* vstorage,
                        int _output_level, uint64_t _target_file_size,
                        uint64_t _max_compaction_bytes, uint32_t _output_path_id,
                        CompressionType _compression,
-<<<<<<< HEAD
                        CompressionOptions _compression_opts,
                        uint32_t _max_subcompactions,
-=======
->>>>>>> blood in blood out
                        std::vector<FileMetaData*> _grandparents,
                        bool _manual_compaction, double _score,
                        bool _deletion_compaction,
@@ -148,10 +145,7 @@ Compaction::Compaction(VersionStorageInfo* vstorage,
       output_level_(_output_level),
       max_output_file_size_(_target_file_size),
       max_compaction_bytes_(_max_compaction_bytes),
-<<<<<<< HEAD
       max_subcompactions_(_max_subcompactions),
-=======
->>>>>>> blood in blood out
       immutable_cf_options_(_immutable_cf_options),
       mutable_cf_options_(_mutable_cf_options),
       input_version_(nullptr),
@@ -159,10 +153,7 @@ Compaction::Compaction(VersionStorageInfo* vstorage,
       cfd_(nullptr),
       output_path_id_(_output_path_id),
       output_compression_(_compression),
-<<<<<<< HEAD
       output_compression_opts_(_compression_opts),
-=======
->>>>>>> blood in blood out
       deletion_compaction_(_deletion_compaction),
       inputs_(std::move(_inputs)),
       grandparents_(std::move(_grandparents)),
@@ -176,12 +167,9 @@ Compaction::Compaction(VersionStorageInfo* vstorage,
   if (is_manual_compaction_) {
     compaction_reason_ = CompactionReason::kManualCompaction;
   }
-<<<<<<< HEAD
   if (max_subcompactions_ == 0) {
     max_subcompactions_ = immutable_cf_options_.max_subcompactions;
   }
-=======
->>>>>>> blood in blood out
 
 #ifndef NDEBUG
   for (size_t i = 1; i < inputs_.size(); ++i) {
@@ -461,20 +449,12 @@ bool Compaction::IsOutputLevelEmpty() const {
 }
 
 bool Compaction::ShouldFormSubcompactions() const {
-<<<<<<< HEAD
   if (max_subcompactions_ <= 1 || cfd_ == nullptr) {
     return false;
   }
   if (cfd_->ioptions()->compaction_style == kCompactionStyleLevel) {
     return (start_level_ == 0 || is_manual_compaction_) && output_level_ > 0 &&
            !IsOutputLevelEmpty();
-=======
-  if (immutable_cf_options_.max_subcompactions <= 1 || cfd_ == nullptr) {
-    return false;
-  }
-  if (cfd_->ioptions()->compaction_style == kCompactionStyleLevel) {
-    return start_level_ == 0 && output_level_ > 0 && !IsOutputLevelEmpty();
->>>>>>> blood in blood out
   } else if (cfd_->ioptions()->compaction_style == kCompactionStyleUniversal) {
     return number_levels_ > 1 && output_level_ > 0;
   } else {
@@ -495,11 +475,8 @@ uint64_t Compaction::MaxInputFileCreationTime() const {
   return max_creation_time;
 }
 
-<<<<<<< HEAD
 int Compaction::GetInputBaseLevel() const {
   return input_vstorage_->base_level();
 }
 
-=======
->>>>>>> blood in blood out
 }  // namespace rocksdb

@@ -1,10 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018, The TurtleCoin Developers
-<<<<<<< HEAD
 //
-=======
-// 
->>>>>>> blood in blood out
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -19,10 +15,7 @@
 #include "Common/ObserverManager.h"
 #include "Logging/LoggerRef.h"
 #include "INode.h"
-<<<<<<< HEAD
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
-=======
->>>>>>> blood in blood out
 
 namespace System {
   class ContextGroup;
@@ -42,12 +35,8 @@ public:
 
 class NodeRpcProxy : public CryptoNote::INode {
 public:
-<<<<<<< HEAD
   NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, unsigned int initTimeout, std::shared_ptr<Logging::ILogger> logger);
   NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, unsigned int initTimeout);
-=======
-  NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, Logging::ILogger& logger);
->>>>>>> blood in blood out
   virtual ~NodeRpcProxy();
 
   virtual bool addObserver(CryptoNote::INodeObserver* observer) override;
@@ -64,14 +53,9 @@ public:
   virtual uint32_t getLastKnownBlockHeight() const override;
   virtual uint32_t getLocalBlockCount() const override;
   virtual uint32_t getKnownBlockCount() const override;
-<<<<<<< HEAD
   virtual uint64_t getNodeHeight() const override;
 
   virtual void getFeeInfo() override;
-=======
-  virtual uint64_t getLastLocalBlockTimestamp() const override;
-  virtual std::string getInfo() override;
->>>>>>> blood in blood out
 
   virtual void getBlockHashesByTimestamps(uint64_t timestampBegin, size_t secondsCount, std::vector<Crypto::Hash>& blockHashes, const Callback& callback) override;
   virtual void getTransactionHashesByPaymentId(const Crypto::Hash& paymentId, std::vector<Crypto::Hash>& transactionHashes, const Callback& callback) override;
@@ -79,7 +63,6 @@ public:
   virtual BlockHeaderInfo getLastLocalBlockHeaderInfo() const override;
 
   virtual void relayTransaction(const CryptoNote::Transaction& transaction, const Callback& callback) override;
-<<<<<<< HEAD
   virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint16_t outsCount, std::vector<RandomOuts>& result, const Callback& callback) override;
   virtual void getTransactionOutsGlobalIndices(const Crypto::Hash& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override;
 
@@ -98,12 +81,6 @@ public:
 
   virtual void queryBlocks(std::vector<Crypto::Hash>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
   virtual void getWalletSyncData(std::vector<Crypto::Hash>&& knownBlockIds, uint64_t startHeight, uint64_t startTimestamp, std::vector<WalletTypes::WalletBlockInfo>& newBlocks, const Callback& callback) override;
-=======
-  virtual void getRandomOutsByAmounts(std::vector<uint64_t>&& amounts, uint16_t outsCount, std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result, const Callback& callback) override;
-  virtual void getNewBlocks(std::vector<Crypto::Hash>&& knownBlockIds, std::vector<CryptoNote::RawBlock>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
-  virtual void getTransactionOutsGlobalIndices(const Crypto::Hash& transactionHash, std::vector<uint32_t>& outsGlobalIndices, const Callback& callback) override;
-  virtual void queryBlocks(std::vector<Crypto::Hash>&& knownBlockIds, uint64_t timestamp, std::vector<BlockShortEntry>& newBlocks, uint32_t& startHeight, const Callback& callback) override;
->>>>>>> blood in blood out
   virtual void getPoolSymmetricDifference(std::vector<Crypto::Hash>&& knownPoolTxIds, Crypto::Hash knownBlockId, bool& isBcActual,
           std::vector<std::unique_ptr<ITransactionReader>>& newTxs, std::vector<Crypto::Hash>& deletedTxIds, const Callback& callback) override;
   virtual void getBlocks(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks, const Callback& callback) override;
@@ -111,11 +88,8 @@ public:
   virtual void getBlock(const uint32_t blockHeight, BlockDetails &block, const Callback& callback) override;
   virtual void getTransactions(const std::vector<Crypto::Hash>& transactionHashes, std::vector<TransactionDetails>& transactions, const Callback& callback) override;
   virtual void isSynchronized(bool& syncStatus, const Callback& callback) override;
-<<<<<<< HEAD
   virtual std::string feeAddress() override;
   virtual uint32_t feeAmount() override;
-=======
->>>>>>> blood in blood out
 
   unsigned int rpcTimeout() const { return m_rpcTimeout; }
   void rpcTimeout(unsigned int val) { m_rpcTimeout = val; }
@@ -135,7 +109,6 @@ private:
   std::error_code doGetBlockHashesByTimestamps(uint64_t timestampBegin, size_t secondsCount, std::vector<Crypto::Hash>& blockHashes);
   std::error_code doRelayTransaction(const CryptoNote::Transaction& transaction);
   std::error_code doGetRandomOutsByAmounts(std::vector<uint64_t>& amounts, uint16_t outsCount,
-<<<<<<< HEAD
                                            std::vector<RandomOuts>& result);
   std::error_code doGetTransactionOutsGlobalIndices(const Crypto::Hash& transactionHash,
                                                     std::vector<uint32_t>& outsGlobalIndices);
@@ -156,15 +129,6 @@ private:
 
   std::error_code doGetWalletSyncData(const std::vector<Crypto::Hash>& knownBlockIds, uint64_t startHeight, uint64_t startTimestamp, std::vector<WalletTypes::WalletBlockInfo>& newBlocks);
 
-=======
-                                           std::vector<COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& result);
-  std::error_code doGetNewBlocks(std::vector<Crypto::Hash>& knownBlockIds,
-    std::vector<CryptoNote::RawBlock>& newBlocks, uint32_t& startHeight);
-  std::error_code doGetTransactionOutsGlobalIndices(const Crypto::Hash& transactionHash,
-                                                    std::vector<uint32_t>& outsGlobalIndices);
-  std::error_code doQueryBlocksLite(const std::vector<Crypto::Hash>& knownBlockIds, uint64_t timestamp,
-    std::vector<CryptoNote::BlockShortEntry>& newBlocks, uint32_t& startHeight);
->>>>>>> blood in blood out
   std::error_code doGetPoolSymmetricDifference(std::vector<Crypto::Hash>&& knownPoolTxIds, Crypto::Hash knownBlockId, bool& isBcActual,
           std::vector<std::unique_ptr<ITransactionReader>>& newTxs, std::vector<Crypto::Hash>& deletedTxIds);
   std::error_code doGetBlocksByHeight(const std::vector<uint32_t>& blockHeights, std::vector<std::vector<BlockDetails>>& blocks);
@@ -201,10 +165,7 @@ private:
   const std::string m_nodeHost;
   const unsigned short m_nodePort;
   unsigned int m_rpcTimeout;
-<<<<<<< HEAD
   unsigned int m_initTimeout;
-=======
->>>>>>> blood in blood out
   HttpClient* m_httpClient = nullptr;
   System::Event* m_httpEvent = nullptr;
 
@@ -214,20 +175,14 @@ private:
   bool m_stop = false;
   std::atomic<size_t> m_peerCount;
   std::atomic<uint32_t> m_networkHeight;
-<<<<<<< HEAD
   std::atomic<uint64_t> m_nodeHeight;
-=======
->>>>>>> blood in blood out
 
   BlockHeaderInfo lastLocalBlockHeaderInfo;
   //protect it with mutex if decided to add worker threads
   std::unordered_set<Crypto::Hash> m_knownTxs;
 
   bool m_connected;
-<<<<<<< HEAD
   std::string m_fee_address;
   uint32_t m_fee_amount = 0;
-=======
->>>>>>> blood in blood out
 };
 }

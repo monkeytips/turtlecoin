@@ -10,7 +10,6 @@ import org.junit.internal.TextListener;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-<<<<<<< HEAD
 import org.junit.runner.notification.Failure;
 import org.rocksdb.RocksDB;
 
@@ -22,12 +21,6 @@ import java.util.List;
 
 import static org.rocksdb.test.RocksJunitRunner.RocksJunitListener.Status.*;
 
-=======
-
-import java.util.ArrayList;
-import java.util.List;
-
->>>>>>> blood in blood out
 /**
  * Custom Junit Runner to print also Test classes
  * and executed methods to command prompt.
@@ -40,7 +33,6 @@ public class RocksJunitRunner {
    */
   static class RocksJunitListener extends TextListener {
 
-<<<<<<< HEAD
     private final static NumberFormat secsFormat =
         new DecimalFormat("###,###.###");
 
@@ -62,15 +54,12 @@ public class RocksJunitRunner {
       OK
     }
 
-=======
->>>>>>> blood in blood out
     /**
      * RocksJunitListener constructor
      *
      * @param system JUnitSystem
      */
     public RocksJunitListener(final JUnitSystem system) {
-<<<<<<< HEAD
       this(system.out());
     }
 
@@ -83,14 +72,10 @@ public class RocksJunitRunner {
     public void testRunStarted(final Description description) {
       writer.format("Starting RocksJava Tests...%n");
 
-=======
-      super(system);
->>>>>>> blood in blood out
     }
 
     @Override
     public void testStarted(final Description description) {
-<<<<<<< HEAD
       if(currentClassName == null
           || !currentClassName.equals(description.getClassName())) {
         if(currentClassName !=  null) {
@@ -159,11 +144,6 @@ public class RocksJunitRunner {
     public void testRunFinished(final Result result) {
       printTestsSummary();
       super.testRunFinished(result);
-=======
-       System.out.format("Run: %s testing now -> %s \n",
-           description.getClassName(),
-           description.getMethodName());
->>>>>>> blood in blood out
     }
   }
 

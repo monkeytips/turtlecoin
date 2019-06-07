@@ -69,11 +69,7 @@ class IndexBuilder {
 
   // This method will be called whenever a key is added. The subclasses may
   // override OnKeyAdded() if they need to collect additional information.
-<<<<<<< HEAD
   virtual void OnKeyAdded(const Slice& /*key*/) {}
-=======
-  virtual void OnKeyAdded(const Slice& key) {}
->>>>>>> blood in blood out
 
   // Inform the index builder that all entries has been written. Block builder
   // may therefore perform any operation required for block finalization.
@@ -100,7 +96,6 @@ class IndexBuilder {
   virtual Status Finish(IndexBlocks* index_blocks,
                         const BlockHandle& last_partition_block_handle) = 0;
 
-<<<<<<< HEAD
   // Get the size for index block. Must be called after ::Finish.
   virtual size_t IndexSize() const = 0;
 
@@ -110,13 +105,6 @@ class IndexBuilder {
   const InternalKeyComparator* comparator_;
   // Set after ::Finish is called
   size_t index_size_ = 0;
-=======
-  // Get the estimated size for index block.
-  virtual size_t EstimatedSize() const = 0;
-
- protected:
-  const InternalKeyComparator* comparator_;
->>>>>>> blood in blood out
 };
 
 // This index builder builds space-efficient index block.
@@ -131,7 +119,6 @@ class IndexBuilder {
 class ShortenedIndexBuilder : public IndexBuilder {
  public:
   explicit ShortenedIndexBuilder(const InternalKeyComparator* comparator,
-<<<<<<< HEAD
                                  int index_block_restart_interval,
                                  uint32_t format_version)
       : IndexBuilder(comparator),
@@ -140,11 +127,6 @@ class ShortenedIndexBuilder : public IndexBuilder {
     // Making the default true will disable the feature for old versions
     seperator_is_key_plus_seq_ = (format_version <= 2);
   }
-=======
-                                 int index_block_restart_interval)
-      : IndexBuilder(comparator),
-        index_block_builder_(index_block_restart_interval) {}
->>>>>>> blood in blood out
 
   virtual void AddIndexEntry(std::string* last_key_in_current_block,
                              const Slice* first_key_in_next_block,
@@ -152,7 +134,6 @@ class ShortenedIndexBuilder : public IndexBuilder {
     if (first_key_in_next_block != nullptr) {
       comparator_->FindShortestSeparator(last_key_in_current_block,
                                          *first_key_in_next_block);
-<<<<<<< HEAD
       if (!seperator_is_key_plus_seq_ &&
           comparator_->user_comparator()->Compare(
               ExtractUserKey(*last_key_in_current_block),
@@ -171,21 +152,11 @@ class ShortenedIndexBuilder : public IndexBuilder {
       index_block_builder_without_seq_.Add(ExtractUserKey(sep),
                                            handle_encoding);
     }
-=======
-    } else {
-      comparator_->FindShortSuccessor(last_key_in_current_block);
-    }
-
-    std::string handle_encoding;
-    block_handle.EncodeTo(&handle_encoding);
-    index_block_builder_.Add(*last_key_in_current_block, handle_encoding);
->>>>>>> blood in blood out
   }
 
   using IndexBuilder::Finish;
   virtual Status Finish(
       IndexBlocks* index_blocks,
-<<<<<<< HEAD
       const BlockHandle& /*last_partition_block_handle*/) override {
     if (seperator_is_key_plus_seq_) {
       index_blocks->index_block_contents = index_block_builder_.Finish();
@@ -203,26 +174,14 @@ class ShortenedIndexBuilder : public IndexBuilder {
 
   virtual bool seperator_is_key_plus_seq() override {
     return seperator_is_key_plus_seq_;
-=======
-      const BlockHandle& last_partition_block_handle) override {
-    index_blocks->index_block_contents = index_block_builder_.Finish();
-    return Status::OK();
-  }
-
-  virtual size_t EstimatedSize() const override {
-    return index_block_builder_.CurrentSizeEstimate();
->>>>>>> blood in blood out
   }
 
   friend class PartitionedIndexBuilder;
 
  private:
   BlockBuilder index_block_builder_;
-<<<<<<< HEAD
   BlockBuilder index_block_builder_without_seq_;
   bool seperator_is_key_plus_seq_;
-=======
->>>>>>> blood in blood out
 };
 
 // HashIndexBuilder contains a binary-searchable primary index and the
@@ -256,17 +215,11 @@ class HashIndexBuilder : public IndexBuilder {
  public:
   explicit HashIndexBuilder(const InternalKeyComparator* comparator,
                             const SliceTransform* hash_key_extractor,
-<<<<<<< HEAD
                             int index_block_restart_interval,
                             int format_version)
       : IndexBuilder(comparator),
         primary_index_builder_(comparator, index_block_restart_interval,
                                format_version),
-=======
-                            int index_block_restart_interval)
-      : IndexBuilder(comparator),
-        primary_index_builder_(comparator, index_block_restart_interval),
->>>>>>> blood in blood out
         hash_key_extractor_(hash_key_extractor) {}
 
   virtual void AddIndexEntry(std::string* last_key_in_current_block,
@@ -307,13 +260,9 @@ class HashIndexBuilder : public IndexBuilder {
   virtual Status Finish(
       IndexBlocks* index_blocks,
       const BlockHandle& last_partition_block_handle) override {
-<<<<<<< HEAD
     if (pending_block_num_ != 0) {
       FlushPendingPrefix();
     }
-=======
-    FlushPendingPrefix();
->>>>>>> blood in blood out
     primary_index_builder_.Finish(index_blocks, last_partition_block_handle);
     index_blocks->meta_blocks.insert(
         {kHashIndexPrefixesBlock.c_str(), prefix_block_});
@@ -322,7 +271,6 @@ class HashIndexBuilder : public IndexBuilder {
     return Status::OK();
   }
 
-<<<<<<< HEAD
   virtual size_t IndexSize() const override {
     return primary_index_builder_.IndexSize() + prefix_block_.size() +
            prefix_meta_block_.size();
@@ -332,13 +280,6 @@ class HashIndexBuilder : public IndexBuilder {
     return primary_index_builder_.seperator_is_key_plus_seq();
   }
 
-=======
-  virtual size_t EstimatedSize() const override {
-    return primary_index_builder_.EstimatedSize() + prefix_block_.size() +
-           prefix_meta_block_.size();
-  }
-
->>>>>>> blood in blood out
  private:
   void FlushPendingPrefix() {
     prefix_block_.append(pending_entry_prefix_.data(),
@@ -396,17 +337,12 @@ class PartitionedIndexBuilder : public IndexBuilder {
       IndexBlocks* index_blocks,
       const BlockHandle& last_partition_block_handle) override;
 
-<<<<<<< HEAD
   virtual size_t IndexSize() const override {
     return index_size_;
   }
   size_t TopLevelIndexSize(uint64_t) const {
     return top_level_index_size_;
   }
-=======
-  virtual size_t EstimatedSize() const override;
-  size_t EstimateTopLevelIndexSize(uint64_t) const;
->>>>>>> blood in blood out
   size_t NumPartitions() const;
 
   inline bool ShouldCutFilterBlock() {
@@ -424,7 +360,6 @@ class PartitionedIndexBuilder : public IndexBuilder {
   // cutting the next partition
   void RequestPartitionCut();
 
-<<<<<<< HEAD
   virtual bool seperator_is_key_plus_seq() override {
     return seperator_is_key_plus_seq_;
   }
@@ -435,9 +370,6 @@ class PartitionedIndexBuilder : public IndexBuilder {
   // Set after ::Finish is called
   size_t partition_cnt_ = 0;
 
-=======
- private:
->>>>>>> blood in blood out
   void MakeNewSubIndexBuilder();
 
   struct Entry {
@@ -446,10 +378,7 @@ class PartitionedIndexBuilder : public IndexBuilder {
   };
   std::list<Entry> entries_;  // list of partitioned indexes and their keys
   BlockBuilder index_block_builder_;  // top-level index builder
-<<<<<<< HEAD
   BlockBuilder index_block_builder_without_seq_;  // same for user keys
-=======
->>>>>>> blood in blood out
   // the active partition index builder
   ShortenedIndexBuilder* sub_index_builder_;
   // the last key in the active partition index builder
@@ -458,10 +387,7 @@ class PartitionedIndexBuilder : public IndexBuilder {
   // true if Finish is called once but not complete yet.
   bool finishing_indexes = false;
   const BlockBasedTableOptions& table_opt_;
-<<<<<<< HEAD
   bool seperator_is_key_plus_seq_;
-=======
->>>>>>> blood in blood out
   // true if an external entity (such as filter partition builder) request
   // cutting the next partition
   bool partition_cut_requested_ = true;

@@ -13,7 +13,6 @@
 
 #include <stdexcept>
 #include "jemalloc/jemalloc.h"
-<<<<<<< HEAD
 #include "port/win/port_win.h"
 
 #if defined(ZSTD) && defined(ZSTD_STATIC_LINKING_ONLY)
@@ -34,13 +33,10 @@ ZSTD_customMem GetJeZstdAllocationOverrides() {
 } // namespace rocksdb
 #endif // (ZSTD_VERSION_NUMBER >= 500)
 #endif // defined(ZSTD) defined(ZSTD_STATIC_LINKING_ONLY)
-=======
->>>>>>> blood in blood out
 
 // Global operators to be replaced by a linker when this file is
 // a part of the build
 
-<<<<<<< HEAD
 namespace rocksdb {
 namespace port {
 void* jemalloc_aligned_alloc(size_t size, size_t alignment) ROCKSDB_NOEXCEPT {
@@ -50,8 +46,6 @@ void jemalloc_aligned_free(void* p) ROCKSDB_NOEXCEPT { je_free(p); }
 } // port
 } // rocksdb
 
-=======
->>>>>>> blood in blood out
 void* operator new(size_t size) {
   void* p = je_malloc(size);
   if (!p) {
@@ -79,7 +73,3 @@ void operator delete[](void* p) {
     je_free(p);
   }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> blood in blood out

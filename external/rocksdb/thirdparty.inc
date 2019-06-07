@@ -12,15 +12,9 @@ set (THIRDPARTY_LIBS "")         # Initialization, don't touch
 # Defaults
 #
 set(GFLAGS_HOME $ENV{THIRDPARTY_HOME}/Gflags.Library)
-<<<<<<< HEAD
 set(GFLAGS_INCLUDE ${GFLAGS_HOME}/build/native/include)
 set(GFLAGS_LIB_DEBUG ${GFLAGS_HOME}/lib/native/debug/amd64/gflags.lib)
 set(GFLAGS_LIB_RELEASE ${GFLAGS_HOME}/lib/native/retail/amd64/gflags.lib)
-=======
-set(GFLAGS_INCLUDE ${GFLAGS_HOME}/inc/include)
-set(GFLAGS_LIB_DEBUG ${GFLAGS_HOME}/bin/debug/amd64/gflags.lib)
-set(GFLAGS_LIB_RELEASE ${GFLAGS_HOME}/bin/retail/amd64/gflags.lib)
->>>>>>> blood in blood out
 
 # ================================================== GFLAGS ==================================================
 # For compatibility
@@ -58,15 +52,9 @@ endif ()
 # Edit these 4 lines to define paths to Snappy
 #
 set(SNAPPY_HOME $ENV{THIRDPARTY_HOME}/Snappy.Library)
-<<<<<<< HEAD
 set(SNAPPY_INCLUDE ${SNAPPY_HOME}/build/native/inc/inc)
 set(SNAPPY_LIB_DEBUG ${SNAPPY_HOME}/lib/native/debug/amd64/snappy.lib)
 set(SNAPPY_LIB_RELEASE ${SNAPPY_HOME}/lib/native/retail/amd64/snappy.lib)
-=======
-set(SNAPPY_INCLUDE ${SNAPPY_HOME}/inc/inc)
-set(SNAPPY_LIB_DEBUG ${SNAPPY_HOME}/bin/debug/amd64/snappy.lib)
-set(SNAPPY_LIB_RELEASE ${SNAPPY_HOME}/bin/retail/amd64/snappy.lib)
->>>>>>> blood in blood out
 
 # For compatibility
 if(SNAPPY)
@@ -75,19 +63,11 @@ endif ()
 
 if (WITH_SNAPPY)
   message(STATUS "SNAPPY library is enabled")
-<<<<<<< HEAD
 
   if(DEFINED ENV{SNAPPY_INCLUDE})
     set(SNAPPY_INCLUDE $ENV{SNAPPY_INCLUDE})
   endif()
 
-=======
-  
-  if(DEFINED ENV{SNAPPY_INCLUDE})
-    set(SNAPPY_INCLUDE $ENV{SNAPPY_INCLUDE})
-  endif()
-  
->>>>>>> blood in blood out
   if(DEFINED ENV{SNAPPY_LIB_DEBUG})
     set(SNAPPY_LIB_DEBUG $ENV{SNAPPY_LIB_DEBUG})
   endif()
@@ -95,11 +75,7 @@ if (WITH_SNAPPY)
   if(DEFINED ENV{SNAPPY_LIB_RELEASE})
     set(SNAPPY_LIB_RELEASE $ENV{SNAPPY_LIB_RELEASE})
   endif()
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> blood in blood out
   set(SNAPPY_CXX_FLAGS -DSNAPPY)
   set(SNAPPY_LIBS debug ${SNAPPY_LIB_DEBUG} optimized ${SNAPPY_LIB_RELEASE})
 
@@ -114,7 +90,6 @@ endif ()
 #
 # Edit these 4 lines to define paths to LZ4
 #
-<<<<<<< HEAD
 #set(LZ4_HOME $ENV{THIRDPARTY_HOME}/LZ4.Library)
 #set(LZ4_INCLUDE ${LZ4_HOME}/build/native/inc/inc)
 #set(LZ4_LIB_DEBUG ${LZ4_HOME}/lib/native/debug/amd64/lz4.lib)
@@ -150,63 +125,15 @@ endif ()
 #else ()
 #  message(STATUS "LZ4 library is disabled")
 #endif ()
-=======
-set(LZ4_HOME $ENV{THIRDPARTY_HOME}/LZ4.Library)
-set(LZ4_INCLUDE ${LZ4_HOME}/inc/include)
-set(LZ4_LIB_DEBUG ${LZ4_HOME}/bin/debug/amd64/lz4.lib)
-set(LZ4_LIB_RELEASE ${LZ4_HOME}/bin/retail/amd64/lz4.lib)
-
-#
-# Don't touch these lines
-#
-if (DEFINED LZ4)
-  set(WITH_LZ4 ON)
-endif ()
-
-if (WITH_LZ4)
-  message(STATUS "LZ4 library is enabled")
-  
-  if(DEFINED ENV{LZ4_INCLUDE})
-    set(LZ4_INCLUDE $ENV{LZ4_INCLUDE})
-  endif()
-  
-  if(DEFINED ENV{LZ4_LIB_DEBUG})
-    set(LZ4_LIB_DEBUG $ENV{LZ4_LIB_DEBUG})
-  endif()
-
-  if(DEFINED ENV{LZ4_LIB_RELEASE})
-    set(LZ4_LIB_RELEASE $ENV{LZ4_LIB_RELEASE})
-  endif()
-  
-  set(LZ4_CXX_FLAGS -DLZ4)
-  set(LZ4_LIBS debug ${LZ4_LIB_DEBUG} optimized ${LZ4_LIB_RELEASE})
-
-  add_definitions(${LZ4_CXX_FLAGS})
-  include_directories(${LZ4_INCLUDE})
-  set (THIRDPARTY_LIBS ${THIRDPARTY_LIBS} ${LZ4_LIBS})
-else ()
-  message(STATUS "LZ4 library is disabled")
-endif ()
->>>>>>> blood in blood out
 
 # ================================================== ZLIB ==================================================
 #
 # Edit these 4 lines to define paths to ZLIB
 #
 set(ZLIB_HOME $ENV{THIRDPARTY_HOME}/ZLIB.Library)
-<<<<<<< HEAD
 set(ZLIB_INCLUDE ${ZLIB_HOME}/build/native/inc/inc)
 set(ZLIB_LIB_DEBUG ${ZLIB_HOME}/lib/native/debug/amd64/zlib.lib)
 set(ZLIB_LIB_RELEASE ${ZLIB_HOME}/lib/native/retail/amd64/zlib.lib)
-=======
-set(ZLIB_INCLUDE ${ZLIB_HOME}/inc/include)
-set(ZLIB_LIB_DEBUG ${ZLIB_HOME}/bin/debug/amd64/zlib.lib)
-set(ZLIB_LIB_RELEASE ${ZLIB_HOME}/bin/retail/amd64/zlib.lib)
-
-#
-# Don't touch these lines
-#
->>>>>>> blood in blood out
 
 # For compatibilty
 if (ZLIB)
@@ -238,12 +165,9 @@ else ()
   message(STATUS "ZLIB library is disabled")
 endif ()
 
-<<<<<<< HEAD
 # ================================================== XPRESS ==================================================
 # This makes use of built-in Windows API, no additional includes, links to a system lib
 
-=======
->>>>>>> blood in blood out
 # For compatibilty
 if (XPRESS)
   set(WITH_XPRESS ON)
@@ -260,7 +184,6 @@ else ()
   message(STATUS "XPRESS is disabled")
 endif ()
 
-<<<<<<< HEAD
 
 # ================================================== ZSTD ==================================================
 #
@@ -302,30 +225,15 @@ else ()
   message(STATUS "ZSTD library is disabled")
 endif ()
 
-=======
->>>>>>> blood in blood out
 #
 # Edit these 4 lines to define paths to Jemalloc
 #
 set(JEMALLOC_HOME $ENV{THIRDPARTY_HOME}/Jemalloc.Library)
-<<<<<<< HEAD
 set(JEMALLOC_INCLUDE ${JEMALLOC_HOME}/build/native/inc)
 set(JEMALLOC_LIB_DEBUG ${JEMALLOC_HOME}/lib/native/debug/amd64/jemalloc.lib)
 set(JEMALLOC_LIB_RELEASE ${JEMALLOC_HOME}/lib/native/retail/amd64/jemalloc.lib)
 
 # ================================================== JEMALLOC ==================================================
-=======
-set(JEMALLOC_INCLUDE ${JEMALLOC_HOME}/inc/include)
-set(JEMALLOC_LIB_DEBUG ${JEMALLOC_HOME}/bin/debug/amd64/jemalloc.lib)
-set(JEMALLOC_LIB_RELEASE ${JEMALLOC_HOME}/bin/retail/amd64/jemalloc.lib)
-
-# ================================================== JEMALLOC ==================================================
-#
-# Don't touch these lines
-#
-
-# For compatibilty
->>>>>>> blood in blood out
 if(JEMALLOC)
   set(WITH_JEMALLOC ON)
 endif()
@@ -352,13 +260,7 @@ if (WITH_JEMALLOC)
   include_directories(${JEMALLOC_INCLUDE})
   set (THIRDPARTY_LIBS ${THIRDPARTY_LIBS} ${JEMALLOC_LIBS})
   set (ARTIFACT_SUFFIX "_je")
-<<<<<<< HEAD
 
-=======
-  
-  set(WITH_JEMALLOC ON)
-  
->>>>>>> blood in blood out
 else ()
   set (ARTIFACT_SUFFIX "")
   message(STATUS "JEMALLOC library is disabled")

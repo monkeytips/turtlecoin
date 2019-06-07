@@ -45,10 +45,7 @@ class DBTestCompactionFilterWithCompactParam
   }
 };
 
-<<<<<<< HEAD
 #ifndef ROCKSDB_VALGRIND_RUN
-=======
->>>>>>> blood in blood out
 INSTANTIATE_TEST_CASE_P(
     DBTestCompactionFilterWithCompactOption,
     DBTestCompactionFilterWithCompactParam,
@@ -57,7 +54,6 @@ INSTANTIATE_TEST_CASE_P(
                       DBTestBase::OptionConfig::kUniversalCompactionMultiLevel,
                       DBTestBase::OptionConfig::kLevelSubcompactions,
                       DBTestBase::OptionConfig::kUniversalSubcompactions));
-<<<<<<< HEAD
 #else
 // Run fewer cases in valgrind
 INSTANTIATE_TEST_CASE_P(DBTestCompactionFilterWithCompactOption,
@@ -70,14 +66,6 @@ class KeepFilter : public CompactionFilter {
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-
-class KeepFilter : public CompactionFilter {
- public:
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value, bool* value_changed) const
-      override {
->>>>>>> blood in blood out
     cfilter_count++;
     return false;
   }
@@ -87,15 +75,9 @@ class KeepFilter : public CompactionFilter {
 
 class DeleteFilter : public CompactionFilter {
  public:
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value, bool* value_changed) const
-      override {
->>>>>>> blood in blood out
     cfilter_count++;
     return true;
   }
@@ -105,15 +87,9 @@ class DeleteFilter : public CompactionFilter {
 
 class DeleteISFilter : public CompactionFilter {
  public:
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& key, const Slice& /*value*/,
                       std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value,
-                      bool* value_changed) const override {
->>>>>>> blood in blood out
     cfilter_count++;
     int i = std::stoi(key.ToString());
     if (i > 5 && i <= 105) {
@@ -131,25 +107,16 @@ class DeleteISFilter : public CompactionFilter {
 // zero-padded to length 10.
 class SkipEvenFilter : public CompactionFilter {
  public:
-<<<<<<< HEAD
   virtual Decision FilterV2(int /*level*/, const Slice& key,
                             ValueType /*value_type*/,
                             const Slice& /*existing_value*/,
                             std::string* /*new_value*/,
-=======
-  virtual Decision FilterV2(int level, const Slice& key, ValueType value_type,
-                            const Slice& existing_value, std::string* new_value,
->>>>>>> blood in blood out
                             std::string* skip_until) const override {
     cfilter_count++;
     int i = std::stoi(key.ToString());
     if (i / 10 % 2 == 0) {
       char key_str[100];
-<<<<<<< HEAD
       snprintf(key_str, sizeof(key_str), "%010d", i / 10 * 10 + 10);
-=======
-      snprintf(key_str, sizeof(key), "%010d", i / 10 * 10 + 10);
->>>>>>> blood in blood out
       *skip_until = key_str;
       ++cfilter_skips;
       return Decision::kRemoveAndSkipUntil;
@@ -165,15 +132,9 @@ class SkipEvenFilter : public CompactionFilter {
 class DelayFilter : public CompactionFilter {
  public:
   explicit DelayFilter(DBTestBase* d) : db_test(d) {}
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value,
-                      bool* value_changed) const override {
->>>>>>> blood in blood out
     db_test->env_->addon_time_.fetch_add(1000);
     return true;
   }
@@ -188,15 +149,9 @@ class ConditionalFilter : public CompactionFilter {
  public:
   explicit ConditionalFilter(const std::string* filtered_value)
       : filtered_value_(filtered_value) {}
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/, const Slice& value,
                       std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value,
-                      bool* value_changed) const override {
->>>>>>> blood in blood out
     return value.ToString() == *filtered_value_;
   }
 
@@ -210,15 +165,9 @@ class ChangeFilter : public CompactionFilter {
  public:
   explicit ChangeFilter() {}
 
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* new_value,
                       bool* value_changed) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value, bool* value_changed) const
-      override {
->>>>>>> blood in blood out
     assert(new_value != nullptr);
     *new_value = NEW_VALUE;
     *value_changed = true;
@@ -307,11 +256,7 @@ class DelayFilterFactory : public CompactionFilterFactory {
  public:
   explicit DelayFilterFactory(DBTestBase* d) : db_test(d) {}
   virtual std::unique_ptr<CompactionFilter> CreateCompactionFilter(
-<<<<<<< HEAD
       const CompactionFilter::Context& /*context*/) override {
-=======
-      const CompactionFilter::Context& context) override {
->>>>>>> blood in blood out
     return std::unique_ptr<CompactionFilter>(new DelayFilter(db_test));
   }
 
@@ -327,11 +272,7 @@ class ConditionalFilterFactory : public CompactionFilterFactory {
       : filtered_value_(filtered_value.ToString()) {}
 
   virtual std::unique_ptr<CompactionFilter> CreateCompactionFilter(
-<<<<<<< HEAD
       const CompactionFilter::Context& /*context*/) override {
-=======
-      const CompactionFilter::Context& context) override {
->>>>>>> blood in blood out
     return std::unique_ptr<CompactionFilter>(
         new ConditionalFilter(&filtered_value_));
   }
@@ -349,11 +290,7 @@ class ChangeFilterFactory : public CompactionFilterFactory {
   explicit ChangeFilterFactory() {}
 
   virtual std::unique_ptr<CompactionFilter> CreateCompactionFilter(
-<<<<<<< HEAD
       const CompactionFilter::Context& /*context*/) override {
-=======
-      const CompactionFilter::Context& context) override {
->>>>>>> blood in blood out
     return std::unique_ptr<CompactionFilter>(new ChangeFilter());
   }
 
@@ -837,11 +774,7 @@ TEST_F(DBTestCompactionFilter, CompactionFilterIgnoreSnapshot) {
       iter->Next();
     }
     ASSERT_EQ(count, 6);
-<<<<<<< HEAD
     read_options.snapshot = nullptr;
-=======
-    read_options.snapshot = 0;
->>>>>>> blood in blood out
     std::unique_ptr<Iterator> iter1(db_->NewIterator(read_options));
     iter1->SeekToFirst();
     count = 0;

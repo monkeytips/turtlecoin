@@ -16,17 +16,11 @@
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CachedTransaction.h"
-<<<<<<< HEAD
 
 #include <Common/Varint.h>
 #include <Common/CryptoNoteTools.h>
 
 #include <config/CryptoNoteConfig.h>
-=======
-#include <Common/Varint.h>
-#include "CryptoNoteConfig.h"
-#include "CryptoNoteTools.h"
->>>>>>> blood in blood out
 
 using namespace Crypto;
 using namespace CryptoNote;

@@ -52,13 +52,7 @@ class PosixLogger : public Logger {
   std::atomic<bool> flush_pending_;
 
  protected:
-<<<<<<< HEAD
   virtual Status CloseImpl() override { return PosixCloseHelper(); }
-=======
-  virtual Status CloseImpl() override {
-    return PosixCloseHelper();
-  }
->>>>>>> blood in blood out
 
  public:
   PosixLogger(FILE* f, uint64_t (*gettid)(), Env* env,

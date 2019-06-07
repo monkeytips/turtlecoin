@@ -30,7 +30,6 @@ Status PromoteL0(DB* db, ColumnFamilyHandle* column_family, int target_level) {
 
 #else  // ROCKSDB_LITE
 
-<<<<<<< HEAD
 Status SuggestCompactRange(DB* /*db*/, ColumnFamilyHandle* /*column_family*/,
                            const Slice* /*begin*/, const Slice* /*end*/) {
   return Status::NotSupported("Not supported in RocksDB LITE");
@@ -38,14 +37,6 @@ Status SuggestCompactRange(DB* /*db*/, ColumnFamilyHandle* /*column_family*/,
 
 Status PromoteL0(DB* /*db*/, ColumnFamilyHandle* /*column_family*/,
                  int /*target_level*/) {
-=======
-Status SuggestCompactRange(DB* db, ColumnFamilyHandle* column_family,
-                           const Slice* begin, const Slice* end) {
-  return Status::NotSupported("Not supported in RocksDB LITE");
-}
-
-Status PromoteL0(DB* db, ColumnFamilyHandle* column_family, int target_level) {
->>>>>>> blood in blood out
   return Status::NotSupported("Not supported in RocksDB LITE");
 }
 

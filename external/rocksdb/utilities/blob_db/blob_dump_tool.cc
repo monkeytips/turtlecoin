@@ -17,13 +17,9 @@
 #include "port/port.h"
 #include "rocksdb/convenience.h"
 #include "rocksdb/env.h"
-<<<<<<< HEAD
 #include "table/format.h"
 #include "util/coding.h"
 #include "util/file_reader_writer.h"
-=======
-#include "util/coding.h"
->>>>>>> blood in blood out
 #include "util/string_util.h"
 
 namespace rocksdb {
@@ -33,14 +29,10 @@ BlobDumpTool::BlobDumpTool()
     : reader_(nullptr), buffer_(nullptr), buffer_size_(0) {}
 
 Status BlobDumpTool::Run(const std::string& filename, DisplayType show_key,
-<<<<<<< HEAD
                          DisplayType show_blob,
                          DisplayType show_uncompressed_blob,
                          bool show_summary) {
   constexpr size_t kReadaheadSize = 2 * 1024 * 1024;
-=======
-                         DisplayType show_blob) {
->>>>>>> blood in blood out
   Status s;
   Env* env = Env::Default();
   s = env->FileExists(filename);
@@ -57,22 +49,15 @@ Status BlobDumpTool::Run(const std::string& filename, DisplayType show_key,
   if (!s.ok()) {
     return s;
   }
-<<<<<<< HEAD
   file = NewReadaheadRandomAccessFile(std::move(file), kReadaheadSize);
-=======
->>>>>>> blood in blood out
   if (file_size == 0) {
     return Status::Corruption("File is empty.");
   }
   reader_.reset(new RandomAccessFileReader(std::move(file), filename));
   uint64_t offset = 0;
   uint64_t footer_offset = 0;
-<<<<<<< HEAD
   CompressionType compression = kNoCompression;
   s = DumpBlobLogHeader(&offset, &compression);
-=======
-  s = DumpBlobLogHeader(&offset);
->>>>>>> blood in blood out
   if (!s.ok()) {
     return s;
   }
@@ -80,7 +65,6 @@ Status BlobDumpTool::Run(const std::string& filename, DisplayType show_key,
   if (!s.ok()) {
     return s;
   }
-<<<<<<< HEAD
   uint64_t total_records = 0;
   uint64_t total_key_size = 0;
   uint64_t total_blob_size = 0;
@@ -105,16 +89,6 @@ Status BlobDumpTool::Run(const std::string& filename, DisplayType show_key,
               total_uncompressed_blob_size);
     }
   }
-=======
-  if (show_key != DisplayType::kNone) {
-    while (offset < footer_offset) {
-      s = DumpRecord(show_key, show_blob, &offset);
-      if (!s.ok()) {
-        return s;
-      }
-    }
-  }
->>>>>>> blood in blood out
   return s;
 }
 
@@ -138,12 +112,8 @@ Status BlobDumpTool::Read(uint64_t offset, size_t size, Slice* result) {
   return s;
 }
 
-<<<<<<< HEAD
 Status BlobDumpTool::DumpBlobLogHeader(uint64_t* offset,
                                        CompressionType* compression) {
-=======
-Status BlobDumpTool::DumpBlobLogHeader(uint64_t* offset) {
->>>>>>> blood in blood out
   Slice slice;
   Status s = Read(0, BlobLogHeader::kSize, &slice);
   if (!s.ok()) {
@@ -168,10 +138,7 @@ Status BlobDumpTool::DumpBlobLogHeader(uint64_t* offset) {
   fprintf(stdout, "  Expiration range : %s\n",
           GetString(header.expiration_range).c_str());
   *offset = BlobLogHeader::kSize;
-<<<<<<< HEAD
   *compression = header.compression;
-=======
->>>>>>> blood in blood out
   return s;
 }
 
@@ -194,11 +161,7 @@ Status BlobDumpTool::DumpBlobLogFooter(uint64_t file_size,
   BlobLogFooter footer;
   s = footer.DecodeFrom(slice);
   if (!s.ok()) {
-<<<<<<< HEAD
     return no_footer();
-=======
-    return s;
->>>>>>> blood in blood out
   }
   fprintf(stdout, "Blob log footer:\n");
   fprintf(stdout, "  Blob count       : %" PRIu64 "\n", footer.blob_count);
@@ -208,7 +171,6 @@ Status BlobDumpTool::DumpBlobLogFooter(uint64_t file_size,
 }
 
 Status BlobDumpTool::DumpRecord(DisplayType show_key, DisplayType show_blob,
-<<<<<<< HEAD
                                 DisplayType show_uncompressed_blob,
                                 bool show_summary, CompressionType compression,
                                 uint64_t* offset, uint64_t* total_records,
@@ -219,11 +181,6 @@ Status BlobDumpTool::DumpRecord(DisplayType show_key, DisplayType show_blob,
     fprintf(stdout, "Read record with offset 0x%" PRIx64 " (%" PRIu64 "):\n",
             *offset, *offset);
   }
-=======
-                                uint64_t* offset) {
-  fprintf(stdout, "Read record with offset 0x%" PRIx64 " (%" PRIu64 "):\n",
-          *offset, *offset);
->>>>>>> blood in blood out
   Slice slice;
   Status s = Read(*offset, BlobLogRecord::kHeaderSize, &slice);
   if (!s.ok()) {
@@ -236,23 +193,16 @@ Status BlobDumpTool::DumpRecord(DisplayType show_key, DisplayType show_blob,
   }
   uint64_t key_size = record.key_size;
   uint64_t value_size = record.value_size;
-<<<<<<< HEAD
   if (show_key != DisplayType::kNone) {
     fprintf(stdout, "  key size   : %" PRIu64 "\n", key_size);
     fprintf(stdout, "  value size : %" PRIu64 "\n", value_size);
     fprintf(stdout, "  expiration : %" PRIu64 "\n", record.expiration);
   }
-=======
-  fprintf(stdout, "  key size   : %" PRIu64 "\n", key_size);
-  fprintf(stdout, "  value size : %" PRIu64 "\n", value_size);
-  fprintf(stdout, "  expiration : %" PRIu64 "\n", record.expiration);
->>>>>>> blood in blood out
   *offset += BlobLogRecord::kHeaderSize;
   s = Read(*offset, key_size + value_size, &slice);
   if (!s.ok()) {
     return s;
   }
-<<<<<<< HEAD
   // Decompress value
   std::string uncompressed_value;
   if (compression != kNoCompression &&
@@ -267,8 +217,6 @@ Status BlobDumpTool::DumpRecord(DisplayType show_key, DisplayType show_blob,
     }
     uncompressed_value = contents.data.ToString();
   }
-=======
->>>>>>> blood in blood out
   if (show_key != DisplayType::kNone) {
     fprintf(stdout, "  key        : ");
     DumpSlice(Slice(slice.data(), key_size), show_key);
@@ -276,7 +224,6 @@ Status BlobDumpTool::DumpRecord(DisplayType show_key, DisplayType show_blob,
       fprintf(stdout, "  blob       : ");
       DumpSlice(Slice(slice.data() + key_size, value_size), show_blob);
     }
-<<<<<<< HEAD
     if (show_uncompressed_blob != DisplayType::kNone) {
       fprintf(stdout, "  raw blob   : ");
       DumpSlice(Slice(uncompressed_value), show_uncompressed_blob);
@@ -287,10 +234,6 @@ Status BlobDumpTool::DumpRecord(DisplayType show_key, DisplayType show_blob,
   *total_key_size += key_size;
   *total_blob_size += value_size;
   *total_uncompressed_blob_size += uncompressed_value.size();
-=======
-  }
-  *offset += key_size + value_size;
->>>>>>> blood in blood out
   return s;
 }
 

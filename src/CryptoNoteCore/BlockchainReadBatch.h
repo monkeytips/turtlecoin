@@ -99,10 +99,6 @@ public:
   const std::pair<uint32_t, bool>& getLastBlockIndex() const;
   const std::unordered_map<uint64_t, uint32_t>& getClosestTimestampBlockIndex() const;
   uint32_t getKeyOutputAmountsCount() const;
-<<<<<<< HEAD
-=======
-  const std::unordered_map<uint32_t, IBlockchainCache::Amount>& getKeyOutputAmounts() const;
->>>>>>> blood in blood out
   const std::unordered_map<Crypto::Hash, uint32_t>& getTransactionCountByPaymentIds() const;
   const std::unordered_map<std::pair<Crypto::Hash, uint32_t>, Crypto::Hash>& getTransactionHashesByPaymentIds() const;
   const std::unordered_map<uint64_t, std::vector<Crypto::Hash> >& getBlockHashesByTimestamp() const;
@@ -121,27 +117,17 @@ public:
   BlockchainReadBatch& requestSpentKeyImagesByBlock(uint32_t blockIndex);
   BlockchainReadBatch& requestBlockIndexBySpentKeyImage(const Crypto::KeyImage& keyImage);
   BlockchainReadBatch& requestCachedTransaction(const Crypto::Hash& txHash);
-<<<<<<< HEAD
   BlockchainReadBatch& requestCachedTransactions(const std::vector<Crypto::Hash> &transactions);
-=======
->>>>>>> blood in blood out
   BlockchainReadBatch& requestTransactionHashesByBlock(uint32_t blockIndex);
   BlockchainReadBatch& requestCachedBlock(uint32_t blockIndex);
   BlockchainReadBatch& requestBlockIndexByBlockHash(const Crypto::Hash& blockHash);
   BlockchainReadBatch& requestKeyOutputGlobalIndexesCountForAmount(IBlockchainCache::Amount amount);
   BlockchainReadBatch& requestKeyOutputGlobalIndexForAmount(IBlockchainCache::Amount amount, uint32_t outputIndexWithinAmout);
   BlockchainReadBatch& requestRawBlock(uint32_t blockIndex);
-<<<<<<< HEAD
   BlockchainReadBatch& requestRawBlocks(uint64_t startHeight, uint64_t endHeight);
   BlockchainReadBatch& requestLastBlockIndex();
   BlockchainReadBatch& requestClosestTimestampBlockIndex(uint64_t timestamp);
   BlockchainReadBatch& requestKeyOutputAmountsCount();
-=======
-  BlockchainReadBatch& requestLastBlockIndex();
-  BlockchainReadBatch& requestClosestTimestampBlockIndex(uint64_t timestamp);
-  BlockchainReadBatch& requestKeyOutputAmountsCount();
-  BlockchainReadBatch& requestKeyOutputAmount(uint32_t index);
->>>>>>> blood in blood out
   BlockchainReadBatch& requestTransactionCountByPaymentId(const Crypto::Hash& paymentId);
   BlockchainReadBatch& requestTransactionHashByPaymentId(const Crypto::Hash& paymentId, uint32_t transactionIndexWithinPaymentId);
   BlockchainReadBatch& requestBlockHashesByTimestamp(uint64_t timestamp);

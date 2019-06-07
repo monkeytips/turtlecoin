@@ -155,7 +155,6 @@ static std::unordered_map<std::string, OptionTypeInfo>
           OptionType::kSizeT, OptionVerificationType::kNormal, false, 0}},
         {"enable_index_compression",
          {offsetof(struct BlockBasedTableOptions, enable_index_compression),
-<<<<<<< HEAD
           OptionType::kBoolean, OptionVerificationType::kNormal, false, 0}},
         {"block_align",
          {offsetof(struct BlockBasedTableOptions, block_align),
@@ -163,8 +162,6 @@ static std::unordered_map<std::string, OptionTypeInfo>
         {"pin_top_level_index_and_filter",
          {offsetof(struct BlockBasedTableOptions,
                    pin_top_level_index_and_filter),
-=======
->>>>>>> blood in blood out
           OptionType::kBoolean, OptionVerificationType::kNormal, false, 0}}};
 #endif  // !ROCKSDB_LITE
 }  // namespace rocksdb

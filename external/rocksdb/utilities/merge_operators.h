@@ -19,10 +19,7 @@ class MergeOperators {
   static std::shared_ptr<MergeOperator> CreateDeprecatedPutOperator();
   static std::shared_ptr<MergeOperator> CreateUInt64AddOperator();
   static std::shared_ptr<MergeOperator> CreateStringAppendOperator();
-<<<<<<< HEAD
   static std::shared_ptr<MergeOperator> CreateStringAppendOperator(char delim_char);
-=======
->>>>>>> blood in blood out
   static std::shared_ptr<MergeOperator> CreateStringAppendTESTOperator();
   static std::shared_ptr<MergeOperator> CreateMaxOperator();
   static std::shared_ptr<MergeOperator> CreateBytesXOROperator();

@@ -25,11 +25,7 @@ namespace CryptoNote {
 
 class MemoryBlockchainCacheFactory: public IBlockchainCacheFactory {
 public:
-<<<<<<< HEAD
   MemoryBlockchainCacheFactory(const std::string& filename, std::shared_ptr<Logging::ILogger> logger);
-=======
-  MemoryBlockchainCacheFactory(const std::string& filename, Logging::ILogger& logger);
->>>>>>> blood in blood out
   virtual ~MemoryBlockchainCacheFactory() override;
 
   std::unique_ptr<IBlockchainCache> createRootBlockchainCache(const Currency& currency) override;
@@ -37,11 +33,7 @@ public:
 
 private:
   std::string filename;
-<<<<<<< HEAD
   std::shared_ptr<Logging::ILogger> logger;
-=======
-  Logging::ILogger& logger;
->>>>>>> blood in blood out
 };
 
 } //namespace CryptoNote

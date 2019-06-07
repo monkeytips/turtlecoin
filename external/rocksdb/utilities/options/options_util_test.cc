@@ -34,11 +34,7 @@ class OptionsUtilTest : public testing::Test {
  public:
   OptionsUtilTest() : rnd_(0xFB) {
     env_.reset(new test::StringEnv(Env::Default()));
-<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("options_util_test");
-=======
-    dbname_ = test::TmpDir() + "/options_util_test";
->>>>>>> blood in blood out
   }
 
  protected:
@@ -107,52 +103,30 @@ class DummyTableFactory : public TableFactory {
   virtual const char* Name() const override { return "DummyTableFactory"; }
 
   virtual Status NewTableReader(
-<<<<<<< HEAD
       const TableReaderOptions& /*table_reader_options*/,
       unique_ptr<RandomAccessFileReader>&& /*file*/, uint64_t /*file_size*/,
       unique_ptr<TableReader>* /*table_reader*/,
       bool /*prefetch_index_and_filter_in_cache*/) const override {
-=======
-      const TableReaderOptions& table_reader_options,
-      unique_ptr<RandomAccessFileReader>&& file, uint64_t file_size,
-      unique_ptr<TableReader>* table_reader,
-      bool prefetch_index_and_filter_in_cache) const override {
->>>>>>> blood in blood out
     return Status::NotSupported();
   }
 
   virtual TableBuilder* NewTableBuilder(
-<<<<<<< HEAD
       const TableBuilderOptions& /*table_builder_options*/,
       uint32_t /*column_family_id*/,
       WritableFileWriter* /*file*/) const override {
-=======
-      const TableBuilderOptions& table_builder_options,
-      uint32_t column_family_id, WritableFileWriter* file) const override {
->>>>>>> blood in blood out
     return nullptr;
   }
 
   virtual Status SanitizeOptions(
-<<<<<<< HEAD
       const DBOptions& /*db_opts*/,
       const ColumnFamilyOptions& /*cf_opts*/) const override {
-=======
-      const DBOptions& db_opts,
-      const ColumnFamilyOptions& cf_opts) const override {
->>>>>>> blood in blood out
     return Status::NotSupported();
   }
 
   virtual std::string GetPrintableTableOptions() const override { return ""; }
 
-<<<<<<< HEAD
   Status GetOptionString(std::string* /*opt_string*/,
                          const std::string& /*delimiter*/) const override {
-=======
-  Status GetOptionString(std::string* opt_string,
-                         const std::string& delimiter) const override {
->>>>>>> blood in blood out
     return Status::OK();
   }
 };
@@ -162,7 +136,6 @@ class DummyMergeOperator : public MergeOperator {
   DummyMergeOperator() {}
   virtual ~DummyMergeOperator() {}
 
-<<<<<<< HEAD
   virtual bool FullMergeV2(const MergeOperationInput& /*merge_in*/,
                            MergeOperationOutput* /*merge_out*/) const override {
     return false;
@@ -172,17 +145,6 @@ class DummyMergeOperator : public MergeOperator {
                                  const std::deque<Slice>& /*operand_list*/,
                                  std::string* /*new_value*/,
                                  Logger* /*logger*/) const override {
-=======
-  virtual bool FullMergeV2(const MergeOperationInput& merge_in,
-                           MergeOperationOutput* merge_out) const override {
-    return false;
-  }
-
-  virtual bool PartialMergeMulti(const Slice& key,
-                                 const std::deque<Slice>& operand_list,
-                                 std::string* new_value,
-                                 Logger* logger) const override {
->>>>>>> blood in blood out
     return false;
   }
 
@@ -201,17 +163,10 @@ class DummySliceTransform : public SliceTransform {
   virtual Slice Transform(const Slice& src) const { return src; }
 
   // determine whether this is a valid src upon the function applies
-<<<<<<< HEAD
   virtual bool InDomain(const Slice& /*src*/) const { return false; }
 
   // determine whether dst=Transform(src) for some src
   virtual bool InRange(const Slice& /*dst*/) const { return false; }
-=======
-  virtual bool InDomain(const Slice& src) const { return false; }
-
-  // determine whether dst=Transform(src) for some src
-  virtual bool InRange(const Slice& dst) const { return false; }
->>>>>>> blood in blood out
 };
 
 }  // namespace
@@ -356,11 +311,7 @@ int main(int argc, char** argv) {
 #else
 #include <cstdio>
 
-<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
-=======
-int main(int argc, char** argv) {
->>>>>>> blood in blood out
   printf("Skipped in RocksDBLite as utilities are not supported.\n");
   return 0;
 }

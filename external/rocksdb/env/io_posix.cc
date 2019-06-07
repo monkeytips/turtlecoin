@@ -48,13 +48,10 @@ int Fadvise(int fd, off_t offset, size_t len, int advice) {
 #ifdef OS_LINUX
   return posix_fadvise(fd, offset, len, advice);
 #else
-<<<<<<< HEAD
   (void)fd;
   (void)offset;
   (void)len;
   (void)advice;
-=======
->>>>>>> blood in blood out
   return 0;  // simply do nothing.
 #endif
 }
@@ -187,27 +184,15 @@ Status PosixSequentialFile::Read(size_t n, Slice* result, char* scratch) {
 
 Status PosixSequentialFile::PositionedRead(uint64_t offset, size_t n,
                                            Slice* result, char* scratch) {
-<<<<<<< HEAD
   assert(use_direct_io());
   assert(IsSectorAligned(offset, GetRequiredBufferAlignment()));
   assert(IsSectorAligned(n, GetRequiredBufferAlignment()));
   assert(IsSectorAligned(scratch, GetRequiredBufferAlignment()));
 
-=======
-  if (use_direct_io()) {
-    assert(IsSectorAligned(offset, GetRequiredBufferAlignment()));
-    assert(IsSectorAligned(n, GetRequiredBufferAlignment()));
-    assert(IsSectorAligned(scratch, GetRequiredBufferAlignment()));
-  }
->>>>>>> blood in blood out
   Status s;
   ssize_t r = -1;
   size_t left = n;
   char* ptr = scratch;
-<<<<<<< HEAD
-=======
-  assert(use_direct_io());
->>>>>>> blood in blood out
   while (left > 0) {
     r = pread(fd_, ptr, left, static_cast<off_t>(offset));
     if (r <= 0) {
@@ -245,11 +230,8 @@ Status PosixSequentialFile::Skip(uint64_t n) {
 
 Status PosixSequentialFile::InvalidateCache(size_t offset, size_t length) {
 #ifndef OS_LINUX
-<<<<<<< HEAD
   (void)offset;
   (void)length;
-=======
->>>>>>> blood in blood out
   return Status::OK();
 #else
   if (!use_direct_io()) {
@@ -433,11 +415,8 @@ Status PosixRandomAccessFile::InvalidateCache(size_t offset, size_t length) {
     return Status::OK();
   }
 #ifndef OS_LINUX
-<<<<<<< HEAD
   (void)offset;
   (void)length;
-=======
->>>>>>> blood in blood out
   return Status::OK();
 #else
   // free OS pages
@@ -462,12 +441,9 @@ PosixMmapReadableFile::PosixMmapReadableFile(const int fd,
                                              void* base, size_t length,
                                              const EnvOptions& options)
     : fd_(fd), filename_(fname), mmapped_region_(base), length_(length) {
-<<<<<<< HEAD
 #ifdef NDEBUG
   (void)options;
 #endif
-=======
->>>>>>> blood in blood out
   fd_ = fd_ + 0;  // suppress the warning for used variables
   assert(options.use_mmap_reads);
   assert(!options.use_direct_reads);
@@ -479,18 +455,11 @@ PosixMmapReadableFile::~PosixMmapReadableFile() {
     fprintf(stdout, "failed to munmap %p length %" ROCKSDB_PRIszt " \n",
             mmapped_region_, length_);
   }
-<<<<<<< HEAD
   close(fd_);
 }
 
 Status PosixMmapReadableFile::Read(uint64_t offset, size_t n, Slice* result,
                                    char* /*scratch*/) const {
-=======
-}
-
-Status PosixMmapReadableFile::Read(uint64_t offset, size_t n, Slice* result,
-                                   char* scratch) const {
->>>>>>> blood in blood out
   Status s;
   if (offset > length_) {
     *result = Slice();
@@ -506,11 +475,8 @@ Status PosixMmapReadableFile::Read(uint64_t offset, size_t n, Slice* result,
 
 Status PosixMmapReadableFile::InvalidateCache(size_t offset, size_t length) {
 #ifndef OS_LINUX
-<<<<<<< HEAD
   (void)offset;
   (void)length;
-=======
->>>>>>> blood in blood out
   return Status::OK();
 #else
   // free OS pages
@@ -619,11 +585,8 @@ PosixMmapFile::PosixMmapFile(const std::string& fname, int fd, size_t page_size,
 #ifdef ROCKSDB_FALLOCATE_PRESENT
   allow_fallocate_ = options.allow_fallocate;
   fallocate_with_keep_size_ = options.fallocate_with_keep_size;
-<<<<<<< HEAD
 #else
   (void)options;
-=======
->>>>>>> blood in blood out
 #endif
   assert((page_size & (page_size - 1)) == 0);
   assert(options.use_mmap_writes);
@@ -724,11 +687,8 @@ uint64_t PosixMmapFile::GetFileSize() {
 
 Status PosixMmapFile::InvalidateCache(size_t offset, size_t length) {
 #ifndef OS_LINUX
-<<<<<<< HEAD
   (void)offset;
   (void)length;
-=======
->>>>>>> blood in blood out
   return Status::OK();
 #else
   // free OS pages
@@ -930,17 +890,12 @@ void PosixWritableFile::SetWriteLifeTimeHint(Env::WriteLifeTimeHint hint) {
   if (fcntl(fd_, F_SET_RW_HINT, &hint) == 0) {
     write_hint_ = hint;
   }
-<<<<<<< HEAD
 #else
   (void)hint;
 #endif // ROCKSDB_VALGRIND_RUN
 #else
   (void)hint;
 #endif // OS_LINUX
-=======
-#endif
-#endif
->>>>>>> blood in blood out
 }
 
 Status PosixWritableFile::InvalidateCache(size_t offset, size_t length) {
@@ -948,11 +903,8 @@ Status PosixWritableFile::InvalidateCache(size_t offset, size_t length) {
     return Status::OK();
   }
 #ifndef OS_LINUX
-<<<<<<< HEAD
   (void)offset;
   (void)length;
-=======
->>>>>>> blood in blood out
   return Status::OK();
 #else
   // free OS pages
@@ -1012,11 +964,7 @@ size_t PosixWritableFile::GetUniqueId(char* id, size_t max_size) const {
  */
 
 PosixRandomRWFile::PosixRandomRWFile(const std::string& fname, int fd,
-<<<<<<< HEAD
                                      const EnvOptions& /*options*/)
-=======
-                                     const EnvOptions& options)
->>>>>>> blood in blood out
     : filename_(fname), fd_(fd) {}
 
 PosixRandomRWFile::~PosixRandomRWFile() {
@@ -1104,14 +1052,11 @@ Status PosixRandomRWFile::Close() {
   return Status::OK();
 }
 
-<<<<<<< HEAD
 PosixMemoryMappedFileBuffer::~PosixMemoryMappedFileBuffer() {
   // TODO should have error handling though not much we can do...
   munmap(this->base_, length_);
 }
 
-=======
->>>>>>> blood in blood out
 /*
  * PosixDirectory
  */

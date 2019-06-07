@@ -217,14 +217,9 @@ class WriteBatch : public WriteBatchBase {
     }
     virtual void SingleDelete(const Slice& /*key*/) {}
 
-<<<<<<< HEAD
     virtual Status DeleteRangeCF(uint32_t /*column_family_id*/,
                                  const Slice& /*begin_key*/,
                                  const Slice& /*end_key*/) {
-=======
-    virtual Status DeleteRangeCF(uint32_t column_family_id,
-                                 const Slice& begin_key, const Slice& end_key) {
->>>>>>> blood in blood out
       return Status::InvalidArgument("DeleteRangeCF not implemented");
     }
 
@@ -248,7 +243,6 @@ class WriteBatch : public WriteBatchBase {
     // The default implementation of LogData does nothing.
     virtual void LogData(const Slice& blob);
 
-<<<<<<< HEAD
     virtual Status MarkBeginPrepare(bool = false) {
       return Status::InvalidArgument("MarkBeginPrepare() handler not defined.");
     }
@@ -262,30 +256,11 @@ class WriteBatch : public WriteBatchBase {
     }
 
     virtual Status MarkRollback(const Slice& /*xid*/) {
-=======
-    virtual Status MarkBeginPrepare() {
-      return Status::InvalidArgument("MarkBeginPrepare() handler not defined.");
-    }
-
-    virtual Status MarkEndPrepare(const Slice& xid) {
-      return Status::InvalidArgument("MarkEndPrepare() handler not defined.");
-    }
-
-    virtual Status MarkNoop(bool empty_batch) {
-      return Status::InvalidArgument("MarkNoop() handler not defined.");
-    }
-
-    virtual Status MarkRollback(const Slice& xid) {
->>>>>>> blood in blood out
       return Status::InvalidArgument(
           "MarkRollbackPrepare() handler not defined.");
     }
 
-<<<<<<< HEAD
     virtual Status MarkCommit(const Slice& /*xid*/) {
-=======
-    virtual Status MarkCommit(const Slice& xid) {
->>>>>>> blood in blood out
       return Status::InvalidArgument("MarkCommit() handler not defined.");
     }
 
@@ -297,10 +272,7 @@ class WriteBatch : public WriteBatchBase {
    protected:
     friend class WriteBatch;
     virtual bool WriteAfterCommit() const { return true; }
-<<<<<<< HEAD
     virtual bool WriteBeforePrepare() const { return false; }
-=======
->>>>>>> blood in blood out
   };
   Status Iterate(Handler* handler) const;
 
@@ -363,11 +335,7 @@ class WriteBatch : public WriteBatchBase {
   friend class WriteBatchInternal;
   friend class LocalSavePoint;
   // TODO(myabandeh): this is needed for a hack to collapse the write batch and
-<<<<<<< HEAD
   // remove duplicate keys. Remove it when the hack is replaced with a proper
-=======
-  // remove duplicate keys. Remove it when the hack is replaced with a propper
->>>>>>> blood in blood out
   // solution.
   friend class WriteBatchWithIndex;
   SavePoints* save_points_;

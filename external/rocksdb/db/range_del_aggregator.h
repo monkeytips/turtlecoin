@@ -5,13 +5,9 @@
 
 #pragma once
 
-<<<<<<< HEAD
 #include <list>
 #include <map>
 #include <set>
-=======
-#include <map>
->>>>>>> blood in blood out
 #include <string>
 #include <vector>
 
@@ -28,7 +24,6 @@
 
 namespace rocksdb {
 
-<<<<<<< HEAD
 // RangeDelMaps maintain position across calls to ShouldDelete. The caller may
 // wish to specify a mode to optimize positioning the iterator during the next
 // call to ShouldDelete. The non-kFullScan modes are only available when
@@ -77,8 +72,6 @@ class RangeDelMap {
   virtual std::unique_ptr<RangeDelIterator> NewIterator() = 0;
 };
 
-=======
->>>>>>> blood in blood out
 // A RangeDelAggregator aggregates range deletion tombstones as they are
 // encountered in memtables/SST files. It provides methods that check whether a
 // key is covered by range tombstones or write the relevant tombstones to a new
@@ -109,67 +102,31 @@ class RangeDelAggregator {
                      SequenceNumber upper_bound,
                      bool collapse_deletions = false);
 
-<<<<<<< HEAD
-=======
-  // We maintain position in the tombstone map across calls to ShouldDelete. The
-  // caller may wish to specify a mode to optimize positioning the iterator
-  // during the next call to ShouldDelete. The non-kFullScan modes are only
-  // available when deletion collapsing is enabled.
-  //
-  // For example, if we invoke Next() on an iterator, kForwardTraversal should
-  // be specified to advance one-by-one through deletions until one is found
-  // with its interval containing the key. This will typically be faster than
-  // doing a full binary search (kBinarySearch).
-  enum RangePositioningMode {
-    kFullScan,  // used iff collapse_deletions_ == false
-    kForwardTraversal,
-    kBackwardTraversal,
-    kBinarySearch,
-  };
-
->>>>>>> blood in blood out
   // Returns whether the key should be deleted, which is the case when it is
   // covered by a range tombstone residing in the same snapshot stripe.
   // @param mode If collapse_deletions_ is true, this dictates how we will find
   //             the deletion whose interval contains this key. Otherwise, its
-<<<<<<< HEAD
   //             value must be kFullScan indicating linear scan from beginning.
   bool ShouldDelete(
       const ParsedInternalKey& parsed,
       RangeDelPositioningMode mode = RangeDelPositioningMode::kFullScan) {
-=======
-  //             value must be kFullScan indicating linear scan from beginning..
-  bool ShouldDelete(const ParsedInternalKey& parsed,
-                    RangePositioningMode mode = kFullScan) {
->>>>>>> blood in blood out
     if (rep_ == nullptr) {
       return false;
     }
     return ShouldDeleteImpl(parsed, mode);
   }
-<<<<<<< HEAD
   bool ShouldDelete(
       const Slice& internal_key,
       RangeDelPositioningMode mode = RangeDelPositioningMode::kFullScan) {
-=======
-  bool ShouldDelete(const Slice& internal_key,
-                    RangePositioningMode mode = kFullScan) {
->>>>>>> blood in blood out
     if (rep_ == nullptr) {
       return false;
     }
     return ShouldDeleteImpl(internal_key, mode);
   }
   bool ShouldDeleteImpl(const ParsedInternalKey& parsed,
-<<<<<<< HEAD
                         RangeDelPositioningMode mode);
   bool ShouldDeleteImpl(const Slice& internal_key,
                         RangeDelPositioningMode mode);
-=======
-                        RangePositioningMode mode = kFullScan);
-  bool ShouldDeleteImpl(const Slice& internal_key,
-                        RangePositioningMode mode = kFullScan);
->>>>>>> blood in blood out
 
   // Checks whether range deletions cover any keys between `start` and `end`,
   // inclusive.
@@ -180,7 +137,6 @@ class RangeDelAggregator {
   //     `end` causes this to return true.
   bool IsRangeOverlapped(const Slice& start, const Slice& end);
 
-<<<<<<< HEAD
   // Adds tombstones to the tombstone aggregation structure maintained by this
   // object. Tombstones are truncated to smallest and largest. If smallest (or
   // largest) is null, it is not used for truncation. When adding range
@@ -191,21 +147,12 @@ class RangeDelAggregator {
   Status AddTombstones(std::unique_ptr<InternalIterator> input,
                        const InternalKey* smallest = nullptr,
                        const InternalKey* largest = nullptr);
-=======
-  bool ShouldAddTombstones(bool bottommost_level = false);
-
-  // Adds tombstones to the tombstone aggregation structure maintained by this
-  // object.
-  // @return non-OK status if any of the tombstone keys are corrupted.
-  Status AddTombstones(std::unique_ptr<InternalIterator> input);
->>>>>>> blood in blood out
 
   // Resets iterators maintained across calls to ShouldDelete(). This may be
   // called when the tombstones change, or the owner may call explicitly, e.g.,
   // if it's an iterator that just seeked to an arbitrary position. The effect
   // of invalidation is that the following call to ShouldDelete() will binary
   // search for its tombstone.
-<<<<<<< HEAD
   void InvalidateRangeDelMapPositions();
 
   bool IsEmpty();
@@ -223,79 +170,20 @@ class RangeDelAggregator {
   // Maps snapshot seqnum -> map of tombstones that fall in that stripe, i.e.,
   // their seqnums are greater than the next smaller snapshot's seqnum.
   typedef std::map<SequenceNumber, std::unique_ptr<RangeDelMap>> StripeMap;
-=======
-  void InvalidateTombstoneMapPositions();
-
-  // Writes tombstones covering a range to a table builder.
-  // @param extend_before_min_key If true, the range of tombstones to be added
-  //    to the TableBuilder starts from the beginning of the key-range;
-  //    otherwise, it starts from meta->smallest.
-  // @param lower_bound/upper_bound Any range deletion with [start_key, end_key)
-  //    that overlaps the target range [*lower_bound, *upper_bound) is added to
-  //    the builder. If lower_bound is nullptr, the target range extends
-  //    infinitely to the left. If upper_bound is nullptr, the target range
-  //    extends infinitely to the right. If both are nullptr, the target range
-  //    extends infinitely in both directions, i.e., all range deletions are
-  //    added to the builder.
-  // @param meta The file's metadata. We modify the begin and end keys according
-  //    to the range tombstones added to this file such that the read path does
-  //    not miss range tombstones that cover gaps before/after/between files in
-  //    a level. lower_bound/upper_bound above constrain how far file boundaries
-  //    can be extended.
-  // @param bottommost_level If true, we will filter out any tombstones
-  //    belonging to the oldest snapshot stripe, because all keys potentially
-  //    covered by this tombstone are guaranteed to have been deleted by
-  //    compaction.
-  void AddToBuilder(TableBuilder* builder, const Slice* lower_bound,
-                    const Slice* upper_bound, FileMetaData* meta,
-                    CompactionIterationStats* range_del_out_stats = nullptr,
-                    bool bottommost_level = false);
-  bool IsEmpty();
-
- private:
-  // Maps tombstone user start key -> tombstone object
-  typedef std::multimap<Slice, RangeTombstone, stl_wrappers::LessOfComparator>
-      TombstoneMap;
-  // Also maintains position in TombstoneMap last seen by ShouldDelete(). The
-  // end iterator indicates invalidation (e.g., if AddTombstones() changes the
-  // underlying map). End iterator cannot be invalidated.
-  struct PositionalTombstoneMap {
-    explicit PositionalTombstoneMap(TombstoneMap _raw_map)
-        : raw_map(std::move(_raw_map)), iter(raw_map.end()) {}
-    PositionalTombstoneMap(const PositionalTombstoneMap&) = delete;
-    PositionalTombstoneMap(PositionalTombstoneMap&& other)
-        : raw_map(std::move(other.raw_map)), iter(raw_map.end()) {}
-
-    TombstoneMap raw_map;
-    TombstoneMap::const_iterator iter;
-  };
-
-  // Maps snapshot seqnum -> map of tombstones that fall in that stripe, i.e.,
-  // their seqnums are greater than the next smaller snapshot's seqnum.
-  typedef std::map<SequenceNumber, PositionalTombstoneMap> StripeMap;
->>>>>>> blood in blood out
 
   struct Rep {
     StripeMap stripe_map_;
     PinnedIteratorsManager pinned_iters_mgr_;
-<<<<<<< HEAD
     std::list<std::string> pinned_slices_;
     std::set<uint64_t> added_files_;
-=======
->>>>>>> blood in blood out
   };
   // Initializes rep_ lazily. This aggregator object is constructed for every
   // read, so expensive members should only be created when necessary, i.e.,
   // once the first range deletion is encountered.
   void InitRep(const std::vector<SequenceNumber>& snapshots);
 
-<<<<<<< HEAD
   std::unique_ptr<RangeDelMap> NewRangeDelMap();
   RangeDelMap& GetRangeDelMap(SequenceNumber seq);
-=======
-  PositionalTombstoneMap& GetPositionalTombstoneMap(SequenceNumber seq);
-  Status AddTombstone(RangeTombstone tombstone);
->>>>>>> blood in blood out
 
   SequenceNumber upper_bound_;
   std::unique_ptr<Rep> rep_;

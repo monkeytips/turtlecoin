@@ -21,19 +21,10 @@ StringAppendOperator::StringAppendOperator(char delim_char)
 }
 
 // Implementation for the merge operation (concatenates two strings)
-<<<<<<< HEAD
 bool StringAppendOperator::Merge(const Slice& /*key*/,
                                  const Slice* existing_value,
                                  const Slice& value, std::string* new_value,
                                  Logger* /*logger*/) const {
-=======
-bool StringAppendOperator::Merge(const Slice& key,
-                                 const Slice* existing_value,
-                                 const Slice& value,
-                                 std::string* new_value,
-                                 Logger* logger) const {
-
->>>>>>> blood in blood out
   // Clear the *new_value for writing.
   assert(new_value);
   new_value->clear();
@@ -61,11 +52,8 @@ std::shared_ptr<MergeOperator> MergeOperators::CreateStringAppendOperator() {
   return std::make_shared<StringAppendOperator>(',');
 }
 
-<<<<<<< HEAD
 std::shared_ptr<MergeOperator> MergeOperators::CreateStringAppendOperator(char delim_char) {
   return std::make_shared<StringAppendOperator>(delim_char);
 }
 
-=======
->>>>>>> blood in blood out
 } // namespace rocksdb

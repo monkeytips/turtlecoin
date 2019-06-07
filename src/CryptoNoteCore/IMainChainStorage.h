@@ -27,10 +27,7 @@ public:
 
   virtual void pushBlock(const RawBlock& rawBlock) = 0;
   virtual void popBlock() = 0;
-<<<<<<< HEAD
   virtual void rewindTo(uint32_t index) const = 0;
-=======
->>>>>>> blood in blood out
 
   virtual RawBlock getBlockByIndex(uint32_t index) const = 0;
   virtual uint32_t getBlockCount() const = 0;

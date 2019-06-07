@@ -112,10 +112,7 @@ class PlainTableIndex {
 class PlainTableIndexBuilder {
  public:
   PlainTableIndexBuilder(Arena* arena, const ImmutableCFOptions& ioptions,
-<<<<<<< HEAD
                          const SliceTransform* prefix_extractor,
-=======
->>>>>>> blood in blood out
                          size_t index_sparseness, double hash_table_ratio,
                          size_t huge_page_tlb_size)
       : arena_(arena),
@@ -129,11 +126,7 @@ class PlainTableIndexBuilder {
         index_sparseness_(index_sparseness),
         index_size_(0),
         sub_index_size_(0),
-<<<<<<< HEAD
         prefix_extractor_(prefix_extractor),
-=======
-        prefix_extractor_(ioptions.prefix_extractor),
->>>>>>> blood in blood out
         hash_table_ratio_(hash_table_ratio),
         huge_page_tlb_size_(huge_page_tlb_size) {}
 

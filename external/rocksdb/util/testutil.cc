@@ -19,7 +19,6 @@
 namespace rocksdb {
 namespace test {
 
-<<<<<<< HEAD
 const uint32_t kDefaultFormatVersion = BlockBasedTableOptions().format_version;
 const uint32_t kLatestFormatVersion = 3u;
 
@@ -27,12 +26,6 @@ Slice RandomString(Random* rnd, int len, std::string* dst) {
   dst->resize(len);
   for (int i = 0; i < len; i++) {
     (*dst)[i] = static_cast<char>(' ' + rnd->Uniform(95));  // ' ' .. '~'
-=======
-Slice RandomString(Random* rnd, int len, std::string* dst) {
-  dst->resize(len);
-  for (int i = 0; i < len; i++) {
-    (*dst)[i] = static_cast<char>(' ' + rnd->Uniform(95));   // ' ' .. '~'
->>>>>>> blood in blood out
   }
   return Slice(*dst);
 }
@@ -49,14 +42,8 @@ extern std::string RandomHumanReadableString(Random* rnd, int len) {
 std::string RandomKey(Random* rnd, int len, RandomKeyType type) {
   // Make sure to generate a wide variety of characters so we
   // test the boundary conditions for short-key optimizations.
-<<<<<<< HEAD
   static const char kTestChars[] = {'\0', '\1', 'a',    'b',    'c',
                                     'd',  'e',  '\xfd', '\xfe', '\xff'};
-=======
-  static const char kTestChars[] = {
-    '\0', '\1', 'a', 'b', 'c', 'd', 'e', '\xfd', '\xfe', '\xff'
-  };
->>>>>>> blood in blood out
   std::string result;
   for (int i = 0; i < len; i++) {
     std::size_t indx = 0;
@@ -79,10 +66,6 @@ std::string RandomKey(Random* rnd, int len, RandomKeyType type) {
   return result;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> blood in blood out
 extern Slice CompressibleString(Random* rnd, double compressed_fraction,
                                 int len, std::string* dst) {
   int raw = static_cast<int>(len * compressed_fraction);
@@ -102,11 +85,7 @@ extern Slice CompressibleString(Random* rnd, double compressed_fraction,
 namespace {
 class Uint64ComparatorImpl : public Comparator {
  public:
-<<<<<<< HEAD
   Uint64ComparatorImpl() {}
-=======
-  Uint64ComparatorImpl() { }
->>>>>>> blood in blood out
 
   virtual const char* Name() const override {
     return "rocksdb.Uint64Comparator";
@@ -129,42 +108,20 @@ class Uint64ComparatorImpl : public Comparator {
     }
   }
 
-<<<<<<< HEAD
   virtual void FindShortestSeparator(std::string* /*start*/,
                                      const Slice& /*limit*/) const override {
     return;
   }
 
   virtual void FindShortSuccessor(std::string* /*key*/) const override {
-=======
-  virtual void FindShortestSeparator(std::string* start,
-      const Slice& limit) const override {
-    return;
-  }
-
-  virtual void FindShortSuccessor(std::string* key) const override {
->>>>>>> blood in blood out
     return;
   }
 };
 }  // namespace
 
-<<<<<<< HEAD
 const Comparator* Uint64Comparator() {
   static Uint64ComparatorImpl uint64comp;
   return &uint64comp;
-=======
-static port::OnceType once;
-static const Comparator* uint64comp;
-
-static void InitModule() {
-  uint64comp = new Uint64ComparatorImpl;
-}
-
-const Comparator* Uint64Comparator() {
-  port::InitOnce(&once, InitModule);
-  return uint64comp;
->>>>>>> blood in blood out
 }
 
 WritableFileWriter* GetWritableFileWriter(WritableFile* wf) {
@@ -178,16 +135,10 @@ RandomAccessFileReader* GetRandomAccessFileReader(RandomAccessFile* raf) {
                                     "[test RandomAccessFileReader]");
 }
 
-<<<<<<< HEAD
 SequentialFileReader* GetSequentialFileReader(SequentialFile* se,
                                               const std::string& fname) {
   unique_ptr<SequentialFile> file(se);
   return new SequentialFileReader(std::move(file), fname);
-=======
-SequentialFileReader* GetSequentialFileReader(SequentialFile* se) {
-  unique_ptr<SequentialFile> file(se);
-  return new SequentialFileReader(std::move(file));
->>>>>>> blood in blood out
 }
 
 void CorruptKeyType(InternalKey* ikey) {
@@ -244,10 +195,7 @@ BlockBasedTableOptions RandomBlockBasedTableOptions(Random* rnd) {
   BlockBasedTableOptions opt;
   opt.cache_index_and_filter_blocks = rnd->Uniform(2);
   opt.pin_l0_filter_and_index_blocks_in_cache = rnd->Uniform(2);
-<<<<<<< HEAD
   opt.pin_top_level_index_and_filter = rnd->Uniform(2);
-=======
->>>>>>> blood in blood out
   opt.index_type = rnd->Uniform(2) ? BlockBasedTableOptions::kBinarySearch
                                    : BlockBasedTableOptions::kHashSearch;
   opt.hash_index_allow_collision = rnd->Uniform(2);
@@ -273,11 +221,8 @@ TableFactory* RandomTableFactory(Random* rnd, int pre_defined) {
       return NewBlockBasedTableFactory();
   }
 #else
-<<<<<<< HEAD
   (void)rnd;
   (void)pre_defined;
-=======
->>>>>>> blood in blood out
   return NewBlockBasedTableFactory();
 #endif  // !ROCKSDB_LITE
 }
@@ -402,10 +347,7 @@ void RandomInitCFOptions(ColumnFamilyOptions* cf_opt, Random* rnd) {
 
   // uint64_t options
   static const uint64_t uint_max = static_cast<uint64_t>(UINT_MAX);
-<<<<<<< HEAD
   cf_opt->ttl = uint_max + rnd->Uniform(10000);
-=======
->>>>>>> blood in blood out
   cf_opt->max_sequential_skip_in_iterations = uint_max + rnd->Uniform(10000);
   cf_opt->target_file_size_base = uint_max + rnd->Uniform(10000);
   cf_opt->max_compaction_bytes =

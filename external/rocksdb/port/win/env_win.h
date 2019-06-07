@@ -89,11 +89,8 @@ public:
 
   virtual Status DeleteFile(const std::string& fname);
 
-<<<<<<< HEAD
   Status Truncate(const std::string& fname, size_t size);
 
-=======
->>>>>>> blood in blood out
   virtual Status GetCurrentTime(int64_t* unix_time);
 
   virtual Status NewSequentialFile(const std::string& fname,
@@ -115,13 +112,10 @@ public:
     unique_ptr<RandomRWFile>* result,
     const EnvOptions& options);
 
-<<<<<<< HEAD
   virtual Status NewMemoryMappedFileBuffer(
     const std::string& fname,
     std::unique_ptr<MemoryMappedFileBuffer>* result);
 
-=======
->>>>>>> blood in blood out
   virtual Status NewDirectory(const std::string& name,
     std::unique_ptr<Directory>* result);
 
@@ -150,12 +144,9 @@ public:
   virtual Status LinkFile(const std::string& src,
     const std::string& target);
 
-<<<<<<< HEAD
   virtual Status AreFilesSame(const std::string& first,
     const std::string& second, bool* res);
 
-=======
->>>>>>> blood in blood out
   virtual Status LockFile(const std::string& lockFname,
     FileLock** lock);
 
@@ -183,23 +174,17 @@ public:
   virtual EnvOptions OptimizeForManifestWrite(
     const EnvOptions& env_options) const;
 
-<<<<<<< HEAD
   virtual EnvOptions OptimizeForManifestRead(
     const EnvOptions& env_options) const;
 
-=======
->>>>>>> blood in blood out
   size_t GetPageSize() const { return page_size_; }
 
   size_t GetAllocationGranularity() const { return allocation_granularity_; }
 
   uint64_t GetPerfCounterFrequency() const { return perf_counter_frequency_; }
 
-<<<<<<< HEAD
   static size_t GetSectorSize(const std::string& fname);
 
-=======
->>>>>>> blood in blood out
 private:
   // Returns true iff the named directory exists and is a directory.
   virtual bool DirExists(const std::string& dname);
@@ -221,11 +206,8 @@ public:
 
   Status DeleteFile(const std::string& fname) override;
 
-<<<<<<< HEAD
   Status Truncate(const std::string& fname, size_t size) override;
 
-=======
->>>>>>> blood in blood out
   Status GetCurrentTime(int64_t* unix_time) override;
 
   Status NewSequentialFile(const std::string& fname,
@@ -253,7 +235,6 @@ public:
 
   // The returned file will only be accessed by one thread at a time.
   Status NewRandomRWFile(const std::string& fname,
-<<<<<<< HEAD
     std::unique_ptr<RandomRWFile>* result,
     const EnvOptions& options) override;
 
@@ -261,11 +242,6 @@ public:
     const std::string& fname,
     std::unique_ptr<MemoryMappedFileBuffer>* result) override;
 
-=======
-    unique_ptr<RandomRWFile>* result,
-    const EnvOptions& options) override;
-
->>>>>>> blood in blood out
   Status NewDirectory(const std::string& name,
     std::unique_ptr<Directory>* result) override;
 
@@ -292,12 +268,9 @@ public:
   Status LinkFile(const std::string& src,
     const std::string& target) override;
 
-<<<<<<< HEAD
   Status AreFilesSame(const std::string& first,
     const std::string& second, bool* res) override;
 
-=======
->>>>>>> blood in blood out
   Status LockFile(const std::string& lockFname,
     FileLock** lock) override;
 
@@ -344,22 +317,16 @@ public:
 
   void IncBackgroundThreadsIfNeeded(int num, Env::Priority pri) override;
 
-<<<<<<< HEAD
   EnvOptions OptimizeForManifestRead(
     const EnvOptions& env_options) const override;
 
-=======
->>>>>>> blood in blood out
   EnvOptions OptimizeForLogWrite(const EnvOptions& env_options,
     const DBOptions& db_options) const override;
 
   EnvOptions OptimizeForManifestWrite(
     const EnvOptions& env_options) const override;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> blood in blood out
 private:
 
   WinEnvIO      winenv_io_;

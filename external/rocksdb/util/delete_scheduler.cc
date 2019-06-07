@@ -22,20 +22,13 @@ namespace rocksdb {
 DeleteScheduler::DeleteScheduler(Env* env, int64_t rate_bytes_per_sec,
                                  Logger* info_log,
                                  SstFileManagerImpl* sst_file_manager,
-<<<<<<< HEAD
                                  double max_trash_db_ratio,
                                  uint64_t bytes_max_delete_chunk)
-=======
-                                 double max_trash_db_ratio)
->>>>>>> blood in blood out
     : env_(env),
       total_trash_size_(0),
       rate_bytes_per_sec_(rate_bytes_per_sec),
       pending_files_(0),
-<<<<<<< HEAD
       bytes_max_delete_chunk_(bytes_max_delete_chunk),
-=======
->>>>>>> blood in blood out
       closing_(false),
       cv_(&mu_),
       info_log_(info_log),
@@ -58,12 +51,8 @@ DeleteScheduler::~DeleteScheduler() {
   }
 }
 
-<<<<<<< HEAD
 Status DeleteScheduler::DeleteFile(const std::string& file_path,
                                    const std::string& dir_to_sync) {
-=======
-Status DeleteScheduler::DeleteFile(const std::string& file_path) {
->>>>>>> blood in blood out
   Status s;
   if (rate_bytes_per_sec_.load() <= 0 ||
       total_trash_size_.load() >
@@ -99,11 +88,7 @@ Status DeleteScheduler::DeleteFile(const std::string& file_path) {
   // Add file to delete queue
   {
     InstrumentedMutexLock l(&mu_);
-<<<<<<< HEAD
     queue_.emplace(trash_file, dir_to_sync);
-=======
-    queue_.push(trash_file);
->>>>>>> blood in blood out
     pending_files_++;
     if (pending_files_ == 1) {
       cv_.SignalAll();
@@ -144,11 +129,7 @@ Status DeleteScheduler::CleanupDirectory(Env* env, SstFileManagerImpl* sfm,
     if (sfm) {
       // We have an SstFileManager that will schedule the file delete
       sfm->OnAddFile(trash_file);
-<<<<<<< HEAD
       file_delete = sfm->ScheduleFileDeletion(trash_file, path);
-=======
-      file_delete = sfm->ScheduleFileDeletion(trash_file);
->>>>>>> blood in blood out
     } else {
       // Delete the file immediately
       file_delete = env->DeleteFile(trash_file);
@@ -229,18 +210,12 @@ void DeleteScheduler::BackgroundEmptyTrash() {
       }
 
       // Get new file to delete
-<<<<<<< HEAD
       const FileAndDir& fad = queue_.front();
       std::string path_in_trash = fad.fname;
-=======
-      std::string path_in_trash = queue_.front();
-      queue_.pop();
->>>>>>> blood in blood out
 
       // We dont need to hold the lock while deleting the file
       mu_.Unlock();
       uint64_t deleted_bytes = 0;
-<<<<<<< HEAD
       bool is_complete = true;
       // Delete file from trash and update total_penlty value
       Status s =
@@ -250,12 +225,6 @@ void DeleteScheduler::BackgroundEmptyTrash() {
       if (is_complete) {
         queue_.pop();
       }
-=======
-      // Delete file from trash and update total_penlty value
-      Status s = DeleteTrashFile(path_in_trash,  &deleted_bytes);
-      total_deleted_bytes += deleted_bytes;
-      mu_.Lock();
->>>>>>> blood in blood out
 
       if (!s.ok()) {
         bg_errors_[path_in_trash] = s;
@@ -275,13 +244,9 @@ void DeleteScheduler::BackgroundEmptyTrash() {
       TEST_SYNC_POINT_CALLBACK("DeleteScheduler::BackgroundEmptyTrash:Wait",
                                &total_penlty);
 
-<<<<<<< HEAD
       if (is_complete) {
         pending_files_--;
       }
-=======
-      pending_files_--;
->>>>>>> blood in blood out
       if (pending_files_ == 0) {
         // Unblock WaitForEmptyTrash since there are no more files waiting
         // to be deleted
@@ -292,7 +257,6 @@ void DeleteScheduler::BackgroundEmptyTrash() {
 }
 
 Status DeleteScheduler::DeleteTrashFile(const std::string& path_in_trash,
-<<<<<<< HEAD
                                         const std::string& dir_to_sync,
                                         uint64_t* deleted_bytes,
                                         bool* is_complete) {
@@ -364,29 +328,13 @@ Status DeleteScheduler::DeleteTrashFile(const std::string& path_in_trash,
       sst_file_manager_->OnDeleteFile(path_in_trash);
     }
   }
-=======
-                                        uint64_t* deleted_bytes) {
-  uint64_t file_size;
-  Status s = env_->GetFileSize(path_in_trash, &file_size);
-  if (s.ok()) {
-    TEST_SYNC_POINT("DeleteScheduler::DeleteTrashFile:DeleteFile");
-    s = env_->DeleteFile(path_in_trash);
-  }
-
->>>>>>> blood in blood out
   if (!s.ok()) {
     // Error while getting file size or while deleting
     ROCKS_LOG_ERROR(info_log_, "Failed to delete %s from trash -- %s",
                     path_in_trash.c_str(), s.ToString().c_str());
     *deleted_bytes = 0;
   } else {
-<<<<<<< HEAD
     total_trash_size_.fetch_sub(*deleted_bytes);
-=======
-    *deleted_bytes = file_size;
-    total_trash_size_.fetch_sub(file_size);
-    sst_file_manager_->OnDeleteFile(path_in_trash);
->>>>>>> blood in blood out
   }
 
   return s;

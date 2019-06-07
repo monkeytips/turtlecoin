@@ -36,11 +36,8 @@ struct IngestedFileInfo {
   uint64_t file_size;
   // total number of keys in external file
   uint64_t num_entries;
-<<<<<<< HEAD
   // total number of range deletions in external file
   uint64_t num_range_deletions;
-=======
->>>>>>> blood in blood out
   // Id of column family this file shoule be ingested into
   uint32_t cf_id;
   // TableProperties read from external file
@@ -51,16 +48,11 @@ struct IngestedFileInfo {
   // FileDescriptor for the file inside the DB
   FileDescriptor fd;
   // file path that we picked for file inside the DB
-<<<<<<< HEAD
   std::string internal_file_path;
-=======
-  std::string internal_file_path = "";
->>>>>>> blood in blood out
   // Global sequence number that we picked for the file inside the DB
   SequenceNumber assigned_seqno = 0;
   // Level inside the DB we picked for the external file.
   int picked_level = 0;
-<<<<<<< HEAD
   // Whether to copy or link the external sst file. copy_file will be set to
   // false if ingestion_options.move_files is true and underlying FS
   // supports link operation. Need to provide a default value to make the
@@ -68,8 +60,6 @@ struct IngestedFileInfo {
   // ingestion_options.move_files is false by default, thus copy_file is true
   // by default.
   bool copy_file = true;
-=======
->>>>>>> blood in blood out
 
   InternalKey smallest_internal_key() const {
     return InternalKey(smallest_user_key, assigned_seqno,
@@ -98,12 +88,8 @@ class ExternalSstFileIngestionJob {
         job_start_time_(env_->NowMicros()) {}
 
   // Prepare the job by copying external files into the DB.
-<<<<<<< HEAD
   Status Prepare(const std::vector<std::string>& external_files_paths,
                  SuperVersion* sv);
-=======
-  Status Prepare(const std::vector<std::string>& external_files_paths);
->>>>>>> blood in blood out
 
   // Check if we need to flush the memtable before running the ingestion job
   // This will be true if the files we are ingesting are overlapping with any
@@ -136,12 +122,8 @@ class ExternalSstFileIngestionJob {
   // Open the external file and populate `file_to_ingest` with all the
   // external information we need to ingest this file.
   Status GetIngestedFileInfo(const std::string& external_file,
-<<<<<<< HEAD
                              IngestedFileInfo* file_to_ingest,
                              SuperVersion* sv);
-=======
-                             IngestedFileInfo* file_to_ingest);
->>>>>>> blood in blood out
 
   // Assign `file_to_ingest` the appropriate sequence number and  the lowest
   // possible level that it can be ingested to according to compaction_style.
@@ -162,20 +144,6 @@ class ExternalSstFileIngestionJob {
   Status AssignGlobalSeqnoForIngestedFile(IngestedFileInfo* file_to_ingest,
                                           SequenceNumber seqno);
 
-<<<<<<< HEAD
-=======
-  // Check if `file_to_ingest` key range overlap with the range `iter` represent
-  // REQUIRES: Mutex held
-  Status IngestedFileOverlapWithIteratorRange(
-      const IngestedFileInfo* file_to_ingest, InternalIterator* iter,
-      bool* overlap);
-
-  // Check if `file_to_ingest` key range overlap with level
-  // REQUIRES: Mutex held
-  Status IngestedFileOverlapWithLevel(SuperVersion* sv,
-    IngestedFileInfo* file_to_ingest, int lvl, bool* overlap_with_level);
-
->>>>>>> blood in blood out
   // Check if `file_to_ingest` can fit in level `level`
   // REQUIRES: Mutex held
   bool IngestedFileFitInLevel(const IngestedFileInfo* file_to_ingest,

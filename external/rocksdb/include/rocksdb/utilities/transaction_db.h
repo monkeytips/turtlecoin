@@ -75,11 +75,7 @@ struct TransactionDBOptions {
   // expiration set.
   int64_t default_lock_timeout = 1000;  // 1 second
 
-<<<<<<< HEAD
   // If set, the TransactionDB will use this implementation of a mutex and
-=======
-  // If set, the TransactionDB will use this implemenation of a mutex and
->>>>>>> blood in blood out
   // condition variable for all transaction locking instead of the default
   // mutex/condvar implementation.
   std::shared_ptr<TransactionDBMutexFactory> custom_mutex_factory;
@@ -89,7 +85,6 @@ struct TransactionDBOptions {
   // before the commit phase. The DB then needs to provide the mechanisms to
   // tell apart committed from uncommitted data.
   TxnDBWritePolicy write_policy = TxnDBWritePolicy::WRITE_COMMITTED;
-<<<<<<< HEAD
 
   // TODO(myabandeh): remove this option
   // Note: this is a temporary option as a hot fix in rollback of writeprepared
@@ -98,8 +93,6 @@ struct TransactionDBOptions {
   // logic in myrocks. This hack of simply not rolling back merge operands works
   // for the special way that myrocks uses this operands.
   bool rollback_merge_operands = false;
-=======
->>>>>>> blood in blood out
 };
 
 struct TransactionOptions {
@@ -113,16 +106,10 @@ struct TransactionOptions {
   bool deadlock_detect = false;
 
   // If set, it states that the CommitTimeWriteBatch represents the latest state
-<<<<<<< HEAD
   // of the application, has only one sub-batch, i.e., no duplicate keys,  and
   // meant to be used later during recovery. It enables an optimization to
   // postpone updating the memtable with CommitTimeWriteBatch to only
   // SwitchMemtable or recovery.
-=======
-  // of the application and meant to be used later during recovery. It enables
-  // an optimization to postpone updating the memtable with CommitTimeWriteBatch
-  // to only SwithcMamtable or recovery.
->>>>>>> blood in blood out
   bool use_only_the_last_commit_time_batch_for_recovery = false;
 
   // TODO(agiardullo): TransactionDB does not yet support comparators that allow
@@ -153,25 +140,15 @@ struct TransactionOptions {
 };
 
 // The per-write optimizations that do not involve transactions. TransactionDB
-<<<<<<< HEAD
 // implementation might or might not make use of the specified optimizations.
 struct TransactionDBWriteOptimizations {
   // If it is true it means that the application guarantees that the
-=======
-// implemenation might or might not make use of the specified optimizations.
-struct TransactionDBWriteOptimizations {
-  // If it is true it means that the applicatinn guratnees that the
->>>>>>> blood in blood out
   // key-set in the write batch do not conflict with any concurrent transaction
   // and hence the concurrency control mechanism could be skipped for this
   // write.
   bool skip_concurrency_control = false;
   // If true, the application guarantees that there is no duplicate <column
-<<<<<<< HEAD
   // family, key> in the write batch and any employed mechanism to handle
-=======
-  // family, key> in the write batch and any employed mechanism to hanlde
->>>>>>> blood in blood out
   // duplicate keys could be skipped.
   bool skip_duplicate_key_check = false;
 };
@@ -192,7 +169,6 @@ struct DeadlockInfo {
 struct DeadlockPath {
   std::vector<DeadlockInfo> path;
   bool limit_exceeded;
-<<<<<<< HEAD
   int64_t deadlock_time;
 
   explicit DeadlockPath(std::vector<DeadlockInfo> path_entry,
@@ -202,14 +178,6 @@ struct DeadlockPath {
   // empty path, limit exceeded constructor and default constructor
   explicit DeadlockPath(const int64_t& dl_time = 0, bool limit = false)
       : path(0), limit_exceeded(limit), deadlock_time(dl_time) {}
-=======
-
-  explicit DeadlockPath(std::vector<DeadlockInfo> path_entry)
-      : path(path_entry), limit_exceeded(false) {}
-
-  // empty path, limit exceeded constructor and default constructor
-  explicit DeadlockPath(bool limit = false) : path(0), limit_exceeded(limit) {}
->>>>>>> blood in blood out
 
   bool empty() { return path.empty() && !limit_exceeded; }
 };
@@ -228,10 +196,7 @@ class TransactionDB : public StackableDB {
   }
   // Open a TransactionDB similar to DB::Open().
   // Internally call PrepareWrap() and WrapDB()
-<<<<<<< HEAD
   // If the return status is not ok, then dbptr is set to nullptr.
-=======
->>>>>>> blood in blood out
   static Status Open(const Options& options,
                      const TransactionDBOptions& txn_db_options,
                      const std::string& dbname, TransactionDB** dbptr);
@@ -242,7 +207,6 @@ class TransactionDB : public StackableDB {
                      const std::vector<ColumnFamilyDescriptor>& column_families,
                      std::vector<ColumnFamilyHandle*>* handles,
                      TransactionDB** dbptr);
-<<<<<<< HEAD
   // Note: PrepareWrap() may change parameters, make copies before the
   // invocation if needed.
   static void PrepareWrap(DBOptions* db_options,
@@ -252,41 +216,20 @@ class TransactionDB : public StackableDB {
   // input db parameter might or might not be deleted as a result of the
   // failure. If it is properly deleted it will be set to nullptr. If the return
   // status is ok, the ownership of db is transferred to dbptr.
-=======
-  // The following functions are used to open a TransactionDB internally using
-  // an opened DB or StackableDB.
-  // 1. Call prepareWrap(), passing an empty std::vector<size_t> to
-  // compaction_enabled_cf_indices.
-  // 2. Open DB or Stackable DB with db_options and column_families passed to
-  // prepareWrap()
-  // Note: PrepareWrap() may change parameters, make copies before the
-  // invocation if needed.
-  // 3. Call Wrap*DB() with compaction_enabled_cf_indices in step 1 and handles
-  // of the opened DB/StackableDB in step 2
-  static void PrepareWrap(DBOptions* db_options,
-                          std::vector<ColumnFamilyDescriptor>* column_families,
-                          std::vector<size_t>* compaction_enabled_cf_indices);
->>>>>>> blood in blood out
   static Status WrapDB(DB* db, const TransactionDBOptions& txn_db_options,
                        const std::vector<size_t>& compaction_enabled_cf_indices,
                        const std::vector<ColumnFamilyHandle*>& handles,
                        TransactionDB** dbptr);
-<<<<<<< HEAD
   // If the return status is not ok, then dbptr will bet set to nullptr. The
   // input db parameter might or might not be deleted as a result of the
   // failure. If it is properly deleted it will be set to nullptr. If the return
   // status is ok, the ownership of db is transferred to dbptr.
-=======
->>>>>>> blood in blood out
   static Status WrapStackableDB(
       StackableDB* db, const TransactionDBOptions& txn_db_options,
       const std::vector<size_t>& compaction_enabled_cf_indices,
       const std::vector<ColumnFamilyHandle*>& handles, TransactionDB** dbptr);
-<<<<<<< HEAD
   // Since the destructor in StackableDB is virtual, this destructor is virtual
   // too. The root db will be deleted by the base's destructor.
-=======
->>>>>>> blood in blood out
   ~TransactionDB() override {}
 
   // Starts a new Transaction.
@@ -315,10 +258,7 @@ class TransactionDB : public StackableDB {
 
  protected:
   // To Create an TransactionDB, call Open()
-<<<<<<< HEAD
   // The ownership of db is transferred to the base StackableDB
-=======
->>>>>>> blood in blood out
   explicit TransactionDB(DB* db) : StackableDB(db) {}
 
  private:

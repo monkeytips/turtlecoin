@@ -289,11 +289,8 @@ int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 #else
-<<<<<<< HEAD
   (void) argc;
   (void) argv;
-=======
->>>>>>> blood in blood out
   return 0;
 #endif
 }

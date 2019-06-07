@@ -15,13 +15,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
-<<<<<<< HEAD
 #include "IWallet.h"
 #include "TransfersSubscription.h"
-=======
-#include "TransfersSubscription.h"
-#include "IWalletLegacy.h"
->>>>>>> blood in blood out
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 
 using namespace Crypto;
@@ -29,11 +24,7 @@ using namespace Logging;
 
 namespace CryptoNote {
 
-<<<<<<< HEAD
 TransfersSubscription::TransfersSubscription(const CryptoNote::Currency& currency, std::shared_ptr<Logging::ILogger> logger, const AccountSubscription& sub)
-=======
-TransfersSubscription::TransfersSubscription(const CryptoNote::Currency& currency, Logging::ILogger& logger, const AccountSubscription& sub)
->>>>>>> blood in blood out
   : subscription(sub), logger(logger, "TransfersSubscription"), transfers(currency, logger, sub.transactionSpendableAge),
     m_address(currency.accountAddressAsString(sub.keys.address)) {
 }
@@ -52,11 +43,7 @@ void TransfersSubscription::onBlockchainDetach(uint32_t height) {
 }
 
 void TransfersSubscription::onError(const std::error_code& ec, uint32_t height) {
-<<<<<<< HEAD
   if (height != WALLET_UNCONFIRMED_TRANSACTION_HEIGHT) {
-=======
-  if (height != WALLET_LEGACY_UNCONFIRMED_TRANSACTION_HEIGHT) {
->>>>>>> blood in blood out
   transfers.detach(height);
   }
   m_observerManager.notify(&ITransfersObserver::onError, this, height, ec);

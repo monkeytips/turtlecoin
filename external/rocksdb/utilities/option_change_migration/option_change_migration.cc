@@ -157,14 +157,9 @@ Status OptionChangeMigration(std::string dbname, const Options& old_opts,
 }  // namespace rocksdb
 #else
 namespace rocksdb {
-<<<<<<< HEAD
 Status OptionChangeMigration(std::string /*dbname*/,
                              const Options& /*old_opts*/,
                              const Options& /*new_opts*/) {
-=======
-Status OptionChangeMigration(std::string dbname, const Options& old_opts,
-                             const Options& new_opts) {
->>>>>>> blood in blood out
   return Status::NotSupported();
 }
 }  // namespace rocksdb

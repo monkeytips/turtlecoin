@@ -108,7 +108,6 @@ void InitOnce(OnceType* once, void (*initializer)()) {
 
 // Private structure, exposed only by pointer
 struct DIR {
-<<<<<<< HEAD
   HANDLE      handle_;
   bool        firstread_;
   WIN32_FIND_DATA data_;
@@ -116,26 +115,13 @@ struct DIR {
 
   DIR() : handle_(INVALID_HANDLE_VALUE),
     firstread_(true) {}
-=======
-  intptr_t handle_;
-  bool firstread_;
-  struct __finddata64_t data_;
-  dirent entry_;
-
-  DIR() : handle_(-1), firstread_(true) {}
->>>>>>> blood in blood out
 
   DIR(const DIR&) = delete;
   DIR& operator=(const DIR&) = delete;
 
   ~DIR() {
-<<<<<<< HEAD
     if (INVALID_HANDLE_VALUE != handle_) {
       ::FindClose(handle_);
-=======
-    if (-1 != handle_) {
-      _findclose(handle_);
->>>>>>> blood in blood out
     }
   }
 };
@@ -151,7 +137,6 @@ DIR* opendir(const char* name) {
 
   std::unique_ptr<DIR> dir(new DIR);
 
-<<<<<<< HEAD
   dir->handle_ = ::FindFirstFileExA(pattern.c_str(), 
     FindExInfoBasic, // Do not want alternative name
     &dir->data_,
@@ -165,25 +150,12 @@ DIR* opendir(const char* name) {
 
   strcpy_s(dir->entry_.d_name, sizeof(dir->entry_.d_name), 
     dir->data_.cFileName);
-=======
-  dir->handle_ = _findfirst64(pattern.c_str(), &dir->data_);
-
-  if (dir->handle_ == -1) {
-    return nullptr;
-  }
-
-  strcpy_s(dir->entry_.d_name, sizeof(dir->entry_.d_name), dir->data_.name);
->>>>>>> blood in blood out
 
   return dir.release();
 }
 
 struct dirent* readdir(DIR* dirp) {
-<<<<<<< HEAD
   if (!dirp || dirp->handle_ == INVALID_HANDLE_VALUE) {
-=======
-  if (!dirp || dirp->handle_ == -1) {
->>>>>>> blood in blood out
     errno = EBADF;
     return nullptr;
   }
@@ -193,7 +165,6 @@ struct dirent* readdir(DIR* dirp) {
     return &dirp->entry_;
   }
 
-<<<<<<< HEAD
   auto ret = ::FindNextFileA(dirp->handle_, &dirp->data_);
 
   if (ret == 0) {
@@ -202,15 +173,6 @@ struct dirent* readdir(DIR* dirp) {
 
   strcpy_s(dirp->entry_.d_name, sizeof(dirp->entry_.d_name), 
     dirp->data_.cFileName);
-=======
-  auto ret = _findnext64(dirp->handle_, &dirp->data_);
-
-  if (ret != 0) {
-    return nullptr;
-  }
-
-  strcpy_s(dirp->entry_.d_name, sizeof(dirp->entry_.d_name), dirp->data_.name);
->>>>>>> blood in blood out
 
   return &dirp->entry_;
 }

@@ -11,7 +11,6 @@ package org.rocksdb;
  */
 public class StringAppendOperator extends MergeOperator {
     public StringAppendOperator() {
-<<<<<<< HEAD
         this(',');
     }
 
@@ -20,11 +19,5 @@ public class StringAppendOperator extends MergeOperator {
     }
 
     private native static long newSharedStringAppendOperator(final char delim);
-=======
-        super(newSharedStringAppendOperator());
-    }
-
-    private native static long newSharedStringAppendOperator();
->>>>>>> blood in blood out
     @Override protected final native void disposeInternal(final long handle);
 }

@@ -74,11 +74,7 @@ Status DBImpl::EnableFileDeletions(bool force) {
 }
 
 int DBImpl::IsFileDeletionsEnabled() const {
-<<<<<<< HEAD
   return !disable_delete_obsolete_files_;
-=======
-  return disable_delete_obsolete_files_;
->>>>>>> blood in blood out
 }
 
 Status DBImpl::GetLiveFiles(std::vector<std::string>& ret,

@@ -32,11 +32,7 @@ namespace {
   const std::string TESTNET_DB_NAME = "testnet_DB";
 }
 
-<<<<<<< HEAD
 RocksDBWrapper::RocksDBWrapper(std::shared_ptr<Logging::ILogger> logger) : logger(logger, "RocksDBWrapper"), state(NOT_INITIALIZED){
-=======
-RocksDBWrapper::RocksDBWrapper(Logging::ILogger& logger) : logger(logger, "RocksDBWrapper"), state(NOT_INITIALIZED){
->>>>>>> blood in blood out
 
 }
 
@@ -119,17 +115,6 @@ std::error_code RocksDBWrapper::write(IWriteBatch& batch) {
   return write(batch, false);
 }
 
-<<<<<<< HEAD
-=======
-std::error_code RocksDBWrapper::writeSync(IWriteBatch& batch) {
-  if (state.load() != INITIALIZED) {
-    throw std::system_error(make_error_code(CryptoNote::error::DataBaseErrorCodes::NOT_INITIALIZED));
-  }
-
-  return write(batch, true);
-}
-
->>>>>>> blood in blood out
 std::error_code RocksDBWrapper::write(IWriteBatch& batch, bool sync) {
   rocksdb::WriteOptions writeOptions;
   writeOptions.sync = sync;
@@ -191,11 +176,7 @@ rocksdb::Options RocksDBWrapper::getDBOptions(const DataBaseConfig& config) {
   dbOptions.IncreaseParallelism(config.getBackgroundThreadsCount());
   dbOptions.info_log_level = rocksdb::InfoLogLevel::WARN_LEVEL;
   dbOptions.max_open_files = config.getMaxOpenFiles();
-<<<<<<< HEAD
   
-=======
-
->>>>>>> blood in blood out
   rocksdb::ColumnFamilyOptions fOptions;
   fOptions.write_buffer_size = static_cast<size_t>(config.getWriteBufferSize());
   // merge two memtables when flushing to L0
@@ -221,7 +202,6 @@ rocksdb::Options RocksDBWrapper::getDBOptions(const DataBaseConfig& config) {
   fOptions.compaction_style = rocksdb::kCompactionStyleLevel;
 
   fOptions.compression_per_level.resize(fOptions.num_levels);
-<<<<<<< HEAD
 
   const auto compressionLevel = config.getCompressionEnabled() ? rocksdb::kLZ4Compression : rocksdb::kNoCompression;
   for (int i = 0; i < fOptions.num_levels; ++i) {
@@ -230,11 +210,6 @@ rocksdb::Options RocksDBWrapper::getDBOptions(const DataBaseConfig& config) {
   }
   // bottom most use lz4hc
   fOptions.bottommost_compression = config.getCompressionEnabled() ? rocksdb::kLZ4HCCompression : rocksdb::kNoCompression;
-=======
-  for (int i = 0; i < fOptions.num_levels; ++i) {
-    fOptions.compression_per_level[i] = rocksdb::kNoCompression;
-  }
->>>>>>> blood in blood out
 
   rocksdb::BlockBasedTableOptions tableOptions;
   tableOptions.block_cache = rocksdb::NewLRUCache(config.getReadCacheSize());

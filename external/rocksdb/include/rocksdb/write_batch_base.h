@@ -20,11 +20,7 @@ struct SliceParts;
 
 // Abstract base class that defines the basic interface for a write batch.
 // See WriteBatch for a basic implementation and WrithBatchWithIndex for an
-<<<<<<< HEAD
 // indexed implementation.
-=======
-// indexed implemenation.
->>>>>>> blood in blood out
 class WriteBatchBase {
  public:
   virtual ~WriteBatchBase() {}

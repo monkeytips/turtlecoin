@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* $Id: miniupnpcmodule.c,v 1.24 2014/06/10 09:48:11 nanard Exp $*/
 /* Project : miniupnp
  * Author : Thomas BERNARD
@@ -8,29 +7,15 @@
  * provided LICENCE file. */
 #include <Python.h>
 #define MINIUPNP_STATICLIB
-=======
-/* $Id: miniupnpcmodule.c,v 1.22 2014/01/31 13:18:25 nanard Exp $*/
-/* Project : miniupnp
- * Author : Thomas BERNARD
- * website : http://miniupnp.tuxfamily.org/
- * copyright (c) 2007-2014 Thomas Bernard
- * This software is subjet to the conditions detailed in the
- * provided LICENCE file. */
-#include <Python.h>
-#define STATICLIB
->>>>>>> blood in blood out
 #include "structmember.h"
 #include "miniupnpc.h"
 #include "upnpcommands.h"
 #include "upnperrors.h"
 
-<<<<<<< HEAD
 #ifdef _WIN32
 #include <winsock2.h>
 #endif
 
-=======
->>>>>>> blood in blood out
 /* for compatibility with Python < 2.4 */
 #ifndef Py_RETURN_NONE
 #define Py_RETURN_NONE return Py_INCREF(Py_None), Py_None
@@ -61,10 +46,7 @@ typedef struct {
 	struct UPNPUrls urls;
 	struct IGDdatas data;
 	unsigned int discoverdelay;	/* value passed to upnpDiscover() */
-<<<<<<< HEAD
 	unsigned int localport;		/* value passed to upnpDiscover() */
-=======
->>>>>>> blood in blood out
 	char lanaddr[40];	/* our ip address on the LAN */
 	char * multicastif;
 	char * minissdpdsocket;
@@ -77,7 +59,6 @@ static PyMemberDef UPnP_members[] = {
 	{"discoverdelay", T_UINT, offsetof(UPnPObject, discoverdelay),
 	 0/*READWRITE*/, "value in ms used to wait for SSDP responses"
 	},
-<<<<<<< HEAD
 	{"localport", T_UINT, offsetof(UPnPObject, localport),
 	 0/*READWRITE*/,
 	    "If localport is set to UPNP_LOCAL_PORT_SAME(1) "
@@ -87,23 +68,16 @@ static PyMemberDef UPnP_members[] = {
 	    "port, any other value will be attempted as the "
 	    "source port"
 	},
-=======
->>>>>>> blood in blood out
 	/* T_STRING is allways readonly :( */
 	{"multicastif", T_STRING, offsetof(UPnPObject, multicastif),
 	 0, "IP of the network interface to be used for multicast operations"
 	},
-<<<<<<< HEAD
 	{"minissdpdsocket", T_STRING, offsetof(UPnPObject, minissdpdsocket),
-=======
-	{"minissdpdsocket", T_STRING, offsetof(UPnPObject, multicastif),
->>>>>>> blood in blood out
 	 0, "path of the MiniSSDPd unix socket"
 	},
 	{NULL}
 };
 
-<<<<<<< HEAD
 
 static int UPnP_init(UPnPObject *self, PyObject *args, PyObject *kwds)
 {
@@ -134,18 +108,13 @@ static int UPnP_init(UPnPObject *self, PyObject *args, PyObject *kwds)
 	return 0;
 }
 
-=======
->>>>>>> blood in blood out
 static void
 UPnPObject_dealloc(UPnPObject *self)
 {
 	freeUPNPDevlist(self->devlist);
 	FreeUPNPUrls(&self->urls);
-<<<<<<< HEAD
 	free(self->multicastif);
 	free(self->minissdpdsocket);
-=======
->>>>>>> blood in blood out
 	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -162,18 +131,11 @@ UPnP_discover(UPnPObject *self)
 	}
 	Py_BEGIN_ALLOW_THREADS
 	self->devlist = upnpDiscover((int)self->discoverdelay/*timeout in ms*/,
-<<<<<<< HEAD
 	                             self->multicastif,
 	                             self->minissdpdsocket,
 	                             (int)self->localport,
 	                             0/*ip v6*/,
 	                             2/* TTL */,
-=======
-	                             0/* multicast if*/,
-	                             0/*minissdpd socket*/,
-								 0/*sameport flag*/,
-	                             0/*ip v6*/,
->>>>>>> blood in blood out
 	                             0/*error */);
 	Py_END_ALLOW_THREADS
 	/* Py_RETURN_NONE ??? */
@@ -211,15 +173,11 @@ Py_BEGIN_ALLOW_THREADS
 	i = UPNP_GetTotalBytesSent(self->urls.controlURL_CIF,
 	                           self->data.CIF.servicetype);
 Py_END_ALLOW_THREADS
-<<<<<<< HEAD
 #if (PY_MAJOR_VERSION >= 3) || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION > 3)
 	return Py_BuildValue("I", i);
 #else
 	return Py_BuildValue("i", (int)i);
 #endif
-=======
-	return Py_BuildValue("I", i);
->>>>>>> blood in blood out
 }
 
 static PyObject *
@@ -230,15 +188,11 @@ Py_BEGIN_ALLOW_THREADS
 	i = UPNP_GetTotalBytesReceived(self->urls.controlURL_CIF,
 		                           self->data.CIF.servicetype);
 Py_END_ALLOW_THREADS
-<<<<<<< HEAD
 #if (PY_MAJOR_VERSION >= 3) || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION > 3)
 	return Py_BuildValue("I", i);
 #else
 	return Py_BuildValue("i", (int)i);
 #endif
-=======
-	return Py_BuildValue("I", i);
->>>>>>> blood in blood out
 }
 
 static PyObject *
@@ -249,15 +203,11 @@ Py_BEGIN_ALLOW_THREADS
 	i = UPNP_GetTotalPacketsSent(self->urls.controlURL_CIF,
 		                         self->data.CIF.servicetype);
 Py_END_ALLOW_THREADS
-<<<<<<< HEAD
 #if (PY_MAJOR_VERSION >= 3) || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION > 3)
 	return Py_BuildValue("I", i);
 #else
 	return Py_BuildValue("i", (int)i);
 #endif
-=======
-	return Py_BuildValue("I", i);
->>>>>>> blood in blood out
 }
 
 static PyObject *
@@ -268,15 +218,11 @@ Py_BEGIN_ALLOW_THREADS
 	i = UPNP_GetTotalPacketsReceived(self->urls.controlURL_CIF,
 		                          self->data.CIF.servicetype);
 Py_END_ALLOW_THREADS
-<<<<<<< HEAD
 #if (PY_MAJOR_VERSION >= 3) || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION > 3)
 	return Py_BuildValue("I", i);
 #else
 	return Py_BuildValue("i", (int)i);
 #endif
-=======
-	return Py_BuildValue("I", i);
->>>>>>> blood in blood out
 }
 
 static PyObject *
@@ -293,15 +239,11 @@ Py_BEGIN_ALLOW_THREADS
 	                   status, &uptime, lastconnerror);
 Py_END_ALLOW_THREADS
 	if(r==UPNPCOMMAND_SUCCESS) {
-<<<<<<< HEAD
 #if (PY_MAJOR_VERSION >= 3) || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION > 3)
 		return Py_BuildValue("(s,I,s)", status, uptime, lastconnerror);
 #else
 		return Py_BuildValue("(s,i,s)", status, (int)uptime, lastconnerror);
 #endif
-=======
-		return Py_BuildValue("(s,I,s)", status, uptime, lastconnerror);
->>>>>>> blood in blood out
 	} else {
 		/* TODO: have our own exception type ! */
 		PyErr_SetString(PyExc_Exception, strupnperror(r));
@@ -365,11 +307,7 @@ UPnP_addportmapping(UPnPObject *self, PyObject *args)
 	const char * remoteHost;
 	const char * leaseDuration = "0";
 	int r;
-<<<<<<< HEAD
 	if (!PyArg_ParseTuple(args, "HssHzz", &ePort, &proto,
-=======
-	if (!PyArg_ParseTuple(args, "HssHss", &ePort, &proto,
->>>>>>> blood in blood out
 	                                     &host, &iPort, &desc, &remoteHost))
         return NULL;
 Py_BEGIN_ALLOW_THREADS
@@ -394,7 +332,6 @@ Py_END_ALLOW_THREADS
 	}
 }
 
-<<<<<<< HEAD
 /* AddAnyPortMapping(externalPort, protocol, internalHost, internalPort, desc,
  *                   remoteHost)
  * protocol is 'UDP' or 'TCP' */
@@ -431,8 +368,6 @@ Py_END_ALLOW_THREADS
 }
 
 
-=======
->>>>>>> blood in blood out
 /* DeletePortMapping(extPort, proto, removeHost='')
  * proto = 'UDP', 'TCP' */
 static PyObject *
@@ -459,7 +394,6 @@ Py_END_ALLOW_THREADS
 	}
 }
 
-<<<<<<< HEAD
 /* DeletePortMappingRange(extPort, proto, removeHost='')
  * proto = 'UDP', 'TCP' */
 static PyObject *
@@ -491,8 +425,6 @@ Py_END_ALLOW_THREADS
 	}
 }
 
-=======
->>>>>>> blood in blood out
 static PyObject *
 UPnP_getportmappingnumberofentries(UPnPObject *self)
 {
@@ -504,15 +436,11 @@ Py_BEGIN_ALLOW_THREADS
 									   &n);
 Py_END_ALLOW_THREADS
 	if(r==UPNPCOMMAND_SUCCESS) {
-<<<<<<< HEAD
 #if (PY_MAJOR_VERSION >= 3) || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION > 3)
 		return Py_BuildValue("I", n);
 #else
 		return Py_BuildValue("i", (int)n);
 #endif
-=======
-		return Py_BuildValue("I", n);
->>>>>>> blood in blood out
 	} else {
 		/* TODO: have our own exception type ! */
 		PyErr_SetString(PyExc_Exception, strupnperror(r));
@@ -597,7 +525,6 @@ Py_END_ALLOW_THREADS
 		ePort = (unsigned short)atoi(extPort);
 		iPort = (unsigned short)atoi(intPort);
 		dur = (unsigned int)strtoul(duration, 0, 0);
-<<<<<<< HEAD
 #if (PY_MAJOR_VERSION >= 3) || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION > 3)
 		return Py_BuildValue("(H,s,(s,H),s,s,s,I)",
 		                     ePort, protocol, intClient, iPort,
@@ -607,11 +534,6 @@ Py_END_ALLOW_THREADS
 		                     (int)ePort, protocol, intClient, (int)iPort,
 		                     desc, enabled, rHost, (int)dur);
 #endif
-=======
-		return Py_BuildValue("(H,s,(s,H),s,s,s,I)",
-		                     ePort, protocol, intClient, iPort,
-		                     desc, enabled, rHost, dur);
->>>>>>> blood in blood out
 	}
 	else
 	{
@@ -651,7 +573,6 @@ static PyMethodDef UPnP_methods[] = {
 	{"addportmapping", (PyCFunction)UPnP_addportmapping, METH_VARARGS,
 	 "add a port mapping"
 	},
-<<<<<<< HEAD
 	{"addanyportmapping", (PyCFunction)UPnP_addanyportmapping, METH_VARARGS,
 	 "add a port mapping, IGD to select alternative if necessary"
 	},
@@ -661,11 +582,6 @@ static PyMethodDef UPnP_methods[] = {
 	{"deleteportmappingrange", (PyCFunction)UPnP_deleteportmappingrange, METH_VARARGS,
 	 "delete a range of port mappings"
 	},
-=======
-	{"deleteportmapping", (PyCFunction)UPnP_deleteportmapping, METH_VARARGS,
-	 "delete a port mapping"
-	},
->>>>>>> blood in blood out
 	{"getportmappingnumberofentries", (PyCFunction)UPnP_getportmappingnumberofentries, METH_NOARGS,
 	 "-- non standard --"
 	},
@@ -715,11 +631,7 @@ static PyTypeObject UPnPType = {
     0,                         /* tp_descr_get */
     0,                         /* tp_descr_set */
     0,                         /* tp_dictoffset */
-<<<<<<< HEAD
     (initproc)UPnP_init,       /* tp_init */
-=======
-    0,/*(initproc)UPnP_init,*/      /* tp_init */
->>>>>>> blood in blood out
     0,                         /* tp_alloc */
 #ifndef _WIN32
     PyType_GenericNew,/*UPnP_new,*/      /* tp_new */
@@ -761,7 +673,6 @@ initminiupnpc(void)
     PyObject* m;
 
 #ifdef _WIN32
-<<<<<<< HEAD
     /* initialize Winsock. */
     WSADATA wsaData;
     int nResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -774,12 +685,6 @@ initminiupnpc(void)
 #else
         return;
 #endif
-=======
-    UPnPType.tp_new = PyType_GenericNew;
-#endif
-    if (PyType_Ready(&UPnPType) < 0)
-        return;
->>>>>>> blood in blood out
 
 #if PY_MAJOR_VERSION >= 3
     m = PyModule_Create(&moduledef);
@@ -790,11 +695,7 @@ initminiupnpc(void)
 
     Py_INCREF(&UPnPType);
     PyModule_AddObject(m, "UPnP", (PyObject *)&UPnPType);
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> blood in blood out
 #if PY_MAJOR_VERSION >= 3
     return m;
 #endif

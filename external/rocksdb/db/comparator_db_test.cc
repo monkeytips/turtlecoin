@@ -2,10 +2,7 @@
 //  This source code is licensed under both the GPLv2 (found in the
 //  COPYING file in the root directory) and Apache 2.0 License
 //  (found in the LICENSE.Apache file in the root directory).
-<<<<<<< HEAD
 #include <array>
-=======
->>>>>>> blood in blood out
 #include <map>
 #include <string>
 
@@ -192,17 +189,10 @@ class DoubleComparator : public Comparator {
       return -1;
     }
   }
-<<<<<<< HEAD
   virtual void FindShortestSeparator(std::string* /*start*/,
                                      const Slice& /*limit*/) const override {}
 
   virtual void FindShortSuccessor(std::string* /*key*/) const override {}
-=======
-  virtual void FindShortestSeparator(std::string* start,
-                                     const Slice& limit) const override {}
-
-  virtual void FindShortSuccessor(std::string* key) const override {}
->>>>>>> blood in blood out
 };
 
 class HashComparator : public Comparator {
@@ -222,17 +212,10 @@ class HashComparator : public Comparator {
       return -1;
     }
   }
-<<<<<<< HEAD
   virtual void FindShortestSeparator(std::string* /*start*/,
                                      const Slice& /*limit*/) const override {}
 
   virtual void FindShortSuccessor(std::string* /*key*/) const override {}
-=======
-  virtual void FindShortestSeparator(std::string* start,
-                                     const Slice& limit) const override {}
-
-  virtual void FindShortSuccessor(std::string* key) const override {}
->>>>>>> blood in blood out
 };
 
 class TwoStrComparator : public Comparator {
@@ -261,7 +244,6 @@ class TwoStrComparator : public Comparator {
     }
     return a2.compare(b2);
   }
-<<<<<<< HEAD
   virtual void FindShortestSeparator(std::string* /*start*/,
                                      const Slice& /*limit*/) const override {}
 
@@ -272,16 +254,6 @@ class TwoStrComparator : public Comparator {
 class ComparatorDBTest
     : public testing::Test,
       virtual public ::testing::WithParamInterface<uint32_t> {
-=======
-  virtual void FindShortestSeparator(std::string* start,
-                                     const Slice& limit) const override {}
-
-  virtual void FindShortSuccessor(std::string* key) const override {}
-};
-}  // namespace
-
-class ComparatorDBTest : public testing::Test {
->>>>>>> blood in blood out
  private:
   std::string dbname_;
   Env* env_;
@@ -292,15 +264,11 @@ class ComparatorDBTest : public testing::Test {
  public:
   ComparatorDBTest() : env_(Env::Default()), db_(nullptr) {
     comparator = BytewiseComparator();
-<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("comparator_db_test");
     BlockBasedTableOptions toptions;
     toptions.format_version = GetParam();
     last_options_.table_factory.reset(
         rocksdb::NewBlockBasedTableFactory(toptions));
-=======
-    dbname_ = test::TmpDir() + "/comparator_db_test";
->>>>>>> blood in blood out
     EXPECT_OK(DestroyDB(dbname_, last_options_));
   }
 
@@ -312,17 +280,12 @@ class ComparatorDBTest : public testing::Test {
 
   DB* GetDB() { return db_; }
 
-<<<<<<< HEAD
   void SetOwnedComparator(const Comparator* cmp, bool owner = true) {
     if (owner) {
       comparator_guard.reset(cmp);
     } else {
       comparator_guard.reset();
     }
-=======
-  void SetOwnedComparator(const Comparator* cmp) {
-    comparator_guard.reset(cmp);
->>>>>>> blood in blood out
     comparator = cmp;
     last_options_.comparator = cmp;
   }
@@ -351,16 +314,12 @@ class ComparatorDBTest : public testing::Test {
   }
 };
 
-<<<<<<< HEAD
 INSTANTIATE_TEST_CASE_P(FormatDef, ComparatorDBTest,
                         testing::Values(test::kDefaultFormatVersion));
 INSTANTIATE_TEST_CASE_P(FormatLatest, ComparatorDBTest,
                         testing::Values(test::kLatestFormatVersion));
 
 TEST_P(ComparatorDBTest, Bytewise) {
-=======
-TEST_F(ComparatorDBTest, Bytewise) {
->>>>>>> blood in blood out
   for (int rand_seed = 301; rand_seed < 306; rand_seed++) {
     DestroyAndReopen();
     Random rnd(rand_seed);
@@ -370,11 +329,7 @@ TEST_F(ComparatorDBTest, Bytewise) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ComparatorDBTest, SimpleSuffixReverseComparator) {
-=======
-TEST_F(ComparatorDBTest, SimpleSuffixReverseComparator) {
->>>>>>> blood in blood out
   SetOwnedComparator(new test::SimpleSuffixReverseComparator());
 
   for (int rnd_seed = 301; rnd_seed < 316; rnd_seed++) {
@@ -400,13 +355,8 @@ TEST_F(ComparatorDBTest, SimpleSuffixReverseComparator) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ComparatorDBTest, Uint64Comparator) {
   SetOwnedComparator(test::Uint64Comparator(), false /* owner */);
-=======
-TEST_F(ComparatorDBTest, Uint64Comparator) {
-  SetOwnedComparator(test::Uint64Comparator());
->>>>>>> blood in blood out
 
   for (int rnd_seed = 301; rnd_seed < 316; rnd_seed++) {
     Options* opt = GetOptions();
@@ -429,11 +379,7 @@ TEST_F(ComparatorDBTest, Uint64Comparator) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ComparatorDBTest, DoubleComparator) {
-=======
-TEST_F(ComparatorDBTest, DoubleComparator) {
->>>>>>> blood in blood out
   SetOwnedComparator(new DoubleComparator());
 
   for (int rnd_seed = 301; rnd_seed < 316; rnd_seed++) {
@@ -458,11 +404,7 @@ TEST_F(ComparatorDBTest, DoubleComparator) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ComparatorDBTest, HashComparator) {
-=======
-TEST_F(ComparatorDBTest, HashComparator) {
->>>>>>> blood in blood out
   SetOwnedComparator(new HashComparator());
 
   for (int rnd_seed = 301; rnd_seed < 316; rnd_seed++) {
@@ -481,11 +423,7 @@ TEST_F(ComparatorDBTest, HashComparator) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ComparatorDBTest, TwoStrComparator) {
-=======
-TEST_F(ComparatorDBTest, TwoStrComparator) {
->>>>>>> blood in blood out
   SetOwnedComparator(new TwoStrComparator());
 
   for (int rnd_seed = 301; rnd_seed < 316; rnd_seed++) {
@@ -511,7 +449,6 @@ TEST_F(ComparatorDBTest, TwoStrComparator) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ComparatorDBTest, IsSameLengthImmediateSuccessor) {
   {
     // different length
@@ -715,8 +652,6 @@ TEST_P(ComparatorDBTest, SeparatorSuccessorRandomizeTest) {
   }
 }
 
-=======
->>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char** argv) {

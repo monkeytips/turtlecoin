@@ -8,15 +8,11 @@
 # import the python miniupnpc module
 import miniupnpc
 import socket
-<<<<<<< HEAD
 
 try:
     from http.server import BaseHTTPRequestHandler, HTTPServer
 except ImportError:
     from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-=======
-import BaseHTTPServer
->>>>>>> blood in blood out
 
 # function definition
 def list_redirections():
@@ -25,19 +21,11 @@ def list_redirections():
 		p = u.getgenericportmapping(i)
 		if p==None:
 			break
-<<<<<<< HEAD
 		print(i, p)
 		i = i + 1
 
 #define the handler class for HTTP connections
 class handler_class(BaseHTTPRequestHandler):
-=======
-		print i, p
-		i = i + 1
-
-#define the handler class for HTTP connections
-class handler_class(BaseHTTPServer.BaseHTTPRequestHandler):
->>>>>>> blood in blood out
 	def do_GET(self):
 		self.send_response(200)
 		self.end_headers()
@@ -53,20 +41,13 @@ u = miniupnpc.UPnP()
 u.discoverdelay = 200;
 
 try:
-<<<<<<< HEAD
 	print('Discovering... delay=%ums' % u.discoverdelay)
 	ndevices = u.discover()
 	print(ndevices, 'device(s) detected')
-=======
-	print 'Discovering... delay=%ums' % u.discoverdelay
-	ndevices = u.discover()
-	print ndevices, 'device(s) detected'
->>>>>>> blood in blood out
 
 	# select an igd
 	u.selectigd()
 	# display information about the IGD and the internet connection
-<<<<<<< HEAD
 	print('local ip address :', u.lanaddr)
 	externalipaddress = u.externalipaddress()
 	print('external ip address :', externalipaddress)
@@ -74,15 +55,6 @@ try:
 
 	#instanciate a HTTPd object. The port is assigned by the system.
 	httpd = HTTPServer((u.lanaddr, 0), handler_class)
-=======
-	print 'local ip address :', u.lanaddr
-	externalipaddress = u.externalipaddress()
-	print 'external ip address :', externalipaddress
-	print u.statusinfo(), u.connectiontype()
-
-	#instanciate a HTTPd object. The port is assigned by the system.
-	httpd = BaseHTTPServer.HTTPServer((u.lanaddr, 0), handler_class)
->>>>>>> blood in blood out
 	eport = httpd.server_port
 
 	# find a free port for the redirection
@@ -91,16 +63,11 @@ try:
 		eport = eport + 1
 		r = u.getspecificportmapping(eport, 'TCP')
 
-<<<<<<< HEAD
 	print('trying to redirect %s port %u TCP => %s port %u TCP' % (externalipaddress, eport, u.lanaddr, httpd.server_port))
-=======
-	print 'trying to redirect %s port %u TCP => %s port %u TCP' % (externalipaddress, eport, u.lanaddr, httpd.server_port)
->>>>>>> blood in blood out
 
 	b = u.addportmapping(eport, 'TCP', u.lanaddr, httpd.server_port,
 	                    'UPnP IGD Tester port %u' % eport, '')
 	if b:
-<<<<<<< HEAD
 		print('Success. Now waiting for some HTTP request on http://%s:%u' % (externalipaddress ,eport))
 		try:
 			httpd.handle_request()
@@ -119,23 +86,3 @@ try:
 
 except Exception as e:
 	print('Exception :', e)
-=======
-		print 'Success. Now waiting for some HTTP request on http://%s:%u' % (externalipaddress ,eport)
-		try:
-			httpd.handle_request()
-			httpd.server_close()
-		except KeyboardInterrupt, details:
-			print "CTRL-C exception!", details
-		b = u.deleteportmapping(eport, 'TCP')
-		if b:
-			print 'Successfully deleted port mapping'
-		else:
-			print 'Failed to remove port mapping'
-	else:
-		print 'Failed'
-
-	httpd.server_close()
-
-except Exception, e:
-	print 'Exception :', e
->>>>>>> blood in blood out

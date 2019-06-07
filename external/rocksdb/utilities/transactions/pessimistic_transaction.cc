@@ -197,12 +197,8 @@ Status PessimisticTransaction::Prepare() {
     s = PrepareInternal();
     if (s.ok()) {
       assert(log_number_ != 0);
-<<<<<<< HEAD
       dbimpl_->logs_with_prep_tracker()->MarkLogAsContainingPrepSection(
           log_number_);
-=======
-      dbimpl_->MarkLogAsContainingPrepSection(log_number_);
->>>>>>> blood in blood out
       txn_state_.store(PREPARED);
     }
   } else if (txn_state_ == LOCKS_STOLEN) {
@@ -289,12 +285,8 @@ Status PessimisticTransaction::Commit() {
     // to determine what prep logs must be kept around,
     // not the prep section heap.
     assert(log_number_ > 0);
-<<<<<<< HEAD
     dbimpl_->logs_with_prep_tracker()->MarkLogAsHavingPrepSectionFlushed(
         log_number_);
-=======
-    dbimpl_->MarkLogAsHavingPrepSectionFlushed(log_number_);
->>>>>>> blood in blood out
     txn_db_impl_->UnregisterTransaction(this);
 
     Clear();
@@ -351,12 +343,8 @@ Status PessimisticTransaction::Rollback() {
     if (s.ok()) {
       // we do not need to keep our prepared section around
       assert(log_number_ > 0);
-<<<<<<< HEAD
       dbimpl_->logs_with_prep_tracker()->MarkLogAsHavingPrepSectionFlushed(
           log_number_);
-=======
-      dbimpl_->MarkLogAsHavingPrepSectionFlushed(log_number_);
->>>>>>> blood in blood out
       Clear();
       txn_state_.store(ROLLEDBACK);
     }

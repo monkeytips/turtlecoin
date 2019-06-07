@@ -57,26 +57,17 @@ class EnvCounter : public EnvWrapper {
   std::atomic<int> num_new_writable_file_;
 };
 
-<<<<<<< HEAD
 class ColumnFamilyTestBase : public testing::Test {
  public:
   ColumnFamilyTestBase(uint32_t format) : rnd_(139), format_(format) {
     env_ = new EnvCounter(Env::Default());
     dbname_ = test::PerThreadDBPath("column_family_test");
-=======
-class ColumnFamilyTest : public testing::Test {
- public:
-  ColumnFamilyTest() : rnd_(139) {
-    env_ = new EnvCounter(Env::Default());
-    dbname_ = test::TmpDir() + "/column_family_test";
->>>>>>> blood in blood out
     db_options_.create_if_missing = true;
     db_options_.fail_if_options_file_error = true;
     db_options_.env = env_;
     DestroyDB(dbname_, Options(db_options_, column_family_options_));
   }
 
-<<<<<<< HEAD
   virtual ~ColumnFamilyTestBase() {
     std::vector<ColumnFamilyDescriptor> column_families;
     for (auto h : handles_) {
@@ -96,15 +87,6 @@ class ColumnFamilyTest : public testing::Test {
     return options;
   }
 
-=======
-  ~ColumnFamilyTest() {
-    Close();
-    rocksdb::SyncPoint::GetInstance()->DisableProcessing();
-    Destroy();
-    delete env_;
-  }
-
->>>>>>> blood in blood out
   // Return the value to associate with the specified key
   Slice Value(int k, std::string* storage) {
     if (k == 0) {
@@ -266,17 +248,11 @@ class ColumnFamilyTest : public testing::Test {
 #endif  // !ROCKSDB_LITE
   }
 
-<<<<<<< HEAD
   void Destroy(const std::vector<ColumnFamilyDescriptor>& column_families =
                   std::vector<ColumnFamilyDescriptor>()) {
     Close();
     ASSERT_OK(DestroyDB(dbname_, Options(db_options_, column_family_options_),
                         column_families));
-=======
-  void Destroy() {
-    Close();
-    ASSERT_OK(DestroyDB(dbname_, Options(db_options_, column_family_options_)));
->>>>>>> blood in blood out
   }
 
   void CreateColumnFamilies(
@@ -329,12 +305,9 @@ class ColumnFamilyTest : public testing::Test {
   }
 
   void PutRandomData(int cf, int num, int key_value_size, bool save = false) {
-<<<<<<< HEAD
     if (cf >= static_cast<int>(keys_.size())) {
       keys_.resize(cf + 1);
     }
-=======
->>>>>>> blood in blood out
     for (int i = 0; i < num; ++i) {
       // 10 bytes for key, rest is value
       if (!save) {
@@ -342,11 +315,7 @@ class ColumnFamilyTest : public testing::Test {
                       RandomString(&rnd_, key_value_size - 10)));
       } else {
         std::string key = test::RandomKey(&rnd_, 11);
-<<<<<<< HEAD
         keys_[cf].insert(key);
-=======
-        keys_.insert(key);
->>>>>>> blood in blood out
         ASSERT_OK(Put(cf, key, RandomString(&rnd_, key_value_size - 10)));
       }
     }
@@ -431,12 +400,9 @@ class ColumnFamilyTest : public testing::Test {
   void AssertFilesPerLevel(const std::string& value, int cf) {
 #ifndef ROCKSDB_LITE
     ASSERT_EQ(value, FilesPerLevel(cf));
-<<<<<<< HEAD
 #else
     (void) value;
     (void) cf;
-=======
->>>>>>> blood in blood out
 #endif
   }
 
@@ -451,11 +417,8 @@ class ColumnFamilyTest : public testing::Test {
   void AssertCountLiveFiles(int expected_value) {
 #ifndef ROCKSDB_LITE
     ASSERT_EQ(expected_value, CountLiveFiles());
-<<<<<<< HEAD
 #else
     (void) expected_value;
-=======
->>>>>>> blood in blood out
 #endif
   }
 
@@ -504,11 +467,8 @@ class ColumnFamilyTest : public testing::Test {
   void AssertCountLiveLogFiles(int value) {
 #ifndef ROCKSDB_LITE  // GetSortedWalFiles is not supported
     ASSERT_EQ(value, CountLiveLogFiles());
-<<<<<<< HEAD
 #else
     (void) value;
-=======
->>>>>>> blood in blood out
 #endif  // !ROCKSDB_LITE
   }
 
@@ -547,7 +507,6 @@ class ColumnFamilyTest : public testing::Test {
     ASSERT_OK(destfile->Close());
   }
 
-<<<<<<< HEAD
   int GetSstFileCount(std::string path) {
     std::vector<std::string> files;
     DBTestBase::GetSstFiles(env_, path, &files);
@@ -557,18 +516,12 @@ class ColumnFamilyTest : public testing::Test {
   std::vector<ColumnFamilyHandle*> handles_;
   std::vector<std::string> names_;
   std::vector<std::set<std::string>> keys_;
-=======
-  std::vector<ColumnFamilyHandle*> handles_;
-  std::vector<std::string> names_;
-  std::set<std::string> keys_;
->>>>>>> blood in blood out
   ColumnFamilyOptions column_family_options_;
   DBOptions db_options_;
   std::string dbname_;
   DB* db_ = nullptr;
   EnvCounter* env_;
   Random rnd_;
-<<<<<<< HEAD
   uint32_t format_;
 };
 
@@ -585,11 +538,6 @@ INSTANTIATE_TEST_CASE_P(FormatLatest, ColumnFamilyTest,
                         testing::Values(test::kLatestFormatVersion));
 
 TEST_P(ColumnFamilyTest, DontReuseColumnFamilyID) {
-=======
-};
-
-TEST_F(ColumnFamilyTest, DontReuseColumnFamilyID) {
->>>>>>> blood in blood out
   for (int iter = 0; iter < 3; ++iter) {
     Open();
     CreateColumnFamilies({"one", "two", "three"});
@@ -608,12 +556,8 @@ TEST_F(ColumnFamilyTest, DontReuseColumnFamilyID) {
       Reopen();
     }
     CreateColumnFamilies({"three2"});
-<<<<<<< HEAD
     // ID 3 that was used for dropped column family "three" should not be
     // reused
-=======
-    // ID 3 that was used for dropped column family "three" should not be reused
->>>>>>> blood in blood out
     auto cfh3 = reinterpret_cast<ColumnFamilyHandleImpl*>(handles_[3]);
     ASSERT_EQ(4U, cfh3->GetID());
     Close();
@@ -622,11 +566,7 @@ TEST_F(ColumnFamilyTest, DontReuseColumnFamilyID) {
 }
 
 #ifndef ROCKSDB_LITE
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, CreateCFRaceWithGetAggProperty) {
-=======
-TEST_F(ColumnFamilyTest, CreateCFRaceWithGetAggProperty) {
->>>>>>> blood in blood out
   Open();
 
   rocksdb::SyncPoint::GetInstance()->LoadDependency(
@@ -649,7 +589,6 @@ TEST_F(ColumnFamilyTest, CreateCFRaceWithGetAggProperty) {
 }
 #endif  // !ROCKSDB_LITE
 
-<<<<<<< HEAD
 class FlushEmptyCFTestWithParam
     : public ColumnFamilyTestBase,
       virtual public testing::WithParamInterface<std::tuple<uint32_t, bool>> {
@@ -657,12 +596,6 @@ class FlushEmptyCFTestWithParam
   FlushEmptyCFTestWithParam()
       : ColumnFamilyTestBase(std::get<0>(GetParam())),
         allow_2pc_(std::get<1>(GetParam())) {}
-=======
-class FlushEmptyCFTestWithParam : public ColumnFamilyTest,
-                                  public testing::WithParamInterface<bool> {
- public:
-  FlushEmptyCFTestWithParam() { allow_2pc_ = GetParam(); }
->>>>>>> blood in blood out
 
   // Required if inheriting from testing::WithParamInterface<>
   static void SetUpTestCase() {}
@@ -787,7 +720,6 @@ TEST_P(FlushEmptyCFTestWithParam, FlushEmptyCFTest2) {
   db_options_.env = env_;
 }
 
-<<<<<<< HEAD
 INSTANTIATE_TEST_CASE_P(
     FormatDef, FlushEmptyCFTestWithParam,
     testing::Values(std::make_tuple(test::kDefaultFormatVersion, true),
@@ -798,12 +730,6 @@ INSTANTIATE_TEST_CASE_P(
                     std::make_tuple(test::kLatestFormatVersion, false)));
 
 TEST_P(ColumnFamilyTest, AddDrop) {
-=======
-INSTANTIATE_TEST_CASE_P(FlushEmptyCFTestWithParam, FlushEmptyCFTestWithParam,
-                        ::testing::Bool());
-
-TEST_F(ColumnFamilyTest, AddDrop) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one", "two", "three"});
   ASSERT_EQ("NOT_FOUND", Get(1, "fodor"));
@@ -829,11 +755,7 @@ TEST_F(ColumnFamilyTest, AddDrop) {
               std::vector<std::string>({"default", "four", "three"}));
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, BulkAddDrop) {
-=======
-TEST_F(ColumnFamilyTest, BulkAddDrop) {
->>>>>>> blood in blood out
   constexpr int kNumCF = 1000;
   ColumnFamilyOptions cf_options;
   WriteOptions write_options;
@@ -871,11 +793,7 @@ TEST_F(ColumnFamilyTest, BulkAddDrop) {
   ASSERT_TRUE(families == std::vector<std::string>({"default"}));
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, DropTest) {
-=======
-TEST_F(ColumnFamilyTest, DropTest) {
->>>>>>> blood in blood out
   // first iteration - dont reopen DB before dropping
   // second iteration - reopen DB before dropping
   for (int iter = 0; iter < 2; ++iter) {
@@ -899,11 +817,7 @@ TEST_F(ColumnFamilyTest, DropTest) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, WriteBatchFailure) {
-=======
-TEST_F(ColumnFamilyTest, WriteBatchFailure) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamiliesAndReopen({"one", "two"});
   WriteBatch batch;
@@ -921,11 +835,7 @@ TEST_F(ColumnFamilyTest, WriteBatchFailure) {
   Close();
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, ReadWrite) {
-=======
-TEST_F(ColumnFamilyTest, ReadWrite) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamiliesAndReopen({"one", "two"});
   ASSERT_OK(Put(0, "foo", "v1"));
@@ -949,11 +859,7 @@ TEST_F(ColumnFamilyTest, ReadWrite) {
   Close();
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, IgnoreRecoveredLog) {
-=======
-TEST_F(ColumnFamilyTest, IgnoreRecoveredLog) {
->>>>>>> blood in blood out
   std::string backup_logs = dbname_ + "/backup_logs";
 
   // delete old files in backup_logs directory
@@ -1029,11 +935,7 @@ TEST_F(ColumnFamilyTest, IgnoreRecoveredLog) {
 }
 
 #ifndef ROCKSDB_LITE  // TEST functions used are not supported
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, FlushTest) {
-=======
-TEST_F(ColumnFamilyTest, FlushTest) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamiliesAndReopen({"one", "two"});
   ASSERT_OK(Put(0, "foo", "v1"));
@@ -1081,11 +983,7 @@ TEST_F(ColumnFamilyTest, FlushTest) {
 }
 
 // Makes sure that obsolete log files get deleted
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, LogDeletionTest) {
-=======
-TEST_F(ColumnFamilyTest, LogDeletionTest) {
->>>>>>> blood in blood out
   db_options_.max_total_wal_size = std::numeric_limits<uint64_t>::max();
   column_family_options_.arena_block_size = 4 * 1024;
   column_family_options_.write_buffer_size = 128000;  // 128KB
@@ -1153,11 +1051,7 @@ TEST_F(ColumnFamilyTest, LogDeletionTest) {
 }
 #endif  // !ROCKSDB_LITE
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, CrashAfterFlush) {
-=======
-TEST_F(ColumnFamilyTest, CrashAfterFlush) {
->>>>>>> blood in blood out
   std::unique_ptr<FaultInjectionTestEnv> fault_env(
       new FaultInjectionTestEnv(env_));
   db_options_.env = fault_env.get();
@@ -1189,11 +1083,7 @@ TEST_F(ColumnFamilyTest, CrashAfterFlush) {
   db_options_.env = env_;
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, OpenNonexistentColumnFamily) {
-=======
-TEST_F(ColumnFamilyTest, OpenNonexistentColumnFamily) {
->>>>>>> blood in blood out
   ASSERT_OK(TryOpen({"default"}));
   Close();
   ASSERT_TRUE(TryOpen({"default", "dne"}).IsInvalidArgument());
@@ -1201,11 +1091,7 @@ TEST_F(ColumnFamilyTest, OpenNonexistentColumnFamily) {
 
 #ifndef ROCKSDB_LITE  // WaitForFlush() is not supported
 // Makes sure that obsolete log files get deleted
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, DifferentWriteBufferSizes) {
-=======
-TEST_F(ColumnFamilyTest, DifferentWriteBufferSizes) {
->>>>>>> blood in blood out
   // disable flushing stale column families
   db_options_.max_total_wal_size = std::numeric_limits<uint64_t>::max();
   Open();
@@ -1311,11 +1197,7 @@ TEST_F(ColumnFamilyTest, DifferentWriteBufferSizes) {
 #endif  // !ROCKSDB_LITE
 
 #ifndef ROCKSDB_LITE  // Cuckoo is not supported in lite
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, MemtableNotSupportSnapshot) {
-=======
-TEST_F(ColumnFamilyTest, MemtableNotSupportSnapshot) {
->>>>>>> blood in blood out
   db_options_.allow_concurrent_memtable_write = false;
   Open();
   auto* s1 = dbfull()->GetSnapshot();
@@ -1339,7 +1221,6 @@ TEST_F(ColumnFamilyTest, MemtableNotSupportSnapshot) {
 #endif  // !ROCKSDB_LITE
 
 class TestComparator : public Comparator {
-<<<<<<< HEAD
   int Compare(const rocksdb::Slice& /*a*/,
               const rocksdb::Slice& /*b*/) const override {
     return 0;
@@ -1348,26 +1229,13 @@ class TestComparator : public Comparator {
   void FindShortestSeparator(std::string* /*start*/,
                              const rocksdb::Slice& /*limit*/) const override {}
   void FindShortSuccessor(std::string* /*key*/) const override {}
-=======
-  int Compare(const rocksdb::Slice& a, const rocksdb::Slice& b) const override {
-    return 0;
-  }
-  const char* Name() const override { return "Test"; }
-  void FindShortestSeparator(std::string* start,
-                             const rocksdb::Slice& limit) const override {}
-  void FindShortSuccessor(std::string* key) const override {}
->>>>>>> blood in blood out
 };
 
 static TestComparator third_comparator;
 static TestComparator fourth_comparator;
 
 // Test that we can retrieve the comparator from a created CF
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, GetComparator) {
-=======
-TEST_F(ColumnFamilyTest, GetComparator) {
->>>>>>> blood in blood out
   Open();
   // Add a column family with no comparator specified
   CreateColumnFamilies({"first"});
@@ -1386,11 +1254,7 @@ TEST_F(ColumnFamilyTest, GetComparator) {
   Close();
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, DifferentMergeOperators) {
-=======
-TEST_F(ColumnFamilyTest, DifferentMergeOperators) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"first", "second"});
   ColumnFamilyOptions default_cf, first, second;
@@ -1421,11 +1285,7 @@ TEST_F(ColumnFamilyTest, DifferentMergeOperators) {
 }
 
 #ifndef ROCKSDB_LITE  // WaitForFlush() is not supported
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, DifferentCompactionStyles) {
-=======
-TEST_F(ColumnFamilyTest, DifferentCompactionStyles) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one", "two"});
   ColumnFamilyOptions default_cf, one, two;
@@ -1437,11 +1297,7 @@ TEST_F(ColumnFamilyTest, DifferentCompactionStyles) {
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = static_cast<uint64_t>(1) << 60;
 
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -1501,11 +1357,7 @@ TEST_F(ColumnFamilyTest, DifferentCompactionStyles) {
 #ifndef ROCKSDB_LITE
 // Sync points not supported in RocksDB Lite
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, MultipleManualCompactions) {
-=======
-TEST_F(ColumnFamilyTest, MultipleManualCompactions) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one", "two"});
   ColumnFamilyOptions default_cf, one, two;
@@ -1517,11 +1369,7 @@ TEST_F(ColumnFamilyTest, MultipleManualCompactions) {
   default_cf.write_buffer_size = 64 << 10;  // 64KB
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = default_cf.target_file_size_base * 1100;
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -1552,11 +1400,7 @@ TEST_F(ColumnFamilyTest, MultipleManualCompactions) {
        {"ColumnFamilyTest::MultiManual:2", "ColumnFamilyTest::MultiManual:5"},
        {"ColumnFamilyTest::MultiManual:2", "ColumnFamilyTest::MultiManual:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
->>>>>>> blood in blood out
         if (cf_1_1) {
           TEST_SYNC_POINT("ColumnFamilyTest::MultiManual:4");
           cf_1_1 = false;
@@ -1602,7 +1446,6 @@ TEST_F(ColumnFamilyTest, MultipleManualCompactions) {
   CompactAll(2);
   AssertFilesPerLevel("0,1", 2);
   // Compare against saved keys
-<<<<<<< HEAD
   std::set<std::string>::iterator key_iter = keys_[1].begin();
   while (key_iter != keys_[1].end()) {
     ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
@@ -1614,17 +1457,6 @@ TEST_F(ColumnFamilyTest, MultipleManualCompactions) {
 }
 
 TEST_P(ColumnFamilyTest, AutomaticAndManualCompactions) {
-=======
-  std::set<std::string>::iterator key_iter = keys_.begin();
-  while (key_iter != keys_.end()) {
-    ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
-    key_iter++;
-  }
-  Close();
-}
-
-TEST_F(ColumnFamilyTest, AutomaticAndManualCompactions) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one", "two"});
   ColumnFamilyOptions default_cf, one, two;
@@ -1636,12 +1468,8 @@ TEST_F(ColumnFamilyTest, AutomaticAndManualCompactions) {
   default_cf.write_buffer_size = 64 << 10;  // 64KB
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = default_cf.target_file_size_base * 1100;
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
   ;
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -1668,11 +1496,7 @@ TEST_F(ColumnFamilyTest, AutomaticAndManualCompactions) {
        {"ColumnFamilyTest::AutoManual:2", "ColumnFamilyTest::AutoManual:5"},
        {"ColumnFamilyTest::AutoManual:2", "ColumnFamilyTest::AutoManual:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
->>>>>>> blood in blood out
         if (cf_1_1) {
           cf_1_1 = false;
           TEST_SYNC_POINT("ColumnFamilyTest::AutoManual:4");
@@ -1719,7 +1543,6 @@ TEST_F(ColumnFamilyTest, AutomaticAndManualCompactions) {
   CompactAll(2);
   AssertFilesPerLevel("0,1", 2);
   // Compare against saved keys
-<<<<<<< HEAD
   std::set<std::string>::iterator key_iter = keys_[1].begin();
   while (key_iter != keys_[1].end()) {
     ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
@@ -1730,16 +1553,6 @@ TEST_F(ColumnFamilyTest, AutomaticAndManualCompactions) {
 }
 
 TEST_P(ColumnFamilyTest, ManualAndAutomaticCompactions) {
-=======
-  std::set<std::string>::iterator key_iter = keys_.begin();
-  while (key_iter != keys_.end()) {
-    ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
-    key_iter++;
-  }
-}
-
-TEST_F(ColumnFamilyTest, ManualAndAutomaticCompactions) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one", "two"});
   ColumnFamilyOptions default_cf, one, two;
@@ -1751,12 +1564,8 @@ TEST_F(ColumnFamilyTest, ManualAndAutomaticCompactions) {
   default_cf.write_buffer_size = 64 << 10;  // 64KB
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = default_cf.target_file_size_base * 1100;
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
   ;
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -1791,11 +1600,7 @@ TEST_F(ColumnFamilyTest, ManualAndAutomaticCompactions) {
        {"ColumnFamilyTest::ManualAuto:5", "ColumnFamilyTest::ManualAuto:2"},
        {"ColumnFamilyTest::ManualAuto:2", "ColumnFamilyTest::ManualAuto:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
->>>>>>> blood in blood out
         if (cf_1_1) {
           TEST_SYNC_POINT("ColumnFamilyTest::ManualAuto:4");
           cf_1_1 = false;
@@ -1837,7 +1642,6 @@ TEST_F(ColumnFamilyTest, ManualAndAutomaticCompactions) {
   CompactAll(2);
   AssertFilesPerLevel("0,1", 2);
   // Compare against saved keys
-<<<<<<< HEAD
   std::set<std::string>::iterator key_iter = keys_[1].begin();
   while (key_iter != keys_[1].end()) {
     ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
@@ -1848,16 +1652,6 @@ TEST_F(ColumnFamilyTest, ManualAndAutomaticCompactions) {
 }
 
 TEST_P(ColumnFamilyTest, SameCFManualManualCompactions) {
-=======
-  std::set<std::string>::iterator key_iter = keys_.begin();
-  while (key_iter != keys_.end()) {
-    ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
-    key_iter++;
-  }
-}
-
-TEST_F(ColumnFamilyTest, SameCFManualManualCompactions) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one"});
   ColumnFamilyOptions default_cf, one;
@@ -1869,12 +1663,8 @@ TEST_F(ColumnFamilyTest, SameCFManualManualCompactions) {
   default_cf.write_buffer_size = 64 << 10;  // 64KB
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = default_cf.target_file_size_base * 1100;
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
   ;
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -1906,11 +1696,7 @@ TEST_F(ColumnFamilyTest, SameCFManualManualCompactions) {
        {"ColumnFamilyTest::ManualManual:1",
         "ColumnFamilyTest::ManualManual:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
->>>>>>> blood in blood out
         if (cf_1_1) {
           TEST_SYNC_POINT("ColumnFamilyTest::ManualManual:4");
           cf_1_1 = false;
@@ -1958,7 +1744,6 @@ TEST_F(ColumnFamilyTest, SameCFManualManualCompactions) {
   ASSERT_LE(NumTableFilesAtLevel(0, 1), 2);
 
   // Compare against saved keys
-<<<<<<< HEAD
   std::set<std::string>::iterator key_iter = keys_[1].begin();
   while (key_iter != keys_[1].end()) {
     ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
@@ -1969,16 +1754,6 @@ TEST_F(ColumnFamilyTest, SameCFManualManualCompactions) {
 }
 
 TEST_P(ColumnFamilyTest, SameCFManualAutomaticCompactions) {
-=======
-  std::set<std::string>::iterator key_iter = keys_.begin();
-  while (key_iter != keys_.end()) {
-    ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
-    key_iter++;
-  }
-}
-
-TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactions) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one"});
   ColumnFamilyOptions default_cf, one;
@@ -1990,12 +1765,8 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactions) {
   default_cf.write_buffer_size = 64 << 10;  // 64KB
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = default_cf.target_file_size_base * 1100;
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
   ;
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -2026,11 +1797,7 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactions) {
        {"ColumnFamilyTest::ManualAuto:1", "ColumnFamilyTest::ManualAuto:2"},
        {"ColumnFamilyTest::ManualAuto:1", "ColumnFamilyTest::ManualAuto:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
->>>>>>> blood in blood out
         if (cf_1_1) {
           TEST_SYNC_POINT("ColumnFamilyTest::ManualAuto:4");
           cf_1_1 = false;
@@ -2070,7 +1837,6 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactions) {
   ASSERT_LE(NumTableFilesAtLevel(0, 1), 2);
 
   // Compare against saved keys
-<<<<<<< HEAD
   std::set<std::string>::iterator key_iter = keys_[1].begin();
   while (key_iter != keys_[1].end()) {
     ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
@@ -2081,16 +1847,6 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactions) {
 }
 
 TEST_P(ColumnFamilyTest, SameCFManualAutomaticCompactionsLevel) {
-=======
-  std::set<std::string>::iterator key_iter = keys_.begin();
-  while (key_iter != keys_.end()) {
-    ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
-    key_iter++;
-  }
-}
-
-TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactionsLevel) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one"});
   ColumnFamilyOptions default_cf, one;
@@ -2102,12 +1858,8 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactionsLevel) {
   default_cf.write_buffer_size = 64 << 10;  // 64KB
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = default_cf.target_file_size_base * 1100;
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
   ;
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -2140,11 +1892,7 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactionsLevel) {
         "ColumnFamilyTest::ManualAuto:3"},
        {"ColumnFamilyTest::ManualAuto:1", "ColumnFamilyTest::ManualAuto:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
->>>>>>> blood in blood out
         if (cf_1_1) {
           TEST_SYNC_POINT("ColumnFamilyTest::ManualAuto:4");
           cf_1_1 = false;
@@ -2182,7 +1930,6 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactionsLevel) {
   AssertFilesPerLevel("0,1", 1);
 
   // Compare against saved keys
-<<<<<<< HEAD
   std::set<std::string>::iterator key_iter = keys_[1].begin();
   while (key_iter != keys_[1].end()) {
     ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
@@ -2190,13 +1937,6 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactionsLevel) {
   }
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
   rocksdb::SyncPoint::GetInstance()->ClearAllCallBacks();
-=======
-  std::set<std::string>::iterator key_iter = keys_.begin();
-  while (key_iter != keys_.end()) {
-    ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
-    key_iter++;
-  }
->>>>>>> blood in blood out
 }
 
 // In this test, we generate enough files to trigger automatic compactions.
@@ -2205,11 +1945,7 @@ TEST_F(ColumnFamilyTest, SameCFManualAutomaticCompactionsLevel) {
 // This will wait because the automatic compaction has files it needs.
 // Once the conflict is hit, the automatic compaction starts and ends
 // Then the manual will run and end.
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, SameCFAutomaticManualCompactions) {
-=======
-TEST_F(ColumnFamilyTest, SameCFAutomaticManualCompactions) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one"});
   ColumnFamilyOptions default_cf, one;
@@ -2221,12 +1957,8 @@ TEST_F(ColumnFamilyTest, SameCFAutomaticManualCompactions) {
   default_cf.write_buffer_size = 64 << 10;  // 64KB
   default_cf.target_file_size_base = 30 << 10;
   default_cf.max_compaction_bytes = default_cf.target_file_size_base * 1100;
-<<<<<<< HEAD
   BlockBasedTableOptions table_options = GetBlockBasedTableOptions();
   ;
-=======
-  BlockBasedTableOptions table_options;
->>>>>>> blood in blood out
   table_options.no_block_cache = true;
   default_cf.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
@@ -2250,11 +1982,7 @@ TEST_F(ColumnFamilyTest, SameCFAutomaticManualCompactions) {
        {"CompactionPicker::CompactRange:Conflict",
         "ColumnFamilyTest::AutoManual:3"}});
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* /*arg*/) {
-=======
-      "DBImpl::BackgroundCompaction:NonTrivial:AfterRun", [&](void* arg) {
->>>>>>> blood in blood out
         if (cf_1_1) {
           TEST_SYNC_POINT("ColumnFamilyTest::AutoManual:4");
           cf_1_1 = false;
@@ -2294,7 +2022,6 @@ TEST_F(ColumnFamilyTest, SameCFAutomaticManualCompactions) {
   // VERIFY compaction "one"
   AssertFilesPerLevel("1", 1);
   // Compare against saved keys
-<<<<<<< HEAD
   std::set<std::string>::iterator key_iter = keys_[1].begin();
   while (key_iter != keys_[1].end()) {
     ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
@@ -2302,13 +2029,6 @@ TEST_F(ColumnFamilyTest, SameCFAutomaticManualCompactions) {
   }
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
   rocksdb::SyncPoint::GetInstance()->ClearAllCallBacks();
-=======
-  std::set<std::string>::iterator key_iter = keys_.begin();
-  while (key_iter != keys_.end()) {
-    ASSERT_NE("NOT_FOUND", Get(1, *key_iter));
-    key_iter++;
-  }
->>>>>>> blood in blood out
 }
 #endif  // !ROCKSDB_LITE
 
@@ -2325,11 +2045,7 @@ std::string IterStatus(Iterator* iter) {
 }
 }  // anonymous namespace
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, NewIteratorsTest) {
-=======
-TEST_F(ColumnFamilyTest, NewIteratorsTest) {
->>>>>>> blood in blood out
   // iter == 0 -- no tailing
   // iter == 2 -- tailing
   for (int iter = 0; iter < 2; ++iter) {
@@ -2376,11 +2092,7 @@ TEST_F(ColumnFamilyTest, NewIteratorsTest) {
 #endif  // !ROCKSDB_LITE
 
 #ifndef ROCKSDB_LITE  // ReadOnlyDB is not supported
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, ReadOnlyDBTest) {
-=======
-TEST_F(ColumnFamilyTest, ReadOnlyDBTest) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamiliesAndReopen({"one", "two", "three", "four"});
   ASSERT_OK(Put(0, "a", "b"));
@@ -2432,11 +2144,7 @@ TEST_F(ColumnFamilyTest, ReadOnlyDBTest) {
 #endif  // !ROCKSDB_LITE
 
 #ifndef ROCKSDB_LITE  //  WaitForFlush() is not supported in lite
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, DontRollEmptyLogs) {
-=======
-TEST_F(ColumnFamilyTest, DontRollEmptyLogs) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamiliesAndReopen({"one", "two", "three", "four"});
 
@@ -2460,11 +2168,7 @@ TEST_F(ColumnFamilyTest, DontRollEmptyLogs) {
 #endif  // !ROCKSDB_LITE
 
 #ifndef ROCKSDB_LITE  //  WaitForCompaction() is not supported in lite
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, FlushStaleColumnFamilies) {
-=======
-TEST_F(ColumnFamilyTest, FlushStaleColumnFamilies) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamilies({"one", "two"});
   ColumnFamilyOptions default_cf, one, two;
@@ -2499,11 +2203,7 @@ TEST_F(ColumnFamilyTest, FlushStaleColumnFamilies) {
 }
 #endif  // !ROCKSDB_LITE
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, CreateMissingColumnFamilies) {
-=======
-TEST_F(ColumnFamilyTest, CreateMissingColumnFamilies) {
->>>>>>> blood in blood out
   Status s = TryOpen({"one", "two"});
   ASSERT_TRUE(!s.ok());
   db_options_.create_missing_column_families = true;
@@ -2512,11 +2212,7 @@ TEST_F(ColumnFamilyTest, CreateMissingColumnFamilies) {
   Close();
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, SanitizeOptions) {
-=======
-TEST_F(ColumnFamilyTest, SanitizeOptions) {
->>>>>>> blood in blood out
   DBOptions db_options;
   for (int s = kCompactionStyleLevel; s <= kCompactionStyleUniversal; ++s) {
     for (int l = 0; l <= 2; l++) {
@@ -2565,11 +2261,7 @@ TEST_F(ColumnFamilyTest, SanitizeOptions) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, ReadDroppedColumnFamily) {
-=======
-TEST_F(ColumnFamilyTest, ReadDroppedColumnFamily) {
->>>>>>> blood in blood out
   // iter 0 -- drop CF, don't reopen
   // iter 1 -- delete CF, reopen
   for (int iter = 0; iter < 2; ++iter) {
@@ -2641,11 +2333,7 @@ TEST_F(ColumnFamilyTest, ReadDroppedColumnFamily) {
   }
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, FlushAndDropRaceCondition) {
-=======
-TEST_F(ColumnFamilyTest, FlushAndDropRaceCondition) {
->>>>>>> blood in blood out
   db_options_.create_missing_column_families = true;
   Open({"default", "one"});
   ColumnFamilyOptions options;
@@ -2711,7 +2399,6 @@ TEST_F(ColumnFamilyTest, FlushAndDropRaceCondition) {
 // skipped as persisting options is not supported in ROCKSDB_LITE
 namespace {
 std::atomic<int> test_stage(0);
-<<<<<<< HEAD
 std::atomic<bool> ordered_by_writethread(false);
 const int kMainThreadStartPersistingOptionsFile = 1;
 const int kChildThreadFinishDroppingColumnFamily = 2;
@@ -2719,14 +2406,6 @@ void DropSingleColumnFamily(ColumnFamilyTest* cf_test, int cf_id,
                             std::vector<Comparator*>* comparators) {
   while (test_stage < kMainThreadStartPersistingOptionsFile &&
          !ordered_by_writethread) {
-=======
-const int kMainThreadStartPersistingOptionsFile = 1;
-const int kChildThreadFinishDroppingColumnFamily = 2;
-const int kChildThreadWaitingMainThreadPersistOptions = 3;
-void DropSingleColumnFamily(ColumnFamilyTest* cf_test, int cf_id,
-                            std::vector<Comparator*>* comparators) {
-  while (test_stage < kMainThreadStartPersistingOptionsFile) {
->>>>>>> blood in blood out
     Env::Default()->SleepForMicroseconds(100);
   }
   cf_test->DropColumnFamilies({cf_id});
@@ -2738,11 +2417,7 @@ void DropSingleColumnFamily(ColumnFamilyTest* cf_test, int cf_id,
 }
 }  // namespace
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, CreateAndDropRace) {
-=======
-TEST_F(ColumnFamilyTest, CreateAndDropRace) {
->>>>>>> blood in blood out
   const int kCfCount = 5;
   std::vector<ColumnFamilyOptions> cf_opts;
   std::vector<Comparator*> comparators;
@@ -2757,45 +2432,25 @@ TEST_F(ColumnFamilyTest, CreateAndDropRace) {
   auto main_thread_id = std::this_thread::get_id();
 
   rocksdb::SyncPoint::GetInstance()->SetCallBack("PersistRocksDBOptions:start",
-<<<<<<< HEAD
                                                  [&](void* /*arg*/) {
-=======
-                                                 [&](void* arg) {
->>>>>>> blood in blood out
     auto current_thread_id = std::this_thread::get_id();
     // If it's the main thread hitting this sync-point, then it
     // will be blocked until some other thread update the test_stage.
     if (main_thread_id == current_thread_id) {
       test_stage = kMainThreadStartPersistingOptionsFile;
-<<<<<<< HEAD
       while (test_stage < kChildThreadFinishDroppingColumnFamily &&
              !ordered_by_writethread) {
-=======
-      while (test_stage < kChildThreadFinishDroppingColumnFamily) {
->>>>>>> blood in blood out
         Env::Default()->SleepForMicroseconds(100);
       }
     }
   });
 
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "WriteThread::EnterUnbatched:Wait", [&](void* /*arg*/) {
         // This means a thread doing DropColumnFamily() is waiting for
         // other thread to finish persisting options.
         // In such case, we update the test_stage to unblock the main thread.
         ordered_by_writethread = true;
-=======
-      "WriteThread::EnterUnbatched:Wait", [&](void* arg) {
-        // This means a thread doing DropColumnFamily() is waiting for
-        // other thread to finish persisting options.
-        // In such case, we update the test_stage to unblock the main thread.
-        test_stage = kChildThreadWaitingMainThreadPersistOptions;
-
-        // Note that based on the test setting, this must not be the
-        // main thread.
-        ASSERT_NE(main_thread_id, std::this_thread::get_id());
->>>>>>> blood in blood out
       });
 
   // Create a database with four column families
@@ -2806,12 +2461,8 @@ TEST_F(ColumnFamilyTest, CreateAndDropRace) {
 
   // Start a thread that will drop the first column family
   // and its comparator
-<<<<<<< HEAD
   rocksdb::port::Thread drop_cf_thread(DropSingleColumnFamily, this, 1,
                                        &comparators);
-=======
-  rocksdb::port::Thread drop_cf_thread(DropSingleColumnFamily, this, 1, &comparators);
->>>>>>> blood in blood out
 
   DropColumnFamilies({2});
 
@@ -2823,7 +2474,6 @@ TEST_F(ColumnFamilyTest, CreateAndDropRace) {
       delete comparator;
     }
   }
-<<<<<<< HEAD
 
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
   rocksdb::SyncPoint::GetInstance()->ClearAllCallBacks();
@@ -2831,12 +2481,6 @@ TEST_F(ColumnFamilyTest, CreateAndDropRace) {
 #endif  // !ROCKSDB_LITE
 
 TEST_P(ColumnFamilyTest, WriteStallSingleColumnFamily) {
-=======
-}
-#endif  // !ROCKSDB_LITE
-
-TEST_F(ColumnFamilyTest, WriteStallSingleColumnFamily) {
->>>>>>> blood in blood out
   const uint64_t kBaseRate = 800000u;
   db_options_.delayed_write_rate = kBaseRate;
   db_options_.max_background_compactions = 6;
@@ -3018,11 +2662,7 @@ TEST_F(ColumnFamilyTest, WriteStallSingleColumnFamily) {
   ASSERT_EQ(kBaseRate / 1.25, GetDbDelayedWriteRate());
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, CompactionSpeedupSingleColumnFamily) {
-=======
-TEST_F(ColumnFamilyTest, CompactionSpeedupSingleColumnFamily) {
->>>>>>> blood in blood out
   db_options_.max_background_compactions = 6;
   Open({"default"});
   ColumnFamilyData* cfd =
@@ -3086,11 +2726,7 @@ TEST_F(ColumnFamilyTest, CompactionSpeedupSingleColumnFamily) {
   ASSERT_EQ(1, dbfull()->TEST_BGCompactionsAllowed());
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, WriteStallTwoColumnFamilies) {
-=======
-TEST_F(ColumnFamilyTest, WriteStallTwoColumnFamilies) {
->>>>>>> blood in blood out
   const uint64_t kBaseRate = 810000u;
   db_options_.delayed_write_rate = kBaseRate;
   Open();
@@ -3165,11 +2801,7 @@ TEST_F(ColumnFamilyTest, WriteStallTwoColumnFamilies) {
   ASSERT_EQ(kBaseRate / 1.25, GetDbDelayedWriteRate());
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, CompactionSpeedupTwoColumnFamilies) {
-=======
-TEST_F(ColumnFamilyTest, CompactionSpeedupTwoColumnFamilies) {
->>>>>>> blood in blood out
   db_options_.max_background_compactions = 6;
   column_family_options_.soft_pending_compaction_bytes_limit = 200;
   column_family_options_.hard_pending_compaction_bytes_limit = 2000;
@@ -3234,7 +2866,6 @@ TEST_F(ColumnFamilyTest, CompactionSpeedupTwoColumnFamilies) {
   ASSERT_EQ(1, dbfull()->TEST_BGCompactionsAllowed());
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, CreateAndDestoryOptions) {
   std::unique_ptr<ColumnFamilyOptions> cfo(new ColumnFamilyOptions());
   ColumnFamilyHandle* cfh;
@@ -3270,10 +2901,6 @@ TEST_P(ColumnFamilyTest, CreateDropAndDestroyWithoutFileDeletion) {
 }
 
 TEST_P(ColumnFamilyTest, FlushCloseWALFiles) {
-=======
-#ifndef ROCKSDB_LITE
-TEST_F(ColumnFamilyTest, FlushCloseWALFiles) {
->>>>>>> blood in blood out
   SpecialEnv env(Env::Default());
   db_options_.env = &env;
   db_options_.max_background_flushes = 1;
@@ -3315,11 +2942,7 @@ TEST_F(ColumnFamilyTest, FlushCloseWALFiles) {
 #endif  // !ROCKSDB_LITE
 
 #ifndef ROCKSDB_LITE  // WaitForFlush() is not supported
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, IteratorCloseWALFile1) {
-=======
-TEST_F(ColumnFamilyTest, IteratorCloseWALFile1) {
->>>>>>> blood in blood out
   SpecialEnv env(Env::Default());
   db_options_.env = &env;
   db_options_.max_background_flushes = 1;
@@ -3364,11 +2987,7 @@ TEST_F(ColumnFamilyTest, IteratorCloseWALFile1) {
   Close();
 }
 
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, IteratorCloseWALFile2) {
-=======
-TEST_F(ColumnFamilyTest, IteratorCloseWALFile2) {
->>>>>>> blood in blood out
   SpecialEnv env(Env::Default());
   // Allow both of flush and purge job to schedule.
   env.SetBackgroundThreads(2, Env::HIGH);
@@ -3425,11 +3044,7 @@ TEST_F(ColumnFamilyTest, IteratorCloseWALFile2) {
 #endif  // !ROCKSDB_LITE
 
 #ifndef ROCKSDB_LITE  // TEST functions are not supported in lite
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, ForwardIteratorCloseWALFile) {
-=======
-TEST_F(ColumnFamilyTest, ForwardIteratorCloseWALFile) {
->>>>>>> blood in blood out
   SpecialEnv env(Env::Default());
   // Allow both of flush and purge job to schedule.
   env.SetBackgroundThreads(2, Env::HIGH);
@@ -3506,11 +3121,7 @@ TEST_F(ColumnFamilyTest, ForwardIteratorCloseWALFile) {
 // Disable on windows because SyncWAL requires env->IsSyncThreadSafe()
 // to return true which is not so in unbuffered mode.
 #ifndef OS_WIN
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, LogSyncConflictFlush) {
-=======
-TEST_F(ColumnFamilyTest, LogSyncConflictFlush) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamiliesAndReopen({"one", "two"});
 
@@ -3545,11 +3156,7 @@ TEST_F(ColumnFamilyTest, LogSyncConflictFlush) {
 // test is being used to ensure a roll of wal files.
 // Basic idea is to test that WAL truncation is being detected and not
 // ignored
-<<<<<<< HEAD
 TEST_P(ColumnFamilyTest, DISABLED_LogTruncationTest) {
-=======
-TEST_F(ColumnFamilyTest, DISABLED_LogTruncationTest) {
->>>>>>> blood in blood out
   Open();
   CreateColumnFamiliesAndReopen({"one", "two"});
 
@@ -3618,7 +3225,6 @@ TEST_F(ColumnFamilyTest, DISABLED_LogTruncationTest) {
   // cleanup
   env_->DeleteDir(backup_logs);
 }
-<<<<<<< HEAD
 
 TEST_P(ColumnFamilyTest, DefaultCfPathsTest) {
   Open();
@@ -3690,8 +3296,6 @@ TEST_P(ColumnFamilyTest, MultipleCFPathsTest) {
   }
 }
 
-=======
->>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char** argv) {

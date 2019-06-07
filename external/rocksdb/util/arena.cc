@@ -62,11 +62,8 @@ Arena::Arena(size_t block_size, AllocTracker* tracker, size_t huge_page_size)
   if (hugetlb_size_ && kBlockSize > hugetlb_size_) {
     hugetlb_size_ = ((kBlockSize - 1U) / hugetlb_size_ + 1U) * hugetlb_size_;
   }
-<<<<<<< HEAD
 #else
   (void)huge_page_size;
-=======
->>>>>>> blood in blood out
 #endif
   if (tracker_ != nullptr) {
     tracker_->Allocate(kInlineSize);
@@ -157,10 +154,7 @@ char* Arena::AllocateFromHugePage(size_t bytes) {
   }
   return reinterpret_cast<char*>(addr);
 #else
-<<<<<<< HEAD
   (void)bytes;
-=======
->>>>>>> blood in blood out
   return nullptr;
 #endif
 }
@@ -188,12 +182,9 @@ char* Arena::AllocateAligned(size_t bytes, size_t huge_page_size,
       return addr;
     }
   }
-<<<<<<< HEAD
 #else
   (void)huge_page_size;
   (void)logger;
-=======
->>>>>>> blood in blood out
 #endif
 
   size_t current_mod =

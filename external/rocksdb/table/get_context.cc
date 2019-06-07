@@ -29,13 +29,10 @@ void appendToReplayLog(std::string* replay_log, ValueType type, Slice value) {
     replay_log->push_back(type);
     PutLengthPrefixedSlice(replay_log, value);
   }
-<<<<<<< HEAD
 #else
   (void)replay_log;
   (void)type;
   (void)value;
-=======
->>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
 }
 
@@ -84,11 +81,7 @@ void GetContext::MarkKeyMayExist() {
   }
 }
 
-<<<<<<< HEAD
 void GetContext::SaveValue(const Slice& value, SequenceNumber /*seq*/) {
-=======
-void GetContext::SaveValue(const Slice& value, SequenceNumber seq) {
->>>>>>> blood in blood out
   assert(state_ == kNotFound);
   appendToReplayLog(replay_log_, kTypeValue, value);
 
@@ -106,7 +99,6 @@ void GetContext::RecordCounters(Tickers ticker, size_t val) {
 }
 
 bool GetContext::SaveValue(const ParsedInternalKey& parsed_key,
-<<<<<<< HEAD
                            const Slice& value, bool* matched,
                            Cleanable* value_pinner) {
   assert(matched);
@@ -114,12 +106,6 @@ bool GetContext::SaveValue(const ParsedInternalKey& parsed_key,
          merge_context_ != nullptr);
   if (ucmp_->Equal(parsed_key.user_key, user_key_)) {
     *matched = true;
-=======
-                           const Slice& value, Cleanable* value_pinner) {
-  assert((state_ != kMerge && parsed_key.type != kTypeMerge) ||
-         merge_context_ != nullptr);
-  if (ucmp_->Equal(parsed_key.user_key, user_key_)) {
->>>>>>> blood in blood out
     // If the value is not in the snapshot, skip it
     if (!CheckCallback(parsed_key.sequence)) {
       return true;  // to continue to the next seq
@@ -214,11 +200,7 @@ bool GetContext::SaveValue(const ParsedInternalKey& parsed_key,
           merge_context_->PushOperand(value, false);
         }
         if (merge_operator_ != nullptr &&
-<<<<<<< HEAD
             merge_operator_->ShouldMerge(merge_context_->GetOperandsDirectionBackward())) {
-=======
-            merge_operator_->ShouldMerge(merge_context_->GetOperands())) {
->>>>>>> blood in blood out
           state_ = kFound;
           if (LIKELY(pinnable_val_ != nullptr)) {
             Status merge_status = MergeHelper::TimedFullMerge(
@@ -256,15 +238,11 @@ void replayGetContextLog(const Slice& replay_log, const Slice& user_key,
     assert(ret);
     (void)ret;
 
-<<<<<<< HEAD
     bool dont_care __attribute__((__unused__));
-=======
->>>>>>> blood in blood out
     // Since SequenceNumber is not stored and unknown, we will use
     // kMaxSequenceNumber.
     get_context->SaveValue(
         ParsedInternalKey(user_key, kMaxSequenceNumber, type), value,
-<<<<<<< HEAD
         &dont_care, value_pinner);
   }
 #else   // ROCKSDB_LITE
@@ -272,11 +250,6 @@ void replayGetContextLog(const Slice& replay_log, const Slice& user_key,
   (void)user_key;
   (void)get_context;
   (void)value_pinner;
-=======
-        value_pinner);
-  }
-#else   // ROCKSDB_LITE
->>>>>>> blood in blood out
   assert(false);
 #endif  // ROCKSDB_LITE
 }

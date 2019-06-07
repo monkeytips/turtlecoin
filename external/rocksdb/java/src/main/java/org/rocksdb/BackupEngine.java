@@ -82,7 +82,6 @@ public class BackupEngine extends RocksObject implements AutoCloseable {
   }
 
   /**
-<<<<<<< HEAD
    * Captures the state of the database in the latest backup along with
    * application specific metadata.
    *
@@ -112,8 +111,6 @@ public class BackupEngine extends RocksObject implements AutoCloseable {
   }
 
   /**
-=======
->>>>>>> blood in blood out
    * Gets information about the available
    * backups
    *
@@ -229,12 +226,9 @@ public class BackupEngine extends RocksObject implements AutoCloseable {
   private native void createNewBackup(final long handle, final long dbHandle,
       final boolean flushBeforeBackup) throws RocksDBException;
 
-<<<<<<< HEAD
   private native void createNewBackupWithMetadata(final long handle, final long dbHandle,
       final String metadata, final boolean flushBeforeBackup) throws RocksDBException;
 
-=======
->>>>>>> blood in blood out
   private native List<BackupInfo> getBackupInfo(final long handle);
 
   private native int[] getCorruptedBackups(final long handle);

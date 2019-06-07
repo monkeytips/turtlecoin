@@ -465,7 +465,6 @@ public enum TickerType {
      */
     NUMBER_RATE_LIMITER_DRAINS((byte) 0x5C),
 
-<<<<<<< HEAD
     /**
      * Number of internal skipped during iteration
      */
@@ -477,9 +476,6 @@ public enum TickerType {
     NUMBER_MULTIGET_KEYS_FOUND((byte) 0x5E),
 
     TICKER_ENUM_MAX((byte) 0x5F);
-=======
-    TICKER_ENUM_MAX((byte) 0x5D);
->>>>>>> blood in blood out
 
 
     private final byte value;

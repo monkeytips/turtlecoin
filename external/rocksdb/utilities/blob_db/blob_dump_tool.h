@@ -27,14 +27,9 @@ class BlobDumpTool {
 
   BlobDumpTool();
 
-<<<<<<< HEAD
   Status Run(const std::string& filename, DisplayType show_key,
              DisplayType show_blob, DisplayType show_uncompressed_blob,
              bool show_summary);
-=======
-  Status Run(const std::string& filename, DisplayType key_type,
-             DisplayType blob_type);
->>>>>>> blood in blood out
 
  private:
   std::unique_ptr<RandomAccessFileReader> reader_;
@@ -42,7 +37,6 @@ class BlobDumpTool {
   size_t buffer_size_;
 
   Status Read(uint64_t offset, size_t size, Slice* result);
-<<<<<<< HEAD
   Status DumpBlobLogHeader(uint64_t* offset, CompressionType* compression);
   Status DumpBlobLogFooter(uint64_t file_size, uint64_t* footer_offset);
   Status DumpRecord(DisplayType show_key, DisplayType show_blob,
@@ -51,12 +45,6 @@ class BlobDumpTool {
                     uint64_t* total_records, uint64_t* total_key_size,
                     uint64_t* total_blob_size,
                     uint64_t* total_uncompressed_blob_size);
-=======
-  Status DumpBlobLogHeader(uint64_t* offset);
-  Status DumpBlobLogFooter(uint64_t file_size, uint64_t* footer_offset);
-  Status DumpRecord(DisplayType show_key, DisplayType show_blob,
-                    uint64_t* offset);
->>>>>>> blood in blood out
   void DumpSlice(const Slice s, DisplayType type);
 
   template <class T>

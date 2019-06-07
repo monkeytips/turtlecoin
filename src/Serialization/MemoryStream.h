@@ -31,11 +31,7 @@ public:
   MemoryStream() : m_writePos(0) {
   }
 
-<<<<<<< HEAD
   virtual uint64_t writeSome(const void* data, uint64_t size) override {
-=======
-  virtual size_t writeSome(const void* data, size_t size) override {
->>>>>>> blood in blood out
     if (size == 0) {
       return 0;
     }
@@ -49,11 +45,7 @@ public:
     return size;
   }
 
-<<<<<<< HEAD
   uint64_t size() {
-=======
-  size_t size() {
->>>>>>> blood in blood out
     return m_buffer.size();
   }
 
@@ -67,11 +59,7 @@ public:
   }
 
 private:
-<<<<<<< HEAD
   uint64_t m_writePos;
-=======
-  size_t m_writePos;
->>>>>>> blood in blood out
   std::vector<uint8_t> m_buffer;
 };
 

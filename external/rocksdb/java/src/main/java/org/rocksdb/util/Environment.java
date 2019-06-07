@@ -8,13 +8,10 @@ public class Environment {
     return ARCH.contains("ppc");
   }
 
-<<<<<<< HEAD
   public static boolean isS390x() {
     return ARCH.contains("s390x");
   }
 
-=======
->>>>>>> blood in blood out
   public static boolean isWindows() {
     return (OS.contains("win"));
   }
@@ -40,13 +37,10 @@ public class Environment {
     return OS.contains("sunos");
   }
 
-<<<<<<< HEAD
   public static boolean isOpenBSD() {
     return (OS.contains("openbsd"));
   }
 
-=======
->>>>>>> blood in blood out
   public static boolean is64Bit() {
     if (ARCH.indexOf("sparcv9") >= 0) {
       return true;
@@ -67,11 +61,8 @@ public class Environment {
       final String arch = is64Bit() ? "64" : "32";
       if(isPowerPC()) {
         return String.format("%sjni-linux-%s", name, ARCH);
-<<<<<<< HEAD
       } else if(isS390x()) {
         return String.format("%sjni-linux%s", name, ARCH);
-=======
->>>>>>> blood in blood out
       } else {
         return String.format("%sjni-linux%s", name, arch);
       }
@@ -86,11 +77,8 @@ public class Environment {
       return String.format("%sjni-solaris%s", name, arch);
     } else if (isWindows() && is64Bit()) {
       return String.format("%sjni-win64", name);
-<<<<<<< HEAD
     } else if (isOpenBSD()) {
       return String.format("%sjni-openbsd%s", name, is64Bit() ? "64" : "32");
-=======
->>>>>>> blood in blood out
     }
 
     throw new UnsupportedOperationException(String.format("Cannot determine JNI library name for ARCH='%s' OS='%s' name='%s'", ARCH, OS, name));
@@ -101,11 +89,7 @@ public class Environment {
   }
 
   private static String appendLibOsSuffix(final String libraryFileName, final boolean shared) {
-<<<<<<< HEAD
     if (isUnix() || isAix() || isSolaris() || isFreeBSD() || isOpenBSD()) {
-=======
-    if (isUnix() || isAix() || isSolaris() || isFreeBSD()) {
->>>>>>> blood in blood out
       return libraryFileName + ".so";
     } else if (isMac()) {
       return libraryFileName + (shared ? ".dylib" : ".jnilib");

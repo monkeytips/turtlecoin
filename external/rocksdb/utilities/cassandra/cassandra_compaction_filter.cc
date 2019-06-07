@@ -17,19 +17,9 @@ const char* CassandraCompactionFilter::Name() const {
 }
 
 CompactionFilter::Decision CassandraCompactionFilter::FilterV2(
-<<<<<<< HEAD
     int /*level*/, const Slice& /*key*/, ValueType value_type,
     const Slice& existing_value, std::string* new_value,
     std::string* /*skip_until*/) const {
-=======
-  int level,
-  const Slice& key,
-  ValueType value_type,
-  const Slice& existing_value,
-  std::string* new_value,
-  std::string* skip_until) const {
-
->>>>>>> blood in blood out
   bool value_changed = false;
   RowValue row_value = RowValue::Deserialize(
     existing_value.data(), existing_value.size());

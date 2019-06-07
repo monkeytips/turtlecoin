@@ -234,19 +234,11 @@ TEST_F(DBTest, SkipDelay) {
       std::atomic<int> sleep_count(0);
       rocksdb::SyncPoint::GetInstance()->SetCallBack(
           "DBImpl::DelayWrite:Sleep",
-<<<<<<< HEAD
           [&](void* /*arg*/) { sleep_count.fetch_add(1); });
       std::atomic<int> wait_count(0);
       rocksdb::SyncPoint::GetInstance()->SetCallBack(
           "DBImpl::DelayWrite:Wait",
           [&](void* /*arg*/) { wait_count.fetch_add(1); });
-=======
-          [&](void* arg) { sleep_count.fetch_add(1); });
-      std::atomic<int> wait_count(0);
-      rocksdb::SyncPoint::GetInstance()->SetCallBack(
-          "DBImpl::DelayWrite:Wait",
-          [&](void* arg) { wait_count.fetch_add(1); });
->>>>>>> blood in blood out
       rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
       WriteOptions wo;
@@ -758,15 +750,9 @@ TEST_F(DBTest, FlushSchedule) {
 namespace {
 class KeepFilter : public CompactionFilter {
  public:
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value,
-                      bool* value_changed) const override {
->>>>>>> blood in blood out
     return false;
   }
 
@@ -796,15 +782,9 @@ class KeepFilterFactory : public CompactionFilterFactory {
 class DelayFilter : public CompactionFilter {
  public:
   explicit DelayFilter(DBTestBase* d) : db_test(d) {}
-<<<<<<< HEAD
   virtual bool Filter(int /*level*/, const Slice& /*key*/,
                       const Slice& /*value*/, std::string* /*new_value*/,
                       bool* /*value_changed*/) const override {
-=======
-  virtual bool Filter(int level, const Slice& key, const Slice& value,
-                      std::string* new_value,
-                      bool* value_changed) const override {
->>>>>>> blood in blood out
     db_test->env_->addon_time_.fetch_add(1000);
     return true;
   }
@@ -819,11 +799,7 @@ class DelayFilterFactory : public CompactionFilterFactory {
  public:
   explicit DelayFilterFactory(DBTestBase* d) : db_test(d) {}
   virtual std::unique_ptr<CompactionFilter> CreateCompactionFilter(
-<<<<<<< HEAD
       const CompactionFilter::Context& /*context*/) override {
-=======
-      const CompactionFilter::Context& context) override {
->>>>>>> blood in blood out
     return std::unique_ptr<CompactionFilter>(new DelayFilter(db_test));
   }
 
@@ -1706,11 +1682,7 @@ TEST_F(DBTest, CustomComparator) {
 
 TEST_F(DBTest, DBOpen_Options) {
   Options options = CurrentOptions();
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("db_options_test");
-=======
-  std::string dbname = test::TmpDir(env_) + "/db_options_test";
->>>>>>> blood in blood out
   ASSERT_OK(DestroyDB(dbname, options));
 
   // Does not exist, and create_if_missing == false: error
@@ -1768,11 +1740,7 @@ TEST_F(DBTest, DBOpen_Change_NumLevels) {
 }
 
 TEST_F(DBTest, DestroyDBMetaDatabase) {
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("db_meta");
-=======
-  std::string dbname = test::TmpDir(env_) + "/db_meta";
->>>>>>> blood in blood out
   ASSERT_OK(env_->CreateDirIfMissing(dbname));
   std::string metadbname = MetaDatabaseName(dbname, 0);
   ASSERT_OK(env_->CreateDirIfMissing(metadbname));
@@ -2185,7 +2153,6 @@ TEST_F(DBTest, GroupCommitTest) {
   do {
     Options options = CurrentOptions();
     options.env = env_;
-<<<<<<< HEAD
     options.statistics = rocksdb::CreateDBStatistics();
     Reopen(options);
 
@@ -2194,12 +2161,6 @@ TEST_F(DBTest, GroupCommitTest) {
           "DBImpl::WriteImpl:BeforeLeaderEnters"}});
     rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
-=======
-    env_->log_write_slowdown_.store(100);
-    options.statistics = rocksdb::CreateDBStatistics();
-    Reopen(options);
-
->>>>>>> blood in blood out
     // Start threads
     GCThread thread[kGCNumThreads];
     for (int id = 0; id < kGCNumThreads; id++) {
@@ -2208,17 +2169,7 @@ TEST_F(DBTest, GroupCommitTest) {
       thread[id].done = false;
       env_->StartThread(GCThreadBody, &thread[id]);
     }
-<<<<<<< HEAD
     env_->WaitForJoin();
-=======
-
-    for (int id = 0; id < kGCNumThreads; id++) {
-      while (thread[id].done == false) {
-        env_->SleepForMicroseconds(100000);
-      }
-    }
-    env_->log_write_slowdown_.store(0);
->>>>>>> blood in blood out
 
     ASSERT_GT(TestGetTickerCount(options, WRITE_DONE_BY_OTHER), 0);
 
@@ -2294,29 +2245,17 @@ class ModelDB : public DB {
     return Write(o, &batch);
   }
   using DB::Get;
-<<<<<<< HEAD
   virtual Status Get(const ReadOptions& /*options*/, ColumnFamilyHandle* /*cf*/,
                      const Slice& key, PinnableSlice* /*value*/) override {
-=======
-  virtual Status Get(const ReadOptions& options, ColumnFamilyHandle* cf,
-                     const Slice& key, PinnableSlice* value) override {
->>>>>>> blood in blood out
     return Status::NotSupported(key);
   }
 
   using DB::MultiGet;
   virtual std::vector<Status> MultiGet(
-<<<<<<< HEAD
       const ReadOptions& /*options*/,
       const std::vector<ColumnFamilyHandle*>& /*column_family*/,
       const std::vector<Slice>& keys,
       std::vector<std::string>* /*values*/) override {
-=======
-      const ReadOptions& options,
-      const std::vector<ColumnFamilyHandle*>& column_family,
-      const std::vector<Slice>& keys,
-      std::vector<std::string>* values) override {
->>>>>>> blood in blood out
     std::vector<Status> s(keys.size(),
                           Status::NotSupported("Not implemented."));
     return s;
@@ -2325,15 +2264,9 @@ class ModelDB : public DB {
 #ifndef ROCKSDB_LITE
   using DB::IngestExternalFile;
   virtual Status IngestExternalFile(
-<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/,
       const std::vector<std::string>& /*external_files*/,
       const IngestExternalFileOptions& /*options*/) override {
-=======
-      ColumnFamilyHandle* column_family,
-      const std::vector<std::string>& external_files,
-      const IngestExternalFileOptions& options) override {
->>>>>>> blood in blood out
     return Status::NotSupported("Not implemented.");
   }
 
@@ -2343,38 +2276,22 @@ class ModelDB : public DB {
 
   using DB::GetPropertiesOfAllTables;
   virtual Status GetPropertiesOfAllTables(
-<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/,
       TablePropertiesCollection* /*props*/) override {
-=======
-      ColumnFamilyHandle* column_family,
-      TablePropertiesCollection* props) override {
->>>>>>> blood in blood out
     return Status();
   }
 
   virtual Status GetPropertiesOfTablesInRange(
-<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/, const Range* /*range*/,
       std::size_t /*n*/, TablePropertiesCollection* /*props*/) override {
-=======
-      ColumnFamilyHandle* column_family, const Range* range, std::size_t n,
-      TablePropertiesCollection* props) override {
->>>>>>> blood in blood out
     return Status();
   }
 #endif  // ROCKSDB_LITE
 
   using DB::KeyMayExist;
-<<<<<<< HEAD
   virtual bool KeyMayExist(const ReadOptions& /*options*/,
                            ColumnFamilyHandle* /*column_family*/,
                            const Slice& /*key*/, std::string* /*value*/,
-=======
-  virtual bool KeyMayExist(const ReadOptions& options,
-                           ColumnFamilyHandle* column_family, const Slice& key,
-                           std::string* value,
->>>>>>> blood in blood out
                            bool* value_found = nullptr) override {
     if (value_found != nullptr) {
       *value_found = false;
@@ -2382,14 +2299,9 @@ class ModelDB : public DB {
     return true;  // Not Supported directly
   }
   using DB::NewIterator;
-<<<<<<< HEAD
   virtual Iterator* NewIterator(
       const ReadOptions& options,
       ColumnFamilyHandle* /*column_family*/) override {
-=======
-  virtual Iterator* NewIterator(const ReadOptions& options,
-                                ColumnFamilyHandle* column_family) override {
->>>>>>> blood in blood out
     if (options.snapshot == nullptr) {
       KVMap* saved = new KVMap;
       *saved = map_;
@@ -2401,15 +2313,9 @@ class ModelDB : public DB {
     }
   }
   virtual Status NewIterators(
-<<<<<<< HEAD
       const ReadOptions& /*options*/,
       const std::vector<ColumnFamilyHandle*>& /*column_family*/,
       std::vector<Iterator*>* /*iterators*/) override {
-=======
-      const ReadOptions& options,
-      const std::vector<ColumnFamilyHandle*>& column_family,
-      std::vector<Iterator*>* iterators) override {
->>>>>>> blood in blood out
     return Status::NotSupported("Not supported yet");
   }
   virtual const Snapshot* GetSnapshot() override {
@@ -2422,11 +2328,7 @@ class ModelDB : public DB {
     delete reinterpret_cast<const ModelSnapshot*>(snapshot);
   }
 
-<<<<<<< HEAD
   virtual Status Write(const WriteOptions& /*options*/,
-=======
-  virtual Status Write(const WriteOptions& options,
->>>>>>> blood in blood out
                        WriteBatch* batch) override {
     class Handler : public WriteBatch::Handler {
      public:
@@ -2434,12 +2336,8 @@ class ModelDB : public DB {
       virtual void Put(const Slice& key, const Slice& value) override {
         (*map_)[key.ToString()] = value.ToString();
       }
-<<<<<<< HEAD
       virtual void Merge(const Slice& /*key*/,
                          const Slice& /*value*/) override {
-=======
-      virtual void Merge(const Slice& key, const Slice& value) override {
->>>>>>> blood in blood out
         // ignore merge for now
         // (*map_)[key.ToString()] = value.ToString();
       }
@@ -2453,7 +2351,6 @@ class ModelDB : public DB {
   }
 
   using DB::GetProperty;
-<<<<<<< HEAD
   virtual bool GetProperty(ColumnFamilyHandle* /*column_family*/,
                            const Slice& /*property*/,
                            std::string* /*value*/) override {
@@ -2463,20 +2360,10 @@ class ModelDB : public DB {
   virtual bool GetIntProperty(ColumnFamilyHandle* /*column_family*/,
                               const Slice& /*property*/,
                               uint64_t* /*value*/) override {
-=======
-  virtual bool GetProperty(ColumnFamilyHandle* column_family,
-                           const Slice& property, std::string* value) override {
-    return false;
-  }
-  using DB::GetIntProperty;
-  virtual bool GetIntProperty(ColumnFamilyHandle* column_family,
-                              const Slice& property, uint64_t* value) override {
->>>>>>> blood in blood out
     return false;
   }
   using DB::GetMapProperty;
   virtual bool GetMapProperty(
-<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/, const Slice& /*property*/,
       std::map<std::string, std::string>* /*value*/) override {
     return false;
@@ -2491,66 +2378,33 @@ class ModelDB : public DB {
                                    const Range* /*range*/, int n,
                                    uint64_t* sizes,
                                    uint8_t /*include_flags*/
-=======
-      ColumnFamilyHandle* column_family, const Slice& property,
-      std::map<std::string, std::string>* value) override {
-    return false;
-  }
-  using DB::GetAggregatedIntProperty;
-  virtual bool GetAggregatedIntProperty(const Slice& property,
-                                        uint64_t* value) override {
-    return false;
-  }
-  using DB::GetApproximateSizes;
-  virtual void GetApproximateSizes(ColumnFamilyHandle* column_family,
-                                   const Range* range, int n, uint64_t* sizes,
-                                   uint8_t include_flags
->>>>>>> blood in blood out
                                    = INCLUDE_FILES) override {
     for (int i = 0; i < n; i++) {
       sizes[i] = 0;
     }
   }
   using DB::GetApproximateMemTableStats;
-<<<<<<< HEAD
   virtual void GetApproximateMemTableStats(
       ColumnFamilyHandle* /*column_family*/, const Range& /*range*/,
       uint64_t* const count, uint64_t* const size) override {
-=======
-  virtual void GetApproximateMemTableStats(ColumnFamilyHandle* column_family,
-                                           const Range& range,
-                                           uint64_t* const count,
-                                           uint64_t* const size) override {
->>>>>>> blood in blood out
     *count = 0;
     *size = 0;
   }
   using DB::CompactRange;
-<<<<<<< HEAD
   virtual Status CompactRange(const CompactRangeOptions& /*options*/,
                               ColumnFamilyHandle* /*column_family*/,
                               const Slice* /*start*/,
                               const Slice* /*end*/) override {
-=======
-  virtual Status CompactRange(const CompactRangeOptions& options,
-                              ColumnFamilyHandle* column_family,
-                              const Slice* start, const Slice* end) override {
->>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation.");
   }
 
   virtual Status SetDBOptions(
-<<<<<<< HEAD
       const std::unordered_map<std::string, std::string>& /*new_options*/)
-=======
-      const std::unordered_map<std::string, std::string>& new_options)
->>>>>>> blood in blood out
       override {
     return Status::NotSupported("Not supported operation.");
   }
 
   using DB::CompactFiles;
-<<<<<<< HEAD
   virtual Status CompactFiles(
       const CompactionOptions& /*compact_options*/,
       ColumnFamilyHandle* /*column_family*/,
@@ -2558,13 +2412,6 @@ class ModelDB : public DB {
       const int /*output_level*/, const int /*output_path_id*/ = -1,
       std::vector<std::string>* const /*output_file_names*/ = nullptr
       ) override {
-=======
-  virtual Status CompactFiles(const CompactionOptions& compact_options,
-                              ColumnFamilyHandle* column_family,
-                              const std::vector<std::string>& input_file_names,
-                              const int output_level,
-                              const int output_path_id = -1) override {
->>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation.");
   }
 
@@ -2577,41 +2424,25 @@ class ModelDB : public DB {
   }
 
   Status EnableAutoCompaction(
-<<<<<<< HEAD
       const std::vector<ColumnFamilyHandle*>& /*column_family_handles*/)
       override {
-=======
-      const std::vector<ColumnFamilyHandle*>& column_family_handles) override {
->>>>>>> blood in blood out
     return Status::NotSupported("Not supported operation.");
   }
 
   using DB::NumberLevels;
-<<<<<<< HEAD
   virtual int NumberLevels(ColumnFamilyHandle* /*column_family*/) override {
-=======
-  virtual int NumberLevels(ColumnFamilyHandle* column_family) override {
->>>>>>> blood in blood out
     return 1;
   }
 
   using DB::MaxMemCompactionLevel;
   virtual int MaxMemCompactionLevel(
-<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/) override {
-=======
-      ColumnFamilyHandle* column_family) override {
->>>>>>> blood in blood out
     return 1;
   }
 
   using DB::Level0StopWriteTrigger;
   virtual int Level0StopWriteTrigger(
-<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/) override {
-=======
-      ColumnFamilyHandle* column_family) override {
->>>>>>> blood in blood out
     return -1;
   }
 
@@ -2620,12 +2451,8 @@ class ModelDB : public DB {
   virtual Env* GetEnv() const override { return nullptr; }
 
   using DB::GetOptions;
-<<<<<<< HEAD
   virtual Options GetOptions(
       ColumnFamilyHandle* /*column_family*/) const override {
-=======
-  virtual Options GetOptions(ColumnFamilyHandle* column_family) const override {
->>>>>>> blood in blood out
     return options_;
   }
 
@@ -2633,13 +2460,8 @@ class ModelDB : public DB {
   virtual DBOptions GetDBOptions() const override { return options_; }
 
   using DB::Flush;
-<<<<<<< HEAD
   virtual Status Flush(const rocksdb::FlushOptions& /*options*/,
                        ColumnFamilyHandle* /*column_family*/) override {
-=======
-  virtual Status Flush(const rocksdb::FlushOptions& options,
-                       ColumnFamilyHandle* column_family) override {
->>>>>>> blood in blood out
     Status ret;
     return ret;
   }
@@ -2649,7 +2471,6 @@ class ModelDB : public DB {
 #ifndef ROCKSDB_LITE
   virtual Status DisableFileDeletions() override { return Status::OK(); }
 
-<<<<<<< HEAD
   virtual Status EnableFileDeletions(bool /*force*/) override {
     return Status::OK();
   }
@@ -2669,54 +2490,23 @@ class ModelDB : public DB {
   virtual Status GetUpdatesSince(
       rocksdb::SequenceNumber, unique_ptr<rocksdb::TransactionLogIterator>*,
       const TransactionLogIterator::ReadOptions& /*read_options*/ =
-=======
-  virtual Status EnableFileDeletions(bool force) override {
-    return Status::OK();
-  }
-  virtual Status GetLiveFiles(std::vector<std::string>&, uint64_t* size,
-                              bool flush_memtable = true) override {
-    return Status::OK();
-  }
-
-  virtual Status GetSortedWalFiles(VectorLogPtr& files) override {
-    return Status::OK();
-  }
-
-  virtual Status DeleteFile(std::string name) override { return Status::OK(); }
-
-  virtual Status GetUpdatesSince(
-      rocksdb::SequenceNumber, unique_ptr<rocksdb::TransactionLogIterator>*,
-      const TransactionLogIterator::ReadOptions& read_options =
->>>>>>> blood in blood out
           TransactionLogIterator::ReadOptions()) override {
     return Status::NotSupported("Not supported in Model DB");
   }
 
   virtual void GetColumnFamilyMetaData(
-<<<<<<< HEAD
       ColumnFamilyHandle* /*column_family*/,
       ColumnFamilyMetaData* /*metadata*/) override {}
 #endif  // ROCKSDB_LITE
 
   virtual Status GetDbIdentity(std::string& /*identity*/) const override {
-=======
-      ColumnFamilyHandle* column_family,
-      ColumnFamilyMetaData* metadata) override {}
-#endif  // ROCKSDB_LITE
-
-  virtual Status GetDbIdentity(std::string& identity) const override {
->>>>>>> blood in blood out
     return Status::OK();
   }
 
   virtual SequenceNumber GetLatestSequenceNumber() const override { return 0; }
 
-<<<<<<< HEAD
   virtual bool SetPreserveDeletesSequenceNumber(
       SequenceNumber /*seqnum*/) override {
-=======
-  virtual bool SetPreserveDeletesSequenceNumber(SequenceNumber seqnum) override {
->>>>>>> blood in blood out
     return true;
   }
 
@@ -2771,10 +2561,7 @@ class ModelDB : public DB {
   std::string name_ = "";
 };
 
-<<<<<<< HEAD
 #ifndef ROCKSDB_VALGRIND_RUN
-=======
->>>>>>> blood in blood out
 static std::string RandomKey(Random* rnd, int minimum = 0) {
   int len;
   do {
@@ -2931,10 +2718,7 @@ TEST_P(DBTestRandomized, Randomized) {
   if (model_snap != nullptr) model.ReleaseSnapshot(model_snap);
   if (db_snap != nullptr) db_->ReleaseSnapshot(db_snap);
 }
-<<<<<<< HEAD
 #endif  // ROCKSDB_VALGRIND_RUN
-=======
->>>>>>> blood in blood out
 
 TEST_F(DBTest, BlockBasedTablePrefixIndexTest) {
   // create a DB with block prefix index
@@ -3564,7 +3348,6 @@ TEST_F(DBTest, WriteSingleThreadEntry) {
   }
 }
 
-<<<<<<< HEAD
 TEST_F(DBTest, ConcurrentFlushWAL) {
   const size_t cnt = 100;
   Options options;
@@ -3615,8 +3398,6 @@ TEST_F(DBTest, ConcurrentFlushWAL) {
   }
 }
 
-=======
->>>>>>> blood in blood out
 #ifndef ROCKSDB_LITE
 TEST_F(DBTest, DynamicMemtableOptions) {
   const uint64_t k64KB = 1 << 16;
@@ -3710,11 +3491,7 @@ TEST_F(DBTest, DynamicMemtableOptions) {
 
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::DelayWrite:Wait",
-<<<<<<< HEAD
       [&](void* /*arg*/) { sleeping_task_low.WakeUp(); });
-=======
-      [&](void* arg) { sleeping_task_low.WakeUp(); });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   while (!sleeping_task_low.WokenUp() && count < 256) {
@@ -4830,10 +4607,7 @@ TEST_F(DBTest, FileCreationRandomFailure) {
 }
 
 #ifndef ROCKSDB_LITE
-<<<<<<< HEAD
 
-=======
->>>>>>> blood in blood out
 TEST_F(DBTest, DynamicMiscOptions) {
   // Test max_sequential_skip_in_iterations
   Options options;
@@ -5065,11 +4839,7 @@ class DelayedMergeOperator : public MergeOperator {
  public:
   explicit DelayedMergeOperator(DBTest* d) : db_test_(d) {}
 
-<<<<<<< HEAD
   virtual bool FullMergeV2(const MergeOperationInput& /*merge_in*/,
-=======
-  virtual bool FullMergeV2(const MergeOperationInput& merge_in,
->>>>>>> blood in blood out
                            MergeOperationOutput* merge_out) const override {
     db_test_->env_->addon_time_.fetch_add(1000);
     merge_out->new_value = "";
@@ -5155,10 +4925,7 @@ TEST_P(DBTestWithParam, FilterCompactionTimeTest) {
   options.disable_auto_compactions = true;
   options.create_if_missing = true;
   options.statistics = rocksdb::CreateDBStatistics();
-<<<<<<< HEAD
   options.statistics->stats_level_ = kExceptTimeForMutex;
-=======
->>>>>>> blood in blood out
   options.max_subcompactions = max_subcompactions_;
   DestroyAndReopen(options);
 
@@ -5429,11 +5196,7 @@ TEST_F(DBTest, AutomaticConflictsWithManualCompaction) {
   std::atomic<int> callback_count(0);
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::MaybeScheduleFlushOrCompaction:Conflict",
-<<<<<<< HEAD
       [&](void* /*arg*/) { callback_count.fetch_add(1); });
-=======
-      [&](void* arg) { callback_count.fetch_add(1); });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   Random rnd(301);
@@ -5444,11 +5207,7 @@ TEST_F(DBTest, AutomaticConflictsWithManualCompaction) {
     }
     ASSERT_OK(Flush());
   }
-<<<<<<< HEAD
   port::Thread manual_compaction_thread([this]() {
-=======
-  std::thread manual_compaction_thread([this]() {
->>>>>>> blood in blood out
     CompactRangeOptions croptions;
     croptions.exclusive_manual_compaction = true;
     ASSERT_OK(db_->CompactRange(croptions, nullptr, nullptr));
@@ -5660,11 +5419,7 @@ TEST_F(DBTest, HardLimit) {
 
   std::atomic<int> callback_count(0);
   rocksdb::SyncPoint::GetInstance()->SetCallBack("DBImpl::DelayWrite:Wait",
-<<<<<<< HEAD
                                                  [&](void* /*arg*/) {
-=======
-                                                 [&](void* arg) {
->>>>>>> blood in blood out
                                                    callback_count.fetch_add(1);
                                                    sleeping_task_low.WakeUp();
                                                  });
@@ -5689,7 +5444,6 @@ TEST_F(DBTest, HardLimit) {
   sleeping_task_low.WaitUntilDone();
 }
 
-<<<<<<< HEAD
 #if !defined(ROCKSDB_LITE) && !defined(ROCKSDB_DISABLE_STALL_NOTIFICATION)
 class WriteStallListener : public EventListener {
  public:
@@ -5728,23 +5482,6 @@ class WriteStallListener : public EventListener {
   WriteStallCondition condition_;
   WriteStallCondition expected_;
   bool                expected_set_;
-=======
-#ifndef ROCKSDB_LITE
-class WriteStallListener : public EventListener {
- public:
-  WriteStallListener() : condition_(WriteStallCondition::kNormal) {}
-  void OnStallConditionsChanged(const WriteStallInfo& info) override {
-    MutexLock l(&mutex_);
-    condition_ = info.condition.cur;
-  }
-  bool CheckCondition(WriteStallCondition expected) {
-    MutexLock l(&mutex_);
-    return expected == condition_;
-  }
- private:
-  port::Mutex mutex_;
-  WriteStallCondition condition_;
->>>>>>> blood in blood out
 };
 
 TEST_F(DBTest, SoftLimit) {
@@ -5818,11 +5555,7 @@ TEST_F(DBTest, SoftLimit) {
 
   // Only allow one compactin going through.
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "BackgroundCallCompaction:0", [&](void* /*arg*/) {
-=======
-      "BackgroundCallCompaction:0", [&](void* arg) {
->>>>>>> blood in blood out
         // Schedule a sleeping task.
         sleeping_task_low.Reset();
         env_->Schedule(&test::SleepingBackgroundTask::DoSleepTask,
@@ -5932,11 +5665,7 @@ TEST_F(DBTest, LastWriteBufferDelay) {
   sleeping_task.WakeUp();
   sleeping_task.WaitUntilDone();
 }
-<<<<<<< HEAD
 #endif  // !defined(ROCKSDB_LITE) && !defined(ROCKSDB_DISABLE_STALL_NOTIFICATION)
-=======
-#endif  // ROCKSDB_LITE
->>>>>>> blood in blood out
 
 TEST_F(DBTest, FailWhenCompressionNotSupportedTest) {
   CompressionType compressions[] = {kZlibCompression, kBZip2Compression,
@@ -6091,11 +5820,7 @@ TEST_F(DBTest, ThreadLocalPtrDeadlock) {
     return flushes_done.load() > 10;
   };
 
-<<<<<<< HEAD
   port::Thread flushing_thread([&] {
-=======
-  std::thread flushing_thread([&] {
->>>>>>> blood in blood out
     for (int i = 0; !done(); ++i) {
       ASSERT_OK(db_->Put(WriteOptions(), Slice("hi"),
                          Slice(std::to_string(i).c_str())));
@@ -6105,21 +5830,12 @@ TEST_F(DBTest, ThreadLocalPtrDeadlock) {
     }
   });
 
-<<<<<<< HEAD
   std::vector<port::Thread> thread_spawning_threads(10);
   for (auto& t: thread_spawning_threads) {
     t = port::Thread([&] {
       while (!done()) {
         {
           port::Thread tmp_thread([&] {
-=======
-  std::vector<std::thread> thread_spawning_threads(10);
-  for (auto& t: thread_spawning_threads) {
-    t = std::thread([&] {
-      while (!done()) {
-        {
-          std::thread tmp_thread([&] {
->>>>>>> blood in blood out
             auto it = db_->NewIterator(ReadOptions());
             delete it;
           });

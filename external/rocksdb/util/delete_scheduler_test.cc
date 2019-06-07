@@ -28,7 +28,6 @@ namespace rocksdb {
 class DeleteSchedulerTest : public testing::Test {
  public:
   DeleteSchedulerTest() : env_(Env::Default()) {
-<<<<<<< HEAD
     const int kNumDataDirs = 3;
     dummy_files_dirs_.reserve(kNumDataDirs);
     for (size_t i = 0; i < kNumDataDirs; ++i) {
@@ -37,23 +36,15 @@ class DeleteSchedulerTest : public testing::Test {
           ToString(i));
       DestroyAndCreateDir(dummy_files_dirs_.back());
     }
-=======
-    dummy_files_dir_ = test::TmpDir(env_) + "/delete_scheduler_dummy_data_dir";
-    DestroyAndCreateDir(dummy_files_dir_);
->>>>>>> blood in blood out
   }
 
   ~DeleteSchedulerTest() {
     rocksdb::SyncPoint::GetInstance()->DisableProcessing();
     rocksdb::SyncPoint::GetInstance()->LoadDependency({});
     rocksdb::SyncPoint::GetInstance()->ClearAllCallBacks();
-<<<<<<< HEAD
     for (const auto& dummy_files_dir : dummy_files_dirs_) {
       test::DestroyDir(env_, dummy_files_dir);
     }
-=======
-    test::DestroyDir(env_, dummy_files_dir_);
->>>>>>> blood in blood out
   }
 
   void DestroyAndCreateDir(const std::string& dir) {
@@ -61,40 +52,24 @@ class DeleteSchedulerTest : public testing::Test {
     EXPECT_OK(env_->CreateDir(dir));
   }
 
-<<<<<<< HEAD
   int CountNormalFiles(size_t dummy_files_dirs_idx = 0) {
     std::vector<std::string> files_in_dir;
     EXPECT_OK(env_->GetChildren(dummy_files_dirs_[dummy_files_dirs_idx],
                                 &files_in_dir));
-=======
-  int CountNormalFiles() {
-    std::vector<std::string> files_in_dir;
-    EXPECT_OK(env_->GetChildren(dummy_files_dir_, &files_in_dir));
->>>>>>> blood in blood out
 
     int normal_cnt = 0;
     for (auto& f : files_in_dir) {
       if (!DeleteScheduler::IsTrashFile(f) && f != "." && f != "..") {
-<<<<<<< HEAD
-=======
-        printf("%s\n", f.c_str());
->>>>>>> blood in blood out
         normal_cnt++;
       }
     }
     return normal_cnt;
   }
 
-<<<<<<< HEAD
   int CountTrashFiles(size_t dummy_files_dirs_idx = 0) {
     std::vector<std::string> files_in_dir;
     EXPECT_OK(env_->GetChildren(dummy_files_dirs_[dummy_files_dirs_idx],
                                 &files_in_dir));
-=======
-  int CountTrashFiles() {
-    std::vector<std::string> files_in_dir;
-    EXPECT_OK(env_->GetChildren(dummy_files_dir_, &files_in_dir));
->>>>>>> blood in blood out
 
     int trash_cnt = 0;
     for (auto& f : files_in_dir) {
@@ -105,15 +80,10 @@ class DeleteSchedulerTest : public testing::Test {
     return trash_cnt;
   }
 
-<<<<<<< HEAD
   std::string NewDummyFile(const std::string& file_name, uint64_t size = 1024,
                            size_t dummy_files_dirs_idx = 0) {
     std::string file_path =
         dummy_files_dirs_[dummy_files_dirs_idx] + "/" + file_name;
-=======
-  std::string NewDummyFile(const std::string& file_name, uint64_t size = 1024) {
-    std::string file_path = dummy_files_dir_ + "/" + file_name;
->>>>>>> blood in blood out
     std::unique_ptr<WritableFile> f;
     env_->NewWritableFile(file_path, &f, EnvOptions());
     std::string data(size, 'A');
@@ -129,20 +99,12 @@ class DeleteSchedulerTest : public testing::Test {
     // 25%)
     sst_file_mgr_.reset(
         new SstFileManagerImpl(env_, nullptr, rate_bytes_per_sec_,
-<<<<<<< HEAD
                                /* max_trash_db_ratio= */ 1.1, 128 * 1024));
-=======
-                               /* max_trash_db_ratio= */ 1.1));
->>>>>>> blood in blood out
     delete_scheduler_ = sst_file_mgr_->delete_scheduler();
   }
 
   Env* env_;
-<<<<<<< HEAD
   std::vector<std::string> dummy_files_dirs_;
-=======
-  std::string dummy_files_dir_;
->>>>>>> blood in blood out
   int64_t rate_bytes_per_sec_;
   DeleteScheduler* delete_scheduler_;
   std::unique_ptr<SstFileManagerImpl> sst_file_mgr_;
@@ -165,7 +127,6 @@ TEST_F(DeleteSchedulerTest, BasicRateLimiting) {
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::BackgroundEmptyTrash:Wait",
       [&](void* arg) { penalties.push_back(*(static_cast<uint64_t*>(arg))); });
-<<<<<<< HEAD
   int dir_synced = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile::AfterSyncDir", [&](void* arg) {
@@ -173,8 +134,6 @@ TEST_F(DeleteSchedulerTest, BasicRateLimiting) {
         std::string* dir = reinterpret_cast<std::string*>(arg);
         EXPECT_EQ(dummy_files_dirs_[0], *dir);
       });
-=======
->>>>>>> blood in blood out
 
   int num_files = 100;  // 100 files
   uint64_t file_size = 1024;  // every file is 1 kb
@@ -185,18 +144,11 @@ TEST_F(DeleteSchedulerTest, BasicRateLimiting) {
     rocksdb::SyncPoint::GetInstance()->ClearTrace();
     rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
-<<<<<<< HEAD
     DestroyAndCreateDir(dummy_files_dirs_[0]);
     rate_bytes_per_sec_ = delete_kbs_per_sec[t] * 1024;
     NewDeleteScheduler();
 
     dir_synced = 0;
-=======
-    DestroyAndCreateDir(dummy_files_dir_);
-    rate_bytes_per_sec_ = delete_kbs_per_sec[t] * 1024;
-    NewDeleteScheduler();
-
->>>>>>> blood in blood out
     // Create 100 dummy files, every file is 1 Kb
     std::vector<std::string> generated_files;
     for (int i = 0; i < num_files; i++) {
@@ -206,12 +158,8 @@ TEST_F(DeleteSchedulerTest, BasicRateLimiting) {
 
     // Delete dummy files and measure time spent to empty trash
     for (int i = 0; i < num_files; i++) {
-<<<<<<< HEAD
       ASSERT_OK(delete_scheduler_->DeleteFile(generated_files[i],
                                               dummy_files_dirs_[0]));
-=======
-      ASSERT_OK(delete_scheduler_->DeleteFile(generated_files[i]));
->>>>>>> blood in blood out
     }
     ASSERT_EQ(CountNormalFiles(), 0);
 
@@ -233,17 +181,13 @@ TEST_F(DeleteSchedulerTest, BasicRateLimiting) {
     }
     ASSERT_GT(time_spent_deleting, expected_penlty * 0.9);
 
-<<<<<<< HEAD
     ASSERT_EQ(num_files, dir_synced);
 
-=======
->>>>>>> blood in blood out
     ASSERT_EQ(CountTrashFiles(), 0);
     rocksdb::SyncPoint::GetInstance()->DisableProcessing();
   }
 }
 
-<<<<<<< HEAD
 TEST_F(DeleteSchedulerTest, MultiDirectoryDeletionsScheduled) {
   rocksdb::SyncPoint::GetInstance()->LoadDependency({
       {"DeleteSchedulerTest::MultiDbPathDeletionsScheduled:1",
@@ -280,8 +224,6 @@ TEST_F(DeleteSchedulerTest, MultiDirectoryDeletionsScheduled) {
   rocksdb::SyncPoint::GetInstance()->DisableProcessing();
 }
 
-=======
->>>>>>> blood in blood out
 // Same as the BasicRateLimiting test but delete files in multiple threads.
 // 1- Create 100 dummy files
 // 2- Delete the 100 dummy files using DeleteScheduler using 10 threads
@@ -310,11 +252,7 @@ TEST_F(DeleteSchedulerTest, RateLimitingMultiThreaded) {
     rocksdb::SyncPoint::GetInstance()->ClearTrace();
     rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
-<<<<<<< HEAD
     DestroyAndCreateDir(dummy_files_dirs_[0]);
-=======
-    DestroyAndCreateDir(dummy_files_dir_);
->>>>>>> blood in blood out
     rate_bytes_per_sec_ = delete_kbs_per_sec[t] * 1024;
     NewDeleteScheduler();
 
@@ -333,11 +271,7 @@ TEST_F(DeleteSchedulerTest, RateLimitingMultiThreaded) {
       int range_start = idx * num_files;
       int range_end = range_start + num_files;
       for (int j = range_start; j < range_end; j++) {
-<<<<<<< HEAD
         ASSERT_OK(delete_scheduler_->DeleteFile(generated_files[j], ""));
-=======
-        ASSERT_OK(delete_scheduler_->DeleteFile(generated_files[j]));
->>>>>>> blood in blood out
       }
     };
 
@@ -380,11 +314,7 @@ TEST_F(DeleteSchedulerTest, DisableRateLimiting) {
   int bg_delete_file = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile:DeleteFile",
-<<<<<<< HEAD
       [&](void* /*arg*/) { bg_delete_file++; });
-=======
-      [&](void* arg) { bg_delete_file++; });
->>>>>>> blood in blood out
 
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
@@ -394,11 +324,7 @@ TEST_F(DeleteSchedulerTest, DisableRateLimiting) {
   for (int i = 0; i < 10; i++) {
     // Every file we delete will be deleted immediately
     std::string dummy_file = NewDummyFile("dummy.data");
-<<<<<<< HEAD
     ASSERT_OK(delete_scheduler_->DeleteFile(dummy_file, ""));
-=======
-    ASSERT_OK(delete_scheduler_->DeleteFile(dummy_file));
->>>>>>> blood in blood out
     ASSERT_TRUE(env_->FileExists(dummy_file).IsNotFound());
     ASSERT_EQ(CountNormalFiles(), 0);
     ASSERT_EQ(CountTrashFiles(), 0);
@@ -428,11 +354,7 @@ TEST_F(DeleteSchedulerTest, ConflictNames) {
   // Create "conflict.data" and move it to trash 10 times
   for (int i = 0; i < 10; i++) {
     std::string dummy_file = NewDummyFile("conflict.data");
-<<<<<<< HEAD
     ASSERT_OK(delete_scheduler_->DeleteFile(dummy_file, ""));
-=======
-    ASSERT_OK(delete_scheduler_->DeleteFile(dummy_file));
->>>>>>> blood in blood out
   }
   ASSERT_EQ(CountNormalFiles(), 0);
   // 10 files ("conflict.data" x 10) in trash
@@ -468,11 +390,7 @@ TEST_F(DeleteSchedulerTest, BackgroundError) {
   // Generate 10 dummy files and move them to trash
   for (int i = 0; i < 10; i++) {
     std::string file_name = "data_" + ToString(i) + ".data";
-<<<<<<< HEAD
     ASSERT_OK(delete_scheduler_->DeleteFile(NewDummyFile(file_name), ""));
-=======
-    ASSERT_OK(delete_scheduler_->DeleteFile(NewDummyFile(file_name)));
->>>>>>> blood in blood out
   }
   ASSERT_EQ(CountNormalFiles(), 0);
   ASSERT_EQ(CountTrashFiles(), 10);
@@ -482,11 +400,7 @@ TEST_F(DeleteSchedulerTest, BackgroundError) {
   // goind to delete
   for (int i = 0; i < 10; i++) {
     std::string file_name = "data_" + ToString(i) + ".data.trash";
-<<<<<<< HEAD
     ASSERT_OK(env_->DeleteFile(dummy_files_dirs_[0] + "/" + file_name));
-=======
-    ASSERT_OK(env_->DeleteFile(dummy_files_dir_ + "/" + file_name));
->>>>>>> blood in blood out
   }
 
   // Hold BackgroundEmptyTrash
@@ -507,11 +421,7 @@ TEST_F(DeleteSchedulerTest, StartBGEmptyTrashMultipleTimes) {
   int bg_delete_file = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile:DeleteFile",
-<<<<<<< HEAD
       [&](void* /*arg*/) { bg_delete_file++; });
-=======
-      [&](void* arg) { bg_delete_file++; });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   rate_bytes_per_sec_ = 1024 * 1024;  // 1 MB / sec
@@ -522,11 +432,7 @@ TEST_F(DeleteSchedulerTest, StartBGEmptyTrashMultipleTimes) {
     // Generate 10 dummy files and move them to trash
     for (int i = 0; i < 10; i++) {
       std::string file_name = "data_" + ToString(i) + ".data";
-<<<<<<< HEAD
       ASSERT_OK(delete_scheduler_->DeleteFile(NewDummyFile(file_name), ""));
-=======
-      ASSERT_OK(delete_scheduler_->DeleteFile(NewDummyFile(file_name)));
->>>>>>> blood in blood out
     }
     ASSERT_EQ(CountNormalFiles(), 0);
     delete_scheduler_->WaitForEmptyTrash();
@@ -541,7 +447,6 @@ TEST_F(DeleteSchedulerTest, StartBGEmptyTrashMultipleTimes) {
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 }
 
-<<<<<<< HEAD
 TEST_F(DeleteSchedulerTest, DeletePartialFile) {
   int bg_delete_file = 0;
   int bg_fsync = 0;
@@ -607,8 +512,6 @@ TEST_F(DeleteSchedulerTest, NoPartialDeleteWithLink) {
 }
 #endif
 
-=======
->>>>>>> blood in blood out
 // 1- Create a DeleteScheduler with very slow rate limit (1 Byte / sec)
 // 2- Delete 100 files using DeleteScheduler
 // 3- Delete the DeleteScheduler (call the destructor while queue is not empty)
@@ -618,11 +521,7 @@ TEST_F(DeleteSchedulerTest, DestructorWithNonEmptyQueue) {
   int bg_delete_file = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile:DeleteFile",
-<<<<<<< HEAD
       [&](void* /*arg*/) { bg_delete_file++; });
-=======
-      [&](void* arg) { bg_delete_file++; });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
   rate_bytes_per_sec_ = 1;  // 1 Byte / sec
@@ -630,11 +529,7 @@ TEST_F(DeleteSchedulerTest, DestructorWithNonEmptyQueue) {
 
   for (int i = 0; i < 100; i++) {
     std::string file_name = "data_" + ToString(i) + ".data";
-<<<<<<< HEAD
     ASSERT_OK(delete_scheduler_->DeleteFile(NewDummyFile(file_name), ""));
-=======
-    ASSERT_OK(delete_scheduler_->DeleteFile(NewDummyFile(file_name)));
->>>>>>> blood in blood out
   }
 
   // Deleting 100 files will need >28 hours to delete
@@ -653,17 +548,10 @@ TEST_F(DeleteSchedulerTest, DISABLED_DynamicRateLimiting1) {
   int fg_delete_file = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile:DeleteFile",
-<<<<<<< HEAD
       [&](void* /*arg*/) { bg_delete_file++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteFile",
       [&](void* /*arg*/) { fg_delete_file++; });
-=======
-      [&](void* arg) { bg_delete_file++; });
-  rocksdb::SyncPoint::GetInstance()->SetCallBack(
-      "DeleteScheduler::DeleteFile",
-      [&](void* arg) { fg_delete_file++; });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::BackgroundEmptyTrash:Wait",
       [&](void* arg) { penalties.push_back(*(static_cast<int*>(arg))); });
@@ -689,11 +577,7 @@ TEST_F(DeleteSchedulerTest, DISABLED_DynamicRateLimiting1) {
     rocksdb::SyncPoint::GetInstance()->ClearTrace();
     rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
-<<<<<<< HEAD
     DestroyAndCreateDir(dummy_files_dirs_[0]);
-=======
-    DestroyAndCreateDir(dummy_files_dir_);
->>>>>>> blood in blood out
     rate_bytes_per_sec_ = delete_kbs_per_sec[t] * 1024;
     delete_scheduler_->SetRateBytesPerSecond(rate_bytes_per_sec_);
 
@@ -706,11 +590,7 @@ TEST_F(DeleteSchedulerTest, DISABLED_DynamicRateLimiting1) {
 
     // Delete dummy files and measure time spent to empty trash
     for (int i = 0; i < num_files; i++) {
-<<<<<<< HEAD
       ASSERT_OK(delete_scheduler_->DeleteFile(generated_files[i], ""));
-=======
-      ASSERT_OK(delete_scheduler_->DeleteFile(generated_files[i]));
->>>>>>> blood in blood out
     }
     ASSERT_EQ(CountNormalFiles(), 0);
 
@@ -750,15 +630,9 @@ TEST_F(DeleteSchedulerTest, ImmediateDeleteOn25PercDBSize) {
   int fg_delete_file = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteTrashFile:DeleteFile",
-<<<<<<< HEAD
       [&](void* /*arg*/) { bg_delete_file++; });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DeleteScheduler::DeleteFile", [&](void* /*arg*/) { fg_delete_file++; });
-=======
-      [&](void* arg) { bg_delete_file++; });
-  rocksdb::SyncPoint::GetInstance()->SetCallBack(
-      "DeleteScheduler::DeleteFile", [&](void* arg) { fg_delete_file++; });
->>>>>>> blood in blood out
 
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
 
@@ -776,11 +650,7 @@ TEST_F(DeleteSchedulerTest, ImmediateDeleteOn25PercDBSize) {
   }
 
   for (std::string& file_name : generated_files) {
-<<<<<<< HEAD
     delete_scheduler_->DeleteFile(file_name, "");
-=======
-    delete_scheduler_->DeleteFile(file_name);
->>>>>>> blood in blood out
   }
 
   // When we end up with 26 files in trash we will start
@@ -819,11 +689,7 @@ int main(int argc, char** argv) {
 }
 
 #else
-<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
-=======
-int main(int argc, char** argv) {
->>>>>>> blood in blood out
   printf("DeleteScheduler is not supported in ROCKSDB_LITE\n");
   return 0;
 }

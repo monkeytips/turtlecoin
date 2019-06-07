@@ -18,7 +18,6 @@ namespace rocksdb {
 #ifndef ROCKSDB_LITE
 SstFileManagerImpl::SstFileManagerImpl(Env* env, std::shared_ptr<Logger> logger,
                                        int64_t rate_bytes_per_sec,
-<<<<<<< HEAD
                                        double max_trash_db_ratio,
                                        uint64_t bytes_max_delete_chunk)
     : env_(env),
@@ -29,15 +28,6 @@ SstFileManagerImpl::SstFileManagerImpl(Env* env, std::shared_ptr<Logger> logger,
       max_allowed_space_(0),
       delete_scheduler_(env, rate_bytes_per_sec, logger.get(), this,
                         max_trash_db_ratio, bytes_max_delete_chunk) {}
-=======
-                                       double max_trash_db_ratio)
-    : env_(env),
-      logger_(logger),
-      total_files_size_(0),
-      max_allowed_space_(0),
-      delete_scheduler_(env, rate_bytes_per_sec, logger.get(), this,
-                        max_trash_db_ratio) {}
->>>>>>> blood in blood out
 
 SstFileManagerImpl::~SstFileManagerImpl() {}
 
@@ -61,7 +51,6 @@ Status SstFileManagerImpl::OnDeleteFile(const std::string& file_path) {
   return Status::OK();
 }
 
-<<<<<<< HEAD
 void SstFileManagerImpl::OnCompactionCompletion(Compaction* c) {
   MutexLock l(&mu_);
   uint64_t size_added_by_compaction = 0;
@@ -74,8 +63,6 @@ void SstFileManagerImpl::OnCompactionCompletion(Compaction* c) {
   cur_compactions_reserved_size_ -= size_added_by_compaction;
 }
 
-=======
->>>>>>> blood in blood out
 Status SstFileManagerImpl::OnMoveFile(const std::string& old_path,
                                       const std::string& new_path,
                                       uint64_t* file_size) {
@@ -96,15 +83,12 @@ void SstFileManagerImpl::SetMaxAllowedSpaceUsage(uint64_t max_allowed_space) {
   max_allowed_space_ = max_allowed_space;
 }
 
-<<<<<<< HEAD
 void SstFileManagerImpl::SetCompactionBufferSize(
     uint64_t compaction_buffer_size) {
   MutexLock l(&mu_);
   compaction_buffer_size_ = compaction_buffer_size;
 }
 
-=======
->>>>>>> blood in blood out
 bool SstFileManagerImpl::IsMaxAllowedSpaceReached() {
   MutexLock l(&mu_);
   if (max_allowed_space_ <= 0) {
@@ -113,7 +97,6 @@ bool SstFileManagerImpl::IsMaxAllowedSpaceReached() {
   return total_files_size_ >= max_allowed_space_;
 }
 
-<<<<<<< HEAD
 bool SstFileManagerImpl::IsMaxAllowedSpaceReachedIncludingCompactions() {
   MutexLock l(&mu_);
   if (max_allowed_space_ <= 0) {
@@ -152,8 +135,6 @@ uint64_t SstFileManagerImpl::GetCompactionsReservedSize() {
   return cur_compactions_reserved_size_;
 }
 
-=======
->>>>>>> blood in blood out
 uint64_t SstFileManagerImpl::GetTotalSize() {
   MutexLock l(&mu_);
   return total_files_size_;
@@ -181,14 +162,9 @@ void SstFileManagerImpl::SetMaxTrashDBRatio(double r) {
   return delete_scheduler_.SetMaxTrashDBRatio(r);
 }
 
-<<<<<<< HEAD
 Status SstFileManagerImpl::ScheduleFileDeletion(
     const std::string& file_path, const std::string& path_to_sync) {
   return delete_scheduler_.DeleteFile(file_path, path_to_sync);
-=======
-Status SstFileManagerImpl::ScheduleFileDeletion(const std::string& file_path) {
-  return delete_scheduler_.DeleteFile(file_path);
->>>>>>> blood in blood out
 }
 
 void SstFileManagerImpl::WaitForEmptyTrash() {
@@ -223,18 +199,11 @@ SstFileManager* NewSstFileManager(Env* env, std::shared_ptr<Logger> info_log,
                                   std::string trash_dir,
                                   int64_t rate_bytes_per_sec,
                                   bool delete_existing_trash, Status* status,
-<<<<<<< HEAD
                                   double max_trash_db_ratio,
                                   uint64_t bytes_max_delete_chunk) {
   SstFileManagerImpl* res =
       new SstFileManagerImpl(env, info_log, rate_bytes_per_sec,
                              max_trash_db_ratio, bytes_max_delete_chunk);
-=======
-                                  double max_trash_db_ratio) {
-  SstFileManagerImpl* res =
-      new SstFileManagerImpl(env, info_log, rate_bytes_per_sec,
-                             max_trash_db_ratio);
->>>>>>> blood in blood out
 
   // trash_dir is deprecated and not needed anymore, but if user passed it
   // we will still remove files in it.
@@ -250,12 +219,8 @@ SstFileManager* NewSstFileManager(Env* env, std::shared_ptr<Logger> info_log,
 
         std::string path_in_trash = trash_dir + "/" + trash_file;
         res->OnAddFile(path_in_trash);
-<<<<<<< HEAD
         Status file_delete =
             res->ScheduleFileDeletion(path_in_trash, trash_dir);
-=======
-        Status file_delete = res->ScheduleFileDeletion(path_in_trash);
->>>>>>> blood in blood out
         if (s.ok() && !file_delete.ok()) {
           s = file_delete;
         }
@@ -272,7 +237,6 @@ SstFileManager* NewSstFileManager(Env* env, std::shared_ptr<Logger> info_log,
 
 #else
 
-<<<<<<< HEAD
 SstFileManager* NewSstFileManager(Env* /*env*/,
                                   std::shared_ptr<Logger> /*info_log*/,
                                   std::string /*trash_dir*/,
@@ -283,16 +247,6 @@ SstFileManager* NewSstFileManager(Env* /*env*/,
   if (status) {
     *status =
         Status::NotSupported("SstFileManager is not supported in ROCKSDB_LITE");
-=======
-SstFileManager* NewSstFileManager(Env* env, std::shared_ptr<Logger> info_log,
-                                  std::string trash_dir,
-                                  int64_t rate_bytes_per_sec,
-                                  bool delete_existing_trash, Status* status,
-                                  double max_trash_db_ratio) {
-  if (status) {
-    *status =
-      Status::NotSupported("SstFileManager is not supported in ROCKSDB_LITE");
->>>>>>> blood in blood out
   }
   return nullptr;
 }

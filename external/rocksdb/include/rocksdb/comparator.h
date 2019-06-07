@@ -68,15 +68,12 @@ class Comparator {
   // if it is a wrapped comparator, may return the root one.
   // return itself it is not wrapped.
   virtual const Comparator* GetRootComparator() const { return this; }
-<<<<<<< HEAD
 
   // given two keys, determine if t is the successor of s
   virtual bool IsSameLengthImmediateSuccessor(const Slice& /*s*/,
                                               const Slice& /*t*/) const {
     return false;
   }
-=======
->>>>>>> blood in blood out
 };
 
 // Return a builtin comparator that uses lexicographic byte-wise

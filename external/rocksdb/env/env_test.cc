@@ -125,11 +125,7 @@ static void SetBool(void* ptr) {
   reinterpret_cast<std::atomic<bool>*>(ptr)->store(true);
 }
 
-<<<<<<< HEAD
 TEST_F(EnvPosixTest, DISABLED_RunImmediately) {
-=======
-TEST_F(EnvPosixTest, RunImmediately) {
->>>>>>> blood in blood out
   for (int pri = Env::BOTTOM; pri < Env::TOTAL; ++pri) {
     std::atomic<bool> called(false);
     env_->SetBackgroundThreads(1, static_cast<Env::Priority>(pri));
@@ -139,7 +135,6 @@ TEST_F(EnvPosixTest, RunImmediately) {
   }
 }
 
-<<<<<<< HEAD
 TEST_F(EnvPosixTest, RunEventually) {
   std::atomic<bool> called(false);
   env_->StartThread(&SetBool, &called);
@@ -252,8 +247,6 @@ TEST_F(EnvPosixTest, MemoryMappedFileBuffer) {
   ASSERT_EQ(expected_data, actual_data);
 }
 
-=======
->>>>>>> blood in blood out
 TEST_P(EnvPosixTestWithParam, UnSchedule) {
   std::atomic<bool> called(false);
   env_->SetBackgroundThreads(1, Env::LOW);
@@ -1075,11 +1068,7 @@ TEST_P(EnvPosixTestWithParam, InvalidateCache) {
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
     EnvOptions soptions;
     soptions.use_direct_reads = soptions.use_direct_writes = direct_io_;
-<<<<<<< HEAD
     std::string fname = test::PerThreadDBPath(env_, "testfile");
-=======
-    std::string fname = test::TmpDir(env_) + "/" + "testfile";
->>>>>>> blood in blood out
 
     const size_t kSectorSize = 512;
     auto data = NewAligned(kSectorSize, 0);
@@ -1262,19 +1251,11 @@ TEST_P(EnvPosixTestWithParam, LogBufferMaxSizeTest) {
 
 TEST_P(EnvPosixTestWithParam, Preallocation) {
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
-<<<<<<< HEAD
   const std::string src = test::PerThreadDBPath(env_, "testfile");
   unique_ptr<WritableFile> srcfile;
   EnvOptions soptions;
   soptions.use_direct_reads = soptions.use_direct_writes = direct_io_;
 #if !defined(OS_MACOSX) && !defined(OS_WIN) && !defined(OS_SOLARIS) && !defined(OS_AIX) && !defined(OS_OPENBSD) && !defined(OS_FREEBSD)
-=======
-    const std::string src = test::TmpDir(env_) + "/" + "testfile";
-    unique_ptr<WritableFile> srcfile;
-    EnvOptions soptions;
-    soptions.use_direct_reads = soptions.use_direct_writes = direct_io_;
-#if !defined(OS_MACOSX) && !defined(OS_WIN) && !defined(OS_SOLARIS) && !defined(OS_AIX) && !defined(OS_OPENBSD)
->>>>>>> blood in blood out
     if (soptions.use_direct_writes) {
       rocksdb::SyncPoint::GetInstance()->SetCallBack(
           "NewWritableFile:O_DIRECT", [&](void* arg) {
@@ -1332,18 +1313,10 @@ TEST_P(EnvPosixTestWithParam, ConsistentChildrenAttributes) {
 
     std::string data;
     for (int i = 0; i < kNumChildren; ++i) {
-<<<<<<< HEAD
       const std::string path =
           test::TmpDir(env_) + "/" + "testfile_" + std::to_string(i);
       unique_ptr<WritableFile> file;
 #if !defined(OS_MACOSX) && !defined(OS_WIN) && !defined(OS_SOLARIS) && !defined(OS_AIX) && !defined(OS_OPENBSD) && !defined(OS_FREEBSD)
-=======
-      std::ostringstream oss;
-      oss << test::TmpDir(env_) << "/testfile_" << i;
-      const std::string path = oss.str();
-      unique_ptr<WritableFile> file;
-#if !defined(OS_MACOSX) && !defined(OS_WIN) && !defined(OS_SOLARIS) && !defined(OS_AIX) && !defined(OS_OPENBSD)
->>>>>>> blood in blood out
       if (soptions.use_direct_writes) {
         rocksdb::SyncPoint::GetInstance()->SetCallBack(
             "NewWritableFile:O_DIRECT", [&](void* arg) {
@@ -1362,13 +1335,7 @@ TEST_P(EnvPosixTestWithParam, ConsistentChildrenAttributes) {
     std::vector<Env::FileAttributes> file_attrs;
     ASSERT_OK(env_->GetChildrenFileAttributes(test::TmpDir(env_), &file_attrs));
     for (int i = 0; i < kNumChildren; ++i) {
-<<<<<<< HEAD
       const std::string name = "testfile_" + std::to_string(i);
-=======
-      std::ostringstream oss;
-      oss << "testfile_" << i;
-      const std::string name = oss.str();
->>>>>>> blood in blood out
       const std::string path = test::TmpDir(env_) + "/" + name;
 
       auto file_attrs_iter = std::find_if(
@@ -1397,21 +1364,15 @@ TEST_P(EnvPosixTestWithParam, WritableFileWrapper) {
       inc(0);
     }
 
-<<<<<<< HEAD
     Status Append(const Slice& /*data*/) override {
       inc(1);
       return Status::OK();
     }
     Status Truncate(uint64_t /*size*/) override { return Status::OK(); }
-=======
-    Status Append(const Slice& data) override { inc(1); return Status::OK(); }
-    Status Truncate(uint64_t size) override { return Status::OK(); }
->>>>>>> blood in blood out
     Status Close() override { inc(2); return Status::OK(); }
     Status Flush() override { inc(3); return Status::OK(); }
     Status Sync() override { inc(4); return Status::OK(); }
     Status Fsync() override { inc(5); return Status::OK(); }
-<<<<<<< HEAD
     void SetIOPriority(Env::IOPriority /*pri*/) override { inc(6); }
     uint64_t GetFileSize() override { inc(7); return 0; }
     void GetPreallocationStatus(size_t* /*block_size*/,
@@ -1423,37 +1384,16 @@ TEST_P(EnvPosixTestWithParam, WritableFileWrapper) {
       return 0;
     }
     Status InvalidateCache(size_t /*offset*/, size_t /*length*/) override {
-=======
-    void SetIOPriority(Env::IOPriority pri) override { inc(6); }
-    uint64_t GetFileSize() override { inc(7); return 0; }
-    void GetPreallocationStatus(size_t* block_size,
-                                size_t* last_allocated_block) override {
-      inc(8);
-    }
-    size_t GetUniqueId(char* id, size_t max_size) const override {
-      inc(9);
-      return 0;
-    }
-    Status InvalidateCache(size_t offset, size_t length) override {
->>>>>>> blood in blood out
       inc(10);
       return Status::OK();
     }
 
    protected:
-<<<<<<< HEAD
     Status Allocate(uint64_t /*offset*/, uint64_t /*len*/) override {
       inc(11);
       return Status::OK();
     }
     Status RangeSync(uint64_t /*offset*/, uint64_t /*nbytes*/) override {
-=======
-    Status Allocate(uint64_t offset, uint64_t len) override {
-      inc(11);
-      return Status::OK();
-    }
-    Status RangeSync(uint64_t offset, uint64_t nbytes) override {
->>>>>>> blood in blood out
       inc(12);
       return Status::OK();
     }
@@ -1496,16 +1436,11 @@ TEST_P(EnvPosixTestWithParam, WritableFileWrapper) {
 }
 
 TEST_P(EnvPosixTestWithParam, PosixRandomRWFile) {
-<<<<<<< HEAD
   const std::string path = test::PerThreadDBPath(env_, "random_rw_file");
-=======
-  const std::string path = test::TmpDir(env_) + "/random_rw_file";
->>>>>>> blood in blood out
 
   env_->DeleteFile(path);
 
   std::unique_ptr<RandomRWFile> file;
-<<<<<<< HEAD
 
   // Cannot open non-existing file.
   ASSERT_NOK(env_->NewRandomRWFile(path, &file, EnvOptions()));
@@ -1516,8 +1451,6 @@ TEST_P(EnvPosixTestWithParam, PosixRandomRWFile) {
     ASSERT_OK(env_->NewWritableFile(path, &wf, EnvOptions()));
   }
 
-=======
->>>>>>> blood in blood out
   ASSERT_OK(env_->NewRandomRWFile(path, &file, EnvOptions()));
 
   char buf[10000];
@@ -1631,7 +1564,6 @@ class RandomRWFileWithMirrorString {
 };
 
 TEST_P(EnvPosixTestWithParam, PosixRandomRWFileRandomized) {
-<<<<<<< HEAD
   const std::string path = test::PerThreadDBPath(env_, "random_rw_file_rand");
   env_->DeleteFile(path);
 
@@ -1648,12 +1580,6 @@ TEST_P(EnvPosixTestWithParam, PosixRandomRWFileRandomized) {
     ASSERT_OK(env_->NewWritableFile(path, &wf, EnvOptions()));
   }
 
-=======
-  const std::string path = test::TmpDir(env_) + "/random_rw_file_rand";
-  env_->DeleteFile(path);
-
-  unique_ptr<RandomRWFile> file;
->>>>>>> blood in blood out
   ASSERT_OK(env_->NewRandomRWFile(path, &file, EnvOptions()));
   RandomRWFileWithMirrorString file_with_mirror(file.get());
 
@@ -1688,7 +1614,6 @@ class TestEnv : public EnvWrapper {
     explicit TestEnv() : EnvWrapper(Env::Default()),
                 close_count(0) { }
 
-<<<<<<< HEAD
   class TestLogger : public Logger {
    public:
     using Logger::Logv;
@@ -1729,49 +1654,6 @@ class EnvTest : public testing::Test {};
 
 TEST_F(EnvTest, Close) {
   TestEnv* env = new TestEnv();
-=======
-    class TestLogger : public Logger {
-      public:
-        using Logger::Logv;
-        TestLogger(TestEnv *env_ptr) : Logger() { env = env_ptr; }
-        ~TestLogger() {
-          if (!closed_) {
-            CloseHelper();
-          }
-        }
-        virtual void Logv(const char *format, va_list ap) override { };
-      protected:
-        virtual Status CloseImpl() override {
-          return CloseHelper();
-        }
-      private:
-        Status CloseHelper() {
-          env->CloseCountInc();;
-          return Status::OK();
-        }
-        TestEnv *env;
-    };
-
-    void CloseCountInc() { close_count++; }
-
-    int GetCloseCount() { return close_count; }
-
-    virtual Status NewLogger(const std::string& fname,
-                             shared_ptr<Logger>* result) {
-      result->reset(new TestLogger(this));
-      return Status::OK();
-    }
-
-  private:
-    int close_count;
-};
-
-class EnvTest : public testing::Test {
-};
-
-TEST_F(EnvTest, Close) {
-  TestEnv *env = new TestEnv();
->>>>>>> blood in blood out
   std::shared_ptr<Logger> logger;
   Status s;
 
@@ -1793,10 +1675,6 @@ TEST_F(EnvTest, Close) {
   delete env;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> blood in blood out
 INSTANTIATE_TEST_CASE_P(DefaultEnvWithoutDirectIO, EnvPosixTestWithParam,
                         ::testing::Values(std::pair<Env*, bool>(Env::Default(),
                                                                 false)));

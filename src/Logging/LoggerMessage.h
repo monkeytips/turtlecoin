@@ -24,11 +24,7 @@ namespace Logging {
 
 class LoggerMessage : public std::ostream, std::streambuf {
 public:
-<<<<<<< HEAD
   LoggerMessage(std::shared_ptr<ILogger> logger, const std::string& category, Level level, const std::string& color);
-=======
-  LoggerMessage(ILogger& logger, const std::string& category, Level level, const std::string& color);
->>>>>>> blood in blood out
   ~LoggerMessage();
   LoggerMessage(const LoggerMessage&) = delete;
   LoggerMessage& operator=(const LoggerMessage&) = delete;
@@ -42,11 +38,7 @@ private:
   std::string message;
   const std::string category;
   Level logLevel;
-<<<<<<< HEAD
   std::shared_ptr<ILogger> logger;
-=======
-  ILogger& logger;
->>>>>>> blood in blood out
   boost::posix_time::ptime timestamp;
   bool gotText;
 };

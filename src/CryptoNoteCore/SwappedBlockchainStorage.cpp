@@ -19,11 +19,7 @@
 
 #include <cassert>
 
-<<<<<<< HEAD
 #include "Serialization/CryptoNoteSerialization.h"
-=======
-#include "CryptoNoteCore/CryptoNoteSerialization.h"
->>>>>>> blood in blood out
 #include "ICoreDefinitions.h"
 #include "MemoryBlockchainStorage.h"
 #include "Serialization/SerializationOverloads.h"

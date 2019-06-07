@@ -56,11 +56,8 @@ class DateTieredDBImpl : public DateTieredDB {
 
   const ImmutableCFOptions ioptions_;
 
-<<<<<<< HEAD
   const MutableCFOptions moptions_;
 
-=======
->>>>>>> blood in blood out
   const InternalKeyComparator icomp_;
 
   // Storing all column family handles for time series data.

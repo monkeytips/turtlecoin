@@ -27,11 +27,7 @@ using namespace Logging;
 
 namespace CryptoNote {
 
-<<<<<<< HEAD
 HttpServer::HttpServer(System::Dispatcher& dispatcher, std::shared_ptr<Logging::ILogger> log)
-=======
-HttpServer::HttpServer(System::Dispatcher& dispatcher, Logging::ILogger& log)
->>>>>>> blood in blood out
   : m_dispatcher(dispatcher), workingContextGroup(dispatcher), logger(log, "HttpServer") {
 
 }
@@ -95,11 +91,7 @@ void HttpServer::acceptLoop() {
 
   } catch (System::InterruptedException&) {
   } catch (std::exception& e) {
-<<<<<<< HEAD
     logger(DEBUGGING) << "Connection error: " << e.what();
-=======
-    logger(WARNING) << "Connection error: " << e.what();
->>>>>>> blood in blood out
   }
 }
 

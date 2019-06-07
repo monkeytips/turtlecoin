@@ -54,9 +54,5 @@ void DumpMallocStats(std::string* stats) {
 #else
 void DumpMallocStats(std::string*) {}
 #endif  // ROCKSDB_JEMALLOC
-<<<<<<< HEAD
-=======
-
->>>>>>> blood in blood out
 }
 #endif  // !ROCKSDB_LITE

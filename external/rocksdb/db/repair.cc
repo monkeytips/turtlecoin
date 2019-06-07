@@ -101,19 +101,12 @@ class Repairer {
         db_options_(SanitizeOptions(dbname_, db_options)),
         immutable_db_options_(ImmutableDBOptions(db_options_)),
         icmp_(default_cf_opts.comparator),
-<<<<<<< HEAD
         default_cf_opts_(
             SanitizeOptions(immutable_db_options_, default_cf_opts)),
         default_cf_iopts_(
             ImmutableCFOptions(immutable_db_options_, default_cf_opts_)),
         unknown_cf_opts_(
             SanitizeOptions(immutable_db_options_, unknown_cf_opts)),
-=======
-        default_cf_opts_(default_cf_opts),
-        default_cf_iopts_(
-            ImmutableCFOptions(immutable_db_options_, default_cf_opts)),
-        unknown_cf_opts_(unknown_cf_opts),
->>>>>>> blood in blood out
         create_unknown_cfs_(create_unknown_cfs),
         raw_table_cache_(
             // TableCache can be small since we expect each table to be opened
@@ -212,11 +205,7 @@ class Repairer {
       ROCKS_LOG_WARN(db_options_.info_log,
                      "**** Repaired rocksdb %s; "
                      "recovered %" ROCKSDB_PRIszt " files; %" PRIu64
-<<<<<<< HEAD
                      " bytes. "
-=======
-                     "bytes. "
->>>>>>> blood in blood out
                      "Some data may have been lost. "
                      "****",
                      dbname_.c_str(), tables_.size(), bytes);
@@ -352,11 +341,7 @@ class Repairer {
       return status;
     }
     unique_ptr<SequentialFileReader> lfile_reader(
-<<<<<<< HEAD
         new SequentialFileReader(std::move(lfile), logname));
-=======
-        new SequentialFileReader(std::move(lfile)));
->>>>>>> blood in blood out
 
     // Create the log reader.
     LogReporter reporter;
@@ -515,14 +500,9 @@ class Repairer {
     }
     if (status.ok()) {
       InternalIterator* iter = table_cache_->NewIterator(
-<<<<<<< HEAD
           ReadOptions(), env_options_, cfd->internal_comparator(), t->meta,
           nullptr /* range_del_agg */,
           cfd->GetLatestMutableCFOptions()->prefix_extractor.get());
-=======
-          ReadOptions(), env_options_, cfd->internal_comparator(), t->meta.fd,
-          nullptr /* range_del_agg */);
->>>>>>> blood in blood out
       bool empty = true;
       ParsedInternalKey parsed;
       t->min_sequence = 0;

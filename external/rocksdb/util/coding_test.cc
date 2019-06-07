@@ -14,7 +14,6 @@
 namespace rocksdb {
 
 class Coding { };
-<<<<<<< HEAD
 TEST(Coding, Fixed16) {
   std::string s;
   for (uint16_t v = 0; v < 0xFFFF; v++) {
@@ -28,8 +27,6 @@ TEST(Coding, Fixed16) {
     p += sizeof(uint16_t);
   }
 }
-=======
->>>>>>> blood in blood out
 
 TEST(Coding, Fixed32) {
   std::string s;

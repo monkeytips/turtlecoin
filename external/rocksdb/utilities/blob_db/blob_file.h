@@ -23,12 +23,8 @@ class BlobDBImpl;
 
 class BlobFile {
   friend class BlobDBImpl;
-<<<<<<< HEAD
   friend struct BlobFileComparator;
   friend struct BlobFileComparatorTTL;
-=======
-  friend struct blobf_compare_ttl;
->>>>>>> blood in blood out
 
  private:
   // access to parent
@@ -58,24 +54,9 @@ class BlobFile {
   // number of blobs in the file
   std::atomic<uint64_t> blob_count_;
 
-<<<<<<< HEAD
   // size of the file
   std::atomic<uint64_t> file_size_;
 
-=======
-  // the file will be selected for GC in this future epoch
-  std::atomic<int64_t> gc_epoch_;
-
-  // size of the file
-  std::atomic<uint64_t> file_size_;
-
-  // number of blobs in this particular file which have been evicted
-  uint64_t deleted_count_;
-
-  // size of deleted blobs (used by heuristic to select file for GC)
-  uint64_t deleted_size_;
-
->>>>>>> blood in blood out
   BlobLogHeader header_;
 
   // closed_ = true implies the file is no more mutable
@@ -90,12 +71,6 @@ class BlobFile {
   // Data in this file is visible to a snapshot taken before the sequence.
   SequenceNumber obsolete_sequence_;
 
-<<<<<<< HEAD
-=======
-  // should this file been gc'd once to reconcile lost deletes/compactions
-  std::atomic<bool> gc_once_after_open_;
-
->>>>>>> blood in blood out
   ExpirationRange expiration_range_;
 
   // Sequential/Append writer for blobs
@@ -207,11 +182,7 @@ class BlobFile {
   Status ReadMetadata(Env* env, const EnvOptions& env_options);
 
  private:
-<<<<<<< HEAD
   std::shared_ptr<Reader> OpenRandomAccessReader(
-=======
-  std::shared_ptr<Reader> OpenSequentialReader(
->>>>>>> blood in blood out
       Env* env, const DBOptions& db_options,
       const EnvOptions& env_options) const;
 

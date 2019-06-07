@@ -5,17 +5,10 @@
 //
 // This file implements the "bridge" between Java and C++ for rocksdb::Options.
 
-<<<<<<< HEAD
 #include "rocksdb/table.h"
 #include <jni.h>
 #include "include/org_rocksdb_BlockBasedTableConfig.h"
 #include "include/org_rocksdb_PlainTableConfig.h"
-=======
-#include <jni.h>
-#include "include/org_rocksdb_PlainTableConfig.h"
-#include "include/org_rocksdb_BlockBasedTableConfig.h"
-#include "rocksdb/table.h"
->>>>>>> blood in blood out
 #include "rocksdb/cache.h"
 #include "rocksdb/filter_policy.h"
 
@@ -25,29 +18,17 @@
  * Signature: (IIDIIBZZ)J
  */
 jlong Java_org_rocksdb_PlainTableConfig_newTableFactoryHandle(
-<<<<<<< HEAD
     JNIEnv * /*env*/, jobject /*jobj*/, jint jkey_size,
     jint jbloom_bits_per_key, jdouble jhash_table_ratio, jint jindex_sparseness,
     jint jhuge_page_tlb_size, jbyte jencoding_type, jboolean jfull_scan_mode,
     jboolean jstore_index_in_file) {
-=======
-    JNIEnv* env, jobject jobj, jint jkey_size, jint jbloom_bits_per_key,
-    jdouble jhash_table_ratio, jint jindex_sparseness,
-    jint jhuge_page_tlb_size, jbyte jencoding_type,
-    jboolean jfull_scan_mode, jboolean jstore_index_in_file) {
->>>>>>> blood in blood out
   rocksdb::PlainTableOptions options = rocksdb::PlainTableOptions();
   options.user_key_len = jkey_size;
   options.bloom_bits_per_key = jbloom_bits_per_key;
   options.hash_table_ratio = jhash_table_ratio;
   options.index_sparseness = jindex_sparseness;
   options.huge_page_tlb_size = jhuge_page_tlb_size;
-<<<<<<< HEAD
   options.encoding_type = static_cast<rocksdb::EncodingType>(jencoding_type);
-=======
-  options.encoding_type = static_cast<rocksdb::EncodingType>(
-      jencoding_type);
->>>>>>> blood in blood out
   options.full_scan_mode = jfull_scan_mode;
   options.store_index_in_file = jstore_index_in_file;
   return reinterpret_cast<jlong>(rocksdb::NewPlainTableFactory(options));
@@ -59,15 +40,9 @@ jlong Java_org_rocksdb_PlainTableConfig_newTableFactoryHandle(
  * Signature: (ZJIJJIIZIZZZJIBBI)J
  */
 jlong Java_org_rocksdb_BlockBasedTableConfig_newTableFactoryHandle(
-<<<<<<< HEAD
     JNIEnv * /*env*/, jobject /*jobj*/, jboolean no_block_cache,
     jlong block_cache_size, jint block_cache_num_shardbits, jlong jblock_cache,
     jlong block_size, jint block_size_deviation, jint block_restart_interval,
-=======
-    JNIEnv *env, jobject jobj, jboolean no_block_cache, jlong block_cache_size,
-    jint block_cache_num_shardbits, jlong jblock_cache, jlong block_size,
-    jint block_size_deviation, jint block_restart_interval,
->>>>>>> blood in blood out
     jboolean whole_key_filtering, jlong jfilter_policy,
     jboolean cache_index_and_filter_blocks,
     jboolean pin_l0_filter_and_index_blocks_in_cache,
@@ -107,26 +82,15 @@ jlong Java_org_rocksdb_BlockBasedTableConfig_newTableFactoryHandle(
   options.hash_index_allow_collision = hash_index_allow_collision;
   if (block_cache_compressed_size > 0) {
     if (block_cache_compressd_num_shard_bits > 0) {
-<<<<<<< HEAD
       options.block_cache = rocksdb::NewLRUCache(
           block_cache_compressed_size, block_cache_compressd_num_shard_bits);
-=======
-      options.block_cache =
-          rocksdb::NewLRUCache(block_cache_compressed_size,
-              block_cache_compressd_num_shard_bits);
->>>>>>> blood in blood out
     } else {
       options.block_cache = rocksdb::NewLRUCache(block_cache_compressed_size);
     }
   }
   options.checksum = static_cast<rocksdb::ChecksumType>(jchecksum_type);
-<<<<<<< HEAD
   options.index_type =
       static_cast<rocksdb::BlockBasedTableOptions::IndexType>(jindex_type);
-=======
-  options.index_type = static_cast<
-      rocksdb::BlockBasedTableOptions::IndexType>(jindex_type);
->>>>>>> blood in blood out
   options.format_version = jformat_version;
 
   return reinterpret_cast<jlong>(rocksdb::NewBlockBasedTableFactory(options));

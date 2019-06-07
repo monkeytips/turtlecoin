@@ -26,10 +26,6 @@
 #include "rocksdb/options.h"
 #include "rocksdb/statistics.h"
 #include "rocksdb/wal_filter.h"
-<<<<<<< HEAD
-=======
-#include "util/mpsc.h"
->>>>>>> blood in blood out
 #include "util/mutexlock.h"
 #include "util/timer_queue.h"
 #include "utilities/blob_db/blob_db.h"
@@ -47,25 +43,9 @@ struct FlushJobInfo;
 
 namespace blob_db {
 
-<<<<<<< HEAD
 struct BlobCompactionContext;
 class BlobDBImpl;
 class BlobFile;
-=======
-class BlobFile;
-class BlobDBImpl;
-
-class BlobDBFlushBeginListener : public EventListener {
- public:
-  explicit BlobDBFlushBeginListener(BlobDBImpl* blob_db_impl)
-      : blob_db_impl_(blob_db_impl) {}
-
-  void OnFlushBegin(DB* db, const FlushJobInfo& info) override;
-
- private:
-  BlobDBImpl* blob_db_impl_;
-};
->>>>>>> blood in blood out
 
 // this implements the callback from the WAL which ensures that the
 // blob record is present in the blob log. If fsync/fdatasync in not
@@ -82,7 +62,6 @@ class BlobReconcileWalFilter : public WalFilter {
   virtual const char* Name() const override { return "BlobDBWalReconciler"; }
 };
 
-<<<<<<< HEAD
 // Comparator to sort "TTL" aware Blob files based on the lower value of
 // TTL range.
 struct BlobFileComparatorTTL {
@@ -91,39 +70,6 @@ struct BlobFileComparatorTTL {
 };
 
 struct BlobFileComparator {
-=======
-class EvictAllVersionsCompactionListener : public EventListener {
- public:
-  class InternalListener : public CompactionEventListener {
-    friend class BlobDBImpl;
-
-   public:
-    explicit InternalListener(BlobDBImpl* blob_db_impl) : impl_(blob_db_impl) {}
-
-    virtual void OnCompaction(int level, const Slice& key,
-                              CompactionListenerValueType value_type,
-                              const Slice& existing_value,
-                              const SequenceNumber& sn, bool is_new) override;
-
-   private:
-    BlobDBImpl* impl_;
-  };
-
-  explicit EvictAllVersionsCompactionListener(BlobDBImpl* blob_db_impl)
-      : internal_listener_(new InternalListener(blob_db_impl)) {}
-
-  virtual CompactionEventListener* GetCompactionEventListener() override {
-    return internal_listener_.get();
-  }
-
- private:
-  std::unique_ptr<InternalListener> internal_listener_;
-};
-
-// Comparator to sort "TTL" aware Blob files based on the lower value of
-// TTL range.
-struct blobf_compare_ttl {
->>>>>>> blood in blood out
   bool operator()(const std::shared_ptr<BlobFile>& lhs,
                   const std::shared_ptr<BlobFile>& rhs) const;
 };
@@ -144,10 +90,6 @@ struct GCStats {
  * Garbage Collected.
  */
 class BlobDBImpl : public BlobDB {
-<<<<<<< HEAD
-=======
-  friend class EvictAllVersionsCompactionListener;
->>>>>>> blood in blood out
   friend class BlobFile;
   friend class BlobDBIterator;
 
@@ -173,13 +115,8 @@ class BlobDBImpl : public BlobDB {
   // how often to schedule delete obs files periods
   static constexpr uint32_t kDeleteObsoleteFilesPeriodMillisecs = 10 * 1000;
 
-<<<<<<< HEAD
   // how often to schedule expired files eviction.
   static constexpr uint32_t kEvictExpiredFilesPeriodMillisecs = 10 * 1000;
-=======
-  // how often to schedule check seq files period
-  static constexpr uint32_t kCheckSeqFilesPeriodMillisecs = 10 * 1000;
->>>>>>> blood in blood out
 
   // when should oldest file be evicted:
   // on reaching 90% of blob_dir_size
@@ -189,37 +126,22 @@ class BlobDBImpl : public BlobDB {
   Status Put(const WriteOptions& options, const Slice& key,
              const Slice& value) override;
 
-<<<<<<< HEAD
-=======
-  using BlobDB::Delete;
-  Status Delete(const WriteOptions& options, const Slice& key) override;
-
->>>>>>> blood in blood out
   using BlobDB::Get;
   Status Get(const ReadOptions& read_options, ColumnFamilyHandle* column_family,
              const Slice& key, PinnableSlice* value) override;
 
-<<<<<<< HEAD
   Status Get(const ReadOptions& read_options, ColumnFamilyHandle* column_family,
              const Slice& key, PinnableSlice* value,
              uint64_t* expiration) override;
 
-=======
->>>>>>> blood in blood out
   using BlobDB::NewIterator;
   virtual Iterator* NewIterator(const ReadOptions& read_options) override;
 
   using BlobDB::NewIterators;
   virtual Status NewIterators(
-<<<<<<< HEAD
       const ReadOptions& /*read_options*/,
       const std::vector<ColumnFamilyHandle*>& /*column_families*/,
       std::vector<Iterator*>* /*iterators*/) override {
-=======
-      const ReadOptions& read_options,
-      const std::vector<ColumnFamilyHandle*>& column_families,
-      std::vector<Iterator*>* iterators) override {
->>>>>>> blood in blood out
     return Status::NotSupported("Not implemented");
   }
 
@@ -231,11 +153,8 @@ class BlobDBImpl : public BlobDB {
 
   virtual Status Write(const WriteOptions& opts, WriteBatch* updates) override;
 
-<<<<<<< HEAD
   virtual Status Close() override;
 
-=======
->>>>>>> blood in blood out
   virtual Status GetLiveFiles(std::vector<std::string>&,
                               uint64_t* manifest_file_size,
                               bool flush_memtable = true) override;
@@ -262,13 +181,10 @@ class BlobDBImpl : public BlobDB {
 
   Status SyncBlobFiles() override;
 
-<<<<<<< HEAD
   void UpdateLiveSSTSize();
 
   void GetCompactionContext(BlobCompactionContext* context);
 
-=======
->>>>>>> blood in blood out
 #ifndef NDEBUG
   Status TEST_GetBlobValue(const Slice& key, const Slice& index_entry,
                            PinnableSlice* value);
@@ -279,27 +195,20 @@ class BlobDBImpl : public BlobDB {
 
   Status TEST_CloseBlobFile(std::shared_ptr<BlobFile>& bfile);
 
-<<<<<<< HEAD
   void TEST_ObsoleteBlobFile(std::shared_ptr<BlobFile>& blob_file,
                              SequenceNumber obsolete_seq = 0,
                              bool update_size = true);
 
-=======
->>>>>>> blood in blood out
   Status TEST_GCFileAndUpdateLSM(std::shared_ptr<BlobFile>& bfile,
                                  GCStats* gc_stats);
 
   void TEST_RunGC();
 
-<<<<<<< HEAD
   void TEST_EvictExpiredFiles();
 
   void TEST_DeleteObsoleteFiles();
 
   uint64_t TEST_live_sst_size();
-=======
-  void TEST_DeleteObsoleteFiles();
->>>>>>> blood in blood out
 #endif  //  !NDEBUG
 
  private:
@@ -312,49 +221,25 @@ class BlobDBImpl : public BlobDB {
 
   Status GetImpl(const ReadOptions& read_options,
                  ColumnFamilyHandle* column_family, const Slice& key,
-<<<<<<< HEAD
                  PinnableSlice* value, uint64_t* expiration = nullptr);
 
   Status GetBlobValue(const Slice& key, const Slice& index_entry,
                       PinnableSlice* value, uint64_t* expiration = nullptr);
-=======
-                 PinnableSlice* value);
-
-  Status GetBlobValue(const Slice& key, const Slice& index_entry,
-                      PinnableSlice* value);
->>>>>>> blood in blood out
 
   Slice GetCompressedSlice(const Slice& raw,
                            std::string* compression_output) const;
 
-<<<<<<< HEAD
   // Close a file by appending a footer, and removes file from open files list.
   Status CloseBlobFile(std::shared_ptr<BlobFile> bfile, bool need_lock = true);
-=======
-  // is this file ready for Garbage collection. if the TTL of the file
-  // has expired or if threshold of the file has been evicted
-  // tt - current time
-  // last_id - the id of the non-TTL file to evict
-  bool ShouldGCFile(std::shared_ptr<BlobFile> bfile, uint64_t now,
-                    bool is_oldest_non_ttl_file, std::string* reason);
-
-  // Close a file by appending a footer, and removes file from open files list.
-  Status CloseBlobFile(std::shared_ptr<BlobFile> bfile);
->>>>>>> blood in blood out
 
   // Close a file if its size exceeds blob_file_size
   Status CloseBlobFileIfNeeded(std::shared_ptr<BlobFile>& bfile);
 
-<<<<<<< HEAD
   // Mark file as obsolete and move the file to obsolete file list.
   //
   // REQUIRED: hold write lock of mutex_ or during DB open.
   void ObsoleteBlobFile(std::shared_ptr<BlobFile> blob_file,
                         SequenceNumber obsolete_seq, bool update_size);
-=======
-  uint64_t ExtractExpiration(const Slice& key, const Slice& value,
-                             Slice* value_slice, std::string* new_value);
->>>>>>> blood in blood out
 
   Status PutBlobValue(const WriteOptions& options, const Slice& key,
                       const Slice& value, uint64_t expiration,
@@ -374,11 +259,6 @@ class BlobDBImpl : public BlobDB {
 
   std::shared_ptr<BlobFile> FindBlobFileLocked(uint64_t expiration) const;
 
-<<<<<<< HEAD
-=======
-  void Shutdown();
-
->>>>>>> blood in blood out
   // periodic sanity check. Bunch of checks
   std::pair<bool, int64_t> SanityCheck(bool aborted);
 
@@ -392,25 +272,13 @@ class BlobDBImpl : public BlobDB {
 
   // periodically check if open blob files and their TTL's has expired
   // if expired, close the sequential writer and make the file immutable
-<<<<<<< HEAD
   std::pair<bool, int64_t> EvictExpiredFiles(bool aborted);
-=======
-  std::pair<bool, int64_t> CheckSeqFiles(bool aborted);
->>>>>>> blood in blood out
 
   // if the number of open files, approaches ULIMIT's this
   // task will close random readers, which are kept around for
   // efficiency
   std::pair<bool, int64_t> ReclaimOpenFiles(bool aborted);
 
-<<<<<<< HEAD
-=======
-  // background task to do book-keeping of deleted keys
-  std::pair<bool, int64_t> EvictDeletions(bool aborted);
-
-  std::pair<bool, int64_t> EvictCompacted(bool aborted);
-
->>>>>>> blood in blood out
   std::pair<bool, int64_t> RemoveTimerQ(TimerQueue* tq, bool aborted);
 
   // Adds the background tasks to the timer queue
@@ -455,7 +323,6 @@ class BlobDBImpl : public BlobDB {
   bool VisibleToActiveSnapshot(const std::shared_ptr<BlobFile>& file);
   bool FileDeleteOk_SnapshotCheckLocked(const std::shared_ptr<BlobFile>& bfile);
 
-<<<<<<< HEAD
   void CopyBlobFiles(std::vector<std::shared_ptr<BlobFile>>* bfiles_copy);
 
   uint64_t EpochNow() { return env_->NowMicros() / 1000000; }
@@ -466,29 +333,6 @@ class BlobDBImpl : public BlobDB {
   // even eviction will not make enough room for the new blob.
   Status CheckSizeAndEvictBlobFiles(uint64_t blob_size,
                                     bool force_evict = false);
-=======
-  bool MarkBlobDeleted(const Slice& key, const Slice& lsmValue);
-
-  bool FindFileAndEvictABlob(uint64_t file_number, uint64_t key_size,
-                             uint64_t blob_offset, uint64_t blob_size);
-
-  void CopyBlobFiles(
-      std::vector<std::shared_ptr<BlobFile>>* bfiles_copy,
-      std::function<bool(const std::shared_ptr<BlobFile>&)> predicate = {});
-
-  void FilterSubsetOfFiles(
-      const std::vector<std::shared_ptr<BlobFile>>& blob_files,
-      std::vector<std::shared_ptr<BlobFile>>* to_process, uint64_t epoch,
-      size_t files_to_collect);
-
-  uint64_t EpochNow() { return env_->NowMicros() / 1000000; }
-
-  Status CheckSize(size_t blob_size);
-
-  std::shared_ptr<BlobFile> GetOldestBlobFile();
-
-  bool EvictOldestBlobFile();
->>>>>>> blood in blood out
 
   // name of the database directory
   std::string dbname_;
@@ -496,10 +340,6 @@ class BlobDBImpl : public BlobDB {
   // the base DB
   DBImpl* db_impl_;
   Env* env_;
-<<<<<<< HEAD
-=======
-  TTLExtractor* ttl_extractor_;
->>>>>>> blood in blood out
 
   // the options that govern the behavior of Blob Storage
   BlobDBOptions bdb_options_;
@@ -538,59 +378,18 @@ class BlobDBImpl : public BlobDB {
 
   // all the blob files which are currently being appended to based
   // on variety of incoming TTL's
-<<<<<<< HEAD
   std::set<std::shared_ptr<BlobFile>, BlobFileComparatorTTL> open_ttl_files_;
 
   // Flag to check whether Close() has been called on this DB
   bool closed_;
-=======
-  std::multiset<std::shared_ptr<BlobFile>, blobf_compare_ttl> open_ttl_files_;
-
-  // packet of information to put in lockess delete(s) queue
-  struct delete_packet_t {
-    ColumnFamilyHandle* cfh_;
-    std::string key_;
-    SequenceNumber dsn_;
-  };
-
-  struct override_packet_t {
-    uint64_t file_number_;
-    uint64_t key_size_;
-    uint64_t blob_offset_;
-    uint64_t blob_size_;
-    SequenceNumber dsn_;
-  };
-
-  // LOCKLESS multiple producer single consumer queue to quickly append
-  // deletes without taking lock. Can rapidly grow in size!!
-  // deletes happen in LSM, but minor book-keeping needs to happen on
-  // BLOB side (for triggering eviction)
-  mpsc_queue_t<delete_packet_t> delete_keys_q_;
-
-  // LOCKLESS multiple producer single consumer queue for values
-  // that are being compacted
-  mpsc_queue_t<override_packet_t> override_vals_q_;
-
-  // atomic bool to represent shutdown
-  std::atomic<bool> shutdown_;
->>>>>>> blood in blood out
 
   // timer based queue to execute tasks
   TimerQueue tqueue_;
 
-<<<<<<< HEAD
-=======
-  // only accessed in GC thread, hence not atomic. The epoch of the
-  // GC task. Each execution is one epoch. Helps us in allocating
-  // files to one execution
-  uint64_t current_epoch_;
-
->>>>>>> blood in blood out
   // number of files opened for random access/GET
   // counter is used to monitor and close excess RA files.
   std::atomic<uint32_t> open_file_count_;
 
-<<<<<<< HEAD
   // Total size of all live blob files (i.e. exclude obsolete files).
   std::atomic<uint64_t> total_blob_size_;
 
@@ -610,16 +409,6 @@ class BlobDBImpl : public BlobDB {
   std::list<std::shared_ptr<BlobFile>> obsolete_files_;
 
   uint32_t debug_level_;
-=======
-  // total size of all blob files at a given time
-  std::atomic<uint64_t> total_blob_space_;
-  std::list<std::shared_ptr<BlobFile>> obsolete_files_;
-  bool open_p1_done_;
-
-  uint32_t debug_level_;
-
-  std::atomic<bool> oldest_file_evicted_;
->>>>>>> blood in blood out
 };
 
 }  // namespace blob_db

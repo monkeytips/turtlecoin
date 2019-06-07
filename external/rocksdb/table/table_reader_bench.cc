@@ -70,35 +70,22 @@ uint64_t Now(Env* env, bool measured_by_nanosecond) {
 namespace {
 void TableReaderBenchmark(Options& opts, EnvOptions& env_options,
                           ReadOptions& read_options, int num_keys1,
-<<<<<<< HEAD
                           int num_keys2, int num_iter, int /*prefix_len*/,
-=======
-                          int num_keys2, int num_iter, int prefix_len,
->>>>>>> blood in blood out
                           bool if_query_empty_keys, bool for_iterator,
                           bool through_db, bool measured_by_nanosecond) {
   rocksdb::InternalKeyComparator ikc(opts.comparator);
 
-<<<<<<< HEAD
   std::string file_name =
       test::PerThreadDBPath("rocksdb_table_reader_benchmark");
   std::string dbname = test::PerThreadDBPath("rocksdb_table_reader_bench_db");
-=======
-  std::string file_name = test::TmpDir()
-      + "/rocksdb_table_reader_benchmark";
-  std::string dbname = test::TmpDir() + "/rocksdb_table_reader_bench_db";
->>>>>>> blood in blood out
   WriteOptions wo;
   Env* env = Env::Default();
   TableBuilder* tb = nullptr;
   DB* db = nullptr;
   Status s;
   const ImmutableCFOptions ioptions(opts);
-<<<<<<< HEAD
   const ColumnFamilyOptions cfo(opts);
   const MutableCFOptions moptions(cfo);
-=======
->>>>>>> blood in blood out
   unique_ptr<WritableFileWriter> file_writer;
   if (!through_db) {
     unique_ptr<WritableFile> file;
@@ -110,20 +97,11 @@ void TableReaderBenchmark(Options& opts, EnvOptions& env_options,
     file_writer.reset(new WritableFileWriter(std::move(file), env_options));
     int unknown_level = -1;
     tb = opts.table_factory->NewTableBuilder(
-<<<<<<< HEAD
         TableBuilderOptions(
             ioptions, moptions, ikc, &int_tbl_prop_collector_factories,
             CompressionType::kNoCompression, CompressionOptions(),
             nullptr /* compression_dict */, false /* skip_filters */,
             kDefaultColumnFamilyName, unknown_level),
-=======
-        TableBuilderOptions(ioptions, ikc, &int_tbl_prop_collector_factories,
-                            CompressionType::kNoCompression,
-                            CompressionOptions(),
-                            nullptr /* compression_dict */,
-                            false /* skip_filters */, kDefaultColumnFamilyName,
-                            unknown_level),
->>>>>>> blood in blood out
         0 /* column_family_id */, file_writer.get());
   } else {
     s = DB::Open(opts, dbname, &db);
@@ -161,14 +139,9 @@ void TableReaderBenchmark(Options& opts, EnvOptions& env_options,
     unique_ptr<RandomAccessFileReader> file_reader(
         new RandomAccessFileReader(std::move(raf), file_name));
     s = opts.table_factory->NewTableReader(
-<<<<<<< HEAD
         TableReaderOptions(ioptions, moptions.prefix_extractor.get(),
                            env_options, ikc),
         std::move(file_reader), file_size, &table_reader);
-=======
-        TableReaderOptions(ioptions, env_options, ikc), std::move(file_reader),
-        file_size, &table_reader);
->>>>>>> blood in blood out
     if (!s.ok()) {
       fprintf(stderr, "Open Table Error: %s\n", s.ToString().c_str());
       exit(1);
@@ -202,11 +175,7 @@ void TableReaderBenchmark(Options& opts, EnvOptions& env_options,
                                    ioptions.statistics, GetContext::kNotFound,
                                    Slice(key), &value, nullptr, &merge_context,
                                    &range_del_agg, env);
-<<<<<<< HEAD
             s = table_reader->Get(read_options, key, &get_context, nullptr);
-=======
-            s = table_reader->Get(read_options, key, &get_context);
->>>>>>> blood in blood out
           } else {
             s = db->Get(read_options, key, &result);
           }
@@ -228,11 +197,7 @@ void TableReaderBenchmark(Options& opts, EnvOptions& env_options,
           Iterator* iter = nullptr;
           InternalIterator* iiter = nullptr;
           if (!through_db) {
-<<<<<<< HEAD
             iiter = table_reader->NewIterator(read_options, nullptr);
-=======
-            iiter = table_reader->NewIterator(read_options);
->>>>>>> blood in blood out
           } else {
             iter = db->NewIterator(read_options);
           }

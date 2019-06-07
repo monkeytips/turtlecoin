@@ -42,13 +42,8 @@ class WriteBatchHandlerJniCallback : public JniCallback, public WriteBatch::Hand
     void DeleteRange(const Slice& beginKey, const Slice& endKey);
     void LogData(const Slice& blob);
     Status PutBlobIndexCF(uint32_t column_family_id, const Slice& key,
-<<<<<<< HEAD
                           const Slice& value);
     Status MarkBeginPrepare(bool);
-=======
-        const Slice& value);
-    Status MarkBeginPrepare();
->>>>>>> blood in blood out
     Status MarkEndPrepare(const Slice& xid);
     Status MarkNoop(bool empty_batch);
     Status MarkRollback(const Slice& xid);

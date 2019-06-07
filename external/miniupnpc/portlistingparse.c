@@ -1,24 +1,14 @@
-<<<<<<< HEAD
 /* $Id: portlistingparse.c,v 1.9 2015/07/15 12:41:13 nanard Exp $ */
 /* MiniUPnP project
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * (c) 2011-2016 Thomas Bernard
-=======
-/* $Id: portlistingparse.c,v 1.7 2014/11/01 10:37:32 nanard Exp $ */
-/* MiniUPnP project
- * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
- * (c) 2011 Thomas Bernard
->>>>>>> blood in blood out
  * This software is subject to the conditions detailed
  * in the LICENCE file provided within the distribution */
 #include <string.h>
 #include <stdlib.h>
-<<<<<<< HEAD
 #ifdef DEBUG
 #include <stdio.h>
 #endif /* DEBUG */
-=======
->>>>>>> blood in blood out
 #include "portlistingparse.h"
 #include "minixml.h"
 
@@ -65,11 +55,7 @@ startelt(void * d, const char * name, int l)
 	pdata->curelt = PortMappingEltNone;
 	for(i = 0; elements[i].str; i++)
 	{
-<<<<<<< HEAD
 		if(strlen(elements[i].str) == (size_t)l && memcmp(name, elements[i].str, l) == 0)
-=======
-		if(memcmp(name, elements[i].str, l) == 0)
->>>>>>> blood in blood out
 		{
 			pdata->curelt = elements[i].code;
 			break;
@@ -79,7 +65,6 @@ startelt(void * d, const char * name, int l)
 	{
 		struct PortMapping * pm;
 		pm = calloc(1, sizeof(struct PortMapping));
-<<<<<<< HEAD
 		if(pm == NULL)
 		{
 			/* malloc error */
@@ -89,8 +74,6 @@ startelt(void * d, const char * name, int l)
 #endif /* DEBUG */
 			return;
 		}
-=======
->>>>>>> blood in blood out
 		pm->l_next = pdata->l_head;	/* insert in list */
 		pdata->l_head = pm;
 	}

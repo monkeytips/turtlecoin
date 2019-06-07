@@ -5,7 +5,6 @@
 
 #include "table/partitioned_filter_block.h"
 
-<<<<<<< HEAD
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
 #ifdef OS_FREEBSD
 #include <malloc_np.h>
@@ -13,8 +12,6 @@
 #include <malloc.h>
 #endif
 #endif
-=======
->>>>>>> blood in blood out
 #include <utility>
 
 #include "monitoring/perf_context_imp.h"
@@ -34,15 +31,10 @@ PartitionedFilterBlockBuilder::PartitionedFilterBlockBuilder(
     : FullFilterBlockBuilder(prefix_extractor, whole_key_filtering,
                              filter_bits_builder),
       index_on_filter_block_builder_(index_block_restart_interval),
-<<<<<<< HEAD
       index_on_filter_block_builder_without_seq_(index_block_restart_interval),
       p_index_builder_(p_index_builder),
       filters_in_partition_(0),
       num_added_(0) {
-=======
-      p_index_builder_(p_index_builder),
-      filters_in_partition_(0) {
->>>>>>> blood in blood out
   filters_per_partition_ =
       filter_bits_builder_->CalculateNumEntry(partition_size);
 }
@@ -64,20 +56,14 @@ void PartitionedFilterBlockBuilder::MaybeCutAFilterBlock() {
   std::string& index_key = p_index_builder_->GetPartitionKey();
   filters.push_back({index_key, filter});
   filters_in_partition_ = 0;
-<<<<<<< HEAD
   Reset();
-=======
->>>>>>> blood in blood out
 }
 
 void PartitionedFilterBlockBuilder::AddKey(const Slice& key) {
   MaybeCutAFilterBlock();
   filter_bits_builder_->AddKey(key);
   filters_in_partition_++;
-<<<<<<< HEAD
   num_added_++;
-=======
->>>>>>> blood in blood out
 }
 
 Slice PartitionedFilterBlockBuilder::Finish(
@@ -88,13 +74,10 @@ Slice PartitionedFilterBlockBuilder::Finish(
     std::string handle_encoding;
     last_partition_block_handle.EncodeTo(&handle_encoding);
     index_on_filter_block_builder_.Add(last_entry.key, handle_encoding);
-<<<<<<< HEAD
     if (!p_index_builder_->seperator_is_key_plus_seq()) {
       index_on_filter_block_builder_without_seq_.Add(
           ExtractUserKey(last_entry.key), handle_encoding);
     }
-=======
->>>>>>> blood in blood out
     filters.pop_front();
   } else {
     MaybeCutAFilterBlock();
@@ -104,15 +87,11 @@ Slice PartitionedFilterBlockBuilder::Finish(
   if (UNLIKELY(filters.empty())) {
     *status = Status::OK();
     if (finishing_filters) {
-<<<<<<< HEAD
       if (p_index_builder_->seperator_is_key_plus_seq()) {
         return index_on_filter_block_builder_.Finish();
       } else {
         return index_on_filter_block_builder_without_seq_.Finish();
       }
-=======
-      return index_on_filter_block_builder_.Finish();
->>>>>>> blood in blood out
     } else {
       // This is the rare case where no key was added to the filter
       return Slice();
@@ -128,7 +107,6 @@ Slice PartitionedFilterBlockBuilder::Finish(
 
 PartitionedFilterBlockReader::PartitionedFilterBlockReader(
     const SliceTransform* prefix_extractor, bool _whole_key_filtering,
-<<<<<<< HEAD
     BlockContents&& contents, FilterBitsReader* /*filter_bits_reader*/,
     Statistics* stats, const InternalKeyComparator comparator,
     const BlockBasedTable* table, const bool index_key_includes_seq)
@@ -137,15 +115,6 @@ PartitionedFilterBlockReader::PartitionedFilterBlockReader(
       comparator_(comparator),
       table_(table),
       index_key_includes_seq_(index_key_includes_seq) {
-=======
-    BlockContents&& contents, FilterBitsReader* filter_bits_reader,
-    Statistics* stats, const Comparator& comparator,
-    const BlockBasedTable* table)
-    : FilterBlockReader(contents.data.size(), stats, _whole_key_filtering),
-      prefix_extractor_(prefix_extractor),
-      comparator_(comparator),
-      table_(table) {
->>>>>>> blood in blood out
   idx_on_fltr_blk_.reset(new Block(std::move(contents),
                                    kDisableGlobalSequenceNumber,
                                    0 /* read_amp_bytes_per_bit */, stats));
@@ -160,18 +129,12 @@ PartitionedFilterBlockReader::~PartitionedFilterBlockReader() {
     return;
   }
   char cache_key[BlockBasedTable::kMaxCacheKeyPrefixSize + kMaxVarint64Length];
-<<<<<<< HEAD
   IndexBlockIter biter;
   BlockHandle handle;
   Statistics* kNullStats = nullptr;
   idx_on_fltr_blk_->NewIterator<IndexBlockIter>(
       &comparator_, comparator_.user_comparator(), &biter, kNullStats, true,
       index_key_includes_seq_);
-=======
-  BlockIter biter;
-  BlockHandle handle;
-  idx_on_fltr_blk_->NewIterator(&comparator_, &biter, true);
->>>>>>> blood in blood out
   biter.SeekToFirst();
   for (; biter.Valid(); biter.Next()) {
     auto input = biter.value();
@@ -188,12 +151,8 @@ PartitionedFilterBlockReader::~PartitionedFilterBlockReader() {
 }
 
 bool PartitionedFilterBlockReader::KeyMayMatch(
-<<<<<<< HEAD
     const Slice& key, const SliceTransform* prefix_extractor,
     uint64_t block_offset, const bool no_io,
-=======
-    const Slice& key, uint64_t block_offset, const bool no_io,
->>>>>>> blood in blood out
     const Slice* const const_ikey_ptr) {
   assert(const_ikey_ptr != nullptr);
   assert(block_offset == kNotValid);
@@ -208,7 +167,6 @@ bool PartitionedFilterBlockReader::KeyMayMatch(
     return false;
   }
   bool cached = false;
-<<<<<<< HEAD
   auto filter_partition =
       GetFilterPartition(nullptr /* prefetch_buffer */, &filter_handle, no_io,
                          &cached, prefix_extractor);
@@ -217,14 +175,6 @@ bool PartitionedFilterBlockReader::KeyMayMatch(
   }
   auto res = filter_partition.value->KeyMayMatch(key, prefix_extractor,
                                                  block_offset, no_io);
-=======
-  auto filter_partition = GetFilterPartition(nullptr /* prefetch_buffer */,
-                                             &filter_handle, no_io, &cached);
-  if (UNLIKELY(!filter_partition.value)) {
-    return true;
-  }
-  auto res = filter_partition.value->KeyMayMatch(key, block_offset, no_io);
->>>>>>> blood in blood out
   if (cached) {
     return res;
   }
@@ -237,7 +187,6 @@ bool PartitionedFilterBlockReader::KeyMayMatch(
 }
 
 bool PartitionedFilterBlockReader::PrefixMayMatch(
-<<<<<<< HEAD
     const Slice& prefix, const SliceTransform* prefix_extractor,
     uint64_t block_offset, const bool no_io,
     const Slice* const const_ikey_ptr) {
@@ -247,13 +196,6 @@ bool PartitionedFilterBlockReader::PrefixMayMatch(
   assert(const_ikey_ptr != nullptr);
   assert(block_offset == kNotValid);
   if (!prefix_extractor_ && !prefix_extractor) {
-=======
-    const Slice& prefix, uint64_t block_offset, const bool no_io,
-    const Slice* const const_ikey_ptr) {
-  assert(const_ikey_ptr != nullptr);
-  assert(block_offset == kNotValid);
-  if (!prefix_extractor_) {
->>>>>>> blood in blood out
     return true;
   }
   if (UNLIKELY(idx_on_fltr_blk_->size() == 0)) {
@@ -264,7 +206,6 @@ bool PartitionedFilterBlockReader::PrefixMayMatch(
     return false;
   }
   bool cached = false;
-<<<<<<< HEAD
   auto filter_partition =
       GetFilterPartition(nullptr /* prefetch_buffer */, &filter_handle, no_io,
                          &cached, prefix_extractor);
@@ -273,14 +214,6 @@ bool PartitionedFilterBlockReader::PrefixMayMatch(
   }
   auto res = filter_partition.value->PrefixMayMatch(prefix, prefix_extractor,
                                                     kNotValid, no_io);
-=======
-  auto filter_partition = GetFilterPartition(nullptr /* prefetch_buffer */,
-                                             &filter_handle, no_io, &cached);
-  if (UNLIKELY(!filter_partition.value)) {
-    return true;
-  }
-  auto res = filter_partition.value->PrefixMayMatch(prefix, kNotValid, no_io);
->>>>>>> blood in blood out
   if (cached) {
     return res;
   }
@@ -294,16 +227,11 @@ bool PartitionedFilterBlockReader::PrefixMayMatch(
 
 Slice PartitionedFilterBlockReader::GetFilterPartitionHandle(
     const Slice& entry) {
-<<<<<<< HEAD
   IndexBlockIter iter;
   Statistics* kNullStats = nullptr;
   idx_on_fltr_blk_->NewIterator<IndexBlockIter>(
       &comparator_, comparator_.user_comparator(), &iter, kNullStats, true,
       index_key_includes_seq_);
-=======
-  BlockIter iter;
-  idx_on_fltr_blk_->NewIterator(&comparator_, &iter, true);
->>>>>>> blood in blood out
   iter.Seek(entry);
   if (UNLIKELY(!iter.Valid())) {
     return Slice();
@@ -316,11 +244,7 @@ Slice PartitionedFilterBlockReader::GetFilterPartitionHandle(
 BlockBasedTable::CachableEntry<FilterBlockReader>
 PartitionedFilterBlockReader::GetFilterPartition(
     FilePrefetchBuffer* prefetch_buffer, Slice* handle_value, const bool no_io,
-<<<<<<< HEAD
     bool* cached, const SliceTransform* prefix_extractor) {
-=======
-    bool* cached) {
->>>>>>> blood in blood out
   BlockHandle fltr_blk_handle;
   auto s = fltr_blk_handle.DecodeFrom(handle_value);
   assert(s.ok());
@@ -343,23 +267,15 @@ PartitionedFilterBlockReader::GetFilterPartition(
     }
     return table_->GetFilter(/*prefetch_buffer*/ nullptr, fltr_blk_handle,
                              is_a_filter_partition, no_io,
-<<<<<<< HEAD
                              /* get_context */ nullptr, prefix_extractor);
   } else {
     auto filter = table_->ReadFilter(prefetch_buffer, fltr_blk_handle,
                                      is_a_filter_partition, prefix_extractor);
-=======
-                             /* get_context */ nullptr);
-  } else {
-    auto filter = table_->ReadFilter(prefetch_buffer, fltr_blk_handle,
-                                     is_a_filter_partition);
->>>>>>> blood in blood out
     return {filter, nullptr};
   }
 }
 
 size_t PartitionedFilterBlockReader::ApproximateMemoryUsage() const {
-<<<<<<< HEAD
   size_t usage = idx_on_fltr_blk_->usable_size();
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
   usage += malloc_usable_size((void*)this);
@@ -388,18 +304,6 @@ void PartitionedFilterBlockReader::CacheDependencies(
   idx_on_fltr_blk_->NewIterator<IndexBlockIter>(
       &comparator_, comparator_.user_comparator(), &biter, kNullStats, true,
       index_key_includes_seq_);
-=======
-  return idx_on_fltr_blk_->size();
-}
-
-// TODO(myabandeh): merge this with the same function in IndexReader
-void PartitionedFilterBlockReader::CacheDependencies(bool pin) {
-  // Before read partitions, prefetch them to avoid lots of IOs
-  auto rep = table_->rep_;
-  BlockIter biter;
-  BlockHandle handle;
-  idx_on_fltr_blk_->NewIterator(&comparator_, &biter, true);
->>>>>>> blood in blood out
   // Index partitions are assumed to be consecuitive. Prefetch them all.
   // Read the first block offset
   biter.SeekToFirst();
@@ -428,12 +332,8 @@ void PartitionedFilterBlockReader::CacheDependencies(bool pin) {
   std::unique_ptr<FilePrefetchBuffer> prefetch_buffer;
   auto& file = table_->rep_->file;
   prefetch_buffer.reset(new FilePrefetchBuffer());
-<<<<<<< HEAD
   s = prefetch_buffer->Prefetch(file.get(), prefetch_off,
     static_cast<size_t>(prefetch_len));
-=======
-  s = prefetch_buffer->Prefetch(file.get(), prefetch_off, prefetch_len);
->>>>>>> blood in blood out
 
   // After prefetch, read the partitions one by one
   biter.SeekToFirst();
@@ -449,7 +349,6 @@ void PartitionedFilterBlockReader::CacheDependencies(bool pin) {
 
     const bool no_io = true;
     const bool is_a_filter_partition = true;
-<<<<<<< HEAD
     auto filter = table_->GetFilter(
         prefetch_buffer.get(), handle, is_a_filter_partition, !no_io,
         /* get_context */ nullptr, prefix_extractor);
@@ -458,14 +357,6 @@ void PartitionedFilterBlockReader::CacheDependencies(bool pin) {
         filter_map_[handle.offset()] = std::move(filter);
         RegisterCleanup(&ReleaseFilterCachedEntry, block_cache,
                         filter.cache_handle);
-=======
-    auto filter = table_->GetFilter(prefetch_buffer.get(), handle,
-                                    is_a_filter_partition, !no_io,
-                                    /* get_context */ nullptr);
-    if (LIKELY(filter.IsSet())) {
-      if (pin) {
-        filter_map_[handle.offset()] = std::move(filter);
->>>>>>> blood in blood out
       } else {
         block_cache->Release(filter.cache_handle);
       }

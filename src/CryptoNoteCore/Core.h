@@ -1,25 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-<<<<<<< HEAD
 // Copyright (c) 2018-2019, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
-=======
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> blood in blood out
 
 #pragma once
 #include <ctime>
@@ -42,28 +24,16 @@
 #include <Logging/LoggerMessage.h>
 #include "MessageQueue.h"
 #include "TransactionValidatiorState.h"
-<<<<<<< HEAD
 
 #include <System/ContextGroup.h>
 
 #include <WalletTypes.h>
-=======
-#include "SwappedVector.h"
-
-#include "CryptoNoteCore/MinerConfig.h"
-
-#include <System/ContextGroup.h>
->>>>>>> blood in blood out
 
 namespace CryptoNote {
 
 class Core : public ICore, public ICoreInformation {
 public:
-<<<<<<< HEAD
   Core(const Currency& currency, std::shared_ptr<Logging::ILogger> logger, Checkpoints&& checkpoints, System::Dispatcher& dispatcher,
-=======
-  Core(const Currency& currency, Logging::ILogger& logger, Checkpoints&& checkpoints, System::Dispatcher& dispatcher,
->>>>>>> blood in blood out
        std::unique_ptr<IBlockchainCacheFactory>&& blockchainCacheFactory, std::unique_ptr<IMainChainStorage>&& mainChainStorage);
   virtual ~Core();
 
@@ -89,7 +59,6 @@ public:
     uint32_t& startIndex, uint32_t& currentIndex, uint32_t& fullOffset, std::vector<BlockFullInfo>& entries) const override;
   virtual bool queryBlocksLite(const std::vector<Crypto::Hash>& knownBlockHashes, uint64_t timestamp,
     uint32_t& startIndex, uint32_t& currentIndex, uint32_t& fullOffset, std::vector<BlockShortInfo>& entries) const override;
-<<<<<<< HEAD
   virtual bool queryBlocksDetailed(const std::vector<Crypto::Hash>& knownBlockHashes, uint64_t timestamp,
     uint64_t& startIndex, uint64_t& currentIndex, uint64_t& fullOffset, std::vector<BlockDetails>& entries, uint32_t blockCount) const override;
 
@@ -112,14 +81,6 @@ public:
 
   virtual uint64_t getBlockDifficulty(uint32_t blockIndex) const override;
   virtual uint64_t getDifficultyForNextBlock() const override;
-=======
-
-  virtual bool hasTransaction(const Crypto::Hash& transactionHash) const override;
-  virtual void getTransactions(const std::vector<Crypto::Hash>& transactionHashes, std::vector<BinaryArray>& transactions, std::vector<Crypto::Hash>& missedHashes) const override;
-
-  virtual Difficulty getBlockDifficulty(uint32_t blockIndex) const override;
-  virtual Difficulty getDifficultyForNextBlock() const override;
->>>>>>> blood in blood out
 
   virtual std::error_code addBlock(const CachedBlock& cachedBlock, RawBlock&& rawBlock) override;
   virtual std::error_code addBlock(RawBlock&& rawBlock) override;
@@ -129,7 +90,6 @@ public:
   virtual bool getTransactionGlobalIndexes(const Crypto::Hash& transactionHash, std::vector<uint32_t>& globalIndexes) const override;
   virtual bool getRandomOutputs(uint64_t amount, uint16_t count, std::vector<uint32_t>& globalIndexes, std::vector<Crypto::PublicKey>& publicKeys) const override;
 
-<<<<<<< HEAD
   virtual bool getGlobalIndexesForRange(
     const uint64_t startHeight,
     const uint64_t endHeight,
@@ -139,21 +99,12 @@ public:
 
   virtual std::vector<Crypto::Hash> getPoolTransactionHashes() const override;
   virtual std::tuple<bool, BinaryArray> getPoolTransaction(const Crypto::Hash& transactionHash) const override;
-=======
-  virtual bool addTransactionToPool(const BinaryArray& transactionBinaryArray) override;
-
-  virtual std::vector<Crypto::Hash> getPoolTransactionHashes() const override;
->>>>>>> blood in blood out
   virtual bool getPoolChanges(const Crypto::Hash& lastBlockHash, const std::vector<Crypto::Hash>& knownHashes, std::vector<BinaryArray>& addedTransactions,
     std::vector<Crypto::Hash>& deletedTransactions) const override;
   virtual bool getPoolChangesLite(const Crypto::Hash& lastBlockHash, const std::vector<Crypto::Hash>& knownHashes, std::vector<TransactionPrefixInfo>& addedTransactions,
     std::vector<Crypto::Hash>& deletedTransactions) const override;
 
-<<<<<<< HEAD
   virtual bool getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, const BinaryArray& extraNonce, uint64_t& difficulty, uint32_t& height) const override;
-=======
-  virtual bool getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, const BinaryArray& extraNonce, Difficulty& difficulty, uint32_t& height) const override;
->>>>>>> blood in blood out
 
   virtual CoreStatistics getCoreStatistics() const override;
 
@@ -163,11 +114,6 @@ public:
   virtual size_t getPoolTransactionCount() const override;
   virtual size_t getBlockchainTransactionCount() const override;
   virtual size_t getAlternativeBlockCount() const override;
-<<<<<<< HEAD
-=======
-  virtual uint64_t getTotalGeneratedAmount() const override;
-  virtual std::vector<BlockTemplate> getAlternativeBlocks() const override;
->>>>>>> blood in blood out
   virtual std::vector<Transaction> getPoolTransactions() const override;
 
   const Currency& getCurrency() const;
@@ -178,10 +124,6 @@ public:
   virtual BlockDetails getBlockDetails(const Crypto::Hash& blockHash) const override;
   BlockDetails getBlockDetails(const uint32_t blockHeight) const;
   virtual TransactionDetails getTransactionDetails(const Crypto::Hash& transactionHash) const override;
-<<<<<<< HEAD
-=======
-  virtual std::vector<Crypto::Hash> getAlternativeBlockHashesByIndex(uint32_t blockIndex) const override;
->>>>>>> blood in blood out
   virtual std::vector<Crypto::Hash> getBlockHashesByTimestamps(uint64_t timestampBegin, size_t secondsCount) const override;
   virtual std::vector<Crypto::Hash> getTransactionHashesByPaymentId(const Crypto::Hash& paymentId) const override;
 
@@ -192,10 +134,6 @@ private:
   System::Dispatcher& dispatcher;
   System::ContextGroup contextGroup;
   Logging::LoggerRef logger;
-<<<<<<< HEAD
-=======
-  Crypto::cn_context cryptoContext;
->>>>>>> blood in blood out
   Checkpoints checkpoints;
   std::unique_ptr<IUpgradeManager> upgradeManager;
   std::vector<std::unique_ptr<IBlockchainCache>> chainsStorage;
@@ -219,13 +157,7 @@ private:
 
   std::error_code validateSemantic(const Transaction& transaction, uint64_t& fee, uint32_t blockIndex);
   std::error_code validateTransaction(const CachedTransaction& transaction, TransactionValidatorState& state, IBlockchainCache* cache, uint64_t& fee, uint32_t blockIndex);
-<<<<<<< HEAD
 
-=======
-  bool validateMixin(const CachedTransaction& transaction, uint64_t minMixin, uint64_t maxMixin);
-  bool validateMixin(std::vector<CachedTransaction> transactions, uint32_t height);
-  
->>>>>>> blood in blood out
   uint32_t findBlockchainSupplement(const std::vector<Crypto::Hash>& remoteBlockIds) const;
   std::vector<Crypto::Hash> getBlockHashes(uint32_t startBlockIndex, uint32_t maxCount) const;
 
@@ -250,23 +182,16 @@ private:
 
   size_t pushBlockHashes(uint32_t startIndex, uint32_t fullOffset, size_t maxItemsCount, std::vector<BlockShortInfo>& entries) const;
   size_t pushBlockHashes(uint32_t startIndex, uint32_t fullOffset, size_t maxItemsCount, std::vector<BlockFullInfo>& entries) const;
-<<<<<<< HEAD
   size_t pushBlockHashes(uint32_t startIndex, uint32_t fullOffset, size_t maxItemsCount, std::vector<BlockDetails>& entries) const;
   bool notifyObservers(BlockchainMessage&& msg);
   void fillQueryBlockFullInfo(uint32_t fullOffset, uint32_t currentIndex, size_t maxItemsCount, std::vector<BlockFullInfo>& entries) const;
   void fillQueryBlockShortInfo(uint32_t fullOffset, uint32_t currentIndex, size_t maxItemsCount, std::vector<BlockShortInfo>& entries) const;
   void fillQueryBlockDetails(uint32_t fullOffset, uint32_t currentIndex, size_t maxItemsCount, std::vector<BlockDetails>& entries) const;
-=======
-  bool notifyObservers(BlockchainMessage&& msg);
-  void fillQueryBlockFullInfo(uint32_t fullOffset, uint32_t currentIndex, size_t maxItemsCount, std::vector<BlockFullInfo>& entries) const;
-  void fillQueryBlockShortInfo(uint32_t fullOffset, uint32_t currentIndex, size_t maxItemsCount, std::vector<BlockShortInfo>& entries) const;
->>>>>>> blood in blood out
 
   void getTransactionPoolDifference(const std::vector<Crypto::Hash>& knownHashes, std::vector<Crypto::Hash>& newTransactions, std::vector<Crypto::Hash>& deletedTransactions) const;
 
   uint8_t getBlockMajorVersionForHeight(uint32_t height) const;
   size_t calculateCumulativeBlocksizeLimit(uint32_t height) const;
-<<<<<<< HEAD
 
   bool validateBlockTemplateTransaction(
     const CachedTransaction &cachedTransaction,
@@ -280,9 +205,6 @@ private:
     size_t& transactionsSize,
     uint64_t& fee) const;
 
-=======
-  void fillBlockTemplate(BlockTemplate& block, size_t medianSize, size_t maxCumulativeSize, size_t& transactionsSize, uint64_t& fee) const;
->>>>>>> blood in blood out
   void deleteAlternativeChains();
   void deleteLeaf(size_t leafIndex);
   void mergeMainChainSegments();
@@ -291,11 +213,7 @@ private:
   void notifyOnSuccess(error::AddBlockErrorCode opResult, uint32_t previousBlockIndex, const CachedBlock& cachedBlock,
                        const IBlockchainCache& cache);
   void copyTransactionsToPool(IBlockchainCache* alt);
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> blood in blood out
   void actualizePoolTransactions();
   void actualizePoolTransactionsLite(const TransactionValidatorState& validatorState); //Checks pool txs only for double spend.
 
@@ -309,7 +227,6 @@ private:
   void cutSegment(IBlockchainCache& segment, uint32_t startIndex);
 
   void switchMainChainStorage(uint32_t splitBlockIndex, IBlockchainCache& newChain);
-<<<<<<< HEAD
 
   static WalletTypes::RawCoinbaseTransaction getRawCoinbaseTransaction(
     const CryptoNote::Transaction &t);
@@ -320,8 +237,6 @@ private:
   static Crypto::PublicKey getPubKeyFromExtra(const std::vector<uint8_t> &extra);
 
   static std::string getPaymentIDFromExtra(const std::vector<uint8_t> &extra);
-=======
->>>>>>> blood in blood out
 };
 
 }

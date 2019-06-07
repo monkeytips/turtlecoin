@@ -13,15 +13,9 @@ extern "C" {
 #endif
 
 struct NameValue {
-<<<<<<< HEAD
 	struct NameValue * l_next;
 	char name[64];
 	char value[128];
-=======
-    struct NameValue * l_next;
-    char name[64];
-    char value[128];
->>>>>>> blood in blood out
 };
 
 struct NameValueParserData {

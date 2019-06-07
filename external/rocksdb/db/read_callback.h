@@ -13,7 +13,6 @@ class ReadCallback {
  public:
   virtual ~ReadCallback() {}
 
-<<<<<<< HEAD
   // Will be called to see if the seq number visible; if not it moves on to
   // the next seq number.
   virtual bool IsVisible(SequenceNumber seq) = 0;
@@ -26,11 +25,6 @@ class ReadCallback {
   // For other uses, this returns zero, meaning that the current snapshot
   // sequence number is the maximum visible sequence number.
   inline virtual SequenceNumber MaxUnpreparedSequenceNumber() { return 0; };
-=======
-  // Will be called to see if the seq number accepted; if not it moves on to the
-  // next seq number.
-  virtual bool IsCommitted(SequenceNumber seq) = 0;
->>>>>>> blood in blood out
 };
 
 }  //  namespace rocksdb

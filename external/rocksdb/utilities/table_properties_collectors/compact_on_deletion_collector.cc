@@ -29,18 +29,11 @@ CompactOnDeletionCollector::CompactOnDeletionCollector(
 // @params key    the user key that is inserted into the table.
 // @params value  the value that is inserted into the table.
 // @params file_size  file size up to now
-<<<<<<< HEAD
 Status CompactOnDeletionCollector::AddUserKey(const Slice& /*key*/,
                                               const Slice& /*value*/,
                                               EntryType type,
                                               SequenceNumber /*seq*/,
                                               uint64_t /*file_size*/) {
-=======
-Status CompactOnDeletionCollector::AddUserKey(
-    const Slice& key, const Slice& value,
-    EntryType type, SequenceNumber seq,
-    uint64_t file_size) {
->>>>>>> blood in blood out
   assert(!finished_);
   if (need_compaction_) {
     // If the output file already needs to be compacted, skip the check.
@@ -76,11 +69,7 @@ Status CompactOnDeletionCollector::AddUserKey(
 
 TablePropertiesCollector*
 CompactOnDeletionCollectorFactory::CreateTablePropertiesCollector(
-<<<<<<< HEAD
     TablePropertiesCollectorFactory::Context /*context*/) {
-=======
-    TablePropertiesCollectorFactory::Context context) {
->>>>>>> blood in blood out
   return new CompactOnDeletionCollector(
       sliding_window_size_, deletion_trigger_);
 }

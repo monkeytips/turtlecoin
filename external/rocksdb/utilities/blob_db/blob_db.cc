@@ -63,7 +63,6 @@ Status BlobDB::Open(const DBOptions& db_options,
 BlobDB::BlobDB() : StackableDB(nullptr) {}
 
 void BlobDBOptions::Dump(Logger* log) const {
-<<<<<<< HEAD
   ROCKS_LOG_HEADER(
       log, "                                  BlobDBOptions.blob_dir: %s",
       blob_dir.c_str());
@@ -103,32 +102,6 @@ void BlobDBOptions::Dump(Logger* log) const {
   ROCKS_LOG_HEADER(
       log, "                  BlobDBOptions.disable_background_tasks: %d",
       disable_background_tasks);
-=======
-  ROCKS_LOG_HEADER(log, "                 blob_db_options.blob_dir: %s",
-                   blob_dir.c_str());
-  ROCKS_LOG_HEADER(log, "            blob_db_options.path_relative: %d",
-                   path_relative);
-  ROCKS_LOG_HEADER(log, "                  blob_db_options.is_fifo: %d",
-                   is_fifo);
-  ROCKS_LOG_HEADER(log, "            blob_db_options.blob_dir_size: %" PRIu64,
-                   blob_dir_size);
-  ROCKS_LOG_HEADER(log, "           blob_db_options.ttl_range_secs: %" PRIu32,
-                   ttl_range_secs);
-  ROCKS_LOG_HEADER(log, "            blob_db_options.min_blob_size: %" PRIu64,
-                   min_blob_size);
-  ROCKS_LOG_HEADER(log, "           blob_db_options.bytes_per_sync: %" PRIu64,
-                   bytes_per_sync);
-  ROCKS_LOG_HEADER(log, "           blob_db_options.blob_file_size: %" PRIu64,
-                   blob_file_size);
-  ROCKS_LOG_HEADER(log, "            blob_db_options.ttl_extractor: %p",
-                   ttl_extractor.get());
-  ROCKS_LOG_HEADER(log, "              blob_db_options.compression: %d",
-                   static_cast<int>(compression));
-  ROCKS_LOG_HEADER(log, "blob_db_options.enable_garbage_collection: %d",
-                   enable_garbage_collection);
-  ROCKS_LOG_HEADER(log, " blob_db_options.disable_background_tasks: %d",
-                   disable_background_tasks);
->>>>>>> blood in blood out
 }
 
 }  // namespace blob_db

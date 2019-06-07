@@ -179,11 +179,7 @@ class SimCacheImpl : public SimCache {
     Handle* h = key_only_cache_->Lookup(key);
     if (h == nullptr) {
       key_only_cache_->Insert(key, nullptr, charge,
-<<<<<<< HEAD
                               [](const Slice& /*k*/, void* /*v*/) {}, nullptr,
-=======
-                              [](const Slice& k, void* v) {}, nullptr,
->>>>>>> blood in blood out
                               priority);
     } else {
       key_only_cache_->Release(h);

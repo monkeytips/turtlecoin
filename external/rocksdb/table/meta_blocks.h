@@ -96,18 +96,13 @@ bool NotifyCollectTableCollectorsOnFinish(
 Status ReadProperties(const Slice& handle_value, RandomAccessFileReader* file,
                       FilePrefetchBuffer* prefetch_buffer, const Footer& footer,
                       const ImmutableCFOptions& ioptions,
-<<<<<<< HEAD
                       TableProperties** table_properties,
                       bool compression_type_missing = false);
-=======
-                      TableProperties** table_properties);
->>>>>>> blood in blood out
 
 // Directly read the properties from the properties block of a plain table.
 // @returns a status to indicate if the operation succeeded. On success,
 //          *table_properties will point to a heap-allocated TableProperties
 //          object, otherwise value of `table_properties` will not be modified.
-<<<<<<< HEAD
 // certain tables do not have compression_type byte setup properly for
 // uncompressed blocks, caller can request to reset compression type by
 // passing compression_type_missing = true, the same applies to
@@ -117,12 +112,6 @@ Status ReadTableProperties(RandomAccessFileReader* file, uint64_t file_size,
                            const ImmutableCFOptions &ioptions,
                            TableProperties** properties,
                            bool compression_type_missing = false);
-=======
-Status ReadTableProperties(RandomAccessFileReader* file, uint64_t file_size,
-                           uint64_t table_magic_number,
-                           const ImmutableCFOptions &ioptions,
-                           TableProperties** properties);
->>>>>>> blood in blood out
 
 // Find the meta block from the meta index block.
 Status FindMetaBlock(InternalIterator* meta_index_iter,
@@ -134,12 +123,8 @@ Status FindMetaBlock(RandomAccessFileReader* file, uint64_t file_size,
                      uint64_t table_magic_number,
                      const ImmutableCFOptions &ioptions,
                      const std::string& meta_block_name,
-<<<<<<< HEAD
                      BlockHandle* block_handle,
                      bool compression_type_missing = false);
-=======
-                     BlockHandle* block_handle);
->>>>>>> blood in blood out
 
 // Read the specified meta block with name meta_block_name
 // from `file` and initialize `contents` with contents of this block.
@@ -149,11 +134,7 @@ Status ReadMetaBlock(RandomAccessFileReader* file,
                      uint64_t table_magic_number,
                      const ImmutableCFOptions& ioptions,
                      const std::string& meta_block_name,
-<<<<<<< HEAD
                      BlockContents* contents,
                      bool compression_type_missing = false);
-=======
-                     BlockContents* contents);
->>>>>>> blood in blood out
 
 }  // namespace rocksdb

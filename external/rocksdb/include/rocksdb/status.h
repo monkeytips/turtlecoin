@@ -25,11 +25,7 @@ namespace rocksdb {
 class Status {
  public:
   // Create a success status.
-<<<<<<< HEAD
   Status() : code_(kOk), subcode_(kNone), sev_(kNoError), state_(nullptr) {}
-=======
-  Status() : code_(kOk), subcode_(kNone), state_(nullptr) {}
->>>>>>> blood in blood out
   ~Status() { delete[] state_; }
 
   // Copy the specified status.
@@ -48,11 +44,7 @@ class Status {
   bool operator==(const Status& rhs) const;
   bool operator!=(const Status& rhs) const;
 
-<<<<<<< HEAD
   enum Code : unsigned char {
-=======
-  enum Code {
->>>>>>> blood in blood out
     kOk = 0,
     kNotFound = 1,
     kCorruption = 2,
@@ -66,21 +58,13 @@ class Status {
     kAborted = 10,
     kBusy = 11,
     kExpired = 12,
-<<<<<<< HEAD
     kTryAgain = 13,
     kCompactionTooLarge = 14
-=======
-    kTryAgain = 13
->>>>>>> blood in blood out
   };
 
   Code code() const { return code_; }
 
-<<<<<<< HEAD
   enum SubCode : unsigned char {
-=======
-  enum SubCode {
->>>>>>> blood in blood out
     kNone = 0,
     kMutexTimeout = 1,
     kLockTimeout = 2,
@@ -89,16 +73,12 @@ class Status {
     kDeadlock = 5,
     kStaleFile = 6,
     kMemoryLimit = 7,
-<<<<<<< HEAD
     kSpaceLimit = 8,
-=======
->>>>>>> blood in blood out
     kMaxSubCode
   };
 
   SubCode subcode() const { return subcode_; }
 
-<<<<<<< HEAD
   enum Severity : unsigned char {
     kNoError = 0,
     kSoftError = 1,
@@ -111,8 +91,6 @@ class Status {
   Status(const Status& s, Severity sev);
   Severity severity() const { return sev_; }
 
-=======
->>>>>>> blood in blood out
   // Returns a C style string indicating the message of the Status
   const char* getState() const { return state_; }
 
@@ -198,7 +176,6 @@ class Status {
     return Status(kTryAgain, msg, msg2);
   }
 
-<<<<<<< HEAD
   static Status CompactionTooLarge(SubCode msg = kNone) {
     return Status(kCompactionTooLarge, msg);
   }
@@ -207,8 +184,6 @@ class Status {
     return Status(kCompactionTooLarge, msg, msg2);
   }
 
-=======
->>>>>>> blood in blood out
   static Status NoSpace() { return Status(kIOError, kNoSpace); }
   static Status NoSpace(const Slice& msg, const Slice& msg2 = Slice()) {
     return Status(kIOError, kNoSpace, msg, msg2);
@@ -219,14 +194,11 @@ class Status {
     return Status(kAborted, kMemoryLimit, msg, msg2);
   }
 
-<<<<<<< HEAD
   static Status SpaceLimit() { return Status(kIOError, kSpaceLimit); }
   static Status SpaceLimit(const Slice& msg, const Slice& msg2 = Slice()) {
     return Status(kIOError, kSpaceLimit, msg, msg2);
   }
 
-=======
->>>>>>> blood in blood out
   // Returns true iff the status indicates success.
   bool ok() const { return code() == kOk; }
 
@@ -276,12 +248,9 @@ class Status {
   // re-attempted.
   bool IsTryAgain() const { return code() == kTryAgain; }
 
-<<<<<<< HEAD
   // Returns true iff the status indicates the proposed compaction is too large
   bool IsCompactionTooLarge() const { return code() == kCompactionTooLarge; }
 
-=======
->>>>>>> blood in blood out
   // Returns true iff the status indicates a NoSpace error
   // This is caused by an I/O error returning the specific "out of space"
   // error condition. Stricto sensu, an NoSpace error is an I/O error
@@ -310,20 +279,13 @@ class Status {
   //    state_[4..]  == message
   Code code_;
   SubCode subcode_;
-<<<<<<< HEAD
   Severity sev_;
-=======
->>>>>>> blood in blood out
   const char* state_;
 
   static const char* msgs[static_cast<int>(kMaxSubCode)];
 
   explicit Status(Code _code, SubCode _subcode = kNone)
-<<<<<<< HEAD
       : code_(_code), subcode_(_subcode), sev_(kNoError), state_(nullptr) {}
-=======
-      : code_(_code), subcode_(_subcode), state_(nullptr) {}
->>>>>>> blood in blood out
 
   Status(Code _code, SubCode _subcode, const Slice& msg, const Slice& msg2);
   Status(Code _code, const Slice& msg, const Slice& msg2)
@@ -332,15 +294,11 @@ class Status {
   static const char* CopyState(const char* s);
 };
 
-<<<<<<< HEAD
 inline Status::Status(const Status& s) : code_(s.code_), subcode_(s.subcode_), sev_(s.sev_) {
   state_ = (s.state_ == nullptr) ? nullptr : CopyState(s.state_);
 }
 inline Status::Status(const Status& s, Severity sev)
   : code_(s.code_), subcode_(s.subcode_), sev_(sev) {
-=======
-inline Status::Status(const Status& s) : code_(s.code_), subcode_(s.subcode_) {
->>>>>>> blood in blood out
   state_ = (s.state_ == nullptr) ? nullptr : CopyState(s.state_);
 }
 inline Status& Status::operator=(const Status& s) {
@@ -349,10 +307,7 @@ inline Status& Status::operator=(const Status& s) {
   if (this != &s) {
     code_ = s.code_;
     subcode_ = s.subcode_;
-<<<<<<< HEAD
     sev_ = s.sev_;
-=======
->>>>>>> blood in blood out
     delete[] state_;
     state_ = (s.state_ == nullptr) ? nullptr : CopyState(s.state_);
   }
@@ -377,11 +332,8 @@ inline Status& Status::operator=(Status&& s)
     s.code_ = kOk;
     subcode_ = std::move(s.subcode_);
     s.subcode_ = kNone;
-<<<<<<< HEAD
     sev_ = std::move(s.sev_);
     s.sev_ = kNoError;
-=======
->>>>>>> blood in blood out
     delete[] state_;
     state_ = nullptr;
     std::swap(state_, s.state_);

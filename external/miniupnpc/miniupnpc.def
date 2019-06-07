@@ -24,13 +24,9 @@ EXPORTS
    UPNP_GetExternalIPAddress
    UPNP_GetLinkLayerMaxBitRates
    UPNP_AddPortMapping
-<<<<<<< HEAD
    UPNP_AddAnyPortMapping
    UPNP_DeletePortMapping
    UPNP_DeletePortMappingRange
-=======
-   UPNP_DeletePortMapping
->>>>>>> blood in blood out
    UPNP_GetPortMappingNumberOfEntries
    UPNP_GetSpecificPortMappingEntry
    UPNP_GetGenericPortMappingEntry

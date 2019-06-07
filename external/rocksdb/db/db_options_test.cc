@@ -134,11 +134,7 @@ TEST_F(DBOptionsTest, SetBytesPerSync) {
   const std::string kValue(kValueSize, 'v');
   ASSERT_EQ(options.bytes_per_sync, dbfull()->GetDBOptions().bytes_per_sync);
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "WritableFileWriter::RangeSync:0", [&](void* /*arg*/) {
-=======
-      "WritableFileWriter::RangeSync:0", [&](void* arg) {
->>>>>>> blood in blood out
         counter++;
       });
 
@@ -187,11 +183,7 @@ TEST_F(DBOptionsTest, SetWalBytesPerSync) {
   int counter = 0;
   int low_bytes_per_sync = 0;
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "WritableFileWriter::RangeSync:0", [&](void* /*arg*/) {
-=======
-      "WritableFileWriter::RangeSync:0", [&](void* arg) {
->>>>>>> blood in blood out
         counter++;
       });
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
@@ -250,20 +242,12 @@ TEST_F(DBOptionsTest, WritableFileMaxBufferSize) {
   ASSERT_EQ(unmatch_cnt, 0);
   ASSERT_GE(match_cnt, 11);
 
-<<<<<<< HEAD
   ASSERT_OK(
       dbfull()->SetDBOptions({{"writable_file_max_buffer_size", "524288"}}));
   buffer_size = 512 * 1024;
   match_cnt = 0;
   unmatch_cnt = 0;  // SetDBOptions() will create a WriteableFileWriter
 
-=======
-  buffer_size = 512 * 1024;
-  match_cnt = 0;
-  unmatch_cnt = 0;
-  ASSERT_OK(
-      dbfull()->SetDBOptions({{"writable_file_max_buffer_size", "524288"}}));
->>>>>>> blood in blood out
   ASSERT_EQ(buffer_size,
             dbfull()->GetDBOptions().writable_file_max_buffer_size);
   i = 0;

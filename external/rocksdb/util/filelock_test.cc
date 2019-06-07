@@ -7,10 +7,7 @@
 #include "rocksdb/env.h"
 
 #include <vector>
-<<<<<<< HEAD
 #include <fcntl.h>
-=======
->>>>>>> blood in blood out
 #include "util/coding.h"
 #include "util/testharness.h"
 
@@ -22,14 +19,9 @@ class LockTest : public testing::Test {
   std::string file_;
   rocksdb::Env* env_;
 
-<<<<<<< HEAD
   LockTest()
       : file_(test::PerThreadDBPath("db_testlock_file")),
         env_(rocksdb::Env::Default()) {
-=======
-  LockTest() : file_(test::TmpDir() + "/db_testlock_file"),
-               env_(rocksdb::Env::Default()) {
->>>>>>> blood in blood out
     current_ = this;
   }
 
@@ -43,7 +35,6 @@ class LockTest : public testing::Test {
   Status UnlockFile(FileLock* db_lock) {
     return env_->UnlockFile(db_lock);
   }
-<<<<<<< HEAD
 
   bool AssertFileIsLocked(){
     return CheckFileLock( /* lock_expected = */ true);
@@ -116,8 +107,6 @@ class LockTest : public testing::Test {
 
   }
 
-=======
->>>>>>> blood in blood out
 };
 LockTest* LockTest::current_;
 
@@ -128,7 +117,6 @@ TEST_F(LockTest, LockBySameThread) {
   // acquire a lock on a file
   ASSERT_OK(LockFile(&lock1));
 
-<<<<<<< HEAD
   // check the file is locked
   ASSERT_TRUE( AssertFileIsLocked() );
 
@@ -144,14 +132,6 @@ TEST_F(LockTest, LockBySameThread) {
   // check the file is not locked
   ASSERT_TRUE( AssertFileIsNotLocked() );
 
-=======
-  // re-acquire the lock on the same file. This should fail.
-  ASSERT_TRUE(LockFile(&lock2).IsIOError());
-
-  // release the lock
-  ASSERT_OK(UnlockFile(lock1));
-
->>>>>>> blood in blood out
 }
 
 }  // namespace rocksdb

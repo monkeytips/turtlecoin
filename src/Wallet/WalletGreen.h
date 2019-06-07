@@ -33,7 +33,6 @@
 
 namespace CryptoNote {
 
-<<<<<<< HEAD
 struct PreparedTransaction {
     std::shared_ptr<ITransaction> transaction;
     std::vector<WalletTransfer> destinations;
@@ -41,36 +40,23 @@ struct PreparedTransaction {
     uint64_t changeAmount;
 };
 
-=======
->>>>>>> blood in blood out
 class WalletGreen : public IWallet,
                     ITransfersObserver,
                     IBlockchainSynchronizerObserver,
                     ITransfersSynchronizerObserver,
                     public IFusionManager {
 public:
-<<<<<<< HEAD
   WalletGreen(System::Dispatcher& dispatcher, const Currency& currency, INode& node, std::shared_ptr<Logging::ILogger> logger, uint32_t transactionSoftLockTime = 1);
   virtual ~WalletGreen();
 
   virtual void initializeWithViewKey(const std::string& path, const std::string& password, const Crypto::SecretKey& viewSecretKey, const uint64_t scanHeight, const bool newAddress) override;
-=======
-  WalletGreen(System::Dispatcher& dispatcher, const Currency& currency, INode& node, Logging::ILogger& logger, uint32_t transactionSoftLockTime = 1);
-  virtual ~WalletGreen();
-
-  virtual void initialize(const std::string& path, const std::string& password) override;
-  virtual void initializeWithViewKey(const std::string& path, const std::string& password, const Crypto::SecretKey& viewSecretKey) override;
->>>>>>> blood in blood out
   virtual void load(const std::string& path, const std::string& password, std::string& extra) override;
   virtual void load(const std::string& path, const std::string& password) override;
   virtual void shutdown() override;
 
   virtual void changePassword(const std::string& oldPassword, const std::string& newPassword) override;
   virtual void save(WalletSaveLevel saveLevel = WalletSaveLevel::SAVE_ALL, const std::string& extra = "") override;
-<<<<<<< HEAD
   virtual void reset(const uint64_t scanHeight) override;
-=======
->>>>>>> blood in blood out
   virtual void exportWallet(const std::string& path, bool encrypt = true, WalletSaveLevel saveLevel = WalletSaveLevel::SAVE_ALL, const std::string& extra = "") override;
 
   virtual size_t getAddressCount() const override;
@@ -78,7 +64,6 @@ public:
   virtual KeyPair getAddressSpendKey(size_t index) const override;
   virtual KeyPair getAddressSpendKey(const std::string& address) const override;
   virtual KeyPair getViewKey() const override;
-<<<<<<< HEAD
 
   virtual std::string createAddress() override;
   virtual std::string createAddress(const Crypto::SecretKey& spendSecretKey, const uint64_t scanHeight, const bool newAddress) override;
@@ -86,12 +71,6 @@ public:
 
   virtual std::vector<std::string> createAddressList(const std::vector<Crypto::SecretKey>& spendSecretKeys, const uint64_t scanHeight, const bool newAddress) override;
 
-=======
-  virtual std::string createAddress() override;
-  virtual std::string createAddress(const Crypto::SecretKey& spendSecretKey) override;
-  virtual std::string createAddress(const Crypto::PublicKey& spendPublicKey) override;
-  virtual std::vector<std::string> createAddressList(const std::vector<Crypto::SecretKey>& spendSecretKeys) override;
->>>>>>> blood in blood out
   virtual void deleteAddress(const std::string& address) override;
 
   virtual uint64_t getActualBalance() const override;
@@ -101,11 +80,6 @@ public:
 
   virtual size_t getTransactionCount() const override;
   virtual WalletTransaction getTransaction(size_t transactionIndex) const override;
-<<<<<<< HEAD
-=======
-  virtual size_t getTransactionTransferCount(size_t transactionIndex) const override;
-  virtual WalletTransfer getTransactionTransfer(size_t transactionIndex, size_t transferIndex) const override;
->>>>>>> blood in blood out
 
   virtual WalletTransactionWithTransfers getTransaction(const Crypto::Hash& transactionHash) const override;
   virtual std::vector<TransactionsInBlockInfo> getTransactions(const Crypto::Hash& blockHash, size_t count) const override;
@@ -115,16 +89,11 @@ public:
   virtual std::vector<WalletTransactionWithTransfers> getUnconfirmedTransactions() const override;
   virtual std::vector<size_t> getDelayedTransactionIds() const override;
 
-<<<<<<< HEAD
   virtual size_t transfer(const TransactionParameters& transactionParameters) override;
-=======
-  virtual size_t transfer(const TransactionParameters& sendingTransaction) override;
->>>>>>> blood in blood out
 
   virtual size_t makeTransaction(const TransactionParameters& sendingTransaction) override;
   virtual void commitTransaction(size_t) override;
   virtual void rollbackUncommitedTransaction(size_t) override;
-<<<<<<< HEAD
 
   size_t transfer(const PreparedTransaction& preparedTransaction);
   bool txIsTooLarge(const PreparedTransaction &p);
@@ -139,17 +108,6 @@ public:
                         const uint64_t scanHeight,
                         const bool newAddress);
   uint64_t getBalanceMinusDust(const std::vector<std::string>& addresses);
-=======
-  bool txIsTooLarge(const TransactionParameters& sendingTransaction);
-  size_t getTxSize(const TransactionParameters &sendingTransaction);
-  size_t getMaxTxSize();
-  void updateInternalCache();
-  void clearCaches(bool clearTransactions, bool clearCachedData);
-  void clearCacheAndShutdown();
-  void createViewWallet(const std::string &path, const std::string &password,
-                        const std::string address, 
-                        const Crypto::SecretKey &viewSecretKey);
->>>>>>> blood in blood out
 
   virtual void start() override;
   virtual void stop() override;
@@ -164,10 +122,6 @@ protected:
   struct NewAddressData {
     Crypto::PublicKey spendPublicKey;
     Crypto::SecretKey spendSecretKey;
-<<<<<<< HEAD
-=======
-    uint64_t creationTimestamp;
->>>>>>> blood in blood out
   };
 
   void throwIfNotInitialized() const;
@@ -184,7 +138,6 @@ protected:
   Crypto::chacha8_iv getNextIv() const;
   static void incIv(Crypto::chacha8_iv& iv);
   void incNextIv();
-<<<<<<< HEAD
   void initWithKeys(const std::string& path, const std::string& password, const Crypto::PublicKey& viewPublicKey, const Crypto::SecretKey& viewSecretKey, const uint64_t scanHeight, const bool newAddress);
   std::string doCreateAddress(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, const uint64_t scanHeight, const bool newAddress);
   std::vector<std::string> doCreateAddressList(const std::vector<NewAddressData>& addressDataList, const uint64_t scanHeight, const bool newAddress);
@@ -194,12 +147,6 @@ protected:
   uint64_t scanHeightToTimestamp(const uint64_t scanHeight);
 
   uint64_t getCurrentTimestampAdjusted();
-=======
-  void initWithKeys(const std::string& path, const std::string& password, const Crypto::PublicKey& viewPublicKey, const Crypto::SecretKey& viewSecretKey);
-  std::string doCreateAddress(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
-  std::vector<std::string> doCreateAddressList(const std::vector<NewAddressData>& addressDataList);
-
->>>>>>> blood in blood out
 
   struct InputInfo {
     TransactionTypes::InputKeyInfo keyInfo;
@@ -284,27 +231,13 @@ protected:
   const WalletRecord& getWalletRecord(CryptoNote::ITransfersContainer* container) const;
 
   CryptoNote::AccountPublicAddress parseAddress(const std::string& address) const;
-<<<<<<< HEAD
   std::string addWallet(const NewAddressData &addressData, uint64_t scanHeight, bool newAddress);
-=======
-  std::string addWallet(const Crypto::PublicKey& spendPublicKey, const Crypto::SecretKey& spendSecretKey, uint64_t creationTimestamp);
->>>>>>> blood in blood out
   AccountKeys makeAccountKeys(const WalletRecord& wallet) const;
   size_t getTransactionId(const Crypto::Hash& transactionHash) const;
   void pushEvent(const WalletEvent& event);
   bool isFusionTransaction(const WalletTransaction& walletTx) const;
 
-<<<<<<< HEAD
   
-=======
-  struct PreparedTransaction {
-    std::unique_ptr<ITransaction> transaction;
-    std::vector<WalletTransfer> destinations;
-    uint64_t neededMoney;
-    uint64_t changeAmount;
-  };
-
->>>>>>> blood in blood out
   void prepareTransaction(std::vector<WalletOuts>&& wallets,
     const std::vector<WalletOrder>& orders,
     uint64_t fee,
@@ -317,11 +250,7 @@ protected:
 
   size_t doTransfer(const TransactionParameters& transactionParameters);
 
-<<<<<<< HEAD
   void checkIfEnoughMixins(std::vector<CryptoNote::RandomOuts>& mixinResult, uint16_t mixIn) const;
-=======
-  void checkIfEnoughMixins(std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& mixinResult, uint16_t mixIn) const;
->>>>>>> blood in blood out
   std::vector<WalletTransfer> convertOrdersToTransfers(const std::vector<WalletOrder>& orders) const;
   uint64_t countNeededMoney(const std::vector<CryptoNote::WalletTransfer>& destinations, uint64_t fee) const;
   CryptoNote::AccountPublicAddress parseAccountAddressString(const std::string& addressString) const;
@@ -334,17 +263,10 @@ protected:
 
   void requestMixinOuts(const std::vector<OutputToTransfer>& selectedTransfers,
     uint16_t mixIn,
-<<<<<<< HEAD
     std::vector<CryptoNote::RandomOuts>& mixinResult);
 
   void prepareInputs(const std::vector<OutputToTransfer>& selectedTransfers,
     std::vector<CryptoNote::RandomOuts>& mixinResult,
-=======
-    std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& mixinResult);
-
-  void prepareInputs(const std::vector<OutputToTransfer>& selectedTransfers,
-    std::vector<CryptoNote::COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS::outs_for_amount>& mixinResult,
->>>>>>> blood in blood out
     uint16_t mixIn,
     std::vector<InputInfo>& keysInfo);
 

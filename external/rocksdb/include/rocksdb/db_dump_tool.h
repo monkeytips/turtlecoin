@@ -17,11 +17,7 @@ struct DumpOptions {
   std::string db_path;
   // File location that will contain dump output
   std::string dump_location;
-<<<<<<< HEAD
   // Don't include db information header in the dump
-=======
-  // Dont include db information header in the dump
->>>>>>> blood in blood out
   bool anonymous = false;
 };
 

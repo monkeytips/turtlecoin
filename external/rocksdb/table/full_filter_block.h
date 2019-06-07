@@ -43,24 +43,16 @@ class FullFilterBlockBuilder : public FilterBlockBuilder {
   ~FullFilterBlockBuilder() {}
 
   virtual bool IsBlockBased() override { return false; }
-<<<<<<< HEAD
   virtual void StartBlock(uint64_t /*block_offset*/) override {}
   virtual void Add(const Slice& key) override;
   virtual size_t NumAdded() const override { return num_added_; }
-=======
-  virtual void StartBlock(uint64_t block_offset) override {}
-  virtual void Add(const Slice& key) override;
->>>>>>> blood in blood out
   virtual Slice Finish(const BlockHandle& tmp, Status* status) override;
   using FilterBlockBuilder::Finish;
 
  protected:
   virtual void AddKey(const Slice& key);
   std::unique_ptr<FilterBitsBuilder> filter_bits_builder_;
-<<<<<<< HEAD
   virtual void Reset();
-=======
->>>>>>> blood in blood out
 
  private:
   // important: all of these might point to invalid addresses
@@ -68,13 +60,10 @@ class FullFilterBlockBuilder : public FilterBlockBuilder {
   // should NOT dereference them.
   const SliceTransform* prefix_extractor_;
   bool whole_key_filtering_;
-<<<<<<< HEAD
   bool last_whole_key_recorded_;
   std::string last_whole_key_str_;
   bool last_prefix_recorded_;
   std::string last_prefix_str_;
-=======
->>>>>>> blood in blood out
 
   uint32_t num_added_;
   std::unique_ptr<const char[]> filter_data_;
@@ -108,7 +97,6 @@ class FullFilterBlockReader : public FilterBlockReader {
   ~FullFilterBlockReader() {}
 
   virtual bool IsBlockBased() override { return false; }
-<<<<<<< HEAD
 
   virtual bool KeyMayMatch(
       const Slice& key, const SliceTransform* prefix_extractor,
@@ -125,40 +113,21 @@ class FullFilterBlockReader : public FilterBlockReader {
                              const Comparator* comparator,
                              const Slice* const const_ikey_ptr, bool* filter_checked,
                              bool need_upper_bound_check) override;
-=======
-  virtual bool KeyMayMatch(
-      const Slice& key, uint64_t block_offset = kNotValid,
-      const bool no_io = false,
-      const Slice* const const_ikey_ptr = nullptr) override;
-  virtual bool PrefixMayMatch(
-      const Slice& prefix, uint64_t block_offset = kNotValid,
-      const bool no_io = false,
-      const Slice* const const_ikey_ptr = nullptr) override;
-  virtual size_t ApproximateMemoryUsage() const override;
-
->>>>>>> blood in blood out
  private:
   const SliceTransform* prefix_extractor_;
   Slice contents_;
   std::unique_ptr<FilterBitsReader> filter_bits_reader_;
   BlockContents block_contents_;
-<<<<<<< HEAD
   bool full_length_enabled_;
   size_t prefix_extractor_full_length_;
-=======
-  std::unique_ptr<const char[]> filter_data_;
->>>>>>> blood in blood out
 
   // No copying allowed
   FullFilterBlockReader(const FullFilterBlockReader&);
   bool MayMatch(const Slice& entry);
   void operator=(const FullFilterBlockReader&);
-<<<<<<< HEAD
   bool IsFilterCompatible(const Slice* iterate_upper_bound,
                           const Slice& prefix, const Comparator* comparator);
 
-=======
->>>>>>> blood in blood out
 };
 
 }  // namespace rocksdb

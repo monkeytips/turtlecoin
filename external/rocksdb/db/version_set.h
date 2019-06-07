@@ -115,11 +115,7 @@ class VersionStorageInfo {
   // Update the accumulated stats from a file-meta.
   void UpdateAccumulatedStats(FileMetaData* file_meta);
 
-<<<<<<< HEAD
   // Decrease the current stat from a to-be-deleted file-meta
-=======
-  // Decrease the current stat form a to-be-delected file-meta
->>>>>>> blood in blood out
   void RemoveCurrentStats(FileMetaData* file_meta);
 
   void ComputeCompensatedSizes();
@@ -139,14 +135,11 @@ class VersionStorageInfo {
   // ComputeCompactionScore()
   void ComputeFilesMarkedForCompaction();
 
-<<<<<<< HEAD
   // This computes ttl_expired_files_ and is called by
   // ComputeCompactionScore()
   void ComputeExpiredTtlFiles(const ImmutableCFOptions& ioptions,
                               const uint64_t ttl);
 
-=======
->>>>>>> blood in blood out
   // This computes bottommost_files_marked_for_compaction_ and is called by
   // ComputeCompactionScore() or UpdateOldestSnapshot().
   //
@@ -209,13 +202,8 @@ class VersionStorageInfo {
 
   void GetOverlappingInputsRangeBinarySearch(
       int level,           // level > 0
-<<<<<<< HEAD
       const InternalKey* begin,  // nullptr means before all keys
       const InternalKey* end,    // nullptr means after all keys
-=======
-      const Slice& begin,  // nullptr means before all keys
-      const Slice& end,    // nullptr means after all keys
->>>>>>> blood in blood out
       std::vector<FileMetaData*>* inputs,
       int hint_index,                // index of overlap file
       int* file_index,               // return index of overlap file
@@ -224,36 +212,20 @@ class VersionStorageInfo {
 
   void ExtendFileRangeOverlappingInterval(
       int level,
-<<<<<<< HEAD
       const InternalKey* begin,  // nullptr means before all keys
       const InternalKey* end,    // nullptr means after all keys
       unsigned int index,        // start extending from this index
       int* startIndex,           // return the startIndex of input range
       int* endIndex)             // return the endIndex of input range
-=======
-      const Slice& begin,  // nullptr means before all keys
-      const Slice& end,    // nullptr means after all keys
-      unsigned int index,  // start extending from this index
-      int* startIndex,     // return the startIndex of input range
-      int* endIndex)       // return the endIndex of input range
->>>>>>> blood in blood out
       const;
 
   void ExtendFileRangeWithinInterval(
       int level,
-<<<<<<< HEAD
       const InternalKey* begin,  // nullptr means before all keys
       const InternalKey* end,    // nullptr means after all keys
       unsigned int index,        // start extending from this index
       int* startIndex,           // return the startIndex of input range
       int* endIndex)             // return the endIndex of input range
-=======
-      const Slice& begin,  // nullptr means before all keys
-      const Slice& end,    // nullptr means after all keys
-      unsigned int index,  // start extending from this index
-      int* startIndex,     // return the startIndex of input range
-      int* endIndex)       // return the endIndex of input range
->>>>>>> blood in blood out
       const;
 
   // Returns true iff some file in the specified level overlaps
@@ -321,7 +293,6 @@ class VersionStorageInfo {
 
   // REQUIRES: This version has been saved (see VersionSet::SaveTo)
   // REQUIRES: DB mutex held during access
-<<<<<<< HEAD
   const autovector<std::pair<int, FileMetaData*>>& ExpiredTtlFiles() const {
     assert(finalized_);
     return expired_ttl_files_;
@@ -329,8 +300,6 @@ class VersionStorageInfo {
 
   // REQUIRES: This version has been saved (see VersionSet::SaveTo)
   // REQUIRES: DB mutex held during access
-=======
->>>>>>> blood in blood out
   const autovector<std::pair<int, FileMetaData*>>&
   BottommostFilesMarkedForCompaction() const {
     assert(finalized_);
@@ -489,11 +458,8 @@ class VersionStorageInfo {
   // ComputeCompactionScore()
   autovector<std::pair<int, FileMetaData*>> files_marked_for_compaction_;
 
-<<<<<<< HEAD
   autovector<std::pair<int, FileMetaData*>> expired_ttl_files_;
 
-=======
->>>>>>> blood in blood out
   // These files are considered bottommost because none of their keys can exist
   // at lower levels. They are not necessarily all in the same level. The marked
   // ones are eligible for compaction because they contain duplicate key
@@ -539,11 +505,7 @@ class VersionStorageInfo {
   uint64_t accumulated_num_deletions_;
   // current number of non_deletion entries
   uint64_t current_num_non_deletions_;
-<<<<<<< HEAD
   // current number of deletion entries
-=======
-  // current number of delection entries
->>>>>>> blood in blood out
   uint64_t current_num_deletions_;
   // current number of file samples
   uint64_t current_num_samples_;
@@ -577,14 +539,11 @@ class Version {
                             MergeIteratorBuilder* merger_iter_builder,
                             int level, RangeDelAggregator* range_del_agg);
 
-<<<<<<< HEAD
   Status OverlapWithLevelIterator(const ReadOptions&, const EnvOptions&,
                                   const Slice& smallest_user_key,
                                   const Slice& largest_user_key,
                                   int level, bool* overlap);
 
-=======
->>>>>>> blood in blood out
   // Lookup the value for key.  If found, store it in *val and
   // return OK.  Else return a non-OK status.
   // Uses *operands to store merge_operator operations to apply later.
@@ -625,21 +584,13 @@ class Version {
   // Return a human readable string that describes this version's contents.
   std::string DebugString(bool hex = false, bool print_stats = false) const;
 
-<<<<<<< HEAD
   // Returns the version number of this version
-=======
-  // Returns the version nuber of this version
->>>>>>> blood in blood out
   uint64_t GetVersionNumber() const { return version_number_; }
 
   // REQUIRES: lock is held
   // On success, "tp" will contains the table properties of the file
   // specified in "file_meta".  If the file name of "file_meta" is
-<<<<<<< HEAD
   // known ahead, passing it by a non-null "fname" can save a
-=======
-  // known ahread, passing it by a non-null "fname" can save a
->>>>>>> blood in blood out
   // file-name conversion.
   Status GetTableProperties(std::shared_ptr<const TableProperties>* tp,
                             const FileMetaData* file_meta,
@@ -648,22 +599,14 @@ class Version {
   // REQUIRES: lock is held
   // On success, *props will be populated with all SSTables' table properties.
   // The keys of `props` are the sst file name, the values of `props` are the
-<<<<<<< HEAD
   // tables' properties, represented as shared_ptr.
-=======
-  // tables' propertis, represented as shared_ptr.
->>>>>>> blood in blood out
   Status GetPropertiesOfAllTables(TablePropertiesCollection* props);
   Status GetPropertiesOfAllTables(TablePropertiesCollection* props, int level);
   Status GetPropertiesOfTablesInRange(const Range* range, std::size_t n,
                                       TablePropertiesCollection* props) const;
 
   // REQUIRES: lock is held
-<<<<<<< HEAD
   // On success, "tp" will contains the aggregated table property among
-=======
-  // On success, "tp" will contains the aggregated table property amoug
->>>>>>> blood in blood out
   // the table properties of all sst files in this version.
   Status GetAggregatedTableProperties(
       std::shared_ptr<const TableProperties>* tp, int level = -1);
@@ -689,13 +632,10 @@ class Version {
 
   void GetColumnFamilyMetaData(ColumnFamilyMetaData* cf_meta);
 
-<<<<<<< HEAD
   uint64_t GetSstFilesSize();
 
   MutableCFOptions GetMutableCFOptions() { return mutable_cf_options_; }
 
-=======
->>>>>>> blood in blood out
  private:
   Env* env_;
   friend class VersionSet;
@@ -718,11 +658,7 @@ class Version {
   bool IsFilterSkipped(int level, bool is_file_last_in_level = false);
 
   // The helper function of UpdateAccumulatedStats, which may fill the missing
-<<<<<<< HEAD
   // fields of file_meta from its associated TableProperties.
-=======
-  // fields of file_mata from its associated TableProperties.
->>>>>>> blood in blood out
   // Returns true if it does initialize FileMetaData.
   bool MaybeInitializeFileMetaData(FileMetaData* file_meta);
 
@@ -747,21 +683,14 @@ class Version {
   Version* prev_;               // Previous version in linked list
   int refs_;                    // Number of live refs to this version
   const EnvOptions env_options_;
-<<<<<<< HEAD
   const MutableCFOptions mutable_cf_options_;
-=======
->>>>>>> blood in blood out
 
   // A version number that uniquely represents this version. This is
   // used for debugging and logging purposes only.
   uint64_t version_number_;
 
   Version(ColumnFamilyData* cfd, VersionSet* vset, const EnvOptions& env_opt,
-<<<<<<< HEAD
           MutableCFOptions mutable_cf_options, uint64_t version_number = 0);
-=======
-          uint64_t version_number = 0);
->>>>>>> blood in blood out
 
   ~Version();
 
@@ -770,7 +699,6 @@ class Version {
   void operator=(const Version&);
 };
 
-<<<<<<< HEAD
 struct ObsoleteFileInfo {
   FileMetaData* metadata;
   std::string   path;
@@ -801,8 +729,6 @@ struct ObsoleteFileInfo {
   }
 };
 
-=======
->>>>>>> blood in blood out
 class VersionSet {
  public:
   VersionSet(const std::string& dbname, const ImmutableDBOptions* db_options,
@@ -823,17 +749,11 @@ class VersionSet {
       InstrumentedMutex* mu, Directory* db_directory = nullptr,
       bool new_descriptor_log = false,
       const ColumnFamilyOptions* column_family_options = nullptr) {
-<<<<<<< HEAD
     std::vector<ColumnFamilyData*> cfds(1, column_family_data);
     std::vector<MutableCFOptions> mutable_cf_options_list(1,
                                                           mutable_cf_options);
     std::vector<autovector<VersionEdit*>> edit_lists(1, {edit});
     return LogAndApply(cfds, mutable_cf_options_list, edit_lists, mu,
-=======
-    autovector<VersionEdit*> edit_list;
-    edit_list.push_back(edit);
-    return LogAndApply(column_family_data, mutable_cf_options, edit_list, mu,
->>>>>>> blood in blood out
                        db_directory, new_descriptor_log, column_family_options);
   }
   // The batch version. If edit_list.size() > 1, caller must ensure that
@@ -843,7 +763,6 @@ class VersionSet {
       const MutableCFOptions& mutable_cf_options,
       const autovector<VersionEdit*>& edit_list, InstrumentedMutex* mu,
       Directory* db_directory = nullptr, bool new_descriptor_log = false,
-<<<<<<< HEAD
       const ColumnFamilyOptions* column_family_options = nullptr) {
     std::vector<ColumnFamilyData*> cfds(1, column_family_data);
     std::vector<MutableCFOptions> mutable_cf_options_list(1,
@@ -862,9 +781,6 @@ class VersionSet {
                      InstrumentedMutex* mu, Directory* db_directory = nullptr,
                      bool new_descriptor_log = false,
                      const ColumnFamilyOptions* new_cf_options = nullptr);
-=======
-      const ColumnFamilyOptions* column_family_options = nullptr);
->>>>>>> blood in blood out
 
   // Recover the last saved descriptor from persistent storage.
   // If read_only == true, Recover() will not complain if some column families
@@ -909,13 +825,10 @@ class VersionSet {
 
   uint64_t current_next_file_number() const { return next_file_number_.load(); }
 
-<<<<<<< HEAD
   uint64_t min_log_number_to_keep_2pc() const {
     return min_log_number_to_keep_2pc_.load();
   }
 
-=======
->>>>>>> blood in blood out
   // Allocate and return a new file number
   uint64_t NewFileNumber() { return next_file_number_.fetch_add(1); }
 
@@ -937,11 +850,7 @@ class VersionSet {
   // Set the last sequence number to s.
   void SetLastSequence(uint64_t s) {
     assert(s >= last_sequence_);
-<<<<<<< HEAD
     // Last visible sequence must always be less than last written seq
-=======
-    // Last visible seqeunce must always be less than last written seq
->>>>>>> blood in blood out
     assert(!db_options_->two_write_queues || s <= last_allocated_sequence_);
     last_sequence_.store(s, std::memory_order_release);
   }
@@ -967,19 +876,15 @@ class VersionSet {
   // REQUIRED: this is only called during single-threaded recovery or repair.
   void MarkFileNumberUsed(uint64_t number);
 
-<<<<<<< HEAD
   // Mark the specified log number as deleted
   // REQUIRED: this is only called during single-threaded recovery or repair, or
   // from ::LogAndApply where the global mutex is held.
   void MarkMinLogNumberToKeep2PC(uint64_t number);
 
-=======
->>>>>>> blood in blood out
   // Return the log file number for the log file that is currently
   // being compacted, or zero if there is no such log file.
   uint64_t prev_log_number() const { return prev_log_number_; }
 
-<<<<<<< HEAD
   // Returns the minimum log number which still has data not flushed to any SST
   // file.
   // In non-2PC mode, all the log numbers smaller than this number can be safely
@@ -996,13 +901,6 @@ class VersionSet {
       if (cfd == cfd_to_skip) {
         continue;
       }
-=======
-  // Returns the minimum log number such that all
-  // log numbers less than or equal to it can be deleted
-  uint64_t MinLogNumber() const {
-    uint64_t min_log_num = std::numeric_limits<uint64_t>::max();
-    for (auto cfd : *column_family_set_) {
->>>>>>> blood in blood out
       // It's safe to ignore dropped column families here:
       // cfd->IsDropped() becomes true after the drop is persisted in MANIFEST.
       if (min_log_num > cfd->GetLogNumber() && !cfd->IsDropped()) {
@@ -1042,11 +940,7 @@ class VersionSet {
   // This function doesn't support leveldb SST filenames
   void GetLiveFilesMetaData(std::vector<LiveFileMetaData> *metadata);
 
-<<<<<<< HEAD
   void GetObsoleteFiles(std::vector<ObsoleteFileInfo>* files,
-=======
-  void GetObsoleteFiles(std::vector<FileMetaData*>* files,
->>>>>>> blood in blood out
                         std::vector<std::string>* manifest_filenames,
                         uint64_t min_pending_output);
 
@@ -1057,11 +951,8 @@ class VersionSet {
         new_options.writable_file_max_buffer_size;
   }
 
-<<<<<<< HEAD
   const ImmutableDBOptions* db_options() const { return db_options_; }
 
-=======
->>>>>>> blood in blood out
   static uint64_t GetNumLiveVersions(Version* dummy_versions);
 
   static uint64_t GetTotalSstFilesSize(Version* dummy_versions);
@@ -1074,11 +965,7 @@ class VersionSet {
 
   struct LogReporter : public log::Reader::Reporter {
     Status* status;
-<<<<<<< HEAD
     virtual void Corruption(size_t /*bytes*/, const Status& s) override {
-=======
-    virtual void Corruption(size_t bytes, const Status& s) override {
->>>>>>> blood in blood out
       if (this->status->ok()) *this->status = s;
     }
   };
@@ -1098,27 +985,21 @@ class VersionSet {
   ColumnFamilyData* CreateColumnFamily(const ColumnFamilyOptions& cf_options,
                                        VersionEdit* edit);
 
-<<<<<<< HEAD
   Status ProcessManifestWrites(std::deque<ManifestWriter>& writers,
                                InstrumentedMutex* mu, Directory* db_directory,
                                bool new_descriptor_log,
                                const ColumnFamilyOptions* new_cf_options);
 
-=======
->>>>>>> blood in blood out
   std::unique_ptr<ColumnFamilySet> column_family_set_;
 
   Env* const env_;
   const std::string dbname_;
   const ImmutableDBOptions* const db_options_;
   std::atomic<uint64_t> next_file_number_;
-<<<<<<< HEAD
   // Any log number equal or lower than this should be ignored during recovery,
   // and is qualified for being deleted in 2PC mode. In non-2PC mode, this
   // number is ignored.
   std::atomic<uint64_t> min_log_number_to_keep_2pc_ = {0};
-=======
->>>>>>> blood in blood out
   uint64_t manifest_file_number_;
   uint64_t options_file_number_;
   uint64_t pending_manifest_file_number_;
@@ -1134,11 +1015,7 @@ class VersionSet {
   // The last allocated sequence that is also published to the readers. This is
   // applicable only when last_seq_same_as_publish_seq_ is not set. Otherwise
   // last_sequence_ also indicates the last published seq.
-<<<<<<< HEAD
   // We have last_sequence <= last_published_sequence_ <=
-=======
-  // We have last_sequence <= last_published_seqeunce_ <=
->>>>>>> blood in blood out
   // last_allocated_sequence_
   std::atomic<uint64_t> last_published_sequence_;
   uint64_t prev_log_number_;  // 0 or backing store for memtable being compacted
@@ -1155,11 +1032,7 @@ class VersionSet {
   // Current size of manifest file
   uint64_t manifest_file_size_;
 
-<<<<<<< HEAD
   std::vector<ObsoleteFileInfo> obsolete_files_;
-=======
-  std::vector<FileMetaData*> obsolete_files_;
->>>>>>> blood in blood out
   std::vector<std::string> obsolete_manifests_;
 
   // env options for all reads and writes except compactions

@@ -33,22 +33,16 @@ class PartitionedFilterBlockBuilder : public FullFilterBlockBuilder {
 
   void AddKey(const Slice& key) override;
 
-<<<<<<< HEAD
   size_t NumAdded() const override { return num_added_; }
 
-=======
->>>>>>> blood in blood out
   virtual Slice Finish(const BlockHandle& last_partition_block_handle,
                        Status* status) override;
 
  private:
   // Filter data
   BlockBuilder index_on_filter_block_builder_;  // top-level index builder
-<<<<<<< HEAD
   BlockBuilder
       index_on_filter_block_builder_without_seq_;  // same for user keys
-=======
->>>>>>> blood in blood out
   struct FilterEntry {
     std::string key;
     Slice filter;
@@ -69,7 +63,6 @@ class PartitionedFilterBlockBuilder : public FullFilterBlockBuilder {
   uint32_t filters_per_partition_;
   // The current number of filters in the last partition
   uint32_t filters_in_partition_;
-<<<<<<< HEAD
   // Number of keys added
   size_t num_added_;
 };
@@ -82,38 +75,16 @@ class PartitionedFilterBlockReader : public FilterBlockReader,
       BlockContents&& contents, FilterBitsReader* filter_bits_reader,
       Statistics* stats, const InternalKeyComparator comparator,
       const BlockBasedTable* table, const bool index_key_includes_seq);
-=======
-};
-
-class PartitionedFilterBlockReader : public FilterBlockReader {
- public:
-  explicit PartitionedFilterBlockReader(const SliceTransform* prefix_extractor,
-                                        bool whole_key_filtering,
-                                        BlockContents&& contents,
-                                        FilterBitsReader* filter_bits_reader,
-                                        Statistics* stats,
-                                        const Comparator& comparator,
-                                        const BlockBasedTable* table);
->>>>>>> blood in blood out
   virtual ~PartitionedFilterBlockReader();
 
   virtual bool IsBlockBased() override { return false; }
   virtual bool KeyMayMatch(
-<<<<<<< HEAD
       const Slice& key, const SliceTransform* prefix_extractor,
       uint64_t block_offset = kNotValid, const bool no_io = false,
       const Slice* const const_ikey_ptr = nullptr) override;
   virtual bool PrefixMayMatch(
       const Slice& prefix, const SliceTransform* prefix_extractor,
       uint64_t block_offset = kNotValid, const bool no_io = false,
-=======
-      const Slice& key, uint64_t block_offset = kNotValid,
-      const bool no_io = false,
-      const Slice* const const_ikey_ptr = nullptr) override;
-  virtual bool PrefixMayMatch(
-      const Slice& prefix, uint64_t block_offset = kNotValid,
-      const bool no_io = false,
->>>>>>> blood in blood out
       const Slice* const const_ikey_ptr = nullptr) override;
   virtual size_t ApproximateMemoryUsage() const override;
 
@@ -121,7 +92,6 @@ class PartitionedFilterBlockReader : public FilterBlockReader {
   Slice GetFilterPartitionHandle(const Slice& entry);
   BlockBasedTable::CachableEntry<FilterBlockReader> GetFilterPartition(
       FilePrefetchBuffer* prefetch_buffer, Slice* handle, const bool no_io,
-<<<<<<< HEAD
       bool* cached, const SliceTransform* prefix_extractor = nullptr);
   virtual void CacheDependencies(
       bool bin, const SliceTransform* prefix_extractor) override;
@@ -131,15 +101,6 @@ class PartitionedFilterBlockReader : public FilterBlockReader {
   const InternalKeyComparator comparator_;
   const BlockBasedTable* table_;
   const bool index_key_includes_seq_;
-=======
-      bool* cached);
-  virtual void CacheDependencies(bool pin) override;
-
-  const SliceTransform* prefix_extractor_;
-  std::unique_ptr<Block> idx_on_fltr_blk_;
-  const Comparator& comparator_;
-  const BlockBasedTable* table_;
->>>>>>> blood in blood out
   std::unordered_map<uint64_t,
                      BlockBasedTable::CachableEntry<FilterBlockReader>>
       filter_map_;

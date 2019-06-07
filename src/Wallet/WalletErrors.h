@@ -56,13 +56,9 @@ enum WalletErrorCodes {
   BAD_PAYMENT_ID,
   BAD_TRANSACTION_EXTRA,
   MIXIN_BELOW_THRESHOLD,
-<<<<<<< HEAD
   MIXIN_ABOVE_THRESHOLD,
   CONFLICTING_PAYMENT_IDS,
   EXTRA_TOO_LARGE,
-=======
-  MIXIN_ABOVE_THRESHOLD
->>>>>>> blood in blood out
 };
 
 // custom category:
@@ -111,11 +107,8 @@ public:
     case BAD_TRANSACTION_EXTRA:         return "Wrong transaction extra format";
     case MIXIN_BELOW_THRESHOLD:         return "Mixin below minimum allowed threshold";
     case MIXIN_ABOVE_THRESHOLD:         return "Mixin above maximum allowed threshold";
-<<<<<<< HEAD
     case CONFLICTING_PAYMENT_IDS:       return "Multiple conflicting payment ID's were specified via the use of integrated addresses";
     case EXTRA_TOO_LARGE:               return "Transaction extra too large";
-=======
->>>>>>> blood in blood out
     default:                            return "Unknown error";
     }
   }

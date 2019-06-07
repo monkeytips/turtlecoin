@@ -23,11 +23,7 @@ using namespace rocksdb;
 namespace rocksdb {
 
 // Path to the database on file system
-<<<<<<< HEAD
 const std::string kDbName = test::PerThreadDBPath("stringappend_test");
-=======
-const std::string kDbName = test::TmpDir() + "/stringappend_test";
->>>>>>> blood in blood out
 
 namespace {
 // OpenDb opens a (possibly new) rocksdb database with a StringAppendOperator

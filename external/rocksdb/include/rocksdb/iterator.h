@@ -33,10 +33,7 @@ class Iterator : public Cleanable {
 
   // An iterator is either positioned at a key/value pair, or
   // not valid.  This method returns true iff the iterator is valid.
-<<<<<<< HEAD
   // Always returns false if !status().ok().
-=======
->>>>>>> blood in blood out
   virtual bool Valid() const = 0;
 
   // Position at the first key in the source.  The iterator is Valid()
@@ -47,7 +44,6 @@ class Iterator : public Cleanable {
   // Valid() after this call iff the source is not empty.
   virtual void SeekToLast() = 0;
 
-<<<<<<< HEAD
   // Position at the first key in the source that at or past target.
   // The iterator is Valid() after this call iff the source contains
   // an entry that comes at or past target.
@@ -57,14 +53,6 @@ class Iterator : public Cleanable {
   virtual void Seek(const Slice& target) = 0;
 
   // Position at the last key in the source that at or before target.
-=======
-  // Position at the first key in the source that at or past target
-  // The iterator is Valid() after this call iff the source contains
-  // an entry that comes at or past target.
-  virtual void Seek(const Slice& target) = 0;
-
-  // Position at the last key in the source that at or before target
->>>>>>> blood in blood out
   // The iterator is Valid() after this call iff the source contains
   // an entry that comes at or before target.
   virtual void SeekForPrev(const Slice& target) = 0;
@@ -88,11 +76,7 @@ class Iterator : public Cleanable {
   // Return the value for the current entry.  The underlying storage for
   // the returned slice is valid only until the next modification of
   // the iterator.
-<<<<<<< HEAD
   // REQUIRES: Valid()
-=======
-  // REQUIRES: !AtEnd() && !AtStart()
->>>>>>> blood in blood out
   virtual Slice value() const = 0;
 
   // If an error has occurred, return it.  Else return an ok status.

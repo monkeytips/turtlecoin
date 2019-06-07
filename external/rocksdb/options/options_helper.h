@@ -31,11 +31,7 @@ ColumnFamilyOptions BuildColumnFamilyOptions(
 Status GetMutableOptionsFromStrings(
     const MutableCFOptions& base_options,
     const std::unordered_map<std::string, std::string>& options_map,
-<<<<<<< HEAD
     Logger* info_log, MutableCFOptions* new_options);
-=======
-    MutableCFOptions* new_options);
->>>>>>> blood in blood out
 
 Status GetMutableDBOptionsFromStrings(
     const MutableDBOptions& base_options,
@@ -134,13 +130,10 @@ Status GetColumnFamilyOptionsFromMapInternal(
     std::vector<std::string>* unsupported_options_names = nullptr,
     bool ignore_unknown_options = false);
 
-<<<<<<< HEAD
 bool ParseSliceTransform(
     const std::string& value,
     std::shared_ptr<const SliceTransform>* slice_transform);
 
-=======
->>>>>>> blood in blood out
 extern Status StringToMap(
     const std::string& opts_str,
     std::unordered_map<std::string, std::string>* opts_map);

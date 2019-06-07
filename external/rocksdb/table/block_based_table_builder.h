@@ -18,13 +18,9 @@
 #include "rocksdb/listener.h"
 #include "rocksdb/options.h"
 #include "rocksdb/status.h"
-<<<<<<< HEAD
 #include "table/meta_blocks.h"
 #include "table/table_builder.h"
 #include "util/compression.h"
-=======
-#include "table/table_builder.h"
->>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -44,11 +40,7 @@ class BlockBasedTableBuilder : public TableBuilder {
   // @param compression_dict Data for presetting the compression library's
   //    dictionary, or nullptr.
   BlockBasedTableBuilder(
-<<<<<<< HEAD
       const ImmutableCFOptions& ioptions, const MutableCFOptions& moptions,
-=======
-      const ImmutableCFOptions& ioptions,
->>>>>>> blood in blood out
       const BlockBasedTableOptions& table_options,
       const InternalKeyComparator& internal_comparator,
       const std::vector<std::unique_ptr<IntTblPropCollectorFactory>>*
@@ -63,13 +55,10 @@ class BlockBasedTableBuilder : public TableBuilder {
   // REQUIRES: Either Finish() or Abandon() has been called.
   ~BlockBasedTableBuilder();
 
-<<<<<<< HEAD
   // No copying allowed
   BlockBasedTableBuilder(const BlockBasedTableBuilder&) = delete;
   BlockBasedTableBuilder& operator=(const BlockBasedTableBuilder&) = delete;
 
-=======
->>>>>>> blood in blood out
   // Add key,value to the table being constructed.
   // REQUIRES: key is after any previously added key according to comparator.
   // REQUIRES: Finish(), Abandon() have not been called
@@ -113,7 +102,6 @@ class BlockBasedTableBuilder : public TableBuilder {
   void WriteBlock(const Slice& block_contents, BlockHandle* handle,
                   bool is_data_block);
   // Directly write data to the file.
-<<<<<<< HEAD
   void WriteRawBlock(const Slice& data, CompressionType, BlockHandle* handle,
                      bool is_data_block = false);
   Status InsertBlockInCache(const Slice& block_contents,
@@ -127,12 +115,6 @@ class BlockBasedTableBuilder : public TableBuilder {
   void WriteCompressionDictBlock(MetaIndexBuilder* meta_index_builder);
   void WriteRangeDelBlock(MetaIndexBuilder* meta_index_builder);
 
-=======
-  void WriteRawBlock(const Slice& data, CompressionType, BlockHandle* handle);
-  Status InsertBlockInCache(const Slice& block_contents,
-                            const CompressionType type,
-                            const BlockHandle* handle);
->>>>>>> blood in blood out
   struct Rep;
   class BlockBasedTablePropertiesCollectorFactory;
   class BlockBasedTablePropertiesCollector;
@@ -147,23 +129,10 @@ class BlockBasedTableBuilder : public TableBuilder {
   // Some compression libraries fail when the raw size is bigger than int. If
   // uncompressed size is bigger than kCompressionSizeLimit, don't compress it
   const uint64_t kCompressionSizeLimit = std::numeric_limits<int>::max();
-<<<<<<< HEAD
 };
 
 Slice CompressBlock(const Slice& raw, const CompressionContext& compression_ctx,
                     CompressionType* type, uint32_t format_version,
-=======
-
-  // No copying allowed
-  BlockBasedTableBuilder(const BlockBasedTableBuilder&) = delete;
-  void operator=(const BlockBasedTableBuilder&) = delete;
-};
-
-Slice CompressBlock(const Slice& raw,
-                    const CompressionOptions& compression_options,
-                    CompressionType* type, uint32_t format_version,
-                    const Slice& compression_dict,
->>>>>>> blood in blood out
                     std::string* compressed_output);
 
 }  // namespace rocksdb

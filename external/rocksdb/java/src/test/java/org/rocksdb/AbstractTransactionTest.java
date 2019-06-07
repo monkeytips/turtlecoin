@@ -688,11 +688,7 @@ public abstract class AbstractTransactionTest {
     final long preStartTxnTime = System.currentTimeMillis();
     try(final DBContainer dbContainer = startDb();
         final Transaction txn = dbContainer.beginTransaction()) {
-<<<<<<< HEAD
       Thread.sleep(2);
-=======
-      Thread.sleep(1);
->>>>>>> blood in blood out
 
       final long txnElapsedTime = txn.getElapsedTime();
       assertThat(txnElapsedTime).isLessThan(System.currentTimeMillis()

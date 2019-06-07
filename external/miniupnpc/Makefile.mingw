@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # $Id: Makefile.mingw,v 1.21 2015/09/18 12:45:16 nanard Exp $
 # Miniupnp project.
 # http://miniupnp.free.fr/ or https://miniupnp.tuxfamily.org/
@@ -16,15 +15,6 @@ RM = del
 else
 RM = rm -f
 endif
-=======
-# $Id: Makefile.mingw,v 1.18 2014/01/17 09:04:01 nanard Exp $
-# Miniupnp project.
-# http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
-# (c) 2005-2014 Thomas Bernard
-# This Makefile is made for MinGW
-#
-CC = gcc
->>>>>>> blood in blood out
 #CFLAGS = -Wall -g -DDEBUG -D_WIN32_WINNT=0X501
 CFLAGS = -Wall -Os -DNDEBUG -D_WIN32_WINNT=0X501
 LDLIBS = -lws2_32 -liphlpapi
@@ -32,7 +22,6 @@ LDLIBS = -lws2_32 -liphlpapi
 # -liphlpapi is needed for GetBestRoute() and GetIpAddrTable()
 PYTHON=\utils\python25\python
 OBJS=miniwget.o minixml.o igd_desc_parse.o minisoap.o \
-<<<<<<< HEAD
      minissdpc.o \
      miniupnpc.o upnpreplyparse.o upnpcommands.o upnperrors.o \
      connecthostport.o portlistingparse.o receivedata.o \
@@ -41,32 +30,17 @@ OBJSDLL=$(addprefix dll/, $(OBJS))
 
 all:	init upnpc-static upnpc-shared testminixml libminiupnpc.a \
 	miniupnpc.dll listdevices
-=======
-     miniupnpc.o upnpreplyparse.o upnpcommands.o upnperrors.o \
-     connecthostport.o portlistingparse.o receivedata.o
-OBJSDLL=$(addprefix dll/, $(OBJS))
-
-all:	init upnpc-static upnpc-shared testminixml libminiupnpc.a miniupnpc.dll
->>>>>>> blood in blood out
 
 init:
 	mkdir dll
 	echo init > init
 
 clean:
-<<<<<<< HEAD
 	$(RM) upnpc testminixml *.o
 	$(RM) dll\*.o
 	$(RM) *.exe
 	$(RM) miniupnpc.dll
 	$(RM) libminiupnpc.a
-=======
-	del upnpc testminixml *.o
-	del dll\*.o
-	del *.exe
-	del miniupnpc.dll
-	del libminiupnpc.a
->>>>>>> blood in blood out
 
 libminiupnpc.a:	$(OBJS)
 	$(AR) cr $@ $?
@@ -76,18 +50,13 @@ pythonmodule:	libminiupnpc.a
 	$(PYTHON) setupmingw32.py install --skip-build
 
 miniupnpc.dll:	libminiupnpc.a $(OBJSDLL)
-<<<<<<< HEAD
 	$(DLLWRAP) -k --driver-name $(CC) \
-=======
-	dllwrap -k --driver-name gcc \
->>>>>>> blood in blood out
 	--def miniupnpc.def \
 	--output-def miniupnpc.dll.def \
 	--implib miniupnpc.lib -o $@ \
 	$(OBJSDLL) $(LDLIBS)
 
 miniupnpc.lib:	miniupnpc.dll
-<<<<<<< HEAD
 #	echo $@ generated with $<
 
 dll/upnpc.o:	upnpc.o
@@ -99,19 +68,6 @@ dll/upnpc.o:	upnpc.o
 
 upnpc.o:	upnpc.c
 	$(CC) $(CFLAGS) -DMINIUPNP_STATICLIB -c -o $@ $<
-=======
-	echo $@ generated with $<
-
-dll/upnpc.o:	upnpc.o
-	echo $@ generated with $<
-
-.c.o:
-	$(CC) $(CFLAGS) -DSTATICLIB -c -o $@ $<
-	$(CC) $(CFLAGS) -DMINIUPNP_EXPORTS -c -o dll/$@ $<
-
-upnpc.o:
-	$(CC) $(CFLAGS) -DSTATICLIB -c -o $@ $<
->>>>>>> blood in blood out
 	$(CC) $(CFLAGS) -c -o dll/$@ $<
 
 # --enable-stdcall-fixup
@@ -121,17 +77,13 @@ upnpc-static:	upnpc.o libminiupnpc.a
 upnpc-shared:	dll/upnpc.o miniupnpc.lib
 	$(CC) -o $@ $^ $(LDLIBS)
 
-<<<<<<< HEAD
 listdevices: listdevices.o libminiupnpc.a
 	$(CC) -o $@ $^ $(LDLIBS)
 
-=======
->>>>>>> blood in blood out
 wingenminiupnpcstrings:	wingenminiupnpcstrings.o
 
 wingenminiupnpcstrings.o:	wingenminiupnpcstrings.c
 
-<<<<<<< HEAD
 # To make miniupnpcstrings.h from miniupnpcstrings.h.in we either
 # use a custom executable (if running make under windows) or use
 # sed (if cross compiling from another platform).
@@ -148,14 +100,6 @@ minixml.o:	minixml.c minixml.h
 
 upnpc.o:	miniwget.h minisoap.h miniupnpc.h igd_desc_parse.h
 upnpc.o:	upnpreplyparse.h upnpcommands.h upnperrors.h miniupnpcstrings.h
-=======
-miniupnpcstrings.h: miniupnpcstrings.h.in wingenminiupnpcstrings
-	wingenminiupnpcstrings $< $@
-
-minixml.o:	minixml.c minixml.h miniupnpcstrings.h
-
-upnpc.o:	upnpc.c miniwget.h minisoap.h miniupnpc.h igd_desc_parse.h upnpreplyparse.h upnpcommands.h upnperrors.h
->>>>>>> blood in blood out
 
 miniwget.o:	miniwget.c miniwget.h miniupnpcstrings.h connecthostport.h
 
@@ -171,10 +115,7 @@ upnpreplyparse.o:	upnpreplyparse.c upnpreplyparse.h minixml.h
 
 upnpcommands.o:	upnpcommands.c upnpcommands.h upnpreplyparse.h miniupnpc.h portlistingparse.h
 
-<<<<<<< HEAD
 minissdpc.o:	minissdpc.c minissdpc.h receivedata.h
 
 upnpdev.o:	upnpdev.c upnpdev.h
 
-=======
->>>>>>> blood in blood out

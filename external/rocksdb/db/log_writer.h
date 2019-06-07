@@ -49,11 +49,7 @@ namespace log {
  * |CRC (4B) | Size (2B) | Type (1B) | Payload   |
  * +---------+-----------+-----------+--- ... ---+
  *
-<<<<<<< HEAD
  * CRC = 32bit hash computed over the record type and payload using CRC
-=======
- * CRC = 32bit hash computed over the payload using CRC
->>>>>>> blood in blood out
  * Size = Length of the payload data
  * Type = Type of record
  *        (kZeroType, kFullType, kFirstType, kLastType, kMiddleType )
@@ -89,11 +85,8 @@ class Writer {
 
   Status WriteBuffer();
 
-<<<<<<< HEAD
   bool TEST_BufferIsEmpty();
 
-=======
->>>>>>> blood in blood out
  private:
   unique_ptr<WritableFileWriter> dest_;
   size_t block_offset_;       // Current offset in block

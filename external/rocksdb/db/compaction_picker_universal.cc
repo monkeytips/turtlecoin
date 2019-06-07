@@ -162,7 +162,6 @@ bool UniversalCompactionPicker::IsInputFilesNonOverlapping(Compaction* c) {
 bool UniversalCompactionPicker::NeedsCompaction(
     const VersionStorageInfo* vstorage) const {
   const int kLevel0 = 0;
-<<<<<<< HEAD
   if (vstorage->CompactionScore(kLevel0) >= 1) {
     return true;
   }
@@ -170,9 +169,6 @@ bool UniversalCompactionPicker::NeedsCompaction(
     return true;
   }
   return false;
-=======
-  return vstorage->CompactionScore(kLevel0) >= 1;
->>>>>>> blood in blood out
 }
 
 void UniversalCompactionPicker::SortedRun::Dump(char* out_buf,
@@ -214,11 +210,7 @@ void UniversalCompactionPicker::SortedRun::DumpSizeInfo(
 
 std::vector<UniversalCompactionPicker::SortedRun>
 UniversalCompactionPicker::CalculateSortedRuns(
-<<<<<<< HEAD
     const VersionStorageInfo& vstorage, const ImmutableCFOptions& /*ioptions*/,
-=======
-    const VersionStorageInfo& vstorage, const ImmutableCFOptions& ioptions,
->>>>>>> blood in blood out
     const MutableCFOptions& mutable_cf_options) {
   std::vector<UniversalCompactionPicker::SortedRun> ret;
   for (FileMetaData* f : vstorage.LevelFiles(0)) {
@@ -271,14 +263,9 @@ Compaction* UniversalCompactionPicker::PickCompaction(
       CalculateSortedRuns(*vstorage, ioptions_, mutable_cf_options);
 
   if (sorted_runs.size() == 0 ||
-<<<<<<< HEAD
       (vstorage->FilesMarkedForCompaction().empty() &&
        sorted_runs.size() < (unsigned int)mutable_cf_options
                                 .level0_file_num_compaction_trigger)) {
-=======
-      sorted_runs.size() <
-          (unsigned int)mutable_cf_options.level0_file_num_compaction_trigger) {
->>>>>>> blood in blood out
     ROCKS_LOG_BUFFER(log_buffer, "[%s] Universal: nothing to do\n",
                      cf_name.c_str());
     TEST_SYNC_POINT_CALLBACK("UniversalCompactionPicker::PickCompaction:Return",
@@ -292,7 +279,6 @@ Compaction* UniversalCompactionPicker::PickCompaction(
       cf_name.c_str(), sorted_runs.size(), vstorage->LevelSummary(&tmp));
 
   // Check for size amplification first.
-<<<<<<< HEAD
   Compaction* c = nullptr;
   if (sorted_runs.size() >=
       static_cast<size_t>(
@@ -345,61 +331,10 @@ Compaction* UniversalCompactionPicker::PickCompaction(
                              "[%s] Universal: compacting for file num -- %u\n",
                              cf_name.c_str(), num_files);
           }
-=======
-  Compaction* c;
-  if ((c = PickCompactionToReduceSizeAmp(cf_name, mutable_cf_options, vstorage,
-                                         score, sorted_runs, log_buffer)) !=
-      nullptr) {
-    ROCKS_LOG_BUFFER(log_buffer, "[%s] Universal: compacting for size amp\n",
-                     cf_name.c_str());
-  } else {
-    // Size amplification is within limits. Try reducing read
-    // amplification while maintaining file size ratios.
-    unsigned int ratio =
-        mutable_cf_options.compaction_options_universal.size_ratio;
-
-    if ((c = PickCompactionToReduceSortedRuns(
-             cf_name, mutable_cf_options, vstorage, score, ratio, UINT_MAX,
-             sorted_runs, log_buffer)) != nullptr) {
-      ROCKS_LOG_BUFFER(log_buffer,
-                       "[%s] Universal: compacting for size ratio\n",
-                       cf_name.c_str());
-    } else {
-      // Size amplification and file size ratios are within configured limits.
-      // If max read amplification is exceeding configured limits, then force
-      // compaction without looking at filesize ratios and try to reduce
-      // the number of files to fewer than level0_file_num_compaction_trigger.
-      // This is guaranteed by NeedsCompaction()
-      assert(sorted_runs.size() >=
-             static_cast<size_t>(
-                 mutable_cf_options.level0_file_num_compaction_trigger));
-      // Get the total number of sorted runs that are not being compacted
-      int num_sr_not_compacted = 0;
-      for (size_t i = 0; i < sorted_runs.size(); i++) {
-        if (sorted_runs[i].being_compacted == false) {
-          num_sr_not_compacted++;
-        }
-      }
-
-      // The number of sorted runs that are not being compacted is greater than
-      // the maximum allowed number of sorted runs
-      if (num_sr_not_compacted >
-          mutable_cf_options.level0_file_num_compaction_trigger) {
-        unsigned int num_files =
-            num_sr_not_compacted -
-            mutable_cf_options.level0_file_num_compaction_trigger + 1;
-        if ((c = PickCompactionToReduceSortedRuns(
-                 cf_name, mutable_cf_options, vstorage, score, UINT_MAX,
-                 num_files, sorted_runs, log_buffer)) != nullptr) {
-          ROCKS_LOG_BUFFER(log_buffer,
-                           "[%s] Universal: compacting for file num -- %u\n",
-                           cf_name.c_str(), num_files);
->>>>>>> blood in blood out
         }
       }
     }
   }
-<<<<<<< HEAD
 
   if (c == nullptr) {
     if ((c = PickDeleteTriggeredCompaction(cf_name, mutable_cf_options,
@@ -411,8 +346,6 @@ Compaction* UniversalCompactionPicker::PickCompaction(
     }
   }
 
-=======
->>>>>>> blood in blood out
   if (c == nullptr) {
     TEST_SYNC_POINT_CALLBACK("UniversalCompactionPicker::PickCompaction:Return",
                              nullptr);
@@ -495,15 +428,9 @@ uint32_t UniversalCompactionPicker::GetPathId(
       file_size *
       (100 - mutable_cf_options.compaction_options_universal.size_ratio) / 100;
   uint32_t p = 0;
-<<<<<<< HEAD
   assert(!ioptions.cf_paths.empty());
   for (; p < ioptions.cf_paths.size() - 1; p++) {
     uint64_t target_size = ioptions.cf_paths[p].target_size;
-=======
-  assert(!ioptions.db_paths.empty());
-  for (; p < ioptions.db_paths.size() - 1; p++) {
-    uint64_t target_size = ioptions.db_paths[p].target_size;
->>>>>>> blood in blood out
     if (target_size > file_size &&
         accumulated_size + (target_size - file_size) > future_size) {
       return p;
@@ -704,7 +631,6 @@ Compaction* UniversalCompactionPicker::PickCompactionToReduceSortedRuns(
   }
   return new Compaction(
       vstorage, ioptions_, mutable_cf_options, std::move(inputs), output_level,
-<<<<<<< HEAD
       MaxFileSizeForLevel(mutable_cf_options, output_level,
                           kCompactionStyleUniversal),
       LLONG_MAX, path_id,
@@ -714,13 +640,6 @@ Compaction* UniversalCompactionPicker::PickCompactionToReduceSortedRuns(
                             enable_compression),
       /* max_subcompactions */ 0, /* grandparents */ {}, /* is manual */ false,
       score, false /* deletion_compaction */, compaction_reason);
-=======
-      mutable_cf_options.MaxFileSizeForLevel(output_level), LLONG_MAX, path_id,
-      GetCompressionType(ioptions_, vstorage, mutable_cf_options, start_level,
-                         1, enable_compression),
-      /* grandparents */ {}, /* is manual */ false, score,
-      false /* deletion_compaction */, compaction_reason);
->>>>>>> blood in blood out
 }
 
 // Look at overall size amplification. If size amplification
@@ -742,13 +661,10 @@ Compaction* UniversalCompactionPicker::PickCompactionToReduceSizeAmp(
   size_t start_index = 0;
   const SortedRun* sr = nullptr;
 
-<<<<<<< HEAD
   if (sorted_runs.back().being_compacted) {
     return nullptr;
   }
 
-=======
->>>>>>> blood in blood out
   // Skip files that are already being compacted
   for (size_t loop = 0; loop < sorted_runs.size() - 1; loop++) {
     sr = &sorted_runs[loop];
@@ -855,7 +771,6 @@ Compaction* UniversalCompactionPicker::PickCompactionToReduceSizeAmp(
   }
 
   return new Compaction(
-<<<<<<< HEAD
       vstorage, ioptions_, mutable_cf_options, std::move(inputs), output_level,
       MaxFileSizeForLevel(mutable_cf_options, output_level,
                           kCompactionStyleUniversal),
@@ -987,17 +902,6 @@ Compaction* UniversalCompactionPicker::PickDeleteTriggeredCompaction(
       score, false /* deletion_compaction */,
       CompactionReason::kFilesMarkedForCompaction);
 }
-=======
-      vstorage, ioptions_, mutable_cf_options, std::move(inputs),
-      output_level, mutable_cf_options.MaxFileSizeForLevel(output_level),
-      /* max_grandparent_overlap_bytes */ LLONG_MAX, path_id,
-      GetCompressionType(ioptions_, vstorage, mutable_cf_options,
-                         output_level, 1),
-      /* grandparents */ {}, /* is manual */ false, score,
-      false /* deletion_compaction */,
-      CompactionReason::kUniversalSizeAmplification);
-}
->>>>>>> blood in blood out
 }  // namespace rocksdb
 
 #endif  // !ROCKSDB_LITE

@@ -20,12 +20,8 @@
 jlong Java_org_rocksdb_AbstractCompactionFilterFactory_createNewCompactionFilterFactory0(
     JNIEnv* env, jobject jobj) {
   auto* cff = new rocksdb::CompactionFilterFactoryJniCallback(env, jobj);
-<<<<<<< HEAD
   auto* ptr_sptr_cff =
       new std::shared_ptr<rocksdb::CompactionFilterFactoryJniCallback>(cff);
-=======
-  auto* ptr_sptr_cff = new std::shared_ptr<rocksdb::CompactionFilterFactoryJniCallback>(cff);
->>>>>>> blood in blood out
   return reinterpret_cast<jlong>(ptr_sptr_cff);
 }
 
@@ -35,18 +31,9 @@ jlong Java_org_rocksdb_AbstractCompactionFilterFactory_createNewCompactionFilter
  * Signature: (J)V
  */
 void Java_org_rocksdb_AbstractCompactionFilterFactory_disposeInternal(
-<<<<<<< HEAD
     JNIEnv* /*env*/, jobject /*jobj*/, jlong jhandle) {
   auto* ptr_sptr_cff = reinterpret_cast<
       std::shared_ptr<rocksdb::CompactionFilterFactoryJniCallback>*>(jhandle);
   delete ptr_sptr_cff;
   // @lint-ignore TXT4 T25377293 Grandfathered in
 }
-=======
-    JNIEnv* env, jobject jobj, jlong jhandle) {
-  auto* ptr_sptr_cff =
-      reinterpret_cast<std::shared_ptr<rocksdb::CompactionFilterFactoryJniCallback> *>(jhandle);
-  delete ptr_sptr_cff;
-// @lint-ignore TXT4 T25377293 Grandfathered in
-}
->>>>>>> blood in blood out

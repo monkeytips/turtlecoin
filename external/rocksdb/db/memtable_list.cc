@@ -12,10 +12,7 @@
 #include <inttypes.h>
 #include <limits>
 #include <string>
-<<<<<<< HEAD
 #include "db/db_impl.h"
-=======
->>>>>>> blood in blood out
 #include "db/memtable.h"
 #include "db/version_set.h"
 #include "monitoring/thread_status_util.h"
@@ -44,10 +41,6 @@ void MemTableListVersion::UnrefMemTable(autovector<MemTable*>* to_delete,
     to_delete->push_back(m);
     assert(*parent_memtable_list_memory_usage_ >= m->ApproximateMemoryUsage());
     *parent_memtable_list_memory_usage_ -= m->ApproximateMemoryUsage();
-<<<<<<< HEAD
-=======
-  } else {
->>>>>>> blood in blood out
   }
 }
 
@@ -161,11 +154,7 @@ bool MemTableListVersion::GetFromList(
 }
 
 Status MemTableListVersion::AddRangeTombstoneIterators(
-<<<<<<< HEAD
     const ReadOptions& read_opts, Arena* /*arena*/,
-=======
-    const ReadOptions& read_opts, Arena* arena,
->>>>>>> blood in blood out
     RangeDelAggregator* range_del_agg) {
   assert(range_del_agg != nullptr);
   for (auto& m : memlist_) {
@@ -311,11 +300,7 @@ void MemTableList::PickMemtablesToFlush(autovector<MemTable*>* ret) {
 }
 
 void MemTableList::RollbackMemtableFlush(const autovector<MemTable*>& mems,
-<<<<<<< HEAD
                                          uint64_t /*file_number*/) {
-=======
-                                         uint64_t file_number) {
->>>>>>> blood in blood out
   AutoThreadOperationStageUpdater stage_updater(
       ThreadStatus::STAGE_MEMTABLE_ROLLBACK);
   assert(!mems.empty());
@@ -337,16 +322,10 @@ void MemTableList::RollbackMemtableFlush(const autovector<MemTable*>& mems,
 // Record a successful flush in the manifest file
 Status MemTableList::InstallMemtableFlushResults(
     ColumnFamilyData* cfd, const MutableCFOptions& mutable_cf_options,
-<<<<<<< HEAD
     const autovector<MemTable*>& mems, LogsWithPrepTracker* prep_tracker,
     VersionSet* vset, InstrumentedMutex* mu, uint64_t file_number,
     autovector<MemTable*>* to_delete, Directory* db_directory,
     LogBuffer* log_buffer) {
-=======
-    const autovector<MemTable*>& mems, VersionSet* vset, InstrumentedMutex* mu,
-    uint64_t file_number, autovector<MemTable*>* to_delete,
-    Directory* db_directory, LogBuffer* log_buffer) {
->>>>>>> blood in blood out
   AutoThreadOperationStageUpdater stage_updater(
       ThreadStatus::STAGE_MEMTABLE_INSTALL_FLUSH_RESULTS);
   mu->AssertHeld();
@@ -383,10 +362,7 @@ Status MemTableList::InstallMemtableFlushResults(
     uint64_t batch_file_number = 0;
     size_t batch_count = 0;
     autovector<VersionEdit*> edit_list;
-<<<<<<< HEAD
     autovector<MemTable*> memtables_to_flush;
-=======
->>>>>>> blood in blood out
     // enumerate from the last (earliest) element to see how many batch finished
     for (auto it = memlist.rbegin(); it != memlist.rend(); ++it) {
       MemTable* m = *it;
@@ -399,16 +375,12 @@ Status MemTableList::InstallMemtableFlushResults(
                          "[%s] Level-0 commit table #%" PRIu64 " started",
                          cfd->GetName().c_str(), m->file_number_);
         edit_list.push_back(&m->edit_);
-<<<<<<< HEAD
         memtables_to_flush.push_back(m);
-=======
->>>>>>> blood in blood out
       }
       batch_count++;
     }
 
     if (batch_count > 0) {
-<<<<<<< HEAD
       if (vset->db_options()->allow_2pc) {
         assert(edit_list.size() > 0);
         // We piggyback the information of  earliest log file to keep in the
@@ -417,8 +389,6 @@ Status MemTableList::InstallMemtableFlushResults(
             vset, *cfd, edit_list, memtables_to_flush, prep_tracker));
       }
 
-=======
->>>>>>> blood in blood out
       // this can release and reacquire the mutex.
       s = vset->LogAndApply(cfd, mutable_cf_options, edit_list, mu,
                             db_directory);
@@ -430,7 +400,6 @@ Status MemTableList::InstallMemtableFlushResults(
       // All the later memtables that have the same filenum
       // are part of the same batch. They can be committed now.
       uint64_t mem_id = 1;  // how many memtables have been flushed.
-<<<<<<< HEAD
 
       // commit new state only if the column family is NOT dropped.
       // The reason is as follows (refer to
@@ -447,9 +416,6 @@ Status MemTableList::InstallMemtableFlushResults(
       // read full data as long as column family handle is not deleted, even if
       // the column family is dropped.
       if (s.ok() && !cfd->IsDropped()) {  // commit new state
-=======
-      if (s.ok()) {         // commit new state
->>>>>>> blood in blood out
         while (batch_count-- > 0) {
           MemTable* m = current_->memlist_.back();
           ROCKS_LOG_BUFFER(log_buffer, "[%s] Level-0 commit table #%" PRIu64
@@ -528,7 +494,6 @@ void MemTableList::InstallNewVersion() {
   }
 }
 
-<<<<<<< HEAD
 uint64_t MemTableList::PrecomputeMinLogContainingPrepSection(
     const autovector<MemTable*>& memtables_to_flush) {
   uint64_t min_log = 0;
@@ -544,15 +509,6 @@ uint64_t MemTableList::PrecomputeMinLogContainingPrepSection(
       }
     }
     if (should_skip) {
-=======
-uint64_t MemTableList::GetMinLogContainingPrepSection() {
-  uint64_t min_log = 0;
-
-  for (auto& m : current_->memlist_) {
-    // this mem has been flushed it no longer
-    // needs to hold on the its prep section
-    if (m->flush_completed_) {
->>>>>>> blood in blood out
       continue;
     }
 

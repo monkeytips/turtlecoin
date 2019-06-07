@@ -336,11 +336,7 @@ $InvokeTestAsync = {
 # Test limiting factor here
 [int]$count = 0
 # Overall status
-<<<<<<< HEAD
 [bool]$script:success = $true;
-=======
-[bool]$success = $true;
->>>>>>> blood in blood out
 
 function RunJobs($Suites, $TestCmds, [int]$ConcurrencyVal)
 {
@@ -429,11 +425,7 @@ function RunJobs($Suites, $TestCmds, [int]$ConcurrencyVal)
         $log_content = @(Get-Content $log)
 
         if($completed.State -ne "Completed") {
-<<<<<<< HEAD
             $script:success = $false
-=======
-            $success = $false
->>>>>>> blood in blood out
             Write-Warning $message
             $log_content | Write-Warning
         } else {
@@ -457,11 +449,7 @@ function RunJobs($Suites, $TestCmds, [int]$ConcurrencyVal)
             }
 
             if(!$pass_found) {
-<<<<<<< HEAD
                 $script:success = $false;
-=======
-                $success = $false;
->>>>>>> blood in blood out
                 Write-Warning $message
                 $log_content | Write-Warning
             } else {
@@ -485,11 +473,7 @@ New-TimeSpan -Start $StartDate -End $EndDate |
   }
 
 
-<<<<<<< HEAD
 if(!$script:success) {
-=======
-if(!$success) {
->>>>>>> blood in blood out
 # This does not succeed killing off jobs quick
 # So we simply exit
 #    Remove-Job -Job $jobs -Force

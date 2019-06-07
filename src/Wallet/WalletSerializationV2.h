@@ -53,13 +53,8 @@ public:
   static const uint8_t SERIALIZATION_VERSION = 6;
 
 private:
-<<<<<<< HEAD
   void loadKeyListAndBalances(CryptoNote::ISerializer& serializer, bool saveCache);
   void saveKeyListAndBalances(CryptoNote::ISerializer& serializer, bool saveCache);
-=======
-  void loadKeyListAndBanalces(CryptoNote::ISerializer& serializer, bool saveCache);
-  void saveKeyListAndBanalces(CryptoNote::ISerializer& serializer, bool saveCache);
->>>>>>> blood in blood out
     
   void loadTransactions(CryptoNote::ISerializer& serializer);
   void saveTransactions(CryptoNote::ISerializer& serializer);
@@ -73,10 +68,6 @@ private:
   void loadUnlockTransactionsJobs(CryptoNote::ISerializer& serializer);
   void saveUnlockTransactionsJobs(CryptoNote::ISerializer& serializer);
 
-<<<<<<< HEAD
-=======
-  ITransfersObserver& m_transfersObserver;
->>>>>>> blood in blood out
   uint64_t& m_actualBalance;
   uint64_t& m_pendingBalance;
   WalletsContainer& m_walletsContainer;
@@ -86,10 +77,6 @@ private:
   WalletTransfers& m_transfers;
   UncommitedTransactions& m_uncommitedTransactions;
   std::string& m_extra;
-<<<<<<< HEAD
-=======
-  uint32_t m_transactionSoftLockTime;
->>>>>>> blood in blood out
 
   std::unordered_set<Crypto::PublicKey> m_addedKeys;
   std::unordered_set<Crypto::PublicKey> m_deletedKeys;

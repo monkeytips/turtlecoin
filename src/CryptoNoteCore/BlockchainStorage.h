@@ -19,11 +19,8 @@
 
 #include <CryptoNote.h>
 
-<<<<<<< HEAD
 #include <memory>
 
-=======
->>>>>>> blood in blood out
 namespace CryptoNote {
 
 //TODO: rename this class since it's not persistent blockchain storage!

@@ -22,10 +22,7 @@ class InternalIterator : public Cleanable {
 
   // An iterator is either positioned at a key/value pair, or
   // not valid.  This method returns true iff the iterator is valid.
-<<<<<<< HEAD
   // Always returns false if !status().ok().
-=======
->>>>>>> blood in blood out
   virtual bool Valid() const = 0;
 
   // Position at the first key in the source.  The iterator is Valid()
@@ -39,12 +36,9 @@ class InternalIterator : public Cleanable {
   // Position at the first key in the source that at or past target
   // The iterator is Valid() after this call iff the source contains
   // an entry that comes at or past target.
-<<<<<<< HEAD
   // All Seek*() methods clear any error status() that the iterator had prior to
   // the call; after the seek, status() indicates only the error (if any) that
   // happened during the seek, not any past errors.
-=======
->>>>>>> blood in blood out
   virtual void Seek(const Slice& target) = 0;
 
   // Position at the first key in the source that at or before target
@@ -71,11 +65,7 @@ class InternalIterator : public Cleanable {
   // Return the value for the current entry.  The underlying storage for
   // the returned slice is valid only until the next modification of
   // the iterator.
-<<<<<<< HEAD
   // REQUIRES: Valid()
-=======
-  // REQUIRES: !AtEnd() && !AtStart()
->>>>>>> blood in blood out
   virtual Slice value() const = 0;
 
   // If an error has occurred, return it.  Else return an ok status.
@@ -92,12 +82,8 @@ class InternalIterator : public Cleanable {
   // but for Iterators that need to communicate with PinnedIteratorsManager
   // they will implement this function and use the passed pointer to communicate
   // with PinnedIteratorsManager.
-<<<<<<< HEAD
   virtual void SetPinnedItersMgr(PinnedIteratorsManager* /*pinned_iters_mgr*/) {
   }
-=======
-  virtual void SetPinnedItersMgr(PinnedIteratorsManager* pinned_iters_mgr) {}
->>>>>>> blood in blood out
 
   // If true, this means that the Slice returned by key() is valid as long as
   // PinnedIteratorsManager::ReleasePinnedData is not called and the
@@ -114,11 +100,7 @@ class InternalIterator : public Cleanable {
   // Iterator is not deleted.
   virtual bool IsValuePinned() const { return false; }
 
-<<<<<<< HEAD
   virtual Status GetProperty(std::string /*prop_name*/, std::string* /*prop*/) {
-=======
-  virtual Status GetProperty(std::string prop_name, std::string* prop) {
->>>>>>> blood in blood out
     return Status::NotSupported("");
   }
 

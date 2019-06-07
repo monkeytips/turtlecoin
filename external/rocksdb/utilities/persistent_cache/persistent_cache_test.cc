@@ -132,11 +132,7 @@ std::unique_ptr<PersistentTieredCache> NewTieredCache(
 }
 
 PersistentCacheTierTest::PersistentCacheTierTest()
-<<<<<<< HEAD
     : path_(test::PerThreadDBPath("cache_test")) {
-=======
-    : path_(test::TmpDir(Env::Default()) + "/cache_test") {
->>>>>>> blood in blood out
 #ifdef OS_LINUX
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
   rocksdb::SyncPoint::GetInstance()->SetCallBack("NewRandomAccessFile:O_DIRECT",
@@ -161,11 +157,7 @@ TEST_F(PersistentCacheTierTest, DISABLED_BlockCacheInsertWithFileCreateError) {
   rocksdb::SyncPoint::GetInstance()->ClearAllCallBacks();
 }
 
-<<<<<<< HEAD
 #if defined(TRAVIS) || defined(ROCKSDB_VALGRIND_RUN)
-=======
-#ifdef TRAVIS
->>>>>>> blood in blood out
 // Travis is unable to handle the normal version of the tests running out of
 // fds, out of space and timeouts. This is an easier version of the test
 // specifically written for Travis
@@ -443,11 +435,7 @@ void PersistentCacheDBTest::RunTest(
   }
 }
 
-<<<<<<< HEAD
 #if defined(TRAVIS) || defined(ROCKSDB_VALGRIND_RUN)
-=======
-#ifdef TRAVIS
->>>>>>> blood in blood out
 // Travis is unable to handle the normal version of the tests running out of
 // fds, out of space and timeouts. This is an easier version of the test
 // specifically written for Travis

@@ -59,11 +59,7 @@ public class TransactionOptions extends RocksObject
    * If negative, {@link TransactionDBOptions#getTransactionLockTimeout(long)}
    * will be used
    *
-<<<<<<< HEAD
    * @return the lock timeout in milliseconds
-=======
-   * @return the lock tiemout in milliseconds
->>>>>>> blood in blood out
    */
   public long getLockTimeout() {
     assert(isOwningHandle());
@@ -80,11 +76,7 @@ public class TransactionOptions extends RocksObject
    *
    * Default: -1
    *
-<<<<<<< HEAD
    * @param lockTimeout the lock timeout in milliseconds
-=======
-   * @param lockTimeout the lock tiemout in milliseconds
->>>>>>> blood in blood out
    *
    * @return this TransactionOptions instance
    */
@@ -144,11 +136,7 @@ public class TransactionOptions extends RocksObject
    *
    * Default: 50
    *
-<<<<<<< HEAD
    * @param deadlockDetectDepth the number of traversals to make during
-=======
-   * @param deadlockDetectDepth the the number of traversals to make during
->>>>>>> blood in blood out
    *     deadlock detection
    *
    * @return this TransactionOptions instance

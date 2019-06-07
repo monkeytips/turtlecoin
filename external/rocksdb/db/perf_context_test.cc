@@ -30,11 +30,7 @@ int FLAGS_min_write_buffer_number_to_merge = 7;
 bool FLAGS_verbose = false;
 
 // Path to the database on file system
-<<<<<<< HEAD
 const std::string kDbName = rocksdb::test::PerThreadDBPath("perf_context_test");
-=======
-const std::string kDbName = rocksdb::test::TmpDir() + "/perf_context_test";
->>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -231,12 +227,9 @@ void ProfileQueries(bool enabled_time = false) {
   HistogramImpl hist_write_pre_post;
   HistogramImpl hist_write_wal_time;
   HistogramImpl hist_write_memtable_time;
-<<<<<<< HEAD
   HistogramImpl hist_write_delay_time;
   HistogramImpl hist_write_thread_wait_nanos;
   HistogramImpl hist_write_scheduling_time;
-=======
->>>>>>> blood in blood out
 
   uint64_t total_db_mutex_nanos = 0;
 
@@ -280,7 +273,6 @@ void ProfileQueries(bool enabled_time = false) {
       ThreadStatusUtil::TEST_SetStateDelay(ThreadStatus::STATE_MUTEX_WAIT, 0U);
 #endif
     }
-<<<<<<< HEAD
     hist_write_pre_post.Add(
         get_perf_context()->write_pre_and_post_process_time);
     hist_write_wal_time.Add(get_perf_context()->write_wal_time);
@@ -290,11 +282,6 @@ void ProfileQueries(bool enabled_time = false) {
         get_perf_context()->write_thread_wait_nanos);
     hist_write_scheduling_time.Add(
         get_perf_context()->write_scheduling_flushes_compactions_time);
-=======
-    hist_write_pre_post.Add(get_perf_context()->write_pre_and_post_process_time);
-    hist_write_wal_time.Add(get_perf_context()->write_wal_time);
-    hist_write_memtable_time.Add(get_perf_context()->write_memtable_time);
->>>>>>> blood in blood out
     hist_put.Add(get_perf_context()->user_key_comparison_count);
     total_db_mutex_nanos += get_perf_context()->db_mutex_lock_nanos;
   }
@@ -342,14 +329,11 @@ void ProfileQueries(bool enabled_time = false) {
               << hist_write_wal_time.ToString() << "\n"
               << " Writing Mem Table time: \n"
               << hist_write_memtable_time.ToString() << "\n"
-<<<<<<< HEAD
               << " Write Delay: \n" << hist_write_delay_time.ToString() << "\n"
               << " Waiting for Batch time: \n"
               << hist_write_thread_wait_nanos.ToString() << "\n"
               << " Scheduling Flushes and Compactions Time: \n"
               << hist_write_scheduling_time.ToString() << "\n"
-=======
->>>>>>> blood in blood out
               << " Total DB mutex nanos: \n" << total_db_mutex_nanos << "\n";
 
     std::cout << "Get(): Time to get snapshot: \n"
@@ -389,7 +373,6 @@ void ProfileQueries(bool enabled_time = false) {
     ASSERT_GT(hist_mget_files.Average(), 0);
     ASSERT_GT(hist_mget_post_process.Average(), 0);
     ASSERT_GT(hist_mget_num_memtable_checked.Average(), 0);
-<<<<<<< HEAD
 
     EXPECT_GT(hist_write_pre_post.Average(), 0);
     EXPECT_GT(hist_write_wal_time.Average(), 0);
@@ -398,8 +381,6 @@ void ProfileQueries(bool enabled_time = false) {
     EXPECT_EQ(hist_write_thread_wait_nanos.Average(), 0);
     EXPECT_GT(hist_write_scheduling_time.Average(), 0);
 
-=======
->>>>>>> blood in blood out
 #ifndef NDEBUG
     ASSERT_GT(total_db_mutex_nanos, 2000U);
 #endif

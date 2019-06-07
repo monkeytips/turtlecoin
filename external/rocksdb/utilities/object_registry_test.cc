@@ -18,7 +18,6 @@ class EnvRegistryTest : public testing::Test {
 int EnvRegistryTest::num_a = 0;
 int EnvRegistryTest::num_b = 0;
 
-<<<<<<< HEAD
 static Registrar<Env> test_reg_a("a://.*",
                                  [](const std::string& /*uri*/,
                                     std::unique_ptr<Env>* /*env_guard*/) {
@@ -27,15 +26,6 @@ static Registrar<Env> test_reg_a("a://.*",
                                  });
 
 static Registrar<Env> test_reg_b("b://.*", [](const std::string& /*uri*/,
-=======
-static Registrar<Env> test_reg_a("a://.*", [](const std::string& uri,
-                                              std::unique_ptr<Env>* env_guard) {
-  ++EnvRegistryTest::num_a;
-  return Env::Default();
-});
-
-static Registrar<Env> test_reg_b("b://.*", [](const std::string& uri,
->>>>>>> blood in blood out
                                               std::unique_ptr<Env>* env_guard) {
   ++EnvRegistryTest::num_b;
   // Env::Default() is a singleton so we can't grant ownership directly to the
@@ -75,11 +65,7 @@ int main(int argc, char** argv) {
 #else  // ROCKSDB_LITE
 #include <stdio.h>
 
-<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
-=======
-int main(int argc, char** argv) {
->>>>>>> blood in blood out
   fprintf(stderr, "SKIPPED as EnvRegistry is not supported in ROCKSDB_LITE\n");
   return 0;
 }

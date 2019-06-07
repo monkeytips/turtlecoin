@@ -27,7 +27,6 @@ int main(int argc, char** argv) {
       {"file", required_argument, nullptr, 'f'},
       {"show_key", optional_argument, nullptr, 'k'},
       {"show_blob", optional_argument, nullptr, 'b'},
-<<<<<<< HEAD
       {"show_uncompressed_blob", optional_argument, nullptr, 'r'},
       {"show_summary", optional_argument, nullptr, 's'},
   };
@@ -35,11 +34,6 @@ int main(int argc, char** argv) {
   DisplayType show_blob = DisplayType::kNone;
   DisplayType show_uncompressed_blob = DisplayType::kNone;
   bool show_summary = false;
-=======
-  };
-  DisplayType show_key = DisplayType::kRaw;
-  DisplayType show_blob = DisplayType::kNone;
->>>>>>> blood in blood out
   std::string file;
   while (true) {
     int c = getopt_long(argc, argv, "hk::b::f:", options, nullptr);
@@ -52,13 +46,9 @@ int main(int argc, char** argv) {
         fprintf(stdout,
                 "Usage: blob_dump --file=filename "
                 "[--show_key[=none|raw|hex|detail]] "
-<<<<<<< HEAD
                 "[--show_blob[=none|raw|hex|detail]] "
                 "[--show_uncompressed_blob[=none|raw|hex|detail]] "
                 "[--show_summary]\n");
-=======
-                "[--show_blob[=none|raw|hex|detail]]\n");
->>>>>>> blood in blood out
         return 0;
       case 'f':
         file = optarg;
@@ -80,7 +70,6 @@ int main(int argc, char** argv) {
           }
           show_blob = display_types.at(arg_str);
         } else {
-<<<<<<< HEAD
           show_blob = DisplayType::kHex;
         }
         break;
@@ -98,23 +87,14 @@ int main(int argc, char** argv) {
       case 's':
         show_summary = true;
         break;
-=======
-          show_blob = DisplayType::kDetail;
-        }
-        break;
->>>>>>> blood in blood out
       default:
         fprintf(stderr, "Unrecognized option.\n");
         return -1;
     }
   }
   BlobDumpTool tool;
-<<<<<<< HEAD
   Status s =
       tool.Run(file, show_key, show_blob, show_uncompressed_blob, show_summary);
-=======
-  Status s = tool.Run(file, show_key, show_blob);
->>>>>>> blood in blood out
   if (!s.ok()) {
     fprintf(stderr, "Failed: %s\n", s.ToString().c_str());
     return -1;
@@ -123,11 +103,7 @@ int main(int argc, char** argv) {
 }
 #else
 #include <stdio.h>
-<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
-=======
-int main(int argc, char** argv) {
->>>>>>> blood in blood out
   fprintf(stderr, "Not supported in lite mode.\n");
   return -1;
 }

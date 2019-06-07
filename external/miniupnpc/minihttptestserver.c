@@ -1,14 +1,7 @@
-<<<<<<< HEAD
 /* $Id: minihttptestserver.c,v 1.23 2018/01/15 16:20:07 nanard Exp $ */
 /* Project : miniUPnP
  * Author : Thomas Bernard
  * Copyright (c) 2011-2018 Thomas Bernard
-=======
-/* $Id: minihttptestserver.c,v 1.13 2012/05/29 13:03:07 nanard Exp $ */
-/* Project : miniUPnP
- * Author : Thomas Bernard
- * Copyright (c) 2011-2012 Thomas Bernard
->>>>>>> blood in blood out
  * This software is subject to the conditions detailed in the
  * LICENCE file provided in this distribution.
  * */
@@ -25,7 +18,6 @@
 #include <time.h>
 #include <errno.h>
 
-<<<<<<< HEAD
 #ifndef INADDR_LOOPBACK
 #define INADDR_LOOPBACK         0x7f000001
 #endif
@@ -34,10 +26,6 @@
 
 static int server(unsigned short port, const char * expected_file_name, int ipv6);
 
-=======
-#define CRAP_LENGTH (2048)
-
->>>>>>> blood in blood out
 volatile sig_atomic_t quit = 0;
 volatile sig_atomic_t child_to_wait_for = 0;
 
@@ -46,43 +34,25 @@ volatile sig_atomic_t child_to_wait_for = 0;
  */
 void handle_signal_chld(int sig)
 {
-<<<<<<< HEAD
 	(void)sig;
 	/* printf("handle_signal_chld(%d)\n", sig); */
-=======
-	printf("handle_signal_chld(%d)\n", sig);
->>>>>>> blood in blood out
 	++child_to_wait_for;
 }
 
 /**
  * signal handler for SIGINT (CRTL C)
  */
-<<<<<<< HEAD
 void handle_signal_int(int sig)
 {
 	(void)sig;
 	/* printf("handle_signal_int(%d)\n", sig); */
 	quit = 1;
 }
-=======
-#if 0
-void handle_signal_int(int sig)
-{
-	printf("handle_signal_int(%d)\n", sig);
-	quit = 1;
-}
-#endif
->>>>>>> blood in blood out
 
 /**
  * build a text/plain content of the specified length
  */
-<<<<<<< HEAD
 void build_content(char * p, size_t n)
-=======
-void build_content(char * p, int n)
->>>>>>> blood in blood out
 {
 	char line_buffer[80];
 	int k;
@@ -111,17 +81,10 @@ void build_content(char * p, int n)
 /**
  * build crappy content
  */
-<<<<<<< HEAD
 void build_crap(char * p, size_t n)
 {
 	static const char crap[] = "_CRAP_\r\n";
 	size_t i;
-=======
-void build_crap(char * p, int n)
-{
-	static const char crap[] = "_CRAP_\r\n";
-	int i;
->>>>>>> blood in blood out
 
 	while(n > 0) {
 		i = sizeof(crap) - 1;
@@ -137,7 +100,6 @@ void build_crap(char * p, int n)
  * build chunked response.
  * return a malloc'ed buffer
  */
-<<<<<<< HEAD
 char * build_chunked_response(size_t content_length, size_t * response_len)
 {
 	char * response_buffer;
@@ -145,22 +107,12 @@ char * build_chunked_response(size_t content_length, size_t * response_len)
 	size_t buffer_length;
 	size_t i;
 	unsigned int n;
-=======
-char * build_chunked_response(int content_length, int * response_len) {
-	char * response_buffer;
-	char * content_buffer;
-	int buffer_length;
-	int i, n;
->>>>>>> blood in blood out
 
 	/* allocate to have some margin */
 	buffer_length = 256 + content_length + (content_length >> 4);
 	response_buffer = malloc(buffer_length);
-<<<<<<< HEAD
 	if(response_buffer == NULL)
 		return NULL;
-=======
->>>>>>> blood in blood out
 	*response_len = snprintf(response_buffer, buffer_length,
 	                         "HTTP/1.1 200 OK\r\n"
 	                         "Content-Type: text/plain\r\n"
@@ -169,13 +121,10 @@ char * build_chunked_response(int content_length, int * response_len) {
 
 	/* build the content */
 	content_buffer = malloc(content_length);
-<<<<<<< HEAD
 	if(content_buffer == NULL) {
 		free(response_buffer);
 		return NULL;
 	}
-=======
->>>>>>> blood in blood out
 	build_content(content_buffer, content_length);
 
 	/* chunk it */
@@ -201,16 +150,11 @@ char * build_chunked_response(int content_length, int * response_len) {
 	*response_len += 5;
 	free(content_buffer);
 
-<<<<<<< HEAD
 	printf("resp_length=%lu buffer_length=%lu content_length=%lu\n",
-=======
-	printf("resp_length=%d buffer_length=%d content_length=%d\n",
->>>>>>> blood in blood out
 	       *response_len, buffer_length, content_length);
 	return response_buffer;
 }
 
-<<<<<<< HEAD
 /* favicon.ico generator */
 #ifdef OLD_HEADER
 #define FAVICON_LENGTH (6 + 16 + 12 + 8 + 32 * 4)
@@ -320,9 +264,6 @@ enum modes {
 	MODE_INVALID, MODE_CHUNKED, MODE_ADDCRAP, MODE_NORMAL, MODE_FAVICON
 };
 
-=======
-enum modes { MODE_INVALID, MODE_CHUNKED, MODE_ADDCRAP, MODE_NORMAL };
->>>>>>> blood in blood out
 const struct {
 	const enum modes mode;
 	const char * text;
@@ -330,31 +271,19 @@ const struct {
 	{MODE_CHUNKED, "chunked"},
 	{MODE_ADDCRAP, "addcrap"},
 	{MODE_NORMAL, "normal"},
-<<<<<<< HEAD
 	{MODE_FAVICON, "favicon.ico"},
-=======
->>>>>>> blood in blood out
 	{MODE_INVALID, NULL}
 };
 
 /**
  * write the response with random behaviour !
  */
-<<<<<<< HEAD
 void send_response(int c, const char * buffer, size_t len)
 {
 	ssize_t n;
 	while(len > 0) {
 		n = (rand() % 99) + 1;
 		if((size_t)n > len)
-=======
-void send_response(int c, const char * buffer, int len)
-{
-	int n;
-	while(len > 0) {
-		n = (rand() % 99) + 1;
-		if(n > len)
->>>>>>> blood in blood out
 			n = len;
 		n = write(c, buffer, n);
 		if(n < 0) {
@@ -366,13 +295,8 @@ void send_response(int c, const char * buffer, int len)
 		} else {
 			len -= n;
 			buffer += n;
-<<<<<<< HEAD
 			usleep(10000); /* 10ms */
 		}
-=======
-		}
-		usleep(10000); /* 10ms */
->>>>>>> blood in blood out
 	}
 }
 
@@ -382,45 +306,27 @@ void send_response(int c, const char * buffer, int len)
 void handle_http_connection(int c)
 {
 	char request_buffer[2048];
-<<<<<<< HEAD
 	size_t request_len = 0;
 	int headers_found = 0;
 	ssize_t n, m;
 	size_t i;
-=======
-	int request_len = 0;
-	int headers_found = 0;
-	int n, i;
->>>>>>> blood in blood out
 	char request_method[16];
 	char request_uri[256];
 	char http_version[16];
 	char * p;
 	char * response_buffer;
-<<<<<<< HEAD
 	size_t response_len;
 	enum modes mode;
 	size_t content_length = 16*1024;
 
 	/* read the request */
 	while(request_len < sizeof(request_buffer) && !headers_found) {
-=======
-	int response_len;
-	enum modes mode;
-	int content_length = 16*1024;
-
-	/* read the request */
-	while(request_len < (int)sizeof(request_buffer) && !headers_found) {
->>>>>>> blood in blood out
 		n = read(c,
 		         request_buffer + request_len,
 		         sizeof(request_buffer) - request_len);
 		if(n < 0) {
-<<<<<<< HEAD
 			if(errno == EINTR)
 				continue;
-=======
->>>>>>> blood in blood out
 			perror("read");
 			return;
 		} else if(n==0) {
@@ -439,7 +345,6 @@ void handle_http_connection(int c)
 	}
 	if(!headers_found) {
 		/* error */
-<<<<<<< HEAD
 		printf("no HTTP header found in the request\n");
 		return;
 	}
@@ -447,14 +352,6 @@ void handle_http_connection(int c)
 	/* the request have been received, now parse the request line */
 	p = request_buffer;
 	for(i = 0; i < sizeof(request_method) - 1; i++) {
-=======
-		return;
-	}
-	printf("headers :\n%.*s", request_len, request_buffer);
-	/* the request have been received, now parse the request line */
-	p = request_buffer;
-	for(i = 0; i < (int)sizeof(request_method) - 1; i++) {
->>>>>>> blood in blood out
 		if(*p == ' ' || *p == '\r')
 			break;
 		request_method[i] = *p;
@@ -492,25 +389,15 @@ void handle_http_connection(int c)
 		n = sizeof(response405) - 1;
 		pc = response405;
 		while(n > 0) {
-<<<<<<< HEAD
 			m = write(c, pc, n);
 			if(m<0) {
-=======
-			i = write(c, pc, n);
-			if(i<0) {
->>>>>>> blood in blood out
 				if(errno != EINTR) {
 					perror("write");
 					return;
 				}
 			} else {
-<<<<<<< HEAD
 				n -= m;
 				pc += m;
-=======
-				n -= i;
-				pc += i;
->>>>>>> blood in blood out
 			}
 		}
 		return;
@@ -532,16 +419,12 @@ void handle_http_connection(int c)
 	case MODE_ADDCRAP:
 		response_len = content_length+256;
 		response_buffer = malloc(response_len);
-<<<<<<< HEAD
 		if(!response_buffer)
 			break;
-=======
->>>>>>> blood in blood out
 		n = snprintf(response_buffer, response_len,
 		             "HTTP/1.1 200 OK\r\n"
 		             "Server: minihttptestserver\r\n"
 		             "Content-Type: text/plain\r\n"
-<<<<<<< HEAD
 		             "Content-Length: %lu\r\n"
 		             "\r\n", content_length);
 		response_len = content_length+n+CRAP_LENGTH;
@@ -577,25 +460,12 @@ void handle_http_connection(int c)
 		response_buffer = malloc(response_len);
 		if(!response_buffer)
 			break;
-=======
-		             "Content-Length: %d\r\n"
-		             "\r\n", content_length);
-		response_len = content_length+n+CRAP_LENGTH;
-		response_buffer = realloc(response_buffer, response_len);
-		build_content(response_buffer + n, content_length);
-		build_crap(response_buffer + n + content_length, CRAP_LENGTH);
-		break;
-	default:
-		response_len = content_length+256;
-		response_buffer = malloc(response_len);
->>>>>>> blood in blood out
 		n = snprintf(response_buffer, response_len,
 		             "HTTP/1.1 200 OK\r\n"
 		             "Server: minihttptestserver\r\n"
 		             "Content-Type: text/plain\r\n"
 		             "\r\n");
 		response_len = content_length+n;
-<<<<<<< HEAD
 		p = realloc(response_buffer, response_len);
 		if(p == NULL) {
 			/* Error 500 */
@@ -604,9 +474,6 @@ void handle_http_connection(int c)
 			break;
 		}
 		response_buffer = p;
-=======
-		response_buffer = realloc(response_buffer, response_len);
->>>>>>> blood in blood out
 		build_content(response_buffer + n, response_len - n);
 	}
 
@@ -622,20 +489,8 @@ void handle_http_connection(int c)
  */
 int main(int argc, char * * argv) {
 	int ipv6 = 0;
-<<<<<<< HEAD
 	int r, i;
 	unsigned short port = 0;
-=======
-	int s, c, i;
-	unsigned short port = 0;
-	struct sockaddr_storage server_addr;
-	socklen_t server_addrlen;
-	struct sockaddr_storage client_addr;
-	socklen_t client_addrlen;
-	pid_t pid;
-	int child = 0;
-	int status;
->>>>>>> blood in blood out
 	const char * expected_file_name = NULL;
 
 	for(i = 1; i < argc; i++) {
@@ -658,16 +513,11 @@ int main(int argc, char * * argv) {
 				fprintf(stderr, "unknown command line switch '%s'\n", argv[i]);
 			}
 		} else {
-<<<<<<< HEAD
 			fprintf(stderr, "unknown command line argument '%s'\n", argv[i]);
-=======
-			fprintf(stderr, "unkown command line argument '%s'\n", argv[i]);
->>>>>>> blood in blood out
 		}
 	}
 
 	srand(time(NULL));
-<<<<<<< HEAD
 
 	r = server(port, expected_file_name, ipv6);
 	if(r != 0) {
@@ -703,12 +553,6 @@ static int server(unsigned short port, const char * expected_file_name, int ipv6
 		perror("sigaction");
 		return 1;
 	}
-=======
-	signal(SIGCHLD, handle_signal_chld);
-#if 0
-	signal(SIGINT, handle_signal_int);
-#endif
->>>>>>> blood in blood out
 
 	s = socket(ipv6 ? AF_INET6 : AF_INET, SOCK_STREAM, 0);
 	if(s < 0) {
@@ -760,7 +604,6 @@ static int server(unsigned short port, const char * expected_file_name, int ipv6
 		if(f) {
 			char * buffer;
 			buffer = malloc(16*1024);
-<<<<<<< HEAD
 			if(buffer == NULL) {
 				fprintf(stderr, "memory allocation error\n");
 			} else {
@@ -771,14 +614,6 @@ static int server(unsigned short port, const char * expected_file_name, int ipv6
 				}
 				free(buffer);
 			}
-=======
-			build_content(buffer, 16*1024);
-			i = fwrite(buffer, 1, 16*1024, f);
-			if(i != 16*1024) {
-				fprintf(stderr, "error writing to file %s : %dbytes written (out of %d)\n", expected_file_name, i, 16*1024);
-			}
-			free(buffer);
->>>>>>> blood in blood out
 			fclose(f);
 		} else {
 			fprintf(stderr, "error opening file %s for writing\n", expected_file_name);
@@ -792,28 +627,16 @@ static int server(unsigned short port, const char * expected_file_name, int ipv6
 			if(pid < 0) {
 				perror("wait");
 			} else {
-<<<<<<< HEAD
 				printf("child(%d) terminated with status %d\n", (int)pid, status);
 			}
 			--child_to_wait_for;
 		}
-=======
-				printf("child(%d) terminated with status %d\n", pid, status);
-			}
-			--child_to_wait_for;
-		}
-		/* TODO : add a select() call in order to handle the case
-		 * when a signal is caught */
->>>>>>> blood in blood out
 		client_addrlen = sizeof(struct sockaddr_storage);
 		c = accept(s, (struct sockaddr *)&client_addr,
 		           &client_addrlen);
 		if(c < 0) {
-<<<<<<< HEAD
 			if(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)
 				continue;
-=======
->>>>>>> blood in blood out
 			perror("accept");
 			return 1;
 		}
@@ -841,11 +664,7 @@ static int server(unsigned short port, const char * expected_file_name, int ipv6
 			if(pid < 0) {
 				perror("wait");
 			} else {
-<<<<<<< HEAD
 				printf("child(%d) terminated with status %d\n", (int)pid, status);
-=======
-				printf("child(%d) terminated with status %d\n", pid, status);
->>>>>>> blood in blood out
 			}
 			--child_to_wait_for;
 		}

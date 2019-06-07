@@ -1,5 +1,4 @@
 # Rocksdb Change Log
-<<<<<<< HEAD
 ### 5.15.10 (9/13/2018)
 ### Bug Fixes
 * Fix RocksDB Java build and tests.
@@ -112,23 +111,6 @@
 
 ### Bug Fixes
 * Fix a leak in prepared_section_completed_ where the zeroed entries would not removed from the map.
-=======
-## 5.12.2 (3/23/2018)
-### Bug Fixes
-* Fsync after writing global seq number to the ingestion file in ExternalSstFileIngestionJob.
-
-### Java API Changes
-* Add `BlockBasedTableConfig.setBlockCache` to allow sharing a block cache across DB instances.
-
-## 5.12.1 (3/16/2018)
-### Public API Change
-* RocksDBOptionsParser::Parse()'s `ignore_unknown_options` argument will only be effective if the option file shows it is generated using a higher version of RocksDB than the current version.
-
-### New Features
-* Avoid unnecessarily flushing in `CompactRange()` when the range specified by the user does not overlap unflushed memtables.
-
-### Bug Fixes
->>>>>>> blood in blood out
 * Fix WAL corruption caused by race condition between user write thread and backup/checkpoint thread.
 
 ## 5.12.0 (2/14/2018)
@@ -190,11 +172,7 @@
 * `BackupableDBOptions::max_valid_backups_to_open == 0` now means no backups will be opened during BackupEngine initialization. Previously this condition disabled limiting backups opened.
 * `DBOptions::preserve_deletes` is a new option that allows one to specify that DB should not drop tombstones for regular deletes if they have sequence number larger than what was set by the new API call `DB::SetPreserveDeletesSequenceNumber(SequenceNumber seqnum)`. Disabled by default.
 * API call `DB::SetPreserveDeletesSequenceNumber(SequenceNumber seqnum)` was added, users who wish to preserve deletes are expected to periodically call this function to advance the cutoff seqnum (all deletes made before this seqnum can be dropped by DB). It's user responsibility to figure out how to advance the seqnum in the way so the tombstones are kept for the desired period of time, yet are eventually processed in time and don't eat up too much space.
-<<<<<<< HEAD
 * `ReadOptions::iter_start_seqnum` was added; if set to something > 0 user will see 2 changes in iterators behavior 1) only keys written with sequence larger than this parameter would be returned and 2) the `Slice` returned by iter->key() now points to the memory that keep User-oriented representation of the internal key, rather than user key. New struct `FullKey` was added to represent internal keys, along with a new helper function `ParseFullKey(const Slice& internal_key, FullKey* result);`.
-=======
-* `ReadOptions::iter_start_seqnum` was added; if set to something > 0 user will see 2 changes in iterators behavior 1) only keys written with sequence larger than this parameter would be returned and 2) the `Slice` returned by iter->key() now points to the the memory that keep User-oriented representation of the internal key, rather than user key. New struct `FullKey` was added to represent internal keys, along with a new helper function `ParseFullKey(const Slice& internal_key, FullKey* result);`.
->>>>>>> blood in blood out
 * Deprecate trash_dir param in NewSstFileManager, right now we will rename deleted files to <name>.trash instead of moving them to trash directory
 * Allow setting a custom trash/DB size ratio limit in the SstFileManager, after which files that are to be scheduled for deletion are deleted immediately, regardless of any delete ratelimit.
 * Return an error on write if write_options.sync = true and write_options.disableWAL = true to warn user of inconsistent options. Previously we will not write to WAL and not respecting the sync options in this case.

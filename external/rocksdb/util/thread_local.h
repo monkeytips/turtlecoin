@@ -45,12 +45,9 @@ class ThreadLocalPtr {
  public:
   explicit ThreadLocalPtr(UnrefHandler handler = nullptr);
 
-<<<<<<< HEAD
   ThreadLocalPtr(const ThreadLocalPtr&) = delete;
   ThreadLocalPtr& operator=(const ThreadLocalPtr&) = delete;
 
-=======
->>>>>>> blood in blood out
   ~ThreadLocalPtr();
 
   // Return the current pointer stored in thread local

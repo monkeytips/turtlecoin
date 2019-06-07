@@ -160,17 +160,10 @@ class LogTest : public ::testing::TestWithParam<int> {
       : reader_contents_(),
         dest_holder_(test::GetWritableFileWriter(
             new test::StringSink(&reader_contents_))),
-<<<<<<< HEAD
         source_holder_(test::GetSequentialFileReader(
             new StringSource(reader_contents_), "" /* file name */)),
         writer_(std::move(dest_holder_), 123, GetParam()),
         reader_(nullptr, std::move(source_holder_), &report_, true /*checksum*/,
-=======
-        source_holder_(
-            test::GetSequentialFileReader(new StringSource(reader_contents_))),
-        writer_(std::move(dest_holder_), 123, GetParam()),
-        reader_(NULL, std::move(source_holder_), &report_, true /*checksum*/,
->>>>>>> blood in blood out
                 0 /*initial_offset*/, 123) {
     int header_size = GetParam() ? kRecyclableHeaderSize : kHeaderSize;
     initial_offset_last_record_offsets_[0] = 0;
@@ -275,17 +268,10 @@ class LogTest : public ::testing::TestWithParam<int> {
 
   void CheckOffsetPastEndReturnsNoRecords(uint64_t offset_past_end) {
     WriteInitialOffsetLog();
-<<<<<<< HEAD
     unique_ptr<SequentialFileReader> file_reader(test::GetSequentialFileReader(
         new StringSource(reader_contents_), "" /* fname */));
     unique_ptr<Reader> offset_reader(
         new Reader(nullptr, std::move(file_reader), &report_,
-=======
-    unique_ptr<SequentialFileReader> file_reader(
-        test::GetSequentialFileReader(new StringSource(reader_contents_)));
-    unique_ptr<Reader> offset_reader(
-        new Reader(NULL, std::move(file_reader), &report_,
->>>>>>> blood in blood out
                    true /*checksum*/, WrittenBytes() + offset_past_end, 123));
     Slice record;
     std::string scratch;
@@ -295,17 +281,10 @@ class LogTest : public ::testing::TestWithParam<int> {
   void CheckInitialOffsetRecord(uint64_t initial_offset,
                                 int expected_record_offset) {
     WriteInitialOffsetLog();
-<<<<<<< HEAD
     unique_ptr<SequentialFileReader> file_reader(test::GetSequentialFileReader(
         new StringSource(reader_contents_), "" /* fname */));
     unique_ptr<Reader> offset_reader(
         new Reader(nullptr, std::move(file_reader), &report_,
-=======
-    unique_ptr<SequentialFileReader> file_reader(
-        test::GetSequentialFileReader(new StringSource(reader_contents_)));
-    unique_ptr<Reader> offset_reader(
-        new Reader(NULL, std::move(file_reader), &report_,
->>>>>>> blood in blood out
                    true /*checksum*/, initial_offset, 123));
     Slice record;
     std::string scratch;

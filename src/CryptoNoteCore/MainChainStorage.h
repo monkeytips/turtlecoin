@@ -30,10 +30,7 @@ public:
 
   virtual void pushBlock(const RawBlock& rawBlock) override;
   virtual void popBlock() override;
-<<<<<<< HEAD
   void rewindTo(const uint32_t index) const override;
-=======
->>>>>>> blood in blood out
 
   virtual RawBlock getBlockByIndex(uint32_t index) const override;
   virtual uint32_t getBlockCount() const override;

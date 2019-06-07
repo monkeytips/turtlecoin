@@ -131,13 +131,8 @@ class HashSkipListRep : public MemTableRep {
     }
 
     // Retreat to the last entry with a key <= target
-<<<<<<< HEAD
     virtual void SeekForPrev(const Slice& /*internal_key*/,
                              const char* /*memtable_key*/) override {
-=======
-    virtual void SeekForPrev(const Slice& internal_key,
-                             const char* memtable_key) override {
->>>>>>> blood in blood out
       // not supported
       assert(false);
     }
@@ -224,17 +219,10 @@ class HashSkipListRep : public MemTableRep {
     }
     virtual void Next() override {}
     virtual void Prev() override {}
-<<<<<<< HEAD
     virtual void Seek(const Slice& /*internal_key*/,
                       const char* /*memtable_key*/) override {}
     virtual void SeekForPrev(const Slice& /*internal_key*/,
                              const char* /*memtable_key*/) override {}
-=======
-    virtual void Seek(const Slice& internal_key,
-                      const char* memtable_key) override {}
-    virtual void SeekForPrev(const Slice& internal_key,
-                             const char* memtable_key) override {}
->>>>>>> blood in blood out
     virtual void SeekToFirst() override {}
     virtual void SeekToLast() override {}
 
@@ -347,11 +335,7 @@ MemTableRep::Iterator* HashSkipListRep::GetDynamicPrefixIterator(Arena* arena) {
 
 MemTableRep* HashSkipListRepFactory::CreateMemTableRep(
     const MemTableRep::KeyComparator& compare, Allocator* allocator,
-<<<<<<< HEAD
     const SliceTransform* transform, Logger* /*logger*/) {
-=======
-    const SliceTransform* transform, Logger* logger) {
->>>>>>> blood in blood out
   return new HashSkipListRep(compare, allocator, transform, bucket_count_,
                              skiplist_height_, skiplist_branching_factor_);
 }

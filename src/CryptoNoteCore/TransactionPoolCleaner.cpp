@@ -1,5 +1,4 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-<<<<<<< HEAD
 // Copyright (c) 2018-2019, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
@@ -7,25 +6,6 @@
 #include "TransactionPoolCleaner.h"
 #include "Core.h"
 #include "Mixins.h"
-=======
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
-
-#include "TransactionPoolCleaner.h"
->>>>>>> blood in blood out
 
 #include "Common/StringTools.h"
 
@@ -37,11 +17,7 @@ namespace CryptoNote {
 TransactionPoolCleanWrapper::TransactionPoolCleanWrapper(
   std::unique_ptr<ITransactionPool>&& transactionPool,
   std::unique_ptr<ITimeProvider>&& timeProvider,
-<<<<<<< HEAD
   std::shared_ptr<Logging::ILogger> logger,
-=======
-  Logging::ILogger& logger,
->>>>>>> blood in blood out
   uint64_t timeout)
   :
   transactionPool(std::move(transactionPool)),
@@ -87,14 +63,11 @@ std::vector<CachedTransaction> TransactionPoolCleanWrapper::getPoolTransactions(
   return transactionPool->getPoolTransactions();
 }
 
-<<<<<<< HEAD
 std::tuple<std::vector<CachedTransaction>, std::vector<CachedTransaction>> TransactionPoolCleanWrapper::getPoolTransactionsForBlockTemplate() const
 {
   return transactionPool->getPoolTransactionsForBlockTemplate();
 }
 
-=======
->>>>>>> blood in blood out
 uint64_t TransactionPoolCleanWrapper::getTransactionReceiveTime(const Crypto::Hash& hash) const {
   return transactionPool->getTransactionReceiveTime(hash);
 }
@@ -103,11 +76,7 @@ std::vector<Crypto::Hash> TransactionPoolCleanWrapper::getTransactionHashesByPay
   return transactionPool->getTransactionHashesByPaymentId(paymentId);
 }
 
-<<<<<<< HEAD
 std::vector<Crypto::Hash> TransactionPoolCleanWrapper::clean(const uint32_t height) {
-=======
-std::vector<Crypto::Hash> TransactionPoolCleanWrapper::clean() {
->>>>>>> blood in blood out
   try {
     uint64_t currentTime = timeProvider->now();
     auto transactionHashes = transactionPool->getTransactionHashes();
@@ -121,7 +90,6 @@ std::vector<Crypto::Hash> TransactionPoolCleanWrapper::clean() {
         transactionPool->removeTransaction(hash);
         deletedTransactions.emplace_back(std::move(hash));
       }
-<<<<<<< HEAD
 
       CachedTransaction transaction = transactionPool->getTransaction(hash);
       std::vector<CachedTransaction> transactions;
@@ -137,8 +105,6 @@ std::vector<Crypto::Hash> TransactionPoolCleanWrapper::clean() {
         transactionPool->removeTransaction(hash);
         deletedTransactions.emplace_back(std::move(hash));
       }
-=======
->>>>>>> blood in blood out
     }
 
     cleanRecentlyDeletedTransactions(currentTime);

@@ -1,27 +1,9 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-<<<<<<< HEAD
 // Copyright (c) 2018, The BBSCoin Developers
 // Copyright (c) 2018, The Karbo Developers
 // Copyright (c) 2018, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
-=======
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> blood in blood out
 
 #pragma once
 
@@ -41,21 +23,13 @@ class Currency;
 }
 
 namespace CryptoNote {
-<<<<<<< HEAD
 
-=======
- 
->>>>>>> blood in blood out
 class TransfersConsumer;
 class INode;
 
 class TransfersSyncronizer : public ITransfersSynchronizer, public IBlockchainConsumerObserver {
 public:
-<<<<<<< HEAD
   TransfersSyncronizer(const CryptoNote::Currency& currency, std::shared_ptr<Logging::ILogger> logger, IBlockchainSynchronizer& sync, INode& node);
-=======
-  TransfersSyncronizer(const CryptoNote::Currency& currency, Logging::ILogger& logger, IBlockchainSynchronizer& sync, INode& node);
->>>>>>> blood in blood out
   virtual ~TransfersSyncronizer();
 
   void initTransactionPool(const std::unordered_set<Crypto::Hash>& uncommitedTransactions);
@@ -70,11 +44,8 @@ public:
   void subscribeConsumerNotifications(const Crypto::PublicKey& viewPublicKey, ITransfersSynchronizerObserver* observer);
   void unsubscribeConsumerNotifications(const Crypto::PublicKey& viewPublicKey, ITransfersSynchronizerObserver* observer);
 
-<<<<<<< HEAD
   void addPublicKeysSeen(const AccountPublicAddress& acc, const Crypto::Hash& transactionHash, const Crypto::PublicKey& outputKey);
 
-=======
->>>>>>> blood in blood out
   // IStreamSerializable
   virtual void save(std::ostream& os) override;
   virtual void load(std::istream& in) override;

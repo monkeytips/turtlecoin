@@ -63,11 +63,7 @@ struct TestHandler : public WriteBatch::Handler {
     seen[column_family_id].push_back(e);
     return Status::OK();
   }
-<<<<<<< HEAD
   virtual void LogData(const Slice& /*blob*/) {}
-=======
-  virtual void LogData(const Slice& blob) {}
->>>>>>> blood in blood out
   virtual Status DeleteCF(uint32_t column_family_id, const Slice& key) {
     Entry e;
     e.key = key.ToString();
@@ -976,11 +972,7 @@ TEST_F(WriteBatchWithIndexTest, TestGetFromBatchMerge) {
   options.merge_operator = MergeOperators::CreateFromStringId("stringappend");
   options.create_if_missing = true;
 
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("write_batch_with_index_test");
-=======
-  std::string dbname = test::TmpDir() + "/write_batch_with_index_test";
->>>>>>> blood in blood out
 
   DestroyDB(dbname, options);
   Status s = DB::Open(options, dbname, &db);
@@ -1028,11 +1020,7 @@ TEST_F(WriteBatchWithIndexTest, TestGetFromBatchMerge2) {
   options.merge_operator = MergeOperators::CreateFromStringId("stringappend");
   options.create_if_missing = true;
 
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("write_batch_with_index_test");
-=======
-  std::string dbname = test::TmpDir() + "/write_batch_with_index_test";
->>>>>>> blood in blood out
 
   DestroyDB(dbname, options);
   Status s = DB::Open(options, dbname, &db);
@@ -1090,11 +1078,7 @@ TEST_F(WriteBatchWithIndexTest, TestGetFromBatchAndDB) {
   DB* db;
   Options options;
   options.create_if_missing = true;
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("write_batch_with_index_test");
-=======
-  std::string dbname = test::TmpDir() + "/write_batch_with_index_test";
->>>>>>> blood in blood out
 
   DestroyDB(dbname, options);
   Status s = DB::Open(options, dbname, &db);
@@ -1145,11 +1129,7 @@ TEST_F(WriteBatchWithIndexTest, TestGetFromBatchAndDBMerge) {
   Options options;
 
   options.create_if_missing = true;
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("write_batch_with_index_test");
-=======
-  std::string dbname = test::TmpDir() + "/write_batch_with_index_test";
->>>>>>> blood in blood out
 
   options.merge_operator = MergeOperators::CreateFromStringId("stringappend");
 
@@ -1275,11 +1255,7 @@ TEST_F(WriteBatchWithIndexTest, TestGetFromBatchAndDBMerge2) {
   Options options;
 
   options.create_if_missing = true;
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("write_batch_with_index_test");
-=======
-  std::string dbname = test::TmpDir() + "/write_batch_with_index_test";
->>>>>>> blood in blood out
 
   options.merge_operator = MergeOperators::CreateFromStringId("stringappend");
 

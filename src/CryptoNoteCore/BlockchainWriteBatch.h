@@ -49,10 +49,6 @@ public:
   BlockchainWriteBatch& removeRawBlock(uint32_t blockIndex);
   BlockchainWriteBatch& removeClosestTimestampBlockIndex(uint64_t timestamp);
   BlockchainWriteBatch& removeTimestamp(uint64_t timestamp);
-<<<<<<< HEAD
-=======
-  BlockchainWriteBatch& removeKeyOutputAmounts(uint32_t keyOutputAmountsToRemoveCount, uint32_t totalKeyOutputAmountsCount);
->>>>>>> blood in blood out
   BlockchainWriteBatch& removeKeyOutputInfo(IBlockchainCache::Amount amount, IBlockchainCache::GlobalOutputIndex globalIndex);
 
   std::vector<std::pair<std::string, std::string>> extractRawDataToInsert() override;

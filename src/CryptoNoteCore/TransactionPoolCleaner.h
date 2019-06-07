@@ -1,25 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-<<<<<<< HEAD
 // Copyright (c) 2018-2019, The TurtleCoin Developers
 // 
 // Please see the included LICENSE file for more information.
-=======
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> blood in blood out
 
 #pragma once
 
@@ -44,11 +26,7 @@ public:
   TransactionPoolCleanWrapper(
     std::unique_ptr<ITransactionPool>&& transactionPool,
     std::unique_ptr<ITimeProvider>&& timeProvider,
-<<<<<<< HEAD
     std::shared_ptr<Logging::ILogger> logger,
-=======
-    Logging::ILogger& logger,
->>>>>>> blood in blood out
     uint64_t timeout);
 
   TransactionPoolCleanWrapper(const TransactionPoolCleanWrapper&) = delete;
@@ -69,19 +47,12 @@ public:
 
   virtual const TransactionValidatorState& getPoolTransactionValidationState() const override;
   virtual std::vector<CachedTransaction> getPoolTransactions() const override;
-<<<<<<< HEAD
   virtual std::tuple<std::vector<CachedTransaction>, std::vector<CachedTransaction>> getPoolTransactionsForBlockTemplate() const override;
-=======
->>>>>>> blood in blood out
 
   virtual uint64_t getTransactionReceiveTime(const Crypto::Hash& hash) const override;
   virtual std::vector<Crypto::Hash> getTransactionHashesByPaymentId(const Crypto::Hash& paymentId) const override;
 
-<<<<<<< HEAD
   virtual std::vector<Crypto::Hash> clean(const uint32_t height) override;
-=======
-  virtual std::vector<Crypto::Hash> clean() override;
->>>>>>> blood in blood out
 
 private:
   std::unique_ptr<ITransactionPool> transactionPool;

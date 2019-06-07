@@ -8,7 +8,6 @@
 
 #include "include/org_rocksdb_Logger.h"
 
-<<<<<<< HEAD
 #include <cstdarg>
 #include <cstdio>
 #include "rocksjni/loggerjnicallback.h"
@@ -20,164 +19,91 @@ LoggerJniCallback::LoggerJniCallback(JNIEnv* env, jobject jlogger)
     : JniCallback(env, jlogger) {
   m_jLogMethodId = LoggerJni::getLogMethodId(env);
   if (m_jLogMethodId == nullptr) {
-=======
-#include "rocksjni/loggerjnicallback.h"
-#include "rocksjni/portal.h"
-#include <cstdarg>
-#include <cstdio>
-
-namespace rocksdb {
-
-LoggerJniCallback::LoggerJniCallback(
-    JNIEnv* env, jobject jlogger) : JniCallback(env, jlogger) {
-
-  m_jLogMethodId = LoggerJni::getLogMethodId(env);
-  if(m_jLogMethodId == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: NoSuchMethodException or OutOfMemoryError
     return;
   }
 
   jobject jdebug_level = InfoLogLevelJni::DEBUG_LEVEL(env);
-<<<<<<< HEAD
   if (jdebug_level == nullptr) {
-=======
-  if(jdebug_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: NoSuchFieldError, ExceptionInInitializerError
     // or OutOfMemoryError
     return;
   }
   m_jdebug_level = env->NewGlobalRef(jdebug_level);
-<<<<<<< HEAD
   if (m_jdebug_level == nullptr) {
-=======
-  if(m_jdebug_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: OutOfMemoryError
     return;
   }
 
   jobject jinfo_level = InfoLogLevelJni::INFO_LEVEL(env);
-<<<<<<< HEAD
   if (jinfo_level == nullptr) {
-=======
-  if(jinfo_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: NoSuchFieldError, ExceptionInInitializerError
     // or OutOfMemoryError
     return;
   }
   m_jinfo_level = env->NewGlobalRef(jinfo_level);
-<<<<<<< HEAD
   if (m_jinfo_level == nullptr) {
-=======
-  if(m_jinfo_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: OutOfMemoryError
     return;
   }
 
   jobject jwarn_level = InfoLogLevelJni::WARN_LEVEL(env);
-<<<<<<< HEAD
   if (jwarn_level == nullptr) {
-=======
-  if(jwarn_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: NoSuchFieldError, ExceptionInInitializerError
     // or OutOfMemoryError
     return;
   }
   m_jwarn_level = env->NewGlobalRef(jwarn_level);
-<<<<<<< HEAD
   if (m_jwarn_level == nullptr) {
-=======
-  if(m_jwarn_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: OutOfMemoryError
     return;
   }
 
   jobject jerror_level = InfoLogLevelJni::ERROR_LEVEL(env);
-<<<<<<< HEAD
   if (jerror_level == nullptr) {
-=======
-  if(jerror_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: NoSuchFieldError, ExceptionInInitializerError
     // or OutOfMemoryError
     return;
   }
   m_jerror_level = env->NewGlobalRef(jerror_level);
-<<<<<<< HEAD
   if (m_jerror_level == nullptr) {
-=======
-  if(m_jerror_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: OutOfMemoryError
     return;
   }
 
   jobject jfatal_level = InfoLogLevelJni::FATAL_LEVEL(env);
-<<<<<<< HEAD
   if (jfatal_level == nullptr) {
-=======
-  if(jfatal_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: NoSuchFieldError, ExceptionInInitializerError
     // or OutOfMemoryError
     return;
   }
   m_jfatal_level = env->NewGlobalRef(jfatal_level);
-<<<<<<< HEAD
   if (m_jfatal_level == nullptr) {
-=======
-  if(m_jfatal_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: OutOfMemoryError
     return;
   }
 
   jobject jheader_level = InfoLogLevelJni::HEADER_LEVEL(env);
-<<<<<<< HEAD
   if (jheader_level == nullptr) {
-=======
-  if(jheader_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: NoSuchFieldError, ExceptionInInitializerError
     // or OutOfMemoryError
     return;
   }
   m_jheader_level = env->NewGlobalRef(jheader_level);
-<<<<<<< HEAD
   if (m_jheader_level == nullptr) {
-=======
-  if(m_jheader_level == nullptr) {
->>>>>>> blood in blood out
     // exception thrown: OutOfMemoryError
     return;
   }
 }
 
-<<<<<<< HEAD
 void LoggerJniCallback::Logv(const char* /*format*/, va_list /*ap*/) {
-=======
-void LoggerJniCallback::Logv(const char* format, va_list ap) {
->>>>>>> blood in blood out
   // We implement this method because it is virtual but we don't
   // use it because we need to know about the log level.
 }
 
-<<<<<<< HEAD
 void LoggerJniCallback::Logv(const InfoLogLevel log_level, const char* format,
                              va_list ap) {
   if (GetInfoLogLevel() <= log_level) {
-=======
-void LoggerJniCallback::Logv(const InfoLogLevel log_level,
-    const char* format, va_list ap) {
-  if (GetInfoLogLevel() <= log_level) {
-
->>>>>>> blood in blood out
     // determine InfoLogLevel java enum instance
     jobject jlog_level;
     switch (log_level) {
@@ -214,45 +140,26 @@ void LoggerJniCallback::Logv(const InfoLogLevel log_level,
     assert(env != nullptr);
 
     jstring jmsg = env->NewStringUTF(msg.get());
-<<<<<<< HEAD
     if (jmsg == nullptr) {
       // unable to construct string
       if (env->ExceptionCheck()) {
         env->ExceptionDescribe();  // print out exception to stderr
-=======
-    if(jmsg == nullptr) {
-      // unable to construct string
-      if(env->ExceptionCheck()) {
-        env->ExceptionDescribe(); // print out exception to stderr
->>>>>>> blood in blood out
       }
       releaseJniEnv(attached_thread);
       return;
     }
-<<<<<<< HEAD
     if (env->ExceptionCheck()) {
       // exception thrown: OutOfMemoryError
       env->ExceptionDescribe();  // print out exception to stderr
-=======
-    if(env->ExceptionCheck()) {
-      // exception thrown: OutOfMemoryError
-      env->ExceptionDescribe(); // print out exception to stderr
->>>>>>> blood in blood out
       env->DeleteLocalRef(jmsg);
       releaseJniEnv(attached_thread);
       return;
     }
 
     env->CallVoidMethod(m_jcallback_obj, m_jLogMethodId, jlog_level, jmsg);
-<<<<<<< HEAD
     if (env->ExceptionCheck()) {
       // exception thrown
       env->ExceptionDescribe();  // print out exception to stderr
-=======
-    if(env->ExceptionCheck()) {
-      // exception thrown
-      env->ExceptionDescribe(); // print out exception to stderr
->>>>>>> blood in blood out
       env->DeleteLocalRef(jmsg);
       releaseJniEnv(attached_thread);
       return;
@@ -263,7 +170,6 @@ void LoggerJniCallback::Logv(const InfoLogLevel log_level,
   }
 }
 
-<<<<<<< HEAD
 std::unique_ptr<char[]> LoggerJniCallback::format_str(const char* format,
                                                       va_list ap) const {
   va_list ap_copy;
@@ -271,13 +177,6 @@ std::unique_ptr<char[]> LoggerJniCallback::format_str(const char* format,
   va_copy(ap_copy, ap);
   const size_t required =
       vsnprintf(nullptr, 0, format, ap_copy) + 1;  // Extra space for '\0'
-=======
-std::unique_ptr<char[]> LoggerJniCallback::format_str(const char* format, va_list ap) const {
-  va_list ap_copy;
-
-  va_copy(ap_copy, ap);
-  const size_t required = vsnprintf(nullptr, 0, format, ap_copy) + 1; // Extra space for '\0'
->>>>>>> blood in blood out
   va_end(ap_copy);
 
   std::unique_ptr<char[]> buf(new char[required]);
@@ -293,7 +192,6 @@ LoggerJniCallback::~LoggerJniCallback() {
   JNIEnv* env = getJniEnv(&attached_thread);
   assert(env != nullptr);
 
-<<<<<<< HEAD
   if (m_jdebug_level != nullptr) {
     env->DeleteGlobalRef(m_jdebug_level);
   }
@@ -315,29 +213,6 @@ LoggerJniCallback::~LoggerJniCallback() {
   }
 
   if (m_jheader_level != nullptr) {
-=======
-  if(m_jdebug_level != nullptr) {
-    env->DeleteGlobalRef(m_jdebug_level);
-  }
-
-  if(m_jinfo_level != nullptr) {
-    env->DeleteGlobalRef(m_jinfo_level);
-  }
-
-  if(m_jwarn_level != nullptr) {
-    env->DeleteGlobalRef(m_jwarn_level);
-  }
-
-  if(m_jerror_level != nullptr) {
-    env->DeleteGlobalRef(m_jerror_level);
-  }
-
-  if(m_jfatal_level != nullptr) {
-    env->DeleteGlobalRef(m_jfatal_level);
-  }
-
-  if(m_jheader_level != nullptr) {
->>>>>>> blood in blood out
     env->DeleteGlobalRef(m_jheader_level);
   }
 
@@ -351,13 +226,8 @@ LoggerJniCallback::~LoggerJniCallback() {
  * Method:    createNewLoggerOptions
  * Signature: (J)J
  */
-<<<<<<< HEAD
 jlong Java_org_rocksdb_Logger_createNewLoggerOptions(JNIEnv* env, jobject jobj,
                                                      jlong joptions) {
-=======
-jlong Java_org_rocksdb_Logger_createNewLoggerOptions(
-    JNIEnv* env, jobject jobj, jlong joptions) {
->>>>>>> blood in blood out
   auto* sptr_logger = new std::shared_ptr<rocksdb::LoggerJniCallback>(
       new rocksdb::LoggerJniCallback(env, jobj));
 
@@ -373,18 +243,11 @@ jlong Java_org_rocksdb_Logger_createNewLoggerOptions(
  * Method:    createNewLoggerDbOptions
  * Signature: (J)J
  */
-<<<<<<< HEAD
 jlong Java_org_rocksdb_Logger_createNewLoggerDbOptions(JNIEnv* env,
                                                        jobject jobj,
                                                        jlong jdb_options) {
   auto* sptr_logger = new std::shared_ptr<rocksdb::LoggerJniCallback>(
       new rocksdb::LoggerJniCallback(env, jobj));
-=======
-jlong Java_org_rocksdb_Logger_createNewLoggerDbOptions(
-    JNIEnv* env, jobject jobj, jlong jdb_options) {
-  auto* sptr_logger = new std::shared_ptr<rocksdb::LoggerJniCallback>(
-    new rocksdb::LoggerJniCallback(env, jobj));
->>>>>>> blood in blood out
 
   // set log level
   auto* db_options = reinterpret_cast<rocksdb::DBOptions*>(jdb_options);
@@ -398,21 +261,12 @@ jlong Java_org_rocksdb_Logger_createNewLoggerDbOptions(
  * Method:    setInfoLogLevel
  * Signature: (JB)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_Logger_setInfoLogLevel(JNIEnv* /*env*/, jobject /*jobj*/,
                                              jlong jhandle, jbyte jlog_level) {
   auto* handle =
       reinterpret_cast<std::shared_ptr<rocksdb::LoggerJniCallback>*>(jhandle);
   handle->get()->SetInfoLogLevel(
       static_cast<rocksdb::InfoLogLevel>(jlog_level));
-=======
-void Java_org_rocksdb_Logger_setInfoLogLevel(
-    JNIEnv* env, jobject jobj, jlong jhandle, jbyte jlog_level) {
-  auto* handle =
-      reinterpret_cast<std::shared_ptr<rocksdb::LoggerJniCallback> *>(jhandle);
-  handle->get()->
-      SetInfoLogLevel(static_cast<rocksdb::InfoLogLevel>(jlog_level));
->>>>>>> blood in blood out
 }
 
 /*
@@ -420,17 +274,10 @@ void Java_org_rocksdb_Logger_setInfoLogLevel(
  * Method:    infoLogLevel
  * Signature: (J)B
  */
-<<<<<<< HEAD
 jbyte Java_org_rocksdb_Logger_infoLogLevel(JNIEnv* /*env*/, jobject /*jobj*/,
                                            jlong jhandle) {
   auto* handle =
       reinterpret_cast<std::shared_ptr<rocksdb::LoggerJniCallback>*>(jhandle);
-=======
-jbyte Java_org_rocksdb_Logger_infoLogLevel(
-    JNIEnv* env, jobject jobj, jlong jhandle) {
-  auto* handle =
-      reinterpret_cast<std::shared_ptr<rocksdb::LoggerJniCallback> *>(jhandle);
->>>>>>> blood in blood out
   return static_cast<jbyte>(handle->get()->GetInfoLogLevel());
 }
 
@@ -439,16 +286,9 @@ jbyte Java_org_rocksdb_Logger_infoLogLevel(
  * Method:    disposeInternal
  * Signature: (J)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_Logger_disposeInternal(JNIEnv* /*env*/, jobject /*jobj*/,
                                              jlong jhandle) {
   auto* handle =
       reinterpret_cast<std::shared_ptr<rocksdb::LoggerJniCallback>*>(jhandle);
-=======
-void Java_org_rocksdb_Logger_disposeInternal(
-    JNIEnv* env, jobject jobj, jlong jhandle) {
-  auto* handle =
-      reinterpret_cast<std::shared_ptr<rocksdb::LoggerJniCallback> *>(jhandle);
->>>>>>> blood in blood out
   delete handle;  // delete std::shared_ptr
 }

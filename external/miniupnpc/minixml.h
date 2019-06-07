@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* $Id: minixml.h,v 1.6 2006/11/30 11:47:21 nanard Exp $ */
-=======
-/* $Id: minixml.h,v 1.7 2012/09/27 15:42:10 nanard Exp $ */
->>>>>>> blood in blood out
 /* minimal xml parser
  *
  * Project : miniupnp

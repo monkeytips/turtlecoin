@@ -35,11 +35,8 @@ HttpClient::~HttpClient() {
 }
 
 void HttpClient::request(const HttpRequest &req, HttpResponse &res) {
-<<<<<<< HEAD
   std::scoped_lock lock(m_mutex);
 
-=======
->>>>>>> blood in blood out
   if (!m_connected) {
     connect();
   }

@@ -45,10 +45,7 @@
 #include "rocksdb/filter_policy.h"
 #include "rocksdb/memtablerep.h"
 #include "rocksdb/options.h"
-<<<<<<< HEAD
 #include "options/cf_options.h"
-=======
->>>>>>> blood in blood out
 #include "rocksdb/perf_context.h"
 #include "rocksdb/persistent_cache.h"
 #include "rocksdb/rate_limiter.h"
@@ -103,20 +100,13 @@ DEFINE_string(
     "readreverse,"
     "compact,"
     "compactall,"
-<<<<<<< HEAD
-=======
-    "readrandom,"
->>>>>>> blood in blood out
     "multireadrandom,"
     "readseq,"
     "readtocache,"
     "readreverse,"
     "readwhilewriting,"
     "readwhilemerging,"
-<<<<<<< HEAD
     "readwhilescanning,"
-=======
->>>>>>> blood in blood out
     "readrandomwriterandom,"
     "updaterandom,"
     "xorupdaterandom,"
@@ -159,16 +149,10 @@ DEFINE_string(
     "reads\n"
     "\treadwhilemerging      -- 1 merger, N threads doing random "
     "reads\n"
-<<<<<<< HEAD
     "\treadwhilescanning     -- 1 thread doing full table scan, "
     "N threads doing random reads\n"
     "\treadrandomwriterandom -- N threads doing random-read, "
     "random-write\n"
-=======
-    "\treadrandomwriterandom -- N threads doing random-read, "
-    "random-write\n"
-    "\tprefixscanrandom      -- prefix scan N times in random order\n"
->>>>>>> blood in blood out
     "\tupdaterandom  -- N threads doing read-modify-write for random "
     "keys\n"
     "\txorupdaterandom  -- N threads doing read-XOR-write for "
@@ -268,11 +252,7 @@ DEFINE_bool(use_uint64_comparator, false, "use Uint64 user comparator");
 
 DEFINE_int64(batch_size, 1, "Batch size");
 
-<<<<<<< HEAD
 static bool ValidateKeySize(const char* /*flagname*/, int32_t /*value*/) {
-=======
-static bool ValidateKeySize(const char* flagname, int32_t value) {
->>>>>>> blood in blood out
   return true;
 }
 
@@ -321,11 +301,7 @@ DEFINE_int64(write_buffer_size, rocksdb::Options().write_buffer_size,
 DEFINE_int32(max_write_buffer_number,
              rocksdb::Options().max_write_buffer_number,
              "The number of in-memory memtables. Each memtable is of size"
-<<<<<<< HEAD
              " write_buffer_size bytes.");
-=======
-             "write_buffer_size.");
->>>>>>> blood in blood out
 
 DEFINE_int32(min_write_buffer_number_to_merge,
              rocksdb::Options().min_write_buffer_number_to_merge,
@@ -456,25 +432,19 @@ DEFINE_int32(ops_between_duration_checks, 1000,
 DEFINE_bool(pin_l0_filter_and_index_blocks_in_cache, false,
             "Pin index/filter blocks of L0 files in block cache.");
 
-<<<<<<< HEAD
 DEFINE_bool(
     pin_top_level_index_and_filter, false,
     "Pin top-level index of partitioned index/filter blocks in block cache.");
 
-=======
->>>>>>> blood in blood out
 DEFINE_int32(block_size,
              static_cast<int32_t>(rocksdb::BlockBasedTableOptions().block_size),
              "Number of bytes in a block.");
 
-<<<<<<< HEAD
 DEFINE_int32(
     format_version,
     static_cast<int32_t>(rocksdb::BlockBasedTableOptions().format_version),
     "Format version of SST files.");
 
-=======
->>>>>>> blood in blood out
 DEFINE_int32(block_restart_interval,
              rocksdb::BlockBasedTableOptions().block_restart_interval,
              "Number of keys between restart points "
@@ -493,12 +463,9 @@ DEFINE_bool(enable_index_compression,
             rocksdb::BlockBasedTableOptions().enable_index_compression,
             "Compress the index block");
 
-<<<<<<< HEAD
 DEFINE_bool(block_align, rocksdb::BlockBasedTableOptions().block_align,
             "Align data blocks on page size");
 
-=======
->>>>>>> blood in blood out
 DEFINE_int64(compressed_cache_size, -1,
              "Number of bytes to use as a cache of compressed data.");
 
@@ -558,11 +525,8 @@ DEFINE_bool(read_cache_direct_write, true,
 DEFINE_bool(read_cache_direct_read, true,
             "Whether to use Direct IO for reading from read cache");
 
-<<<<<<< HEAD
 DEFINE_bool(use_keep_filter, false, "Whether to use a noop compaction filter");
 
-=======
->>>>>>> blood in blood out
 static bool ValidateCacheNumshardbits(const char* flagname, int32_t value) {
   if (value >= 20) {
     fprintf(stderr, "Invalid value for --%s: %d, must be < 20\n",
@@ -738,11 +702,7 @@ DEFINE_bool(blob_db_enable_gc, false, "Enable BlobDB garbage collection.");
 
 DEFINE_bool(blob_db_is_fifo, false, "Enable FIFO eviction strategy in BlobDB.");
 
-<<<<<<< HEAD
 DEFINE_uint64(blob_db_max_db_size, 0,
-=======
-DEFINE_uint64(blob_db_dir_size, 0,
->>>>>>> blood in blood out
               "Max size limit of the directory where blob files are stored.");
 
 DEFINE_uint64(blob_db_max_ttl_range, 86400,
@@ -935,7 +895,6 @@ DEFINE_bool(rate_limiter_auto_tuned, false,
             "Enable dynamic adjustment of rate limit according to demand for "
             "background I/O");
 
-<<<<<<< HEAD
 
 DEFINE_bool(sine_write_rate, false,
             "Use a sine wave write_rate_limit");
@@ -955,8 +914,6 @@ DEFINE_double(sine_c, 0,
 DEFINE_double(sine_d, 1,
              "D in f(x) = A sin(bx + c) + d");
 
-=======
->>>>>>> blood in blood out
 DEFINE_bool(rate_limit_bg_reads, false,
             "Use options.rate_limiter on compaction reads");
 
@@ -995,11 +952,7 @@ DEFINE_bool(use_direct_reads, rocksdb::Options().use_direct_reads,
 
 DEFINE_bool(use_direct_io_for_flush_and_compaction,
             rocksdb::Options().use_direct_io_for_flush_and_compaction,
-<<<<<<< HEAD
             "Use O_DIRECT for background flush and compaction writes");
-=======
-            "Use O_DIRECT for background flush and compaction I/O");
->>>>>>> blood in blood out
 
 DEFINE_bool(advise_random_on_open, rocksdb::Options().advise_random_on_open,
             "Advise random access on table file open");
@@ -1071,20 +1024,14 @@ DEFINE_int32(memtable_insert_with_hint_prefix_size, 0,
              "memtable insert with hint with the given prefix size.");
 DEFINE_bool(enable_io_prio, false, "Lower the background flush/compaction "
             "threads' IO priority");
-<<<<<<< HEAD
 DEFINE_bool(enable_cpu_prio, false, "Lower the background flush/compaction "
             "threads' CPU priority");
-=======
->>>>>>> blood in blood out
 DEFINE_bool(identity_as_first_hash, false, "the first hash function of cuckoo "
             "table becomes an identity function. This is only valid when key "
             "is 8 bytes");
 DEFINE_bool(dump_malloc_stats, true, "Dump malloc stats in LOG ");
-<<<<<<< HEAD
 DEFINE_uint64(stats_dump_period_sec, rocksdb::Options().stats_dump_period_sec,
               "Gap between printing stats to log in seconds");
-=======
->>>>>>> blood in blood out
 
 enum RepFactory {
   kSkipList,
@@ -1560,10 +1507,7 @@ class Stats {
  private:
   int id_;
   uint64_t start_;
-<<<<<<< HEAD
   uint64_t sine_interval_;
-=======
->>>>>>> blood in blood out
   uint64_t finish_;
   double seconds_;
   uint64_t done_;
@@ -1596,10 +1540,7 @@ class Stats {
     bytes_ = 0;
     seconds_ = 0;
     start_ = FLAGS_env->NowMicros();
-<<<<<<< HEAD
     sine_interval_ = FLAGS_env->NowMicros();
-=======
->>>>>>> blood in blood out
     finish_ = start_;
     last_report_finish_ = start_;
     message_.clear();
@@ -1672,7 +1613,6 @@ class Stats {
     }
   }
 
-<<<<<<< HEAD
   void ResetSineInterval() {
     sine_interval_ = FLAGS_env->NowMicros();
   }
@@ -1685,8 +1625,6 @@ class Stats {
     return start_;
   }
 
-=======
->>>>>>> blood in blood out
   void ResetLastOpTime() {
     // Set to now to avoid latency from calls to SleepForMicroseconds
     last_op_finish_ = FLAGS_env->NowMicros();
@@ -2049,7 +1987,6 @@ class Benchmark {
     return true;
   }
 
-<<<<<<< HEAD
   inline bool CompressSlice(const CompressionContext& compression_ctx,
                             const Slice& input, std::string* compressed) {
     bool ok = true;
@@ -2073,43 +2010,14 @@ class Benchmark {
       case rocksdb::kLZ4HCCompression:
         ok = LZ4HC_Compress(compression_ctx, 2, input.data(), input.size(),
                             compressed);
-=======
-  inline bool CompressSlice(const Slice& input, std::string* compressed) {
-    bool ok = true;
-    switch (FLAGS_compression_type_e) {
-      case rocksdb::kSnappyCompression:
-        ok = Snappy_Compress(Options().compression_opts, input.data(),
-                             input.size(), compressed);
-        break;
-      case rocksdb::kZlibCompression:
-        ok = Zlib_Compress(Options().compression_opts, 2, input.data(),
-                           input.size(), compressed);
-        break;
-      case rocksdb::kBZip2Compression:
-        ok = BZip2_Compress(Options().compression_opts, 2, input.data(),
-                            input.size(), compressed);
-        break;
-      case rocksdb::kLZ4Compression:
-        ok = LZ4_Compress(Options().compression_opts, 2, input.data(),
-                          input.size(), compressed);
-        break;
-      case rocksdb::kLZ4HCCompression:
-        ok = LZ4HC_Compress(Options().compression_opts, 2, input.data(),
-                            input.size(), compressed);
->>>>>>> blood in blood out
         break;
       case rocksdb::kXpressCompression:
         ok = XPRESS_Compress(input.data(),
           input.size(), compressed);
         break;
       case rocksdb::kZSTD:
-<<<<<<< HEAD
         ok = ZSTD_Compress(compression_ctx, input.data(), input.size(),
                            compressed);
-=======
-        ok = ZSTD_Compress(Options().compression_opts, input.data(),
-                           input.size(), compressed);
->>>>>>> blood in blood out
         break;
       default:
         ok = false;
@@ -2191,14 +2099,10 @@ class Benchmark {
       const int len = FLAGS_block_size;
       std::string input_str(len, 'y');
       std::string compressed;
-<<<<<<< HEAD
       CompressionContext compression_ctx(FLAGS_compression_type_e,
                                          Options().compression_opts);
       bool result =
           CompressSlice(compression_ctx, Slice(input_str), &compressed);
-=======
-      bool result = CompressSlice(Slice(input_str), &compressed);
->>>>>>> blood in blood out
 
       if (!result) {
         fprintf(stdout, "WARNING: %s compression is not enabled\n",
@@ -2286,14 +2190,9 @@ class Benchmark {
     explicit ExpiredTimeFilter(
         const std::shared_ptr<TimestampEmulator>& timestamp_emulator)
         : timestamp_emulator_(timestamp_emulator) {}
-<<<<<<< HEAD
     bool Filter(int /*level*/, const Slice& key,
                 const Slice& /*existing_value*/, std::string* /*new_value*/,
                 bool* /*value_changed*/) const override {
-=======
-    bool Filter(int level, const Slice& key, const Slice& existing_value,
-                std::string* new_value, bool* value_changed) const override {
->>>>>>> blood in blood out
       return KeyExpired(timestamp_emulator_.get(), key);
     }
     const char* Name() const override { return "ExpiredTimeFilter"; }
@@ -2302,7 +2201,6 @@ class Benchmark {
     std::shared_ptr<TimestampEmulator> timestamp_emulator_;
   };
 
-<<<<<<< HEAD
   class KeepFilter : public CompactionFilter {
    public:
     virtual bool Filter(int /*level*/, const Slice& /*key*/,
@@ -2314,8 +2212,6 @@ class Benchmark {
     virtual const char* Name() const override { return "KeepFilter"; }
   };
 
-=======
->>>>>>> blood in blood out
   std::shared_ptr<Cache> NewCache(int64_t capacity) {
     if (capacity <= 0) {
       return nullptr;
@@ -2359,18 +2255,11 @@ class Benchmark {
         merge_keys_(FLAGS_merge_keys < 0 ? FLAGS_num : FLAGS_merge_keys),
         report_file_operations_(FLAGS_report_file_operations),
 #ifndef ROCKSDB_LITE
-<<<<<<< HEAD
         use_blob_db_(FLAGS_use_blob_db)
 #else
         use_blob_db_(false)
 #endif  // !ROCKSDB_LITE
   {
-=======
-        use_blob_db_(FLAGS_use_blob_db) {
-#else
-        use_blob_db_(false) {
-#endif  // !ROCKSDB_LITE
->>>>>>> blood in blood out
     // use simcache instead of cache
     if (FLAGS_simcache_size >= 0) {
       if (FLAGS_cache_numshardbits >= 1) {
@@ -2699,12 +2588,9 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       } else if (name == "readwhilemerging") {
         num_threads++;  // Add extra thread for writing
         method = &Benchmark::ReadWhileMerging;
-<<<<<<< HEAD
       } else if (name == "readwhilescanning") {
         num_threads++;  // Add extra thread for scaning
         method = &Benchmark::ReadWhileScanning;
-=======
->>>>>>> blood in blood out
       } else if (name == "readrandomwriterandom") {
         method = &Benchmark::ReadRandomWriteRandom;
       } else if (name == "readrandommergerandom") {
@@ -3019,20 +2905,13 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     int64_t produced = 0;
     bool ok = true;
     std::string compressed;
-<<<<<<< HEAD
     CompressionContext compression_ctx(FLAGS_compression_type_e,
                                        Options().compression_opts);
-=======
->>>>>>> blood in blood out
 
     // Compress 1G
     while (ok && bytes < int64_t(1) << 30) {
       compressed.clear();
-<<<<<<< HEAD
       ok = CompressSlice(compression_ctx, input, &compressed);
-=======
-      ok = CompressSlice(input, &compressed);
->>>>>>> blood in blood out
       produced += compressed.size();
       bytes += input.size();
       thread->stats.FinishedOps(nullptr, nullptr, 1, kCompress);
@@ -3054,15 +2933,11 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     Slice input = gen.Generate(FLAGS_block_size);
     std::string compressed;
 
-<<<<<<< HEAD
     UncompressionContext uncompression_ctx(FLAGS_compression_type_e);
     CompressionContext compression_ctx(FLAGS_compression_type_e,
                                        Options().compression_opts);
 
     bool ok = CompressSlice(compression_ctx, input, &compressed);
-=======
-    bool ok = CompressSlice(input, &compressed);
->>>>>>> blood in blood out
     int64_t bytes = 0;
     int decompress_size;
     while (ok && bytes < 1024 * 1048576) {
@@ -3082,13 +2957,8 @@ void VerifyDBFromDB(std::string& truth_db_name) {
           break;
         }
       case rocksdb::kZlibCompression:
-<<<<<<< HEAD
         uncompressed = Zlib_Uncompress(uncompression_ctx, compressed.data(),
                                        compressed.size(), &decompress_size, 2);
-=======
-        uncompressed = Zlib_Uncompress(compressed.data(), compressed.size(),
-                                       &decompress_size, 2);
->>>>>>> blood in blood out
         ok = uncompressed != nullptr;
         break;
       case rocksdb::kBZip2Compression:
@@ -3097,7 +2967,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
         ok = uncompressed != nullptr;
         break;
       case rocksdb::kLZ4Compression:
-<<<<<<< HEAD
         uncompressed = LZ4_Uncompress(uncompression_ctx, compressed.data(),
                                       compressed.size(), &decompress_size, 2);
         ok = uncompressed != nullptr;
@@ -3105,15 +2974,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       case rocksdb::kLZ4HCCompression:
         uncompressed = LZ4_Uncompress(uncompression_ctx, compressed.data(),
                                       compressed.size(), &decompress_size, 2);
-=======
-        uncompressed = LZ4_Uncompress(compressed.data(), compressed.size(),
-                                      &decompress_size, 2);
-        ok = uncompressed != nullptr;
-        break;
-      case rocksdb::kLZ4HCCompression:
-        uncompressed = LZ4_Uncompress(compressed.data(), compressed.size(),
-                                      &decompress_size, 2);
->>>>>>> blood in blood out
         ok = uncompressed != nullptr;
         break;
       case rocksdb::kXpressCompression:
@@ -3122,13 +2982,8 @@ void VerifyDBFromDB(std::string& truth_db_name) {
         ok = uncompressed != nullptr;
         break;
       case rocksdb::kZSTD:
-<<<<<<< HEAD
         uncompressed = ZSTD_Uncompress(uncompression_ctx, compressed.data(),
                                        compressed.size(), &decompress_size);
-=======
-        uncompressed = ZSTD_Uncompress(compressed.data(), compressed.size(),
-                                       &decompress_size);
->>>>>>> blood in blood out
         ok = uncompressed != nullptr;
         break;
       default:
@@ -3164,11 +3019,8 @@ void VerifyDBFromDB(std::string& truth_db_name) {
               FLAGS_options_file.c_str(), s.ToString().c_str());
       exit(1);
     }
-<<<<<<< HEAD
 #else
     (void)opts;
-=======
->>>>>>> blood in blood out
 #endif
     return false;
   }
@@ -3353,11 +3205,8 @@ void VerifyDBFromDB(std::string& truth_db_name) {
           FLAGS_cache_index_and_filter_blocks;
       block_based_options.pin_l0_filter_and_index_blocks_in_cache =
           FLAGS_pin_l0_filter_and_index_blocks_in_cache;
-<<<<<<< HEAD
       block_based_options.pin_top_level_index_and_filter =
           FLAGS_pin_top_level_index_and_filter;
-=======
->>>>>>> blood in blood out
       if (FLAGS_cache_high_pri_pool_ratio > 1e-6) {  // > 0.0 + eps
         block_based_options.cache_index_and_filter_blocks_with_high_priority =
             true;
@@ -3369,19 +3218,12 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       block_based_options.index_block_restart_interval =
           FLAGS_index_block_restart_interval;
       block_based_options.filter_policy = filter_policy_;
-<<<<<<< HEAD
       block_based_options.format_version =
           static_cast<uint32_t>(FLAGS_format_version);
       block_based_options.read_amp_bytes_per_bit = FLAGS_read_amp_bytes_per_bit;
       block_based_options.enable_index_compression =
           FLAGS_enable_index_compression;
       block_based_options.block_align = FLAGS_block_align;
-=======
-      block_based_options.format_version = 2;
-      block_based_options.read_amp_bytes_per_bit = FLAGS_read_amp_bytes_per_bit;
-      block_based_options.enable_index_compression =
-          FLAGS_enable_index_compression;
->>>>>>> blood in blood out
       if (FLAGS_read_cache_path != "") {
 #ifndef ROCKSDB_LITE
         Status rc_status;
@@ -3540,17 +3382,13 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     options.wal_dir = FLAGS_wal_dir;
     options.create_if_missing = !FLAGS_use_existing_db;
     options.dump_malloc_stats = FLAGS_dump_malloc_stats;
-<<<<<<< HEAD
     options.stats_dump_period_sec =
         static_cast<unsigned int>(FLAGS_stats_dump_period_sec);
-=======
->>>>>>> blood in blood out
 
     options.compression_opts.level = FLAGS_compression_level;
     options.compression_opts.max_dict_bytes = FLAGS_compression_max_dict_bytes;
     options.compression_opts.zstd_max_train_bytes =
         FLAGS_compression_zstd_max_train_bytes;
-<<<<<<< HEAD
     if (FLAGS_cache_size) {
       // If this is a block based table, also need to set block_cache
       if (options.table_factory->Name() == BlockBasedTableFactory::kName &&
@@ -3561,8 +3399,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
         table_options->block_cache = cache_;
       }
     }
-=======
->>>>>>> blood in blood out
     if (FLAGS_row_cache_size) {
       if (FLAGS_cache_numshardbits >= 1) {
         options.row_cache =
@@ -3575,7 +3411,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       FLAGS_env->LowerThreadPoolIOPriority(Env::LOW);
       FLAGS_env->LowerThreadPoolIOPriority(Env::HIGH);
     }
-<<<<<<< HEAD
     if (FLAGS_enable_cpu_prio) {
       FLAGS_env->LowerThreadPoolCPUPriority(Env::LOW);
       FLAGS_env->LowerThreadPoolCPUPriority(Env::HIGH);
@@ -3584,9 +3419,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     if (FLAGS_sine_write_rate) {
       FLAGS_benchmark_write_rate_limit = static_cast<uint64_t>(SineRate(0));
     }
-=======
-    options.env = FLAGS_env;
->>>>>>> blood in blood out
 
     if (FLAGS_rate_limiter_bytes_per_sec > 0) {
       if (FLAGS_rate_limit_bg_reads &&
@@ -3618,15 +3450,12 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       }
       options.wal_dir = wal_dir;
     }
-<<<<<<< HEAD
 
     // KeepFilter is a noop filter, this can be used to test compaction filter
     if (FLAGS_use_keep_filter) {
       options.compaction_filter = new KeepFilter();
       fprintf(stdout, "A noop compaction filter is used\n");
     }
-=======
->>>>>>> blood in blood out
   }
 
   void Open(Options* opts) {
@@ -3726,11 +3555,7 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       blob_db::BlobDBOptions blob_db_options;
       blob_db_options.enable_garbage_collection = FLAGS_blob_db_enable_gc;
       blob_db_options.is_fifo = FLAGS_blob_db_is_fifo;
-<<<<<<< HEAD
       blob_db_options.max_db_size = FLAGS_blob_db_max_db_size;
-=======
-      blob_db_options.blob_dir_size = FLAGS_blob_db_dir_size;
->>>>>>> blood in blood out
       blob_db_options.ttl_range_secs = FLAGS_blob_db_ttl_range_secs;
       blob_db_options.min_blob_size = FLAGS_blob_db_min_blob_size;
       blob_db_options.bytes_per_sync = FLAGS_blob_db_bytes_per_sync;
@@ -3777,18 +3602,9 @@ void VerifyDBFromDB(std::string& truth_db_name) {
 
   class KeyGenerator {
    public:
-<<<<<<< HEAD
     KeyGenerator(Random64* rand, WriteMode mode, uint64_t num,
                  uint64_t /*num_per_set*/ = 64 * 1024)
         : rand_(rand), mode_(mode), num_(num), next_(0) {
-=======
-    KeyGenerator(Random64* rand, WriteMode mode,
-        uint64_t num, uint64_t num_per_set = 64 * 1024)
-      : rand_(rand),
-        mode_(mode),
-        num_(num),
-        next_(0) {
->>>>>>> blood in blood out
       if (mode_ == UNIQUE_RANDOM) {
         // NOTE: if memory consumption of this approach becomes a concern,
         // we can either break it into pieces and only random shuffle a section
@@ -3842,13 +3658,10 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     }
   }
 
-<<<<<<< HEAD
   double SineRate(double x) {
     return FLAGS_sine_a*sin((FLAGS_sine_b*x) + FLAGS_sine_c) + FLAGS_sine_d;
   }
 
-=======
->>>>>>> blood in blood out
   void DoWrite(ThreadState* thread, WriteMode write_mode) {
     const int test_duration = write_mode == RANDOM ? FLAGS_duration : 0;
     const int64_t num_ops = writes_ == 0 ? num_ : writes_;
@@ -3994,7 +3807,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       }
       thread->stats.FinishedOps(db_with_cfh, db_with_cfh->db,
                                 entries_per_batch_, kWrite);
-<<<<<<< HEAD
       if (FLAGS_sine_write_rate) {
         uint64_t now = FLAGS_env->NowMicros();
 
@@ -4016,8 +3828,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
                   NewGenericRateLimiter(write_rate));
         }
       }
-=======
->>>>>>> blood in blood out
       if (!s.ok()) {
         fprintf(stderr, "put error: %s\n", s.ToString().c_str());
         exit(1);
@@ -4103,21 +3913,13 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       for (size_t i = 0; i < num_db; i++) {
         auto db = db_list[i];
         auto compactionOptions = CompactionOptions();
-<<<<<<< HEAD
         compactionOptions.compression = FLAGS_compression_type_e;
-=======
->>>>>>> blood in blood out
         auto options = db->GetOptions();
         MutableCFOptions mutable_cf_options(options);
         for (size_t j = 0; j < sorted_runs[i].size(); j++) {
           compactionOptions.output_file_size_limit =
-<<<<<<< HEAD
               MaxFileSizeForLevel(mutable_cf_options,
                   static_cast<int>(output_level), compaction_style);
-=======
-              mutable_cf_options.MaxFileSizeForLevel(
-                  static_cast<int>(output_level));
->>>>>>> blood in blood out
           std::cout << sorted_runs[i][j].size() << std::endl;
           db->CompactFiles(compactionOptions, {sorted_runs[i][j].back().name,
                                                sorted_runs[i][j].front().name},
@@ -4163,21 +3965,13 @@ void VerifyDBFromDB(std::string& truth_db_name) {
       for (size_t i = 0; i < num_db; i++) {
         auto db = db_list[i];
         auto compactionOptions = CompactionOptions();
-<<<<<<< HEAD
         compactionOptions.compression = FLAGS_compression_type_e;
-=======
->>>>>>> blood in blood out
         auto options = db->GetOptions();
         MutableCFOptions mutable_cf_options(options);
         for (size_t j = 0; j < sorted_runs[i].size(); j++) {
           compactionOptions.output_file_size_limit =
-<<<<<<< HEAD
               MaxFileSizeForLevel(mutable_cf_options,
                   static_cast<int>(output_level), compaction_style);
-=======
-              mutable_cf_options.MaxFileSizeForLevel(
-                  static_cast<int>(output_level));
->>>>>>> blood in blood out
           db->CompactFiles(
               compactionOptions,
               {sorted_runs[i][j].back().name, sorted_runs[i][j].front().name},
@@ -4338,12 +4132,9 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     }
     return Status::OK();
 #else
-<<<<<<< HEAD
     (void)thread;
     (void)compaction_style;
     (void)write_mode;
-=======
->>>>>>> blood in blood out
     fprintf(stderr, "Rocksdb Lite doesn't support filldeterministic\n");
     return Status::NotSupported(
         "Rocksdb Lite doesn't support filldeterministic");
@@ -4838,7 +4629,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     thread->stats.AddBytes(bytes);
   }
 
-<<<<<<< HEAD
   void ReadWhileScanning(ThreadState* thread) {
     if (thread->tid > 0) {
       ReadRandom(thread);
@@ -4878,8 +4668,6 @@ void VerifyDBFromDB(std::string& truth_db_name) {
     delete iter;
   }
 
-=======
->>>>>>> blood in blood out
   // Given a key K and value V, this puts (K+"0", V), (K+"1", V), (K+"2", V)
   // in DB atomically i.e in a single batch. Also refer GetMany.
   Status PutMany(DB* db, const WriteOptions& writeoptions, const Slice& key,

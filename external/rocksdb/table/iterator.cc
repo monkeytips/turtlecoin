@@ -111,13 +111,8 @@ class EmptyIterator : public Iterator {
  public:
   explicit EmptyIterator(const Status& s) : status_(s) { }
   virtual bool Valid() const override { return false; }
-<<<<<<< HEAD
   virtual void Seek(const Slice& /*target*/) override {}
   virtual void SeekForPrev(const Slice& /*target*/) override {}
-=======
-  virtual void Seek(const Slice& target) override {}
-  virtual void SeekForPrev(const Slice& target) override {}
->>>>>>> blood in blood out
   virtual void SeekToFirst() override {}
   virtual void SeekToLast() override {}
   virtual void Next() override { assert(false); }
@@ -140,13 +135,8 @@ class EmptyInternalIterator : public InternalIterator {
  public:
   explicit EmptyInternalIterator(const Status& s) : status_(s) {}
   virtual bool Valid() const override { return false; }
-<<<<<<< HEAD
   virtual void Seek(const Slice& /*target*/) override {}
   virtual void SeekForPrev(const Slice& /*target*/) override {}
-=======
-  virtual void Seek(const Slice& target) override {}
-  virtual void SeekForPrev(const Slice& target) override {}
->>>>>>> blood in blood out
   virtual void SeekToFirst() override {}
   virtual void SeekToLast() override {}
   virtual void Next() override { assert(false); }

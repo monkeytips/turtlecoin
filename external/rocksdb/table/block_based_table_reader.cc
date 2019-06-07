@@ -79,19 +79,11 @@ Status ReadBlockFromFile(
     std::unique_ptr<Block>* result, const ImmutableCFOptions& ioptions,
     bool do_uncompress, const Slice& compression_dict,
     const PersistentCacheOptions& cache_options, SequenceNumber global_seqno,
-<<<<<<< HEAD
     size_t read_amp_bytes_per_bit, const bool immortal_file = false) {
   BlockContents contents;
   BlockFetcher block_fetcher(file, prefetch_buffer, footer, options, handle,
                              &contents, ioptions, do_uncompress,
                              compression_dict, cache_options, immortal_file);
-=======
-    size_t read_amp_bytes_per_bit) {
-  BlockContents contents;
-  BlockFetcher block_fetcher(file, prefetch_buffer, footer, options, handle,
-                             &contents, ioptions, do_uncompress,
-                             compression_dict, cache_options);
->>>>>>> blood in blood out
   Status s = block_fetcher.ReadBlockContents();
   if (s.ok()) {
     result->reset(new Block(std::move(contents), global_seqno,
@@ -103,21 +95,13 @@ Status ReadBlockFromFile(
 
 // Delete the resource that is held by the iterator.
 template <class ResourceType>
-<<<<<<< HEAD
 void DeleteHeldResource(void* arg, void* /*ignored*/) {
-=======
-void DeleteHeldResource(void* arg, void* ignored) {
->>>>>>> blood in blood out
   delete reinterpret_cast<ResourceType*>(arg);
 }
 
 // Delete the entry resided in the cache.
 template <class Entry>
-<<<<<<< HEAD
 void DeleteCachedEntry(const Slice& /*key*/, void* value) {
-=======
-void DeleteCachedEntry(const Slice& key, void* value) {
->>>>>>> blood in blood out
   auto entry = reinterpret_cast<Entry*>(value);
   delete entry;
 }
@@ -136,11 +120,7 @@ void ReleaseCachedEntry(void* arg, void* h) {
 void ForceReleaseCachedEntry(void* arg, void* h) {
   Cache* cache = reinterpret_cast<Cache*>(arg);
   Cache::Handle* handle = reinterpret_cast<Cache::Handle*>(h);
-<<<<<<< HEAD
   cache->Release(handle, true /* force_erase */);
-=======
-  cache->Release(handle, true);
->>>>>>> blood in blood out
 }
 
 Slice GetCacheKeyFromOffset(const char* cache_key_prefix,
@@ -193,7 +173,6 @@ Cache::Handle* GetEntryFromCache(Cache* block_cache, const Slice& key,
   return cache_handle;
 }
 
-<<<<<<< HEAD
 // For hash based index, return true if prefix_extractor and
 // prefix_extractor_block mismatch, false otherwise. This flag will be used
 // as total_order_seek via NewIndexIterator
@@ -216,8 +195,6 @@ bool PrefixExtractorChanged(const TableProperties* table_properties,
   }
 }
 
-=======
->>>>>>> blood in blood out
 }  // namespace
 
 // Index that allows binary search lookup in a two-level index structure.
@@ -234,11 +211,7 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
                        const InternalKeyComparator* icomparator,
                        IndexReader** index_reader,
                        const PersistentCacheOptions& cache_options,
-<<<<<<< HEAD
                        const int level, const bool index_key_includes_seq) {
-=======
-                       const int level) {
->>>>>>> blood in blood out
     std::unique_ptr<Block> index_block;
     auto s = ReadBlockFromFile(
         file, prefetch_buffer, footer, ReadOptions(), index_handle,
@@ -247,35 +220,23 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
         kDisableGlobalSequenceNumber, 0 /* read_amp_bytes_per_bit */);
 
     if (s.ok()) {
-<<<<<<< HEAD
       *index_reader = new PartitionIndexReader(
           table, icomparator, std::move(index_block), ioptions.statistics,
           level, index_key_includes_seq);
-=======
-      *index_reader =
-          new PartitionIndexReader(table, icomparator, std::move(index_block),
-                                   ioptions.statistics, level);
->>>>>>> blood in blood out
     }
 
     return s;
   }
 
   // return a two-level iterator: first level is on the partition index
-<<<<<<< HEAD
   virtual InternalIterator* NewIterator(IndexBlockIter* /*iter*/ = nullptr,
                                         bool /*dont_care*/ = true,
                                         bool fill_cache = true) override {
     Statistics* kNullStats = nullptr;
-=======
-  virtual InternalIterator* NewIterator(BlockIter* iter = nullptr,
-                                        bool dont_care = true) override {
->>>>>>> blood in blood out
     // Filters are already checked before seeking the index
     if (!partition_map_.empty()) {
       return NewTwoLevelIterator(
           new BlockBasedTable::PartitionedIndexIteratorState(
-<<<<<<< HEAD
               table_, &partition_map_, index_key_includes_seq_),
           index_block_->NewIterator<IndexBlockIter>(
               icomparator_, icomparator_->user_comparator(), nullptr,
@@ -291,14 +252,6 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
               kNullStats, true, index_key_includes_seq_),
           false, true, /* prefix_extractor */ nullptr, kIsIndex,
           index_key_includes_seq_);
-=======
-              table_, partition_map_.size() ? &partition_map_ : nullptr),
-          index_block_->NewIterator(icomparator_, nullptr, true));
-    } else {
-      return new BlockBasedTableIterator(
-          table_, ReadOptions(), *icomparator_,
-          index_block_->NewIterator(icomparator_, nullptr, true), false);
->>>>>>> blood in blood out
     }
     // TODO(myabandeh): Update TwoLevelIterator to be able to make use of
     // on-stack BlockIter while the state is on heap. Currentlly it assumes
@@ -309,7 +262,6 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
   virtual void CacheDependencies(bool pin) override {
     // Before read partitions, prefetch them to avoid lots of IOs
     auto rep = table_->rep_;
-<<<<<<< HEAD
     IndexBlockIter biter;
     BlockHandle handle;
     Statistics* kNullStats = nullptr;
@@ -323,14 +275,6 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
       // Empty index.
       return;
     }
-=======
-    BlockIter biter;
-    BlockHandle handle;
-    index_block_->NewIterator(icomparator_, &biter, true);
-    // Index partitions are assumed to be consecuitive. Prefetch them all.
-    // Read the first block offset
-    biter.SeekToFirst();
->>>>>>> blood in blood out
     Slice input = biter.value();
     Status s = handle.DecodeFrom(&input);
     assert(s.ok());
@@ -343,13 +287,10 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
 
     // Read the last block's offset
     biter.SeekToLast();
-<<<<<<< HEAD
     if (!biter.Valid()) {
       // Empty index.
       return;
     }
-=======
->>>>>>> blood in blood out
     input = biter.value();
     s = handle.DecodeFrom(&input);
     assert(s.ok());
@@ -363,12 +304,8 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
     std::unique_ptr<FilePrefetchBuffer> prefetch_buffer;
     auto& file = table_->rep_->file;
     prefetch_buffer.reset(new FilePrefetchBuffer());
-<<<<<<< HEAD
     s = prefetch_buffer->Prefetch(file.get(), prefetch_off,
       static_cast<size_t>(prefetch_len));
-=======
-    s = prefetch_buffer->Prefetch(file.get(), prefetch_off, prefetch_len);
->>>>>>> blood in blood out
 
     // After prefetch, read the partitions one by one
     biter.SeekToFirst();
@@ -420,7 +357,6 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
 
   virtual size_t ApproximateMemoryUsage() const override {
     assert(index_block_);
-<<<<<<< HEAD
     size_t usage = index_block_->ApproximateMemoryUsage();
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
     usage += malloc_usable_size((void*)this);
@@ -429,37 +365,24 @@ class PartitionIndexReader : public IndexReader, public Cleanable {
 #endif  // ROCKSDB_MALLOC_USABLE_SIZE
     // TODO(myabandeh): more accurate estimate of partition_map_ mem usage
     return usage;
-=======
-    return index_block_->ApproximateMemoryUsage();
->>>>>>> blood in blood out
   }
 
  private:
   PartitionIndexReader(BlockBasedTable* table,
                        const InternalKeyComparator* icomparator,
                        std::unique_ptr<Block>&& index_block, Statistics* stats,
-<<<<<<< HEAD
                        const int /*level*/, const bool index_key_includes_seq)
       : IndexReader(icomparator, stats),
         table_(table),
         index_block_(std::move(index_block)),
         index_key_includes_seq_(index_key_includes_seq) {
-=======
-                       const int level)
-      : IndexReader(icomparator, stats),
-        table_(table),
-        index_block_(std::move(index_block)) {
->>>>>>> blood in blood out
     assert(index_block_ != nullptr);
   }
   BlockBasedTable* table_;
   std::unique_ptr<Block> index_block_;
   std::unordered_map<uint64_t, BlockBasedTable::CachableEntry<Block>>
       partition_map_;
-<<<<<<< HEAD
   const bool index_key_includes_seq_;
-=======
->>>>>>> blood in blood out
 };
 
 // Index that allows binary search lookup for the first key of each block.
@@ -477,12 +400,8 @@ class BinarySearchIndexReader : public IndexReader {
                        const ImmutableCFOptions& ioptions,
                        const InternalKeyComparator* icomparator,
                        IndexReader** index_reader,
-<<<<<<< HEAD
                        const PersistentCacheOptions& cache_options,
                        const bool index_key_includes_seq) {
-=======
-                       const PersistentCacheOptions& cache_options) {
->>>>>>> blood in blood out
     std::unique_ptr<Block> index_block;
     auto s = ReadBlockFromFile(
         file, prefetch_buffer, footer, ReadOptions(), index_handle,
@@ -492,18 +411,13 @@ class BinarySearchIndexReader : public IndexReader {
 
     if (s.ok()) {
       *index_reader = new BinarySearchIndexReader(
-<<<<<<< HEAD
           icomparator, std::move(index_block), ioptions.statistics,
           index_key_includes_seq);
-=======
-          icomparator, std::move(index_block), ioptions.statistics);
->>>>>>> blood in blood out
     }
 
     return s;
   }
 
-<<<<<<< HEAD
   virtual InternalIterator* NewIterator(IndexBlockIter* iter = nullptr,
                                         bool /*dont_care*/ = true,
                                         bool /*dont_care*/ = true) override {
@@ -511,11 +425,6 @@ class BinarySearchIndexReader : public IndexReader {
     return index_block_->NewIterator<IndexBlockIter>(
         icomparator_, icomparator_->user_comparator(), iter, kNullStats, true,
         index_key_includes_seq_);
-=======
-  virtual InternalIterator* NewIterator(BlockIter* iter = nullptr,
-                                        bool dont_care = true) override {
-    return index_block_->NewIterator(icomparator_, iter, true);
->>>>>>> blood in blood out
   }
 
   virtual size_t size() const override { return index_block_->size(); }
@@ -525,7 +434,6 @@ class BinarySearchIndexReader : public IndexReader {
 
   virtual size_t ApproximateMemoryUsage() const override {
     assert(index_block_);
-<<<<<<< HEAD
     size_t usage = index_block_->ApproximateMemoryUsage();
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
     usage += malloc_usable_size((void*)this);
@@ -533,15 +441,11 @@ class BinarySearchIndexReader : public IndexReader {
     usage += sizeof(*this);
 #endif  // ROCKSDB_MALLOC_USABLE_SIZE
     return usage;
-=======
-    return index_block_->ApproximateMemoryUsage();
->>>>>>> blood in blood out
   }
 
  private:
   BinarySearchIndexReader(const InternalKeyComparator* icomparator,
                           std::unique_ptr<Block>&& index_block,
-<<<<<<< HEAD
                           Statistics* stats, const bool index_key_includes_seq)
       : IndexReader(icomparator, stats),
         index_block_(std::move(index_block)),
@@ -550,13 +454,6 @@ class BinarySearchIndexReader : public IndexReader {
   }
   std::unique_ptr<Block> index_block_;
   const bool index_key_includes_seq_;
-=======
-                          Statistics* stats)
-      : IndexReader(icomparator, stats), index_block_(std::move(index_block)) {
-    assert(index_block_ != nullptr);
-  }
-  std::unique_ptr<Block> index_block_;
->>>>>>> blood in blood out
 };
 
 // Index that leverages an internal hash table to quicken the lookup for a given
@@ -571,14 +468,9 @@ class HashIndexReader : public IndexReader {
                        const BlockHandle& index_handle,
                        InternalIterator* meta_index_iter,
                        IndexReader** index_reader,
-<<<<<<< HEAD
                        bool /*hash_index_allow_collision*/,
                        const PersistentCacheOptions& cache_options,
                        const bool index_key_includes_seq) {
-=======
-                       bool hash_index_allow_collision,
-                       const PersistentCacheOptions& cache_options) {
->>>>>>> blood in blood out
     std::unique_ptr<Block> index_block;
     auto s = ReadBlockFromFile(
         file, prefetch_buffer, footer, ReadOptions(), index_handle,
@@ -596,11 +488,7 @@ class HashIndexReader : public IndexReader {
 
     auto new_index_reader =
         new HashIndexReader(icomparator, std::move(index_block),
-<<<<<<< HEAD
                             ioptions.statistics, index_key_includes_seq);
-=======
-          ioptions.statistics);
->>>>>>> blood in blood out
     *index_reader = new_index_reader;
 
     // Get prefixes block
@@ -637,11 +525,7 @@ class HashIndexReader : public IndexReader {
         file, prefetch_buffer, footer, ReadOptions(), prefixes_meta_handle,
         &prefixes_meta_contents, ioptions, true /* decompress */,
         dummy_comp_dict /*compression dict*/, cache_options);
-<<<<<<< HEAD
     s = prefixes_meta_block_fetcher.ReadBlockContents();
-=======
-    prefixes_meta_block_fetcher.ReadBlockContents();
->>>>>>> blood in blood out
     if (!s.ok()) {
       // TODO: log error
       return Status::OK();
@@ -652,17 +536,12 @@ class HashIndexReader : public IndexReader {
                                  prefixes_meta_contents.data, &prefix_index);
     // TODO: log error
     if (s.ok()) {
-<<<<<<< HEAD
       new_index_reader->prefix_index_.reset(prefix_index);
-=======
-      new_index_reader->index_block_->SetBlockPrefixIndex(prefix_index);
->>>>>>> blood in blood out
     }
 
     return Status::OK();
   }
 
-<<<<<<< HEAD
   virtual InternalIterator* NewIterator(IndexBlockIter* iter = nullptr,
                                         bool total_order_seek = true,
                                         bool /*dont_care*/ = true) override {
@@ -670,11 +549,6 @@ class HashIndexReader : public IndexReader {
     return index_block_->NewIterator<IndexBlockIter>(
         icomparator_, icomparator_->user_comparator(), iter, kNullStats,
         total_order_seek, index_key_includes_seq_, prefix_index_.get());
-=======
-  virtual InternalIterator* NewIterator(BlockIter* iter = nullptr,
-                                        bool total_order_seek = true) override {
-    return index_block_->NewIterator(icomparator_, iter, total_order_seek);
->>>>>>> blood in blood out
   }
 
   virtual size_t size() const override { return index_block_->size(); }
@@ -684,7 +558,6 @@ class HashIndexReader : public IndexReader {
 
   virtual size_t ApproximateMemoryUsage() const override {
     assert(index_block_);
-<<<<<<< HEAD
     size_t usage = index_block_->ApproximateMemoryUsage();
     usage += prefixes_contents_.usable_size();
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
@@ -696,24 +569,15 @@ class HashIndexReader : public IndexReader {
     usage += sizeof(*this);
 #endif  // ROCKSDB_MALLOC_USABLE_SIZE
     return usage;
-=======
-    return index_block_->ApproximateMemoryUsage() +
-           prefixes_contents_.data.size();
->>>>>>> blood in blood out
   }
 
  private:
   HashIndexReader(const InternalKeyComparator* icomparator,
-<<<<<<< HEAD
                   std::unique_ptr<Block>&& index_block, Statistics* stats,
                   const bool index_key_includes_seq)
       : IndexReader(icomparator, stats),
         index_block_(std::move(index_block)),
         index_key_includes_seq_(index_key_includes_seq) {
-=======
-                  std::unique_ptr<Block>&& index_block, Statistics* stats)
-      : IndexReader(icomparator, stats), index_block_(std::move(index_block)) {
->>>>>>> blood in blood out
     assert(index_block_ != nullptr);
   }
 
@@ -721,13 +585,9 @@ class HashIndexReader : public IndexReader {
   }
 
   std::unique_ptr<Block> index_block_;
-<<<<<<< HEAD
   std::unique_ptr<BlockPrefixIndex> prefix_index_;
   BlockContents prefixes_contents_;
   const bool index_key_includes_seq_;
-=======
-  BlockContents prefixes_contents_;
->>>>>>> blood in blood out
 };
 
 // Helper function to setup the cache key's prefix for the Table.
@@ -868,22 +728,16 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
                              unique_ptr<RandomAccessFileReader>&& file,
                              uint64_t file_size,
                              unique_ptr<TableReader>* table_reader,
-<<<<<<< HEAD
                              const SliceTransform* prefix_extractor,
                              const bool prefetch_index_and_filter_in_cache,
                              const bool skip_filters, const int level,
                              const bool immortal_table) {
-=======
-                             const bool prefetch_index_and_filter_in_cache,
-                             const bool skip_filters, const int level) {
->>>>>>> blood in blood out
   table_reader->reset();
 
   Footer footer;
 
   std::unique_ptr<FilePrefetchBuffer> prefetch_buffer;
 
-<<<<<<< HEAD
   // prefetch both index and filters, down to all partitions
   const bool prefetch_all = prefetch_index_and_filter_in_cache || level == 0;
   const bool preload_all = !table_options.cache_index_and_filter_blocks;
@@ -895,23 +749,13 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
   // point we don't yet know the index type.
   const size_t kTailPrefetchSize =
       prefetch_all || preload_all ? 512 * 1024 : 4 * 1024;
-=======
-  // Before read footer, readahead backwards to prefetch data
-  const size_t kTailPrefetchSize = 512 * 1024;
->>>>>>> blood in blood out
   size_t prefetch_off;
   size_t prefetch_len;
   if (file_size < kTailPrefetchSize) {
     prefetch_off = 0;
-<<<<<<< HEAD
     prefetch_len = static_cast<size_t>(file_size);
   } else {
     prefetch_off = static_cast<size_t>(file_size - kTailPrefetchSize);
-=======
-    prefetch_len = file_size;
-  } else {
-    prefetch_off = file_size - kTailPrefetchSize;
->>>>>>> blood in blood out
     prefetch_len = kTailPrefetchSize;
   }
   Status s;
@@ -938,12 +782,8 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
   // raw pointer will be used to create HashIndexReader, whose reset may
   // access a dangling pointer.
   Rep* rep = new BlockBasedTable::Rep(ioptions, env_options, table_options,
-<<<<<<< HEAD
                                       internal_comparator, skip_filters,
                                       immortal_table);
-=======
-                                      internal_comparator, skip_filters);
->>>>>>> blood in blood out
   rep->file = std::move(file);
   rep->footer = footer;
   rep->index_type = table_options.index_type;
@@ -951,11 +791,7 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
   // We need to wrap data with internal_prefix_transform to make sure it can
   // handle prefix correctly.
   rep->internal_prefix_transform.reset(
-<<<<<<< HEAD
       new InternalKeySliceTransform(prefix_extractor));
-=======
-      new InternalKeySliceTransform(rep->ioptions.prefix_extractor));
->>>>>>> blood in blood out
   SetupCacheKeyPrefix(rep, file_size);
   unique_ptr<BlockBasedTable> new_table(new BlockBasedTable(rep));
 
@@ -1017,11 +853,7 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
     if (s.ok()) {
       s = ReadProperties(meta_iter->value(), rep->file.get(),
                          prefetch_buffer.get(), rep->footer, rep->ioptions,
-<<<<<<< HEAD
                          &table_properties, false /* compression_type_missing */);
-=======
-                         &table_properties);
->>>>>>> blood in blood out
     }
 
     if (!s.ok()) {
@@ -1039,15 +871,12 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
     ROCKS_LOG_ERROR(rep->ioptions.info_log,
                     "Cannot find Properties block from file.");
   }
-<<<<<<< HEAD
 #ifndef ROCKSDB_LITE
   if (rep->table_properties) {
     ParseSliceTransform(rep->table_properties->prefix_extractor_name,
                         &(rep->table_prefix_extractor));
   }
 #endif  // ROCKSDB_LITE
-=======
->>>>>>> blood in blood out
 
   // Read the compression dictionary meta block
   bool found_compression_dict;
@@ -1083,7 +912,6 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
     }
   }
 
-<<<<<<< HEAD
   // Read the table properties, if provided.
   if (rep->table_properties) {
     rep->whole_key_filtering &=
@@ -1098,8 +926,6 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
                                                 rep->ioptions.info_log);
   }
 
-=======
->>>>>>> blood in blood out
   // Read the range del meta block
   bool found_range_del_block;
   s = SeekToRangeDelBlock(meta_iter.get(), &found_range_del_block,
@@ -1125,7 +951,6 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
     }
   }
 
-<<<<<<< HEAD
   bool need_upper_bound_check =
       PrefixExtractorChanged(rep->table_properties.get(), prefix_extractor);
 
@@ -1152,29 +977,10 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
   const bool pin_filter =
       pin_all || (table_options.pin_top_level_index_and_filter &&
                   rep->filter_type == Rep::FilterType::kPartitionedFilter);
-=======
-  // Determine whether whole key filtering is supported.
-  if (rep->table_properties) {
-    rep->whole_key_filtering &=
-        IsFeatureSupported(*(rep->table_properties),
-                           BlockBasedTablePropertyNames::kWholeKeyFiltering,
-                           rep->ioptions.info_log);
-    rep->prefix_filtering &= IsFeatureSupported(
-        *(rep->table_properties),
-        BlockBasedTablePropertyNames::kPrefixFiltering, rep->ioptions.info_log);
-
-    rep->global_seqno = GetGlobalSequenceNumber(*(rep->table_properties),
-                                                rep->ioptions.info_log);
-  }
-
-  const bool pin =
-      rep->table_options.pin_l0_filter_and_index_blocks_in_cache && level == 0;
->>>>>>> blood in blood out
   // pre-fetching of blocks is turned on
   // Will use block cache for index/filter blocks access
   // Always prefetch index and filter for level 0
   if (table_options.cache_index_and_filter_blocks) {
-<<<<<<< HEAD
     assert(table_options.block_cache != nullptr);
     if (prefetch_index) {
       // Hack: Call NewIndexIterator() to implicitly add index to the
@@ -1186,36 +992,20 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
           need_upper_bound_check;
       unique_ptr<InternalIterator> iter(new_table->NewIndexIterator(
           ReadOptions(), disable_prefix_seek, nullptr, &index_entry));
-=======
-    if (prefetch_index_and_filter_in_cache || level == 0) {
-      assert(table_options.block_cache != nullptr);
-      // Hack: Call NewIndexIterator() to implicitly add index to the
-      // block_cache
-
-      CachableEntry<IndexReader> index_entry;
-      unique_ptr<InternalIterator> iter(
-          new_table->NewIndexIterator(ReadOptions(), nullptr, &index_entry));
->>>>>>> blood in blood out
       s = iter->status();
       if (s.ok()) {
         // This is the first call to NewIndexIterator() since we're in Open().
         // On success it should give us ownership of the `CachableEntry` by
         // populating `index_entry`.
         assert(index_entry.value != nullptr);
-<<<<<<< HEAD
         if (prefetch_all) {
           index_entry.value->CacheDependencies(pin_all);
         }
         if (pin_index) {
-=======
-        index_entry.value->CacheDependencies(pin);
-        if (pin) {
->>>>>>> blood in blood out
           rep->index_entry = std::move(index_entry);
         } else {
           index_entry.Release(table_options.block_cache.get());
         }
-<<<<<<< HEAD
       }
     }
     if (s.ok() && prefetch_filter) {
@@ -1233,23 +1023,6 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
         rep->filter_entry = filter_entry;
       } else {
         filter_entry.Release(table_options.block_cache.get());
-=======
-
-        // Hack: Call GetFilter() to implicitly add filter to the block_cache
-        auto filter_entry = new_table->GetFilter();
-        if (filter_entry.value != nullptr) {
-          filter_entry.value->CacheDependencies(pin);
-        }
-        // if pin_l0_filter_and_index_blocks_in_cache is true, and this is
-        // a level0 file, then save it in rep_->filter_entry; it will be
-        // released in the destructor only, hence it will be pinned in the
-        // cache while this reader is alive
-        if (pin) {
-          rep->filter_entry = filter_entry;
-        } else {
-          filter_entry.Release(table_options.block_cache.get());
-        }
->>>>>>> blood in blood out
       }
     }
   } else {
@@ -1265,32 +1038,20 @@ Status BlockBasedTable::Open(const ImmutableCFOptions& ioptions,
       // are hence follow the configuration for pin and prefetch regardless of
       // the value of cache_index_and_filter_blocks
       if (prefetch_index_and_filter_in_cache || level == 0) {
-<<<<<<< HEAD
         rep->index_reader->CacheDependencies(pin_all);
-=======
-        rep->index_reader->CacheDependencies(pin);
->>>>>>> blood in blood out
       }
 
       // Set filter block
       if (rep->filter_policy) {
         const bool is_a_filter_partition = true;
         auto filter = new_table->ReadFilter(
-<<<<<<< HEAD
             prefetch_buffer.get(), rep->filter_handle, !is_a_filter_partition,
             rep->table_prefix_extractor.get());
-=======
-            prefetch_buffer.get(), rep->filter_handle, !is_a_filter_partition);
->>>>>>> blood in blood out
         rep->filter.reset(filter);
         // Refer to the comment above about paritioned indexes always being
         // cached
         if (filter && (prefetch_index_and_filter_in_cache || level == 0)) {
-<<<<<<< HEAD
           filter->CacheDependencies(pin_all, rep->table_prefix_extractor.get());
-=======
-          filter->CacheDependencies(pin);
->>>>>>> blood in blood out
         }
       }
     } else {
@@ -1365,12 +1126,8 @@ Status BlockBasedTable::ReadMetaBlock(Rep* rep,
 
   *meta_block = std::move(meta);
   // meta block uses bytewise comparator.
-<<<<<<< HEAD
   iter->reset(meta_block->get()->NewIterator<DataBlockIter>(
       BytewiseComparator(), BytewiseComparator()));
-=======
-  iter->reset(meta_block->get()->NewIterator(BytewiseComparator()));
->>>>>>> blood in blood out
   return Status::OK();
 }
 
@@ -1425,18 +1182,11 @@ Status BlockBasedTable::GetDataBlockFromCache(
 
   // Retrieve the uncompressed contents into a new buffer
   BlockContents contents;
-<<<<<<< HEAD
   UncompressionContext uncompresssion_ctx(compressed_block->compression_type(),
                                           compression_dict);
   s = UncompressBlockContents(uncompresssion_ctx, compressed_block->data(),
                               compressed_block->size(), &contents,
                               format_version, ioptions);
-=======
-  s = UncompressBlockContents(compressed_block->data(),
-                              compressed_block->size(), &contents,
-                              format_version, compression_dict,
-                              ioptions);
->>>>>>> blood in blood out
 
   // Insert uncompressed block into block cache
   if (s.ok()) {
@@ -1447,7 +1197,6 @@ Status BlockBasedTable::GetDataBlockFromCache(
     assert(block->value->compression_type() == kNoCompression);
     if (block_cache != nullptr && block->value->cachable() &&
         read_options.fill_cache) {
-<<<<<<< HEAD
       size_t charge = block->value->ApproximateMemoryUsage();
       s = block_cache->Insert(block_cache_key, block->value, charge,
                               &DeleteCachedEntry<Block>,
@@ -1460,56 +1209,22 @@ Status BlockBasedTable::GetDataBlockFromCache(
         } else {
           RecordTick(statistics, BLOCK_CACHE_ADD);
           RecordTick(statistics, BLOCK_CACHE_BYTES_WRITE, charge);
-=======
-      s = block_cache->Insert(
-          block_cache_key, block->value, block->value->usable_size(),
-          &DeleteCachedEntry<Block>, &(block->cache_handle));
-      block_cache->TEST_mark_as_data_block(block_cache_key,
-                                           block->value->usable_size());
-      if (s.ok()) {
-        if (get_context != nullptr) {
-          get_context->RecordCounters(BLOCK_CACHE_ADD, 1);
-          get_context->RecordCounters(BLOCK_CACHE_BYTES_WRITE,
-                                      block->value->usable_size());
-        } else {
-          RecordTick(statistics, BLOCK_CACHE_ADD);
-          RecordTick(statistics, BLOCK_CACHE_BYTES_WRITE,
-                     block->value->usable_size());
->>>>>>> blood in blood out
         }
         if (is_index) {
           if (get_context != nullptr) {
             get_context->RecordCounters(BLOCK_CACHE_INDEX_ADD, 1);
-<<<<<<< HEAD
             get_context->RecordCounters(BLOCK_CACHE_INDEX_BYTES_INSERT, charge);
           } else {
             RecordTick(statistics, BLOCK_CACHE_INDEX_ADD);
             RecordTick(statistics, BLOCK_CACHE_INDEX_BYTES_INSERT, charge);
-=======
-            get_context->RecordCounters(BLOCK_CACHE_INDEX_BYTES_INSERT,
-                                        block->value->usable_size());
-          } else {
-            RecordTick(statistics, BLOCK_CACHE_INDEX_ADD);
-            RecordTick(statistics, BLOCK_CACHE_INDEX_BYTES_INSERT,
-                       block->value->usable_size());
->>>>>>> blood in blood out
           }
         } else {
           if (get_context != nullptr) {
             get_context->RecordCounters(BLOCK_CACHE_DATA_ADD, 1);
-<<<<<<< HEAD
             get_context->RecordCounters(BLOCK_CACHE_DATA_BYTES_INSERT, charge);
           } else {
             RecordTick(statistics, BLOCK_CACHE_DATA_ADD);
             RecordTick(statistics, BLOCK_CACHE_DATA_BYTES_INSERT, charge);
-=======
-            get_context->RecordCounters(BLOCK_CACHE_DATA_BYTES_INSERT,
-                                        block->value->usable_size());
-          } else {
-            RecordTick(statistics, BLOCK_CACHE_DATA_ADD);
-            RecordTick(statistics, BLOCK_CACHE_DATA_BYTES_INSERT,
-                       block->value->usable_size());
->>>>>>> blood in blood out
           }
         }
       } else {
@@ -1528,11 +1243,7 @@ Status BlockBasedTable::GetDataBlockFromCache(
 Status BlockBasedTable::PutDataBlockToCache(
     const Slice& block_cache_key, const Slice& compressed_block_cache_key,
     Cache* block_cache, Cache* block_cache_compressed,
-<<<<<<< HEAD
     const ReadOptions& /*read_options*/, const ImmutableCFOptions& ioptions,
-=======
-    const ReadOptions& read_options, const ImmutableCFOptions& ioptions,
->>>>>>> blood in blood out
     CachableEntry<Block>* block, Block* raw_block, uint32_t format_version,
     const Slice& compression_dict, size_t read_amp_bytes_per_bit, bool is_index,
     Cache::Priority priority, GetContext* get_context) {
@@ -1544,16 +1255,11 @@ Status BlockBasedTable::PutDataBlockToCache(
   BlockContents contents;
   Statistics* statistics = ioptions.statistics;
   if (raw_block->compression_type() != kNoCompression) {
-<<<<<<< HEAD
     UncompressionContext uncompression_ctx(raw_block->compression_type(),
                                            compression_dict);
     s = UncompressBlockContents(uncompression_ctx, raw_block->data(),
                                 raw_block->size(), &contents, format_version,
                                 ioptions);
-=======
-    s = UncompressBlockContents(raw_block->data(), raw_block->size(), &contents,
-                                format_version, compression_dict, ioptions);
->>>>>>> blood in blood out
   }
   if (!s.ok()) {
     delete raw_block;
@@ -1574,11 +1280,7 @@ Status BlockBasedTable::PutDataBlockToCache(
   if (block_cache_compressed != nullptr && raw_block != nullptr &&
       raw_block->cachable()) {
     s = block_cache_compressed->Insert(compressed_block_cache_key, raw_block,
-<<<<<<< HEAD
                                        raw_block->ApproximateMemoryUsage(),
-=======
-                                       raw_block->usable_size(),
->>>>>>> blood in blood out
                                        &DeleteCachedEntry<Block>);
     if (s.ok()) {
       // Avoid the following code to delete this cached block.
@@ -1593,70 +1295,35 @@ Status BlockBasedTable::PutDataBlockToCache(
   // insert into uncompressed block cache
   assert((block->value->compression_type() == kNoCompression));
   if (block_cache != nullptr && block->value->cachable()) {
-<<<<<<< HEAD
     size_t charge = block->value->ApproximateMemoryUsage();
     s = block_cache->Insert(block_cache_key, block->value, charge,
                             &DeleteCachedEntry<Block>, &(block->cache_handle),
                             priority);
     block_cache->TEST_mark_as_data_block(block_cache_key, charge);
-=======
-    s = block_cache->Insert(
-        block_cache_key, block->value, block->value->usable_size(),
-        &DeleteCachedEntry<Block>, &(block->cache_handle), priority);
-    block_cache->TEST_mark_as_data_block(block_cache_key,
-                                         block->value->usable_size());
->>>>>>> blood in blood out
     if (s.ok()) {
       assert(block->cache_handle != nullptr);
       if (get_context != nullptr) {
         get_context->RecordCounters(BLOCK_CACHE_ADD, 1);
-<<<<<<< HEAD
         get_context->RecordCounters(BLOCK_CACHE_BYTES_WRITE, charge);
       } else {
         RecordTick(statistics, BLOCK_CACHE_ADD);
         RecordTick(statistics, BLOCK_CACHE_BYTES_WRITE, charge);
-=======
-        get_context->RecordCounters(BLOCK_CACHE_BYTES_WRITE,
-                                    block->value->usable_size());
-      } else {
-        RecordTick(statistics, BLOCK_CACHE_ADD);
-        RecordTick(statistics, BLOCK_CACHE_BYTES_WRITE,
-                   block->value->usable_size());
->>>>>>> blood in blood out
       }
       if (is_index) {
         if (get_context != nullptr) {
           get_context->RecordCounters(BLOCK_CACHE_INDEX_ADD, 1);
-<<<<<<< HEAD
           get_context->RecordCounters(BLOCK_CACHE_INDEX_BYTES_INSERT, charge);
         } else {
           RecordTick(statistics, BLOCK_CACHE_INDEX_ADD);
           RecordTick(statistics, BLOCK_CACHE_INDEX_BYTES_INSERT, charge);
-=======
-          get_context->RecordCounters(BLOCK_CACHE_INDEX_BYTES_INSERT,
-                                      block->value->usable_size());
-        } else {
-          RecordTick(statistics, BLOCK_CACHE_INDEX_ADD);
-          RecordTick(statistics, BLOCK_CACHE_INDEX_BYTES_INSERT,
-                     block->value->usable_size());
->>>>>>> blood in blood out
         }
       } else {
         if (get_context != nullptr) {
           get_context->RecordCounters(BLOCK_CACHE_DATA_ADD, 1);
-<<<<<<< HEAD
           get_context->RecordCounters(BLOCK_CACHE_DATA_BYTES_INSERT, charge);
         } else {
           RecordTick(statistics, BLOCK_CACHE_DATA_ADD);
           RecordTick(statistics, BLOCK_CACHE_DATA_BYTES_INSERT, charge);
-=======
-          get_context->RecordCounters(BLOCK_CACHE_DATA_BYTES_INSERT,
-                                      block->value->usable_size());
-        } else {
-          RecordTick(statistics, BLOCK_CACHE_DATA_ADD);
-          RecordTick(statistics, BLOCK_CACHE_DATA_BYTES_INSERT,
-                     block->value->usable_size());
->>>>>>> blood in blood out
         }
       }
       assert(reinterpret_cast<Block*>(
@@ -1673,12 +1340,8 @@ Status BlockBasedTable::PutDataBlockToCache(
 
 FilterBlockReader* BlockBasedTable::ReadFilter(
     FilePrefetchBuffer* prefetch_buffer, const BlockHandle& filter_handle,
-<<<<<<< HEAD
     const bool is_a_filter_partition,
     const SliceTransform* prefix_extractor) const {
-=======
-    const bool is_a_filter_partition) const {
->>>>>>> blood in blood out
   auto& rep = rep_;
   // TODO: We might want to unify with ReadBlockFromFile() if we start
   // requiring checksum verification in Table::Open.
@@ -1711,26 +1374,16 @@ FilterBlockReader* BlockBasedTable::ReadFilter(
   switch (filter_type) {
     case Rep::FilterType::kPartitionedFilter: {
       return new PartitionedFilterBlockReader(
-<<<<<<< HEAD
           rep->prefix_filtering ? prefix_extractor : nullptr,
           rep->whole_key_filtering, std::move(block), nullptr,
           rep->ioptions.statistics, rep->internal_comparator, this,
           rep_->table_properties == nullptr ||
               !rep_->table_properties->index_key_is_user_key);
-=======
-          rep->prefix_filtering ? rep->ioptions.prefix_extractor : nullptr,
-          rep->whole_key_filtering, std::move(block), nullptr,
-          rep->ioptions.statistics, rep->internal_comparator, this);
->>>>>>> blood in blood out
     }
 
     case Rep::FilterType::kBlockFilter:
       return new BlockBasedFilterBlockReader(
-<<<<<<< HEAD
           rep->prefix_filtering ? prefix_extractor : nullptr,
-=======
-          rep->prefix_filtering ? rep->ioptions.prefix_extractor : nullptr,
->>>>>>> blood in blood out
           rep->table_options, rep->whole_key_filtering, std::move(block),
           rep->ioptions.statistics);
 
@@ -1739,11 +1392,7 @@ FilterBlockReader* BlockBasedTable::ReadFilter(
           rep->filter_policy->GetFilterBitsReader(block.data);
       assert(filter_bits_reader != nullptr);
       return new FullFilterBlockReader(
-<<<<<<< HEAD
           rep->prefix_filtering ? prefix_extractor : nullptr,
-=======
-          rep->prefix_filtering ? rep->ioptions.prefix_extractor : nullptr,
->>>>>>> blood in blood out
           rep->whole_key_filtering, std::move(block), filter_bits_reader,
           rep->ioptions.statistics);
     }
@@ -1757,32 +1406,18 @@ FilterBlockReader* BlockBasedTable::ReadFilter(
 }
 
 BlockBasedTable::CachableEntry<FilterBlockReader> BlockBasedTable::GetFilter(
-<<<<<<< HEAD
     const SliceTransform* prefix_extractor, FilePrefetchBuffer* prefetch_buffer,
     bool no_io, GetContext* get_context) const {
   const BlockHandle& filter_blk_handle = rep_->filter_handle;
   const bool is_a_filter_partition = true;
   return GetFilter(prefetch_buffer, filter_blk_handle, !is_a_filter_partition,
                    no_io, get_context, prefix_extractor);
-=======
-    FilePrefetchBuffer* prefetch_buffer, bool no_io,
-    GetContext* get_context) const {
-  const BlockHandle& filter_blk_handle = rep_->filter_handle;
-  const bool is_a_filter_partition = true;
-  return GetFilter(prefetch_buffer, filter_blk_handle, !is_a_filter_partition,
-                   no_io, get_context);
->>>>>>> blood in blood out
 }
 
 BlockBasedTable::CachableEntry<FilterBlockReader> BlockBasedTable::GetFilter(
     FilePrefetchBuffer* prefetch_buffer, const BlockHandle& filter_blk_handle,
-<<<<<<< HEAD
     const bool is_a_filter_partition, bool no_io, GetContext* get_context,
     const SliceTransform* prefix_extractor) const {
-=======
-    const bool is_a_filter_partition, bool no_io,
-    GetContext* get_context) const {
->>>>>>> blood in blood out
   // If cache_index_and_filter_blocks is false, filter should be pre-populated.
   // We will return rep_->filter anyway. rep_->filter can be nullptr if filter
   // read fails at Open() time. We don't want to reload again since it will
@@ -1822,28 +1457,18 @@ BlockBasedTable::CachableEntry<FilterBlockReader> BlockBasedTable::GetFilter(
     // Do not invoke any io.
     return CachableEntry<FilterBlockReader>();
   } else {
-<<<<<<< HEAD
     filter = ReadFilter(prefetch_buffer, filter_blk_handle,
                         is_a_filter_partition, prefix_extractor);
     if (filter != nullptr) {
       size_t usage = filter->ApproximateMemoryUsage();
       Status s = block_cache->Insert(
           key, filter, usage, &DeleteCachedFilterEntry, &cache_handle,
-=======
-    filter =
-        ReadFilter(prefetch_buffer, filter_blk_handle, is_a_filter_partition);
-    if (filter != nullptr) {
-      assert(filter->size() > 0);
-      Status s = block_cache->Insert(
-          key, filter, filter->size(), &DeleteCachedFilterEntry, &cache_handle,
->>>>>>> blood in blood out
           rep_->table_options.cache_index_and_filter_blocks_with_high_priority
               ? Cache::Priority::HIGH
               : Cache::Priority::LOW);
       if (s.ok()) {
         if (get_context != nullptr) {
           get_context->RecordCounters(BLOCK_CACHE_ADD, 1);
-<<<<<<< HEAD
           get_context->RecordCounters(BLOCK_CACHE_BYTES_WRITE, usage);
           get_context->RecordCounters(BLOCK_CACHE_FILTER_ADD, 1);
           get_context->RecordCounters(BLOCK_CACHE_FILTER_BYTES_INSERT, usage);
@@ -1852,18 +1477,6 @@ BlockBasedTable::CachableEntry<FilterBlockReader> BlockBasedTable::GetFilter(
           RecordTick(statistics, BLOCK_CACHE_BYTES_WRITE, usage);
           RecordTick(statistics, BLOCK_CACHE_FILTER_ADD);
           RecordTick(statistics, BLOCK_CACHE_FILTER_BYTES_INSERT, usage);
-=======
-          get_context->RecordCounters(BLOCK_CACHE_BYTES_WRITE, filter->size());
-          get_context->RecordCounters(BLOCK_CACHE_FILTER_ADD, 1);
-          get_context->RecordCounters(BLOCK_CACHE_FILTER_BYTES_INSERT,
-                                      filter->size());
-        } else {
-          RecordTick(statistics, BLOCK_CACHE_ADD);
-          RecordTick(statistics, BLOCK_CACHE_BYTES_WRITE, filter->size());
-          RecordTick(statistics, BLOCK_CACHE_FILTER_ADD);
-          RecordTick(statistics, BLOCK_CACHE_FILTER_BYTES_INSERT,
-                     filter->size());
->>>>>>> blood in blood out
         }
       } else {
         RecordTick(statistics, BLOCK_CACHE_ADD_FAILURES);
@@ -1876,7 +1489,6 @@ BlockBasedTable::CachableEntry<FilterBlockReader> BlockBasedTable::GetFilter(
   return { filter, cache_handle };
 }
 
-<<<<<<< HEAD
 // disable_prefix_seek should be set to true when prefix_extractor found in SST
 // differs from the one in mutable_cf_options and index type is HashBasedIndex
 InternalIterator* BlockBasedTable::NewIndexIterator(
@@ -1894,20 +1506,6 @@ InternalIterator* BlockBasedTable::NewIndexIterator(
     return rep_->index_entry.value->NewIterator(
         input_iter, read_options.total_order_seek || disable_prefix_seek,
         read_options.fill_cache);
-=======
-InternalIterator* BlockBasedTable::NewIndexIterator(
-    const ReadOptions& read_options, BlockIter* input_iter,
-    CachableEntry<IndexReader>* index_entry, GetContext* get_context) {
-  // index reader has already been pre-populated.
-  if (rep_->index_reader) {
-    return rep_->index_reader->NewIterator(
-        input_iter, read_options.total_order_seek);
-  }
-  // we have a pinned index block
-  if (rep_->index_entry.IsSet()) {
-    return rep_->index_entry.value->NewIterator(input_iter,
-                                                read_options.total_order_seek);
->>>>>>> blood in blood out
   }
 
   PERF_TIMER_GUARD(read_index_block_nanos);
@@ -1925,11 +1523,7 @@ InternalIterator* BlockBasedTable::NewIndexIterator(
 
   if (cache_handle == nullptr && no_io) {
     if (input_iter != nullptr) {
-<<<<<<< HEAD
       input_iter->Invalidate(Status::Incomplete("no blocking io"));
-=======
-      input_iter->SetStatus(Status::Incomplete("no blocking io"));
->>>>>>> blood in blood out
       return input_iter;
     } else {
       return NewErrorInternalIterator(Status::Incomplete("no blocking io"));
@@ -1948,27 +1542,18 @@ InternalIterator* BlockBasedTable::NewIndexIterator(
     TEST_SYNC_POINT("BlockBasedTable::NewIndexIterator::thread1:1");
     TEST_SYNC_POINT("BlockBasedTable::NewIndexIterator::thread2:3");
     TEST_SYNC_POINT("BlockBasedTable::NewIndexIterator::thread1:4");
-<<<<<<< HEAD
     size_t charge = 0;
     if (s.ok()) {
       assert(index_reader != nullptr);
       charge = index_reader->ApproximateMemoryUsage();
       s = block_cache->Insert(
           key, index_reader, charge, &DeleteCachedIndexEntry, &cache_handle,
-=======
-    if (s.ok()) {
-      assert(index_reader != nullptr);
-      s = block_cache->Insert(
-          key, index_reader, index_reader->usable_size(),
-          &DeleteCachedIndexEntry, &cache_handle,
->>>>>>> blood in blood out
           rep_->table_options.cache_index_and_filter_blocks_with_high_priority
               ? Cache::Priority::HIGH
               : Cache::Priority::LOW);
     }
 
     if (s.ok()) {
-<<<<<<< HEAD
       if (get_context != nullptr) {
         get_context->RecordCounters(BLOCK_CACHE_ADD, 1);
         get_context->RecordCounters(BLOCK_CACHE_BYTES_WRITE, charge);
@@ -1978,18 +1563,6 @@ InternalIterator* BlockBasedTable::NewIndexIterator(
       }
       RecordTick(statistics, BLOCK_CACHE_INDEX_ADD);
       RecordTick(statistics, BLOCK_CACHE_INDEX_BYTES_INSERT, charge);
-=======
-      size_t usable_size = index_reader->usable_size();
-      if (get_context != nullptr) {
-        get_context->RecordCounters(BLOCK_CACHE_ADD, 1);
-        get_context->RecordCounters(BLOCK_CACHE_BYTES_WRITE, usable_size);
-      } else {
-        RecordTick(statistics, BLOCK_CACHE_ADD);
-        RecordTick(statistics, BLOCK_CACHE_BYTES_WRITE, usable_size);
-      }
-      RecordTick(statistics, BLOCK_CACHE_INDEX_ADD);
-      RecordTick(statistics, BLOCK_CACHE_INDEX_BYTES_INSERT, usable_size);
->>>>>>> blood in blood out
     } else {
       if (index_reader != nullptr) {
         delete index_reader;
@@ -1997,11 +1570,7 @@ InternalIterator* BlockBasedTable::NewIndexIterator(
       RecordTick(statistics, BLOCK_CACHE_ADD_FAILURES);
       // make sure if something goes wrong, index_reader shall remain intact.
       if (input_iter != nullptr) {
-<<<<<<< HEAD
         input_iter->Invalidate(s);
-=======
-        input_iter->SetStatus(s);
->>>>>>> blood in blood out
         return input_iter;
       } else {
         return NewErrorInternalIterator(s);
@@ -2012,11 +1581,7 @@ InternalIterator* BlockBasedTable::NewIndexIterator(
 
   assert(cache_handle);
   auto* iter = index_reader->NewIterator(
-<<<<<<< HEAD
       input_iter, read_options.total_order_seek || disable_prefix_seek);
-=======
-      input_iter, read_options.total_order_seek);
->>>>>>> blood in blood out
 
   // the caller would like to take ownership of the index block
   // don't call RegisterCleanup() in this case, the caller will take care of it
@@ -2029,47 +1594,30 @@ InternalIterator* BlockBasedTable::NewIndexIterator(
   return iter;
 }
 
-<<<<<<< HEAD
 template <typename TBlockIter>
 TBlockIter* BlockBasedTable::NewDataBlockIterator(
     Rep* rep, const ReadOptions& ro, const Slice& index_value,
     TBlockIter* input_iter, bool is_index, bool key_includes_seq,
     GetContext* get_context, FilePrefetchBuffer* prefetch_buffer) {
-=======
-BlockIter* BlockBasedTable::NewDataBlockIterator(
-    Rep* rep, const ReadOptions& ro, const Slice& index_value,
-    BlockIter* input_iter, bool is_index, GetContext* get_context) {
->>>>>>> blood in blood out
   BlockHandle handle;
   Slice input = index_value;
   // We intentionally allow extra stuff in index_value so that we
   // can add more features in the future.
   Status s = handle.DecodeFrom(&input);
-<<<<<<< HEAD
   return NewDataBlockIterator<TBlockIter>(rep, ro, handle, input_iter, is_index,
                                           key_includes_seq, get_context, s,
                                           prefetch_buffer);
-=======
-  return NewDataBlockIterator(rep, ro, handle, input_iter, is_index,
-                              get_context, s);
->>>>>>> blood in blood out
 }
 
 // Convert an index iterator value (i.e., an encoded BlockHandle)
 // into an iterator over the contents of the corresponding block.
 // If input_iter is null, new a iterator
 // If input_iter is not null, update this iter and return it
-<<<<<<< HEAD
 template <typename TBlockIter>
 TBlockIter* BlockBasedTable::NewDataBlockIterator(
     Rep* rep, const ReadOptions& ro, const BlockHandle& handle,
     TBlockIter* input_iter, bool is_index, bool key_includes_seq,
     GetContext* get_context, Status s, FilePrefetchBuffer* prefetch_buffer) {
-=======
-BlockIter* BlockBasedTable::NewDataBlockIterator(
-    Rep* rep, const ReadOptions& ro, const BlockHandle& handle,
-    BlockIter* input_iter, bool is_index, GetContext* get_context, Status s) {
->>>>>>> blood in blood out
   PERF_TIMER_GUARD(new_table_block_iter_nanos);
 
   const bool no_io = (ro.read_tier == kBlockCacheTier);
@@ -2080,58 +1628,34 @@ BlockIter* BlockBasedTable::NewDataBlockIterator(
     if (rep->compression_dict_block) {
       compression_dict = rep->compression_dict_block->data;
     }
-<<<<<<< HEAD
     s = MaybeLoadDataBlockToCache(prefetch_buffer, rep, ro, handle,
-=======
-    s = MaybeLoadDataBlockToCache(nullptr /*prefetch_buffer*/, rep, ro, handle,
->>>>>>> blood in blood out
                                   compression_dict, &block, is_index,
                                   get_context);
   }
 
-<<<<<<< HEAD
   TBlockIter* iter;
   if (input_iter != nullptr) {
     iter = input_iter;
   } else {
     iter = new TBlockIter;
-=======
-  BlockIter* iter;
-  if (input_iter != nullptr) {
-    iter = input_iter;
-  } else {
-    iter = new BlockIter;
->>>>>>> blood in blood out
   }
   // Didn't get any data from block caches.
   if (s.ok() && block.value == nullptr) {
     if (no_io) {
       // Could not read from block_cache and can't do IO
-<<<<<<< HEAD
       iter->Invalidate(Status::Incomplete("no blocking io"));
-=======
-      iter->SetStatus(Status::Incomplete("no blocking io"));
->>>>>>> blood in blood out
       return iter;
     }
     std::unique_ptr<Block> block_value;
     {
       StopWatch sw(rep->ioptions.env, rep->ioptions.statistics,
                    READ_BLOCK_GET_MICROS);
-<<<<<<< HEAD
       s = ReadBlockFromFile(
           rep->file.get(), prefetch_buffer, rep->footer, ro, handle,
           &block_value, rep->ioptions, rep->blocks_maybe_compressed,
           compression_dict, rep->persistent_cache_options,
           is_index ? kDisableGlobalSequenceNumber : rep->global_seqno,
           rep->table_options.read_amp_bytes_per_bit, rep->immortal_table);
-=======
-      s = ReadBlockFromFile(rep->file.get(), nullptr /* prefetch_buffer */,
-                            rep->footer, ro, handle, &block_value, rep->ioptions,
-                            rep->blocks_maybe_compressed, compression_dict,
-                            rep->persistent_cache_options, rep->global_seqno,
-                            rep->table_options.read_amp_bytes_per_bit);
->>>>>>> blood in blood out
     }
     if (s.ok()) {
       block.value = block_value.release();
@@ -2140,15 +1664,10 @@ BlockIter* BlockBasedTable::NewDataBlockIterator(
 
   if (s.ok()) {
     assert(block.value != nullptr);
-<<<<<<< HEAD
     const bool kTotalOrderSeek = true;
     iter = block.value->NewIterator<TBlockIter>(
         &rep->internal_comparator, rep->internal_comparator.user_comparator(),
         iter, rep->ioptions.statistics, kTotalOrderSeek, key_includes_seq);
-=======
-    iter = block.value->NewIterator(&rep->internal_comparator, iter, true,
-                                    rep->ioptions.statistics);
->>>>>>> blood in blood out
     if (block.cache_handle != nullptr) {
       iter->RegisterCleanup(&ReleaseCachedEntry, block_cache,
                             block.cache_handle);
@@ -2174,36 +1693,21 @@ BlockIter* BlockBasedTable::NewDataBlockIterator(
                static_cast<int>(kExtraCacheKeyPrefix + kMaxVarint64Length));
         Slice unique_key =
             Slice(cache_key, static_cast<size_t>(end - cache_key));
-<<<<<<< HEAD
         s = block_cache->Insert(unique_key, nullptr,
                                 block.value->ApproximateMemoryUsage(), nullptr,
                                 &cache_handle);
-=======
-        s = block_cache->Insert(unique_key, nullptr, block.value->usable_size(),
-                                nullptr, &cache_handle);
->>>>>>> blood in blood out
         if (s.ok()) {
           if (cache_handle != nullptr) {
             iter->RegisterCleanup(&ForceReleaseCachedEntry, block_cache,
                                   cache_handle);
           }
-<<<<<<< HEAD
-=======
-        } else {
-          delete block.value;
-          block.value = nullptr;
->>>>>>> blood in blood out
         }
       }
       iter->RegisterCleanup(&DeleteHeldResource<Block>, block.value, nullptr);
     }
   } else {
     assert(block.value == nullptr);
-<<<<<<< HEAD
     iter->Invalidate(s);
-=======
-    iter->SetStatus(s);
->>>>>>> blood in blood out
   }
   return iter;
 }
@@ -2252,14 +1756,9 @@ Status BlockBasedTable::MaybeLoadDataBlockToCache(
             rep->file.get(), prefetch_buffer, rep->footer, ro, handle,
             &raw_block, rep->ioptions,
             block_cache_compressed == nullptr && rep->blocks_maybe_compressed,
-<<<<<<< HEAD
             compression_dict, rep->persistent_cache_options,
             is_index ? kDisableGlobalSequenceNumber : rep->global_seqno,
             rep->table_options.read_amp_bytes_per_bit, rep->immortal_table);
-=======
-            compression_dict, rep->persistent_cache_options, rep->global_seqno,
-            rep->table_options.read_amp_bytes_per_bit);
->>>>>>> blood in blood out
       }
 
       if (s.ok()) {
@@ -2282,7 +1781,6 @@ Status BlockBasedTable::MaybeLoadDataBlockToCache(
 
 BlockBasedTable::PartitionedIndexIteratorState::PartitionedIndexIteratorState(
     BlockBasedTable* table,
-<<<<<<< HEAD
     std::unordered_map<uint64_t, CachableEntry<Block>>* block_map,
     bool index_key_includes_seq)
     : table_(table),
@@ -2292,12 +1790,6 @@ BlockBasedTable::PartitionedIndexIteratorState::PartitionedIndexIteratorState(
 template <class TBlockIter>
 const size_t BlockBasedTableIterator<TBlockIter>::kMaxReadaheadSize =
     256 * 1024;
-=======
-    std::unordered_map<uint64_t, CachableEntry<Block>>* block_map)
-    : table_(table), block_map_(block_map) {}
-
-const size_t BlockBasedTableIterator::kMaxReadaheadSize = 256 * 1024;
->>>>>>> blood in blood out
 
 InternalIterator*
 BlockBasedTable::PartitionedIndexIteratorState::NewSecondaryIterator(
@@ -2318,7 +1810,6 @@ BlockBasedTable::PartitionedIndexIteratorState::NewSecondaryIterator(
     assert(block_cache);
     RecordTick(rep->ioptions.statistics, BLOCK_CACHE_BYTES_READ,
                block_cache->GetUsage(block->second.cache_handle));
-<<<<<<< HEAD
     Statistics* kNullStats = nullptr;
     return block->second.value->NewIterator<IndexBlockIter>(
         &rep->internal_comparator, rep->internal_comparator.user_comparator(),
@@ -2326,13 +1817,6 @@ BlockBasedTable::PartitionedIndexIteratorState::NewSecondaryIterator(
   }
   // Create an empty iterator
   return new DataBlockIter();
-=======
-    return block->second.value->NewIterator(&rep->internal_comparator, nullptr,
-                                            true, rep->ioptions.statistics);
-  }
-  // Create an empty iterator
-  return new BlockIter();
->>>>>>> blood in blood out
 }
 
 // This will be broken if the user specifies an unusual implementation
@@ -2347,19 +1831,14 @@ BlockBasedTable::PartitionedIndexIteratorState::NewSecondaryIterator(
 // Otherwise, this method guarantees no I/O will be incurred.
 //
 // REQUIRES: this method shouldn't be called while the DB lock is held.
-<<<<<<< HEAD
 bool BlockBasedTable::PrefixMayMatch(
     const Slice& internal_key, const ReadOptions& read_options,
     const SliceTransform* options_prefix_extractor,
     const bool need_upper_bound_check) {
-=======
-bool BlockBasedTable::PrefixMayMatch(const Slice& internal_key) {
->>>>>>> blood in blood out
   if (!rep_->filter_policy) {
     return true;
   }
 
-<<<<<<< HEAD
   const SliceTransform* prefix_extractor;
 
   if (rep_->table_prefix_extractor == nullptr) {
@@ -2374,22 +1853,11 @@ bool BlockBasedTable::PrefixMayMatch(const Slice& internal_key) {
   if (!prefix_extractor->InDomain(user_key)) {
     return true;
   }
-=======
-  assert(rep_->ioptions.prefix_extractor != nullptr);
-  auto user_key = ExtractUserKey(internal_key);
-  if (!rep_->ioptions.prefix_extractor->InDomain(user_key) ||
-      rep_->table_properties->prefix_extractor_name.compare(
-          rep_->ioptions.prefix_extractor->Name()) != 0) {
-    return true;
-  }
-  auto prefix = rep_->ioptions.prefix_extractor->Transform(user_key);
->>>>>>> blood in blood out
 
   bool may_match = true;
   Status s;
 
   // First, try check with full filter
-<<<<<<< HEAD
   auto filter_entry = GetFilter(prefix_extractor);
   FilterBlockReader* filter = filter_entry.value;
   bool filter_checked = true;
@@ -2409,16 +1877,6 @@ bool BlockBasedTable::PrefixMayMatch(const Slice& internal_key) {
         return true;
       }
       auto prefix = prefix_extractor->Transform(user_key);
-=======
-  auto filter_entry = GetFilter();
-  FilterBlockReader* filter = filter_entry.value;
-  if (filter != nullptr) {
-    if (!filter->IsBlockBased()) {
-      const Slice* const const_ikey_ptr = &internal_key;
-      may_match =
-          filter->PrefixMayMatch(prefix, kNotValid, false, const_ikey_ptr);
-    } else {
->>>>>>> blood in blood out
       InternalKey internal_key_prefix(prefix, kMaxSequenceNumber, kTypeValue);
       auto internal_prefix = internal_key_prefix.Encode();
 
@@ -2429,15 +1887,11 @@ bool BlockBasedTable::PrefixMayMatch(const Slice& internal_key) {
       no_io_read_options.read_tier = kBlockCacheTier;
 
       // Then, try find it within each block
-<<<<<<< HEAD
       // we already know prefix_extractor and prefix_extractor_name must match
       // because `CheckPrefixMayMatch` first checks `check_filter_ == true`
       unique_ptr<InternalIterator> iiter(
           NewIndexIterator(no_io_read_options,
                            /* need_upper_bound_check */ false));
-=======
-      unique_ptr<InternalIterator> iiter(NewIndexIterator(no_io_read_options));
->>>>>>> blood in blood out
       iiter->Seek(internal_prefix);
 
       if (!iiter->Valid()) {
@@ -2446,14 +1900,10 @@ bool BlockBasedTable::PrefixMayMatch(const Slice& internal_key) {
         // and we're not really sure that we're past the end
         // of the file
         may_match = iiter->status().IsIncomplete();
-<<<<<<< HEAD
       } else if ((rep_->table_properties &&
                           rep_->table_properties->index_key_is_user_key
                       ? iiter->key()
                       : ExtractUserKey(iiter->key()))
-=======
-      } else if (ExtractUserKey(iiter->key())
->>>>>>> blood in blood out
                      .starts_with(ExtractUserKey(internal_prefix))) {
         // we need to check for this subtle case because our only
         // guarantee is that "the key is a string >= last key in that data
@@ -2476,29 +1926,18 @@ bool BlockBasedTable::PrefixMayMatch(const Slice& internal_key) {
         BlockHandle handle;
         s = handle.DecodeFrom(&handle_value);
         assert(s.ok());
-<<<<<<< HEAD
         may_match =
             filter->PrefixMayMatch(prefix, prefix_extractor, handle.offset());
-=======
-        may_match = filter->PrefixMayMatch(prefix, handle.offset());
->>>>>>> blood in blood out
       }
     }
   }
 
-<<<<<<< HEAD
   if (filter_checked) {
     Statistics* statistics = rep_->ioptions.statistics;
     RecordTick(statistics, BLOOM_FILTER_PREFIX_CHECKED);
     if (!may_match) {
       RecordTick(statistics, BLOOM_FILTER_PREFIX_USEFUL);
     }
-=======
-  Statistics* statistics = rep_->ioptions.statistics;
-  RecordTick(statistics, BLOOM_FILTER_PREFIX_CHECKED);
-  if (!may_match) {
-    RecordTick(statistics, BLOOM_FILTER_PREFIX_USEFUL);
->>>>>>> blood in blood out
   }
 
   // if rep_->filter_entry is not set, we should call Release(); otherwise
@@ -2507,20 +1946,12 @@ bool BlockBasedTable::PrefixMayMatch(const Slice& internal_key) {
   if (!rep_->filter_entry.IsSet()) {
     filter_entry.Release(rep_->table_options.block_cache.get());
   }
-<<<<<<< HEAD
   return may_match;
 }
 
 template <class TBlockIter>
 void BlockBasedTableIterator<TBlockIter>::Seek(const Slice& target) {
   is_out_of_bound_ = false;
-=======
-
-  return may_match;
-}
-
-void BlockBasedTableIterator::Seek(const Slice& target) {
->>>>>>> blood in blood out
   if (!CheckPrefixMayMatch(target)) {
     ResetDataIter();
     return;
@@ -2537,7 +1968,6 @@ void BlockBasedTableIterator::Seek(const Slice& target) {
 
   InitDataBlock();
 
-<<<<<<< HEAD
   block_iter_.Seek(target);
 
   FindKeyForward();
@@ -2552,16 +1982,6 @@ void BlockBasedTableIterator::Seek(const Slice& target) {
 template <class TBlockIter>
 void BlockBasedTableIterator<TBlockIter>::SeekForPrev(const Slice& target) {
   is_out_of_bound_ = false;
-=======
-  data_block_iter_.Seek(target);
-
-  FindKeyForward();
-  assert(!data_block_iter_.Valid() ||
-         icomp_.Compare(target, data_block_iter_.key()) <= 0);
-}
-
-void BlockBasedTableIterator::SeekForPrev(const Slice& target) {
->>>>>>> blood in blood out
   if (!CheckPrefixMayMatch(target)) {
     ResetDataIter();
     return;
@@ -2595,7 +2015,6 @@ void BlockBasedTableIterator::SeekForPrev(const Slice& target) {
 
   InitDataBlock();
 
-<<<<<<< HEAD
   block_iter_.SeekForPrev(target);
 
   FindKeyBackward();
@@ -2606,16 +2025,6 @@ void BlockBasedTableIterator::SeekForPrev(const Slice& target) {
 template <class TBlockIter>
 void BlockBasedTableIterator<TBlockIter>::SeekToFirst() {
   is_out_of_bound_ = false;
-=======
-  data_block_iter_.SeekForPrev(target);
-
-  FindKeyBackward();
-  assert(!data_block_iter_.Valid() ||
-         icomp_.Compare(target, data_block_iter_.key()) >= 0);
-}
-
-void BlockBasedTableIterator::SeekToFirst() {
->>>>>>> blood in blood out
   SavePrevIndexValue();
   index_iter_->SeekToFirst();
   if (!index_iter_->Valid()) {
@@ -2623,7 +2032,6 @@ void BlockBasedTableIterator::SeekToFirst() {
     return;
   }
   InitDataBlock();
-<<<<<<< HEAD
   block_iter_.SeekToFirst();
   FindKeyForward();
 }
@@ -2631,13 +2039,6 @@ void BlockBasedTableIterator::SeekToFirst() {
 template <class TBlockIter>
 void BlockBasedTableIterator<TBlockIter>::SeekToLast() {
   is_out_of_bound_ = false;
-=======
-  data_block_iter_.SeekToFirst();
-  FindKeyForward();
-}
-
-void BlockBasedTableIterator::SeekToLast() {
->>>>>>> blood in blood out
   SavePrevIndexValue();
   index_iter_->SeekToLast();
   if (!index_iter_->Valid()) {
@@ -2645,7 +2046,6 @@ void BlockBasedTableIterator::SeekToLast() {
     return;
   }
   InitDataBlock();
-<<<<<<< HEAD
   block_iter_.SeekToLast();
   FindKeyBackward();
 }
@@ -2672,29 +2072,6 @@ void BlockBasedTableIterator<TBlockIter>::InitDataBlock() {
       handle_slice.compare(prev_index_value_) != 0 ||
       // if previous attempt of reading the block missed cache, try again
       block_iter_.status().IsIncomplete()) {
-=======
-  data_block_iter_.SeekToLast();
-  FindKeyBackward();
-}
-
-void BlockBasedTableIterator::Next() {
-  assert(block_iter_points_to_real_block_);
-  data_block_iter_.Next();
-  FindKeyForward();
-}
-
-void BlockBasedTableIterator::Prev() {
-  assert(block_iter_points_to_real_block_);
-  data_block_iter_.Prev();
-  FindKeyBackward();
-}
-
-void BlockBasedTableIterator::InitDataBlock() {
-  BlockHandle data_block_handle;
-  Slice handle_slice = index_iter_->value();
-  if (!block_iter_points_to_real_block_ ||
-      handle_slice.compare(prev_index_value_) != 0) {
->>>>>>> blood in blood out
     if (block_iter_points_to_real_block_) {
       ResetDataIter();
     }
@@ -2702,7 +2079,6 @@ void BlockBasedTableIterator::InitDataBlock() {
     auto* rep = table_->get_rep();
 
     // Automatically prefetch additional data when a range scan (iterator) does
-<<<<<<< HEAD
     // more than 2 sequential IOs. This is enabled only for user reads and when
     // ReadOptions.readahead_size is 0.
     if (!for_compaction_ && read_options_.readahead_size == 0) {
@@ -2735,36 +2111,10 @@ void BlockBasedTableIterator::InitDataBlock() {
         rep, read_options_, data_block_handle, &block_iter_, is_index_,
         key_includes_seq_,
         /* get_context */ nullptr, s, prefetch_buffer_.get());
-=======
-    // more than 2 sequential IOs. This is enabled only when
-    // ReadOptions.readahead_size is 0.
-    if (read_options_.readahead_size == 0) {
-      if (num_file_reads_ < 2) {
-        num_file_reads_++;
-      } else if (data_block_handle.offset() +
-                     static_cast<size_t>(data_block_handle.size()) +
-                     kBlockTrailerSize >
-                 readahead_limit_) {
-        num_file_reads_++;
-        // Do not readahead more than kMaxReadaheadSize.
-        readahead_size_ = std::min(kMaxReadaheadSize, readahead_size_);
-        table_->get_rep()->file->Prefetch(data_block_handle.offset(),
-                                          readahead_size_);
-        readahead_limit_ = data_block_handle.offset() + readahead_size_;
-        // Keep exponentially increasing readahead size until kMaxReadaheadSize.
-        readahead_size_ *= 2;
-      }
-    }
-
-    BlockBasedTable::NewDataBlockIterator(rep, read_options_, data_block_handle,
-                                          &data_block_iter_, false,
-                                          /* get_context */ nullptr, s);
->>>>>>> blood in blood out
     block_iter_points_to_real_block_ = true;
   }
 }
 
-<<<<<<< HEAD
 template <class TBlockIter>
 void BlockBasedTableIterator<TBlockIter>::FindKeyForward() {
   assert(!is_out_of_bound_);
@@ -2772,14 +2122,6 @@ void BlockBasedTableIterator<TBlockIter>::FindKeyForward() {
   // whether a block can be empty so it can be replaced by an "if".
   while (!block_iter_.Valid()) {
     if (!block_iter_.status().ok()) {
-=======
-void BlockBasedTableIterator::FindKeyForward() {
-  is_out_of_bound_ = false;
-  // TODO the while loop inherits from two-level-iterator. We don't know
-  // whether a block can be empty so it can be replaced by an "if".
-  while (!data_block_iter_.Valid()) {
-    if (!data_block_iter_.status().ok()) {
->>>>>>> blood in blood out
       return;
     }
     ResetDataIter();
@@ -2791,11 +2133,7 @@ void BlockBasedTableIterator::FindKeyForward() {
 
     if (index_iter_->Valid()) {
       InitDataBlock();
-<<<<<<< HEAD
       block_iter_.SeekToFirst();
-=======
-      data_block_iter_.SeekToFirst();
->>>>>>> blood in blood out
     } else {
       return;
     }
@@ -2804,13 +2142,8 @@ void BlockBasedTableIterator::FindKeyForward() {
   // Check upper bound on the current key
   bool reached_upper_bound =
       (read_options_.iterate_upper_bound != nullptr &&
-<<<<<<< HEAD
        block_iter_points_to_real_block_ && block_iter_.Valid() &&
        icomp_.user_comparator()->Compare(ExtractUserKey(block_iter_.key()),
-=======
-       block_iter_points_to_real_block_ && data_block_iter_.Valid() &&
-       icomp_.user_comparator()->Compare(ExtractUserKey(data_block_iter_.key()),
->>>>>>> blood in blood out
                                          *read_options_.iterate_upper_bound) >=
            0);
   TEST_SYNC_POINT_CALLBACK(
@@ -2818,25 +2151,15 @@ void BlockBasedTableIterator::FindKeyForward() {
       &reached_upper_bound);
   if (reached_upper_bound) {
     is_out_of_bound_ = true;
-<<<<<<< HEAD
-=======
-    ResetDataIter();
->>>>>>> blood in blood out
     return;
   }
 }
 
-<<<<<<< HEAD
 template <class TBlockIter>
 void BlockBasedTableIterator<TBlockIter>::FindKeyBackward() {
   assert(!is_out_of_bound_);
   while (!block_iter_.Valid()) {
     if (!block_iter_.status().ok()) {
-=======
-void BlockBasedTableIterator::FindKeyBackward() {
-  while (!data_block_iter_.Valid()) {
-    if (!data_block_iter_.status().ok()) {
->>>>>>> blood in blood out
       return;
     }
 
@@ -2845,11 +2168,7 @@ void BlockBasedTableIterator::FindKeyBackward() {
 
     if (index_iter_->Valid()) {
       InitDataBlock();
-<<<<<<< HEAD
       block_iter_.SeekToLast();
-=======
-      data_block_iter_.SeekToLast();
->>>>>>> blood in blood out
     } else {
       return;
     }
@@ -2859,7 +2178,6 @@ void BlockBasedTableIterator::FindKeyBackward() {
   // code simplicity.
 }
 
-<<<<<<< HEAD
 InternalIterator* BlockBasedTable::NewIterator(
     const ReadOptions& read_options, const SliceTransform* prefix_extractor,
     Arena* arena, bool skip_filters, bool for_compaction) {
@@ -2887,24 +2205,6 @@ InternalIterator* BlockBasedTable::NewIterator(
             prefix_extractor != nullptr,
         need_upper_bound_check, prefix_extractor, kIsNotIndex,
         true /*key_includes_seq*/, for_compaction);
-=======
-InternalIterator* BlockBasedTable::NewIterator(const ReadOptions& read_options,
-                                               Arena* arena,
-                                               bool skip_filters) {
-  if (arena == nullptr) {
-    return new BlockBasedTableIterator(
-        this, read_options, rep_->internal_comparator,
-        NewIndexIterator(read_options),
-        !skip_filters && !read_options.total_order_seek &&
-            rep_->ioptions.prefix_extractor != nullptr);
-  } else {
-    auto* mem = arena->AllocateAligned(sizeof(BlockBasedTableIterator));
-    return new (mem) BlockBasedTableIterator(
-        this, read_options, rep_->internal_comparator,
-        NewIndexIterator(read_options),
-        !skip_filters && !read_options.total_order_seek &&
-            rep_->ioptions.prefix_extractor != nullptr);
->>>>>>> blood in blood out
   }
 }
 
@@ -2923,15 +2223,9 @@ InternalIterator* BlockBasedTable::NewRangeTombstoneIterator(
     Cache* block_cache = rep_->table_options.block_cache.get();
     assert(block_cache != nullptr);
     if (block_cache->Ref(rep_->range_del_entry.cache_handle)) {
-<<<<<<< HEAD
       auto iter = rep_->range_del_entry.value->NewIterator<DataBlockIter>(
           &rep_->internal_comparator,
           rep_->internal_comparator.user_comparator());
-=======
-      auto iter = rep_->range_del_entry.value->NewIterator(
-          &rep_->internal_comparator, nullptr /* iter */,
-          true /* total_order_seek */, rep_->ioptions.statistics);
->>>>>>> blood in blood out
       iter->RegisterCleanup(&ReleaseCachedEntry, block_cache,
                             rep_->range_del_entry.cache_handle);
       return iter;
@@ -2941,7 +2235,6 @@ InternalIterator* BlockBasedTable::NewRangeTombstoneIterator(
   rep_->range_del_handle.EncodeTo(&str);
   // The meta-block exists but isn't in uncompressed block cache (maybe
   // because it is disabled), so go through the full lookup process.
-<<<<<<< HEAD
   return NewDataBlockIterator<DataBlockIter>(rep_, read_options, Slice(str));
 }
 
@@ -2949,21 +2242,11 @@ bool BlockBasedTable::FullFilterKeyMayMatch(
     const ReadOptions& read_options, FilterBlockReader* filter,
     const Slice& internal_key, const bool no_io,
     const SliceTransform* prefix_extractor) const {
-=======
-  return NewDataBlockIterator(rep_, read_options, Slice(str));
-}
-
-bool BlockBasedTable::FullFilterKeyMayMatch(const ReadOptions& read_options,
-                                            FilterBlockReader* filter,
-                                            const Slice& internal_key,
-                                            const bool no_io) const {
->>>>>>> blood in blood out
   if (filter == nullptr || filter->IsBlockBased()) {
     return true;
   }
   Slice user_key = ExtractUserKey(internal_key);
   const Slice* const const_ikey_ptr = &internal_key;
-<<<<<<< HEAD
   bool may_match = true;
   if (filter->whole_key_filtering()) {
     may_match = filter->KeyMayMatch(user_key, prefix_extractor, kNotValid,
@@ -2988,42 +2271,18 @@ Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
                             const SliceTransform* prefix_extractor,
                             bool skip_filters) {
   assert(key.size() >= 8);  // key must be internal key
-=======
-  if (filter->whole_key_filtering()) {
-    return filter->KeyMayMatch(user_key, kNotValid, no_io, const_ikey_ptr);
-  }
-  if (!read_options.total_order_seek && rep_->ioptions.prefix_extractor &&
-      rep_->table_properties->prefix_extractor_name.compare(
-          rep_->ioptions.prefix_extractor->Name()) == 0 &&
-      rep_->ioptions.prefix_extractor->InDomain(user_key) &&
-      !filter->PrefixMayMatch(
-          rep_->ioptions.prefix_extractor->Transform(user_key), kNotValid,
-          false, const_ikey_ptr)) {
-    return false;
-  }
-  return true;
-}
-
-Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
-                            GetContext* get_context, bool skip_filters) {
->>>>>>> blood in blood out
   Status s;
   const bool no_io = read_options.read_tier == kBlockCacheTier;
   CachableEntry<FilterBlockReader> filter_entry;
   if (!skip_filters) {
     filter_entry =
-<<<<<<< HEAD
         GetFilter(prefix_extractor, /*prefetch_buffer*/ nullptr,
-=======
-        GetFilter(/*prefetch_buffer*/ nullptr,
->>>>>>> blood in blood out
                   read_options.read_tier == kBlockCacheTier, get_context);
   }
   FilterBlockReader* filter = filter_entry.value;
 
   // First check the full filter
   // If full filter not useful, Then go into each block
-<<<<<<< HEAD
   if (!FullFilterKeyMayMatch(read_options, filter, key, no_io,
                              prefix_extractor)) {
     RecordTick(rep_->ioptions.statistics, BLOOM_FILTER_USEFUL);
@@ -3039,23 +2298,12 @@ Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
     auto iiter =
         NewIndexIterator(read_options, need_upper_bound_check, &iiter_on_stack,
                          /* index_entry */ nullptr, get_context);
-=======
-  if (!FullFilterKeyMayMatch(read_options, filter, key, no_io)) {
-    RecordTick(rep_->ioptions.statistics, BLOOM_FILTER_USEFUL);
-  } else {
-    BlockIter iiter_on_stack;
-    auto iiter = NewIndexIterator(read_options, &iiter_on_stack,
-                                  /* index_entry */ nullptr, get_context);
->>>>>>> blood in blood out
     std::unique_ptr<InternalIterator> iiter_unique_ptr;
     if (iiter != &iiter_on_stack) {
       iiter_unique_ptr.reset(iiter);
     }
 
-<<<<<<< HEAD
     bool matched = false;  // if such user key mathced a key in SST
-=======
->>>>>>> blood in blood out
     bool done = false;
     for (iiter->Seek(key); iiter->Valid() && !done; iiter->Next()) {
       Slice handle_value = iiter->value();
@@ -3064,12 +2312,8 @@ Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
       bool not_exist_in_filter =
           filter != nullptr && filter->IsBlockBased() == true &&
           handle.DecodeFrom(&handle_value).ok() &&
-<<<<<<< HEAD
           !filter->KeyMayMatch(ExtractUserKey(key), prefix_extractor,
                                handle.offset(), no_io);
-=======
-          !filter->KeyMayMatch(ExtractUserKey(key), handle.offset(), no_io);
->>>>>>> blood in blood out
 
       if (not_exist_in_filter) {
         // Not found
@@ -3078,16 +2322,10 @@ Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
         RecordTick(rep_->ioptions.statistics, BLOOM_FILTER_USEFUL);
         break;
       } else {
-<<<<<<< HEAD
         DataBlockIter biter;
         NewDataBlockIterator<DataBlockIter>(
             rep_, read_options, iiter->value(), &biter, false,
             true /* key_includes_seq */, get_context);
-=======
-        BlockIter biter;
-        NewDataBlockIterator(rep_, read_options, iiter->value(), &biter, false,
-                             get_context);
->>>>>>> blood in blood out
 
         if (read_options.read_tier == kBlockCacheTier &&
             biter.status().IsIncomplete()) {
@@ -3109,13 +2347,9 @@ Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
             s = Status::Corruption(Slice());
           }
 
-<<<<<<< HEAD
           if (!get_context->SaveValue(
                   parsed_key, biter.value(), &matched,
                   biter.IsValuePinned() ? &biter : nullptr)) {
-=======
-          if (!get_context->SaveValue(parsed_key, biter.value(), &biter)) {
->>>>>>> blood in blood out
             done = true;
             break;
           }
@@ -3127,12 +2361,9 @@ Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
         break;
       }
     }
-<<<<<<< HEAD
     if (matched && filter != nullptr && !filter->IsBlockBased()) {
       RecordTick(rep_->ioptions.statistics, BLOOM_FILTER_FULL_TRUE_POSITIVE);
     }
-=======
->>>>>>> blood in blood out
     if (s.ok()) {
       s = iiter->status();
     }
@@ -3150,22 +2381,14 @@ Status BlockBasedTable::Get(const ReadOptions& read_options, const Slice& key,
 Status BlockBasedTable::Prefetch(const Slice* const begin,
                                  const Slice* const end) {
   auto& comparator = rep_->internal_comparator;
-<<<<<<< HEAD
   auto user_comparator = comparator.user_comparator();
-=======
->>>>>>> blood in blood out
   // pre-condition
   if (begin && end && comparator.Compare(*begin, *end) > 0) {
     return Status::InvalidArgument(*begin, *end);
   }
 
-<<<<<<< HEAD
   IndexBlockIter iiter_on_stack;
   auto iiter = NewIndexIterator(ReadOptions(), false, &iiter_on_stack);
-=======
-  BlockIter iiter_on_stack;
-  auto iiter = NewIndexIterator(ReadOptions(), &iiter_on_stack);
->>>>>>> blood in blood out
   std::unique_ptr<InternalIterator> iiter_unique_ptr;
   if (iiter != &iiter_on_stack) {
     iiter_unique_ptr = std::unique_ptr<InternalIterator>(iiter);
@@ -3182,17 +2405,12 @@ Status BlockBasedTable::Prefetch(const Slice* const begin,
   for (begin ? iiter->Seek(*begin) : iiter->SeekToFirst(); iiter->Valid();
        iiter->Next()) {
     Slice block_handle = iiter->value();
-<<<<<<< HEAD
     const bool is_user_key = rep_->table_properties &&
                              rep_->table_properties->index_key_is_user_key > 0;
     if (end &&
         ((!is_user_key && comparator.Compare(iiter->key(), *end) >= 0) ||
          (is_user_key &&
           user_comparator->Compare(iiter->key(), ExtractUserKey(*end)) >= 0))) {
-=======
-
-    if (end && comparator.Compare(iiter->key(), *end) >= 0) {
->>>>>>> blood in blood out
       if (prefetching_boundary_page) {
         break;
       }
@@ -3203,14 +2421,9 @@ Status BlockBasedTable::Prefetch(const Slice* const begin,
     }
 
     // Load the block specified by the block_handle into the block cache
-<<<<<<< HEAD
     DataBlockIter biter;
     NewDataBlockIterator<DataBlockIter>(rep_, ReadOptions(), block_handle,
                                         &biter);
-=======
-    BlockIter biter;
-    NewDataBlockIterator(rep_, ReadOptions(), block_handle, &biter);
->>>>>>> blood in blood out
 
     if (!biter.status().ok()) {
       // there was an unexpected error while pre-fetching
@@ -3236,14 +2449,9 @@ Status BlockBasedTable::VerifyChecksum() {
     return s;
   }
   // Check Data blocks
-<<<<<<< HEAD
   IndexBlockIter iiter_on_stack;
   InternalIterator* iiter =
       NewIndexIterator(ReadOptions(), false, &iiter_on_stack);
-=======
-  BlockIter iiter_on_stack;
-  InternalIterator* iiter = NewIndexIterator(ReadOptions(), &iiter_on_stack);
->>>>>>> blood in blood out
   std::unique_ptr<InternalIterator> iiter_unique_ptr;
   if (iiter != &iiter_on_stack) {
     iiter_unique_ptr = std::unique_ptr<InternalIterator>(iiter);
@@ -3318,33 +2526,17 @@ bool BlockBasedTable::TEST_KeyInCache(const ReadOptions& options,
   return in_cache;
 }
 
-<<<<<<< HEAD
 BlockBasedTableOptions::IndexType BlockBasedTable::UpdateIndexType() {
   // Some old version of block-based tables don't have index type present in
   // table properties. If that's the case we can safely use the kBinarySearch.
   BlockBasedTableOptions::IndexType index_type_on_file =
       BlockBasedTableOptions::kBinarySearch;
-=======
-// REQUIRES: The following fields of rep_ should have already been populated:
-//  1. file
-//  2. index_handle,
-//  3. options
-//  4. internal_comparator
-//  5. index_type
-Status BlockBasedTable::CreateIndexReader(
-    FilePrefetchBuffer* prefetch_buffer, IndexReader** index_reader,
-    InternalIterator* preloaded_meta_index_iter, int level) {
-  // Some old version of block-based tables don't have index type present in
-  // table properties. If that's the case we can safely use the kBinarySearch.
-  auto index_type_on_file = BlockBasedTableOptions::kBinarySearch;
->>>>>>> blood in blood out
   if (rep_->table_properties) {
     auto& props = rep_->table_properties->user_collected_properties;
     auto pos = props.find(BlockBasedTablePropertyNames::kIndexType);
     if (pos != props.end()) {
       index_type_on_file = static_cast<BlockBasedTableOptions::IndexType>(
           DecodeFixed32(pos->second.c_str()));
-<<<<<<< HEAD
       // update index_type with the true type
       rep_->index_type = index_type_on_file;
     }
@@ -3362,55 +2554,32 @@ Status BlockBasedTable::CreateIndexReader(
     FilePrefetchBuffer* prefetch_buffer, IndexReader** index_reader,
     InternalIterator* preloaded_meta_index_iter, int level) {
   auto index_type_on_file = UpdateIndexType();
-=======
-    }
-  }
->>>>>>> blood in blood out
 
   auto file = rep_->file.get();
   const InternalKeyComparator* icomparator = &rep_->internal_comparator;
   const Footer& footer = rep_->footer;
-<<<<<<< HEAD
 
   // kHashSearch requires non-empty prefix_extractor but bypass checking
   // prefix_extractor here since we have no access to MutableCFOptions.
   // Add need_upper_bound_check flag in  BlockBasedTable::NewIndexIterator.
   // If prefix_extractor does not match prefix_extractor_name from table
   // properties, turn off Hash Index by setting total_order_seek to true
-=======
-  if (index_type_on_file == BlockBasedTableOptions::kHashSearch &&
-      rep_->ioptions.prefix_extractor == nullptr) {
-    ROCKS_LOG_WARN(rep_->ioptions.info_log,
-                   "BlockBasedTableOptions::kHashSearch requires "
-                   "options.prefix_extractor to be set."
-                   " Fall back to binary search index.");
-    index_type_on_file = BlockBasedTableOptions::kBinarySearch;
-  }
->>>>>>> blood in blood out
 
   switch (index_type_on_file) {
     case BlockBasedTableOptions::kTwoLevelIndexSearch: {
       return PartitionIndexReader::Create(
           this, file, prefetch_buffer, footer, footer.index_handle(),
           rep_->ioptions, icomparator, index_reader,
-<<<<<<< HEAD
           rep_->persistent_cache_options, level,
           rep_->table_properties == nullptr ||
               rep_->table_properties->index_key_is_user_key == 0);
-=======
-          rep_->persistent_cache_options, level);
->>>>>>> blood in blood out
     }
     case BlockBasedTableOptions::kBinarySearch: {
       return BinarySearchIndexReader::Create(
           file, prefetch_buffer, footer, footer.index_handle(), rep_->ioptions,
-<<<<<<< HEAD
           icomparator, index_reader, rep_->persistent_cache_options,
           rep_->table_properties == nullptr ||
               rep_->table_properties->index_key_is_user_key == 0);
-=======
-          icomparator, index_reader, rep_->persistent_cache_options);
->>>>>>> blood in blood out
     }
     case BlockBasedTableOptions::kHashSearch: {
       std::unique_ptr<Block> meta_guard;
@@ -3428,13 +2597,9 @@ Status BlockBasedTable::CreateIndexReader(
           return BinarySearchIndexReader::Create(
               file, prefetch_buffer, footer, footer.index_handle(),
               rep_->ioptions, icomparator, index_reader,
-<<<<<<< HEAD
               rep_->persistent_cache_options,
               rep_->table_properties == nullptr ||
                   rep_->table_properties->index_key_is_user_key == 0);
-=======
-              rep_->persistent_cache_options);
->>>>>>> blood in blood out
         }
         meta_index_iter = meta_iter_guard.get();
       }
@@ -3443,13 +2608,9 @@ Status BlockBasedTable::CreateIndexReader(
           rep_->internal_prefix_transform.get(), footer, file, prefetch_buffer,
           rep_->ioptions, icomparator, footer.index_handle(), meta_index_iter,
           index_reader, rep_->hash_index_allow_collision,
-<<<<<<< HEAD
           rep_->persistent_cache_options,
           rep_->table_properties == nullptr ||
               rep_->table_properties->index_key_is_user_key == 0);
-=======
-          rep_->persistent_cache_options);
->>>>>>> blood in blood out
     }
     default: {
       std::string error_message =
@@ -3520,13 +2681,8 @@ Status BlockBasedTable::GetKVPairsFromDataBlocks(
     }
 
     std::unique_ptr<InternalIterator> datablock_iter;
-<<<<<<< HEAD
     datablock_iter.reset(NewDataBlockIterator<DataBlockIter>(
         rep_, ReadOptions(), blockhandles_iter->value()));
-=======
-    datablock_iter.reset(
-        NewDataBlockIterator(rep_, ReadOptions(), blockhandles_iter->value()));
->>>>>>> blood in blood out
     s = datablock_iter->status();
 
     if (!s.ok()) {
@@ -3555,12 +2711,8 @@ Status BlockBasedTable::GetKVPairsFromDataBlocks(
   return Status::OK();
 }
 
-<<<<<<< HEAD
 Status BlockBasedTable::DumpTable(WritableFile* out_file,
                                   const SliceTransform* prefix_extractor) {
-=======
-Status BlockBasedTable::DumpTable(WritableFile* out_file) {
->>>>>>> blood in blood out
   // Output Footer
   out_file->Append(
       "Footer Details:\n"
@@ -3641,11 +2793,7 @@ Status BlockBasedTable::DumpTable(WritableFile* out_file) {
         s = block_fetcher.ReadBlockContents();
         if (!s.ok()) {
           rep_->filter.reset(new BlockBasedFilterBlockReader(
-<<<<<<< HEAD
               prefix_extractor, table_options,
-=======
-              rep_->ioptions.prefix_extractor, table_options,
->>>>>>> blood in blood out
               table_options.whole_key_filtering, std::move(block),
               rep_->ioptions.statistics));
         }
@@ -3730,10 +2878,6 @@ Status BlockBasedTable::DumpIndexBlock(WritableFile* out_file) {
   out_file->Append(
       "Index Details:\n"
       "--------------------------------------\n");
-<<<<<<< HEAD
-=======
-
->>>>>>> blood in blood out
   std::unique_ptr<InternalIterator> blockhandles_iter(
       NewIndexIterator(ReadOptions()));
   Status s = blockhandles_iter->status();
@@ -3751,7 +2895,6 @@ Status BlockBasedTable::DumpIndexBlock(WritableFile* out_file) {
       break;
     }
     Slice key = blockhandles_iter->key();
-<<<<<<< HEAD
     Slice user_key;
     InternalKey ikey;
     if (rep_->table_properties &&
@@ -3764,22 +2907,11 @@ Status BlockBasedTable::DumpIndexBlock(WritableFile* out_file) {
 
     out_file->Append("  HEX    ");
     out_file->Append(user_key.ToString(true).c_str());
-=======
-    InternalKey ikey;
-    ikey.DecodeFrom(key);
-
-    out_file->Append("  HEX    ");
-    out_file->Append(ikey.user_key().ToString(true).c_str());
->>>>>>> blood in blood out
     out_file->Append(": ");
     out_file->Append(blockhandles_iter->value().ToString(true).c_str());
     out_file->Append("\n");
 
-<<<<<<< HEAD
     std::string str_key = user_key.ToString();
-=======
-    std::string str_key = ikey.user_key().ToString();
->>>>>>> blood in blood out
     std::string res_key("");
     char cspace = ' ';
     for (size_t i = 0; i < str_key.size(); i++) {
@@ -3831,13 +2963,8 @@ Status BlockBasedTable::DumpDataBlocks(WritableFile* out_file) {
     out_file->Append("--------------------------------------\n");
 
     std::unique_ptr<InternalIterator> datablock_iter;
-<<<<<<< HEAD
     datablock_iter.reset(NewDataBlockIterator<DataBlockIter>(
         rep_, ReadOptions(), blockhandles_iter->value()));
-=======
-    datablock_iter.reset(
-        NewDataBlockIterator(rep_, ReadOptions(), blockhandles_iter->value()));
->>>>>>> blood in blood out
     s = datablock_iter->status();
 
     if (!s.ok()) {
@@ -3918,36 +3045,20 @@ void BlockBasedTable::DumpKeyValue(const Slice& key, const Slice& value,
 
 namespace {
 
-<<<<<<< HEAD
 void DeleteCachedFilterEntry(const Slice& /*key*/, void* value) {
   FilterBlockReader* filter = reinterpret_cast<FilterBlockReader*>(value);
   if (filter->statistics() != nullptr) {
     RecordTick(filter->statistics(), BLOCK_CACHE_FILTER_BYTES_EVICT,
                filter->ApproximateMemoryUsage());
-=======
-void DeleteCachedFilterEntry(const Slice& key, void* value) {
-  FilterBlockReader* filter = reinterpret_cast<FilterBlockReader*>(value);
-  if (filter->statistics() != nullptr) {
-    RecordTick(filter->statistics(), BLOCK_CACHE_FILTER_BYTES_EVICT,
-               filter->size());
->>>>>>> blood in blood out
   }
   delete filter;
 }
 
-<<<<<<< HEAD
 void DeleteCachedIndexEntry(const Slice& /*key*/, void* value) {
   IndexReader* index_reader = reinterpret_cast<IndexReader*>(value);
   if (index_reader->statistics() != nullptr) {
     RecordTick(index_reader->statistics(), BLOCK_CACHE_INDEX_BYTES_EVICT,
                index_reader->ApproximateMemoryUsage());
-=======
-void DeleteCachedIndexEntry(const Slice& key, void* value) {
-  IndexReader* index_reader = reinterpret_cast<IndexReader*>(value);
-  if (index_reader->statistics() != nullptr) {
-    RecordTick(index_reader->statistics(), BLOCK_CACHE_INDEX_BYTES_EVICT,
-               index_reader->usable_size());
->>>>>>> blood in blood out
   }
   delete index_reader;
 }

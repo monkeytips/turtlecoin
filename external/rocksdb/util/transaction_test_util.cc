@@ -14,10 +14,7 @@
 #include <algorithm>
 #include <numeric>
 #include <string>
-<<<<<<< HEAD
 #include <random>
-=======
->>>>>>> blood in blood out
 #include <thread>
 
 #include "rocksdb/db.h"
@@ -131,14 +128,9 @@ bool RandomTransactionInserter::DoInsert(DB* db, Transaction* txn,
 
   std::vector<uint16_t> set_vec(num_sets_);
   std::iota(set_vec.begin(), set_vec.end(), static_cast<uint16_t>(0));
-<<<<<<< HEAD
 
   std::shuffle(set_vec.begin(), set_vec.end(), std::random_device{});
 
-=======
-  std::random_shuffle(set_vec.begin(), set_vec.end(),
-                      [&](uint64_t r) { return rand_->Uniform(r); });
->>>>>>> blood in blood out
   // For each set, pick a key at random and increment it
   for (uint16_t set_i : set_vec) {
     uint64_t int_value = 0;
@@ -185,11 +177,7 @@ bool RandomTransactionInserter::DoInsert(DB* db, Transaction* txn,
     if (txn != nullptr) {
       std::hash<std::thread::id> hasher;
       char name[64];
-<<<<<<< HEAD
       snprintf(name, 64, "txn%" ROCKSDB_PRIszt "-%d", hasher(std::this_thread::get_id()),
-=======
-      snprintf(name, 64, "txn%zu-%d", hasher(std::this_thread::get_id()),
->>>>>>> blood in blood out
                txn_id_++);
       assert(strlen(name) < 64 - 1);
       if (!is_optimistic && !rand_->OneIn(10)) {
@@ -198,13 +186,7 @@ bool RandomTransactionInserter::DoInsert(DB* db, Transaction* txn,
         s = txn->Prepare();
         assert(s.ok());
       }
-<<<<<<< HEAD
       if (!rand_->OneIn(20)) {
-=======
-      // TODO(myabandeh): enable this when WritePreparedTxnDB::RollbackPrepared
-      // is updated to handle in-the-middle rollbacks.
-      if (!rand_->OneIn(0)) {
->>>>>>> blood in blood out
         s = txn->Commit();
       } else {
         // Also try 5% rollback
@@ -276,12 +258,7 @@ Status RandomTransactionInserter::Verify(DB* db, uint16_t num_sets,
   std::vector<uint16_t> set_vec(num_sets);
   std::iota(set_vec.begin(), set_vec.end(), static_cast<uint16_t>(0));
   if (rand) {
-<<<<<<< HEAD
     std::shuffle(set_vec.begin(), set_vec.end(), std::random_device{});
-=======
-    std::random_shuffle(set_vec.begin(), set_vec.end(),
-                        [&](uint64_t r) { return rand->Uniform(r); });
->>>>>>> blood in blood out
   }
   // For each set of keys with the same prefix, sum all the values
   for (uint16_t set_i : set_vec) {

@@ -22,10 +22,7 @@
 #include "db/internal_stats.h"
 #include "db/job_context.h"
 #include "db/log_writer.h"
-<<<<<<< HEAD
 #include "db/logs_with_prep_tracker.h"
-=======
->>>>>>> blood in blood out
 #include "db/memtable_list.h"
 #include "db/snapshot_impl.h"
 #include "db/version_edit.h"
@@ -46,10 +43,7 @@
 
 namespace rocksdb {
 
-<<<<<<< HEAD
 class DBImpl;
-=======
->>>>>>> blood in blood out
 class MemTable;
 class SnapshotChecker;
 class TableCache;
@@ -79,12 +73,8 @@ class FlushJob {
   // Require db_mutex held.
   // Once PickMemTable() is called, either Run() or Cancel() has to be called.
   void PickMemTable();
-<<<<<<< HEAD
   Status Run(LogsWithPrepTracker* prep_tracker = nullptr,
              FileMetaData* file_meta = nullptr);
-=======
-  Status Run(FileMetaData* file_meta = nullptr);
->>>>>>> blood in blood out
   void Cancel();
   TableProperties GetTableProperties() const { return table_properties_; }
 

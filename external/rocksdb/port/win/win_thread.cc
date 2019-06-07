@@ -138,13 +138,9 @@ void WindowsThread::join() {
       "WaitForSingleObjectFailed: thread join");
   }
 
-<<<<<<< HEAD
   BOOL rc;
   rc = CloseHandle(reinterpret_cast<HANDLE>(data_->handle_));
   assert(rc != 0);
-=======
-  CloseHandle(reinterpret_cast<HANDLE>(data_->handle_));
->>>>>>> blood in blood out
   data_->handle_ = 0;
 }
 
@@ -160,11 +156,7 @@ bool WindowsThread::detach() {
   BOOL ret = CloseHandle(reinterpret_cast<HANDLE>(data_->handle_));
   data_->handle_ = 0;
 
-<<<<<<< HEAD
   return (ret != 0);
-=======
-  return (ret == TRUE);
->>>>>>> blood in blood out
 }
 
 void  WindowsThread::swap(WindowsThread& o) {

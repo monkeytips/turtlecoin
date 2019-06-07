@@ -16,7 +16,6 @@
  * Method:    disposeInternal
  * Signature: (J)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_RocksCallbackObject_disposeInternal(JNIEnv* /*env*/,
                                                           jobject /*jobj*/,
                                                           jlong handle) {
@@ -29,15 +28,4 @@ void Java_org_rocksdb_RocksCallbackObject_disposeInternal(JNIEnv* /*env*/,
   // destructors...
   delete reinterpret_cast<rocksdb::JniCallback*>(handle);
   // @lint-ignore TXT4 T25377293 Grandfathered in
-=======
-void Java_org_rocksdb_RocksCallbackObject_disposeInternal(
-    JNIEnv* env, jobject jobj, jlong handle) {
-      // TODO(AR) is deleting from the super class JniCallback OK, or must we delete the subclass?
-      // Example hierarchies:
-      //   1) Comparator -> BaseComparatorJniCallback + JniCallback -> DirectComparatorJniCallback
-      //   2) Comparator -> BaseComparatorJniCallback + JniCallback -> ComparatorJniCallback
-      // I think this is okay, as Comparator and JniCallback both have virtual destructors...
-      delete reinterpret_cast<rocksdb::JniCallback*>(handle);
-// @lint-ignore TXT4 T25377293 Grandfathered in
->>>>>>> blood in blood out
 }

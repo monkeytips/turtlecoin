@@ -441,11 +441,7 @@ public interface AdvancedColumnFamilyOptionsInterface
   boolean optimizeFiltersForHits();
 
   /**
-<<<<<<< HEAD
    * In debug mode, RocksDB run consistency checks on the LSM every time the LSM
-=======
-   * In debug mode, RocksDB run consistency checks on the LSM everytime the LSM
->>>>>>> blood in blood out
    * change (Flush, Compaction, AddFile). These checks are disabled in release
    * mode, use this option to enable them in release mode as well.
    *
@@ -459,11 +455,7 @@ public interface AdvancedColumnFamilyOptionsInterface
       boolean forceConsistencyChecks);
 
   /**
-<<<<<<< HEAD
    * In debug mode, RocksDB run consistency checks on the LSM every time the LSM
-=======
-   * In debug mode, RocksDB run consistency checks on the LSM everytime the LSM
->>>>>>> blood in blood out
    * change (Flush, Compaction, AddFile). These checks are disabled in release
    * mode.
    *

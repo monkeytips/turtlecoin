@@ -68,26 +68,16 @@ bool StringAppendTESTOperator::FullMergeV2(
 }
 
 bool StringAppendTESTOperator::PartialMergeMulti(
-<<<<<<< HEAD
     const Slice& /*key*/, const std::deque<Slice>& /*operand_list*/,
     std::string* /*new_value*/, Logger* /*logger*/) const {
-=======
-    const Slice& key, const std::deque<Slice>& operand_list,
-    std::string* new_value, Logger* logger) const {
->>>>>>> blood in blood out
   return false;
 }
 
 // A version of PartialMerge that actually performs "partial merging".
 // Use this to simulate the exact behaviour of the StringAppendOperator.
 bool StringAppendTESTOperator::_AssocPartialMergeMulti(
-<<<<<<< HEAD
     const Slice& /*key*/, const std::deque<Slice>& operand_list,
     std::string* new_value, Logger* /*logger*/) const {
-=======
-    const Slice& key, const std::deque<Slice>& operand_list,
-    std::string* new_value, Logger* logger) const {
->>>>>>> blood in blood out
   // Clear the *new_value for writing
   assert(new_value);
   new_value->clear();

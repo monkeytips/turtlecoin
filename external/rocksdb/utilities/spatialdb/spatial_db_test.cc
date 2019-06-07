@@ -21,11 +21,7 @@ namespace spatial {
 class SpatialDBTest : public testing::Test {
  public:
   SpatialDBTest() {
-<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("spatial_db_test");
-=======
-    dbname_ = test::TmpDir() + "/spatial_db_test";
->>>>>>> blood in blood out
     DestroyDB(dbname_, Options());
   }
 
@@ -303,11 +299,7 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
-<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
-=======
-int main(int argc, char** argv) {
->>>>>>> blood in blood out
   fprintf(stderr, "SKIPPED as SpatialDB is not supported in ROCKSDB_LITE\n");
   return 0;
 }

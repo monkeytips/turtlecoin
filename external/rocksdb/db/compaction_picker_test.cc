@@ -20,13 +20,9 @@ namespace rocksdb {
 class CountingLogger : public Logger {
  public:
   using Logger::Logv;
-<<<<<<< HEAD
   virtual void Logv(const char* /*format*/, va_list /*ap*/) override {
     log_count++;
   }
-=======
-  virtual void Logv(const char* format, va_list ap) override { log_count++; }
->>>>>>> blood in blood out
   size_t log_count;
 };
 
@@ -63,11 +59,7 @@ class CompactionPickerTest : public testing::Test {
         vstorage_(nullptr) {
     fifo_options_.max_table_files_size = 1;
     mutable_cf_options_.RefreshDerivedOptions(ioptions_);
-<<<<<<< HEAD
     ioptions_.cf_paths.emplace_back("dummy",
-=======
-    ioptions_.db_paths.emplace_back("dummy",
->>>>>>> blood in blood out
                                     std::numeric_limits<uint64_t>::max());
   }
 
@@ -399,17 +391,10 @@ TEST_F(CompactionPickerTest, NeedsCompactionUniversal) {
   NewVersionStorage(1, kCompactionStyleUniversal);
   UniversalCompactionPicker universal_compaction_picker(
       ioptions_, &icmp_);
-<<<<<<< HEAD
   UpdateVersionStorageInfo();
   // must return false when there's no files.
   ASSERT_EQ(universal_compaction_picker.NeedsCompaction(vstorage_.get()),
             false);
-=======
-  // must return false when there's no files.
-  ASSERT_EQ(universal_compaction_picker.NeedsCompaction(vstorage_.get()),
-            false);
-  UpdateVersionStorageInfo();
->>>>>>> blood in blood out
 
   // verify the trigger given different number of L0 files.
   for (int i = 1;
@@ -430,10 +415,7 @@ TEST_F(CompactionPickerTest, CompactionUniversalIngestBehindReservedLevel) {
   ioptions_.allow_ingest_behind = true;
   ioptions_.num_levels = 3;
   UniversalCompactionPicker universal_compaction_picker(ioptions_, &icmp_);
-<<<<<<< HEAD
   UpdateVersionStorageInfo();
-=======
->>>>>>> blood in blood out
   // must return false when there's no files.
   ASSERT_EQ(universal_compaction_picker.NeedsCompaction(vstorage_.get()),
             false);
@@ -467,10 +449,7 @@ TEST_F(CompactionPickerTest, CannotTrivialMoveUniversal) {
   mutable_cf_options_.compaction_options_universal.allow_trivial_move = true;
   NewVersionStorage(1, kCompactionStyleUniversal);
   UniversalCompactionPicker universal_compaction_picker(ioptions_, &icmp_);
-<<<<<<< HEAD
   UpdateVersionStorageInfo();
-=======
->>>>>>> blood in blood out
   // must return false when there's no files.
   ASSERT_EQ(universal_compaction_picker.NeedsCompaction(vstorage_.get()),
             false);

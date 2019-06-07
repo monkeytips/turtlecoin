@@ -21,11 +21,7 @@
 #include "Common/StdOutputStream.h"
 #include "Serialization/BinaryInputStreamSerializer.h"
 #include "Serialization/BinaryOutputStreamSerializer.h"
-<<<<<<< HEAD
 #include "Serialization/CryptoNoteSerialization.h"
-=======
-#include "CryptoNoteCore/CryptoNoteSerialization.h"
->>>>>>> blood in blood out
 
 using namespace Common;
 

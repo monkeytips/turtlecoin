@@ -185,11 +185,7 @@ void NTAPI WinOnThreadExit(PVOID module, DWORD reason, PVOID reserved) {
   // We decided to punt on PROCESS_EXIT
   if (DLL_THREAD_DETACH == reason) {
     if (thread_local_key != pthread_key_t(-1) && thread_local_inclass_routine != nullptr) {
-<<<<<<< HEAD
       void* tls = TlsGetValue(thread_local_key);
-=======
-      void* tls = pthread_getspecific(thread_local_key);
->>>>>>> blood in blood out
       if (tls != nullptr) {
         thread_local_inclass_routine(tls);
       }

@@ -20,7 +20,6 @@ class DBWALTest : public DBTestBase {
   DBWALTest() : DBTestBase("/db_wal_test") {}
 };
 
-<<<<<<< HEAD
 // A SpecialEnv enriched to give more insight about deleted files
 class EnrichedSpecialEnv : public SpecialEnv {
  public:
@@ -121,8 +120,6 @@ TEST_F(DBWALTestWithEnrichedEnv, SkipDeletedWALs) {
   ASSERT_FALSE(enriched_env_->gap_in_wals);
 }
 
-=======
->>>>>>> blood in blood out
 TEST_F(DBWALTest, WAL) {
   do {
     CreateAndReopenWithCF({"pikachu"}, CurrentOptions());
@@ -994,11 +991,7 @@ TEST_F(DBWALTest, kPointInTimeRecoveryCFConsistency) {
 
   // Record the offset at this point
   Env* env = options.env;
-<<<<<<< HEAD
   uint64_t wal_file_id = dbfull()->TEST_LogfileNumber();
-=======
-  int wal_file_id = RecoveryTestHelper::kWALFileOffset + 1;
->>>>>>> blood in blood out
   std::string fname = LogFileName(dbname_, wal_file_id);
   uint64_t offset_to_corrupt;
   ASSERT_OK(env->GetFileSize(fname, &offset_to_corrupt));

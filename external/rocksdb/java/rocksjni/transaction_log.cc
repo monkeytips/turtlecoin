@@ -19,14 +19,9 @@
  * Method:    disposeInternal
  * Signature: (J)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_TransactionLogIterator_disposeInternal(JNIEnv* /*env*/,
                                                              jobject /*jobj*/,
                                                              jlong handle) {
-=======
-void Java_org_rocksdb_TransactionLogIterator_disposeInternal(
-    JNIEnv* env, jobject jobj, jlong handle) {
->>>>>>> blood in blood out
   delete reinterpret_cast<rocksdb::TransactionLogIterator*>(handle);
 }
 
@@ -35,14 +30,9 @@ void Java_org_rocksdb_TransactionLogIterator_disposeInternal(
  * Method:    isValid
  * Signature: (J)Z
  */
-<<<<<<< HEAD
 jboolean Java_org_rocksdb_TransactionLogIterator_isValid(JNIEnv* /*env*/,
                                                          jobject /*jobj*/,
                                                          jlong handle) {
-=======
-jboolean Java_org_rocksdb_TransactionLogIterator_isValid(
-    JNIEnv* env, jobject jobj, jlong handle) {
->>>>>>> blood in blood out
   return reinterpret_cast<rocksdb::TransactionLogIterator*>(handle)->Valid();
 }
 
@@ -51,14 +41,9 @@ jboolean Java_org_rocksdb_TransactionLogIterator_isValid(
  * Method:    next
  * Signature: (J)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_TransactionLogIterator_next(JNIEnv* /*env*/,
                                                   jobject /*jobj*/,
                                                   jlong handle) {
-=======
-void Java_org_rocksdb_TransactionLogIterator_next(
-    JNIEnv* env, jobject jobj, jlong handle) {
->>>>>>> blood in blood out
   reinterpret_cast<rocksdb::TransactionLogIterator*>(handle)->Next();
 }
 
@@ -67,18 +52,11 @@ void Java_org_rocksdb_TransactionLogIterator_next(
  * Method:    status
  * Signature: (J)V
  */
-<<<<<<< HEAD
 void Java_org_rocksdb_TransactionLogIterator_status(JNIEnv* env,
                                                     jobject /*jobj*/,
                                                     jlong handle) {
   rocksdb::Status s =
       reinterpret_cast<rocksdb::TransactionLogIterator*>(handle)->status();
-=======
-void Java_org_rocksdb_TransactionLogIterator_status(
-    JNIEnv* env, jobject jobj, jlong handle) {
-  rocksdb::Status s = reinterpret_cast<
-      rocksdb::TransactionLogIterator*>(handle)->status();
->>>>>>> blood in blood out
   if (!s.ok()) {
     rocksdb::RocksDBExceptionJni::ThrowNew(env, s);
   }
@@ -89,14 +67,9 @@ void Java_org_rocksdb_TransactionLogIterator_status(
  * Method:    getBatch
  * Signature: (J)Lorg/rocksdb/TransactionLogIterator$BatchResult
  */
-<<<<<<< HEAD
 jobject Java_org_rocksdb_TransactionLogIterator_getBatch(JNIEnv* env,
                                                          jobject /*jobj*/,
                                                          jlong handle) {
-=======
-jobject Java_org_rocksdb_TransactionLogIterator_getBatch(
-    JNIEnv* env, jobject jobj, jlong handle) {
->>>>>>> blood in blood out
   rocksdb::BatchResult batch_result =
       reinterpret_cast<rocksdb::TransactionLogIterator*>(handle)->GetBatch();
   return rocksdb::BatchResultJni::construct(env, batch_result);

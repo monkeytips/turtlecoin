@@ -18,12 +18,8 @@
 #pragma once
 
 #include "CryptoNoteFormatUtils.h"
-<<<<<<< HEAD
 
 #include <Common/TransactionExtra.h>
-=======
-#include "TransactionExtra.h"
->>>>>>> blood in blood out
 
 namespace CryptoNote {
 

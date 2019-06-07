@@ -27,7 +27,6 @@ class DBRangeDelTest : public DBTestBase {
 // ROCKSDB_LITE
 #ifndef ROCKSDB_LITE
 TEST_F(DBRangeDelTest, NonBlockBasedTableNotSupported) {
-<<<<<<< HEAD
   // TODO: figure out why MmapReads trips the iterator pinning assertion in
   // RangeDelAggregator. Ideally it would be supported; otherwise it should at
   // least be explicitly unsupported.
@@ -75,49 +74,6 @@ TEST_F(DBRangeDelTest, CompactionOutputHasOnlyRangeTombstone) {
     // do not hold true.
   } while (ChangeOptions(kRangeDelSkipConfigs | kSkipHashCuckoo |
                          kSkipUniversalCompaction | kSkipFIFOCompaction));
-=======
-  if (!IsMemoryMappedAccessSupported()) {
-    return;
-  }
-  Options opts = CurrentOptions();
-  opts.table_factory.reset(new PlainTableFactory());
-  opts.prefix_extractor.reset(NewNoopTransform());
-  opts.allow_mmap_reads = true;
-  opts.max_sequential_skip_in_iterations = 999999;
-  Reopen(opts);
-
-  ASSERT_TRUE(
-      db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "dr1", "dr1")
-          .IsNotSupported());
-}
-
-TEST_F(DBRangeDelTest, FlushOutputHasOnlyRangeTombstones) {
-  ASSERT_OK(db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "dr1",
-                             "dr2"));
-  ASSERT_OK(db_->Flush(FlushOptions()));
-  ASSERT_EQ(1, NumTableFilesAtLevel(0));
-}
-
-TEST_F(DBRangeDelTest, CompactionOutputHasOnlyRangeTombstone) {
-  Options opts = CurrentOptions();
-  opts.disable_auto_compactions = true;
-  opts.statistics = CreateDBStatistics();
-  Reopen(opts);
-
-  // snapshot protects range tombstone from dropping due to becoming obsolete.
-  const Snapshot* snapshot = db_->GetSnapshot();
-  db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "a", "z");
-  db_->Flush(FlushOptions());
-
-  ASSERT_EQ(1, NumTableFilesAtLevel(0));
-  ASSERT_EQ(0, NumTableFilesAtLevel(1));
-  dbfull()->TEST_CompactRange(0, nullptr, nullptr, nullptr,
-                              true /* disallow_trivial_move */);
-  ASSERT_EQ(0, NumTableFilesAtLevel(0));
-  ASSERT_EQ(1, NumTableFilesAtLevel(1));
-  ASSERT_EQ(0, TestGetTickerCount(opts, COMPACTION_RANGE_DEL_DROP_OBSOLETE));
-  db_->ReleaseSnapshot(snapshot);
->>>>>>> blood in blood out
 }
 
 TEST_F(DBRangeDelTest, CompactionOutputFilesExactlyFilled) {
@@ -483,13 +439,8 @@ TEST_F(DBRangeDelTest, ValidUniversalSubcompactionBoundaries) {
       reinterpret_cast<ColumnFamilyHandleImpl*>(db_->DefaultColumnFamily())
           ->cfd(),
       1 /* input_level */, 2 /* output_level */, 0 /* output_path_id */,
-<<<<<<< HEAD
       0 /* max_subcompactions */, nullptr /* begin */, nullptr /* end */,
       true /* exclusive */, true /* disallow_trivial_move */));
-=======
-      nullptr /* begin */, nullptr /* end */, true /* exclusive */,
-      true /* disallow_trivial_move */));
->>>>>>> blood in blood out
 }
 #endif  // ROCKSDB_LITE
 
@@ -551,20 +502,12 @@ TEST_F(DBRangeDelTest, ObsoleteTombstoneCleanup) {
   Reopen(opts);
 
   db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "dr1",
-<<<<<<< HEAD
                    "dr10");  // obsolete after compaction
-=======
-                   "dr1");  // obsolete after compaction
->>>>>>> blood in blood out
   db_->Put(WriteOptions(), "key", "val");
   db_->Flush(FlushOptions());
   const Snapshot* snapshot = db_->GetSnapshot();
   db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "dr2",
-<<<<<<< HEAD
                    "dr20");  // protected by snapshot
-=======
-                   "dr2");  // protected by snapshot
->>>>>>> blood in blood out
   db_->Put(WriteOptions(), "key", "val");
   db_->Flush(FlushOptions());
 
@@ -653,7 +596,6 @@ TEST_F(DBRangeDelTest, TableEvictedDuringScan) {
 }
 
 TEST_F(DBRangeDelTest, GetCoveredKeyFromMutableMemtable) {
-<<<<<<< HEAD
   do {
     DestroyAndReopen(CurrentOptions());
     db_->Put(WriteOptions(), "key", "val");
@@ -705,50 +647,6 @@ TEST_F(DBRangeDelTest, GetCoveredKeyFromSst) {
     db_->ReleaseSnapshot(snapshot);
     // Cuckoo memtables do not support snapshots.
   } while (ChangeOptions(kRangeDelSkipConfigs | kSkipHashCuckoo));
-=======
-  db_->Put(WriteOptions(), "key", "val");
-  ASSERT_OK(
-      db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "a", "z"));
-
-  ReadOptions read_opts;
-  std::string value;
-  ASSERT_TRUE(db_->Get(read_opts, "key", &value).IsNotFound());
-}
-
-TEST_F(DBRangeDelTest, GetCoveredKeyFromImmutableMemtable) {
-  Options opts = CurrentOptions();
-  opts.max_write_buffer_number = 3;
-  opts.min_write_buffer_number_to_merge = 2;
-  // SpecialSkipListFactory lets us specify maximum number of elements the
-  // memtable can hold. It switches the active memtable to immutable (flush is
-  // prevented by the above options) upon inserting an element that would
-  // overflow the memtable.
-  opts.memtable_factory.reset(new SpecialSkipListFactory(1));
-  Reopen(opts);
-
-  db_->Put(WriteOptions(), "key", "val");
-  ASSERT_OK(
-      db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "a", "z"));
-  db_->Put(WriteOptions(), "blah", "val");
-
-  ReadOptions read_opts;
-  std::string value;
-  ASSERT_TRUE(db_->Get(read_opts, "key", &value).IsNotFound());
-}
-
-TEST_F(DBRangeDelTest, GetCoveredKeyFromSst) {
-  db_->Put(WriteOptions(), "key", "val");
-  // snapshot prevents key from being deleted during flush
-  const Snapshot* snapshot = db_->GetSnapshot();
-  ASSERT_OK(
-      db_->DeleteRange(WriteOptions(), db_->DefaultColumnFamily(), "a", "z"));
-  ASSERT_OK(db_->Flush(FlushOptions()));
-
-  ReadOptions read_opts;
-  std::string value;
-  ASSERT_TRUE(db_->Get(read_opts, "key", &value).IsNotFound());
-  db_->ReleaseSnapshot(snapshot);
->>>>>>> blood in blood out
 }
 
 TEST_F(DBRangeDelTest, GetCoveredMergeOperandFromMemtable) {
@@ -1012,7 +910,6 @@ TEST_F(DBRangeDelTest, MemtableBloomFilter) {
 }
 
 TEST_F(DBRangeDelTest, CompactionTreatsSplitInputLevelDeletionAtomically) {
-<<<<<<< HEAD
   // This test originally verified that compaction treated files containing a
   // split range deletion in the input level as an atomic unit. I.e.,
   // compacting any input-level file(s) containing a portion of the range
@@ -1021,13 +918,6 @@ TEST_F(DBRangeDelTest, CompactionTreatsSplitInputLevelDeletionAtomically) {
   // tombstones are now truncated to sstable boundaries which removed the need
   // for that behavior (which could lead to excessively large
   // compactions).
-=======
-  // make sure compaction treats files containing a split range deletion in the
-  // input level as an atomic unit. I.e., compacting any input-level file(s)
-  // containing a portion of the range deletion causes all other input-level
-  // files containing portions of that same range deletion to be included in the
-  // compaction.
->>>>>>> blood in blood out
   const int kNumFilesPerLevel = 4, kValueBytes = 4 << 10;
   Options options = CurrentOptions();
   options.compression = kNoCompression;
@@ -1074,36 +964,24 @@ TEST_F(DBRangeDelTest, CompactionTreatsSplitInputLevelDeletionAtomically) {
     if (i == 0) {
       ASSERT_OK(db_->CompactFiles(
           CompactionOptions(), {meta.levels[1].files[0].name}, 2 /* level */));
-<<<<<<< HEAD
       ASSERT_EQ(0, NumTableFilesAtLevel(1));
-=======
->>>>>>> blood in blood out
     } else if (i == 1) {
       auto begin_str = Key(0), end_str = Key(1);
       Slice begin = begin_str, end = end_str;
       ASSERT_OK(db_->CompactRange(CompactRangeOptions(), &begin, &end));
-<<<<<<< HEAD
       ASSERT_EQ(3, NumTableFilesAtLevel(1));
-=======
->>>>>>> blood in blood out
     } else if (i == 2) {
       ASSERT_OK(db_->SetOptions(db_->DefaultColumnFamily(),
                                 {{"max_bytes_for_level_base", "10000"}}));
       dbfull()->TEST_WaitForCompact();
-<<<<<<< HEAD
       ASSERT_EQ(1, NumTableFilesAtLevel(1));
     }
-=======
-    }
-    ASSERT_EQ(0, NumTableFilesAtLevel(1));
->>>>>>> blood in blood out
     ASSERT_GT(NumTableFilesAtLevel(2), 0);
 
     db_->ReleaseSnapshot(snapshot);
   }
 }
 
-<<<<<<< HEAD
 TEST_F(DBRangeDelTest, RangeTombstoneEndKeyAsSstableUpperBound) {
   // Test the handling of the range-tombstone end-key as the
   // upper-bound for an sstable.
@@ -1191,8 +1069,6 @@ TEST_F(DBRangeDelTest, RangeTombstoneEndKeyAsSstableUpperBound) {
   db_->ReleaseSnapshot(snapshot);
 }
 
-=======
->>>>>>> blood in blood out
 TEST_F(DBRangeDelTest, UnorderedTombstones) {
   // Regression test for #2752. Range delete tombstones between
   // different snapshot stripes are not stored in order, so the first

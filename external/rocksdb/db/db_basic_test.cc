@@ -862,14 +862,9 @@ class TestEnv : public EnvWrapper {
             CloseHelper();
           }
         }
-<<<<<<< HEAD
         virtual void Logv(const char* /*format*/, va_list /*ap*/) override{};
 
        protected:
-=======
-        virtual void Logv(const char *format, va_list ap) override { };
-      protected:
->>>>>>> blood in blood out
         virtual Status CloseImpl() override {
           return CloseHelper();
         }
@@ -885,39 +880,23 @@ class TestEnv : public EnvWrapper {
 
     int GetCloseCount() { return close_count; }
 
-<<<<<<< HEAD
     virtual Status NewLogger(const std::string& /*fname*/,
-=======
-    virtual Status NewLogger(const std::string& fname,
->>>>>>> blood in blood out
                              shared_ptr<Logger>* result) {
       result->reset(new TestLogger(this));
       return Status::OK();
     }
 
-<<<<<<< HEAD
    private:
-=======
-  private:
->>>>>>> blood in blood out
     int close_count;
 };
 
 TEST_F(DBBasicTest, DBClose) {
   Options options = GetDefaultOptions();
-<<<<<<< HEAD
   std::string dbname = test::PerThreadDBPath("db_close_test");
   ASSERT_OK(DestroyDB(dbname, options));
 
   DB* db = nullptr;
   TestEnv* env = new TestEnv();
-=======
-  std::string dbname = test::TmpDir(env_) + "/db_close_test";
-  ASSERT_OK(DestroyDB(dbname, options));
-
-  DB* db = nullptr;
-  TestEnv *env = new TestEnv();
->>>>>>> blood in blood out
   options.create_if_missing = true;
   options.env = env;
   Status s = DB::Open(options, dbname, &db);

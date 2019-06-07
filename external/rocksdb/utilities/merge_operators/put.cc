@@ -22,18 +22,10 @@ namespace { // anonymous namespace
 // From the client-perspective, semantics are the same.
 class PutOperator : public MergeOperator {
  public:
-<<<<<<< HEAD
   virtual bool FullMerge(const Slice& /*key*/, const Slice* /*existing_value*/,
                          const std::deque<std::string>& operand_sequence,
                          std::string* new_value,
                          Logger* /*logger*/) const override {
-=======
-  virtual bool FullMerge(const Slice& key,
-                         const Slice* existing_value,
-                         const std::deque<std::string>& operand_sequence,
-                         std::string* new_value,
-                         Logger* logger) const override {
->>>>>>> blood in blood out
     // Put basically only looks at the current/latest value
     assert(!operand_sequence.empty());
     assert(new_value != nullptr);
@@ -41,33 +33,18 @@ class PutOperator : public MergeOperator {
     return true;
   }
 
-<<<<<<< HEAD
   virtual bool PartialMerge(const Slice& /*key*/, const Slice& /*left_operand*/,
                             const Slice& right_operand, std::string* new_value,
                             Logger* /*logger*/) const override {
-=======
-  virtual bool PartialMerge(const Slice& key,
-                            const Slice& left_operand,
-                            const Slice& right_operand,
-                            std::string* new_value,
-                            Logger* logger) const override {
->>>>>>> blood in blood out
     new_value->assign(right_operand.data(), right_operand.size());
     return true;
   }
 
   using MergeOperator::PartialMergeMulti;
-<<<<<<< HEAD
   virtual bool PartialMergeMulti(const Slice& /*key*/,
                                  const std::deque<Slice>& operand_list,
                                  std::string* new_value,
                                  Logger* /*logger*/) const override {
-=======
-  virtual bool PartialMergeMulti(const Slice& key,
-                                 const std::deque<Slice>& operand_list,
-                                 std::string* new_value, Logger* logger) const
-      override {
->>>>>>> blood in blood out
     new_value->assign(operand_list.back().data(), operand_list.back().size());
     return true;
   }
@@ -78,17 +55,10 @@ class PutOperator : public MergeOperator {
 };
 
 class PutOperatorV2 : public PutOperator {
-<<<<<<< HEAD
   virtual bool FullMerge(const Slice& /*key*/, const Slice* /*existing_value*/,
                          const std::deque<std::string>& /*operand_sequence*/,
                          std::string* /*new_value*/,
                          Logger* /*logger*/) const override {
-=======
-  virtual bool FullMerge(const Slice& key, const Slice* existing_value,
-                         const std::deque<std::string>& operand_sequence,
-                         std::string* new_value,
-                         Logger* logger) const override {
->>>>>>> blood in blood out
     assert(false);
     return false;
   }

@@ -16,11 +16,7 @@
 #    See thirdparty.inc for more information.
 #        sample command: cmake -G "Visual Studio 15 Win64" -DWITH_GFLAGS=1 -DWITH_SNAPPY=1 -DWITH_JEMALLOC=1 -DWITH_JNI=1 ..
 # 4. Then build the project in debug mode (you may want to add /m[:<N>] flag to run msbuild in <N> parallel threads
-<<<<<<< HEAD
 #                                          or simply /m to use all avail cores)
-=======
-#                                          or simply /m ot use all avail cores)
->>>>>>> blood in blood out
 #        msbuild rocksdb.sln
 #
 #        rocksdb.sln build features exclusions of test only code in Release. If you build ALL_BUILD then everything
@@ -37,7 +33,6 @@
 # 4. make -j
 
 cmake_minimum_required(VERSION 2.8.12)
-<<<<<<< HEAD
 
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
@@ -45,8 +40,6 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-=======
->>>>>>> blood in blood out
 project(rocksdb)
 enable_language(CXX)
 enable_language(C)
@@ -62,17 +55,13 @@ option(WITH_JEMALLOC "build with JeMalloc" OFF)
 option(WITH_SNAPPY "build with SNAPPY" OFF)
 option(WITH_LZ4 "build with lz4" OFF)
 option(WITH_ZLIB "build with zlib" OFF)
-<<<<<<< HEAD
 option(WITH_ZSTD "build with zstd" OFF)
-=======
->>>>>>> blood in blood out
 if(MSVC)
   # Defaults currently different for GFLAGS.
   #  We will address find_package work a little later
   option(WITH_GFLAGS "build with GFlags" OFF)
   option(WITH_XPRESS "build with windows built in compression" OFF)
   include(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty.inc)
-<<<<<<< HEAD
   
   if(WITH_LZ4)
     SET(LZ4_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../lz4")
@@ -84,11 +73,6 @@ if(MSVC)
 else()
   if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
     # FreeBSD has jemalloc as default malloc
-=======
-else()
-  if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-    # FreeBSD has jemaloc as default malloc
->>>>>>> blood in blood out
     # but it does not have all the jemalloc files in include/...
     set(WITH_JEMALLOC ON)
   else()
@@ -96,20 +80,12 @@ else()
       find_package(JeMalloc REQUIRED)
       add_definitions(-DROCKSDB_JEMALLOC -DJEMALLOC_NO_DEMANGLE)
       include_directories(${JEMALLOC_INCLUDE_DIR})
-<<<<<<< HEAD
       list(APPEND THIRDPARTY_LIBS ${JEMALLOC_LIBRARIES})
     endif()
   endif()
 
   # No config file for this
   option(WITH_GFLAGS "build with GFlags" OFF)
-=======
-    endif()
-  endif()
-  
-  # No config file for this
-  option(WITH_GFLAGS "build with GFlags" ON)
->>>>>>> blood in blood out
   if(WITH_GFLAGS)
     find_package(gflags)
     if(gflags_FOUND)
@@ -142,21 +118,13 @@ else()
   endif()
 
   if(WITH_LZ4)
-<<<<<<< HEAD
     SET(LZ4_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../lz4")
     SET(LZ4_LIBRARIES lz4)
-=======
-    find_package(lz4 REQUIRED)
->>>>>>> blood in blood out
     add_definitions(-DLZ4)
     include_directories(${LZ4_INCLUDE_DIR})
     list(APPEND THIRDPARTY_LIBS ${LZ4_LIBRARIES})
   endif()
 
-<<<<<<< HEAD
-=======
-  option(WITH_ZSTD "build with zstd" OFF)
->>>>>>> blood in blood out
   if(WITH_ZSTD)
     find_package(zstd REQUIRED)
     add_definitions(-DZSTD)
@@ -181,7 +149,6 @@ endif()
 
 string(REGEX REPLACE "[^0-9a-f]+" "" GIT_SHA "${GIT_SHA}")
 
-<<<<<<< HEAD
 
 # Read rocksdb version from version.h header file.
 file(READ include/rocksdb/version.h version_header_file)
@@ -195,23 +162,6 @@ set(ROCKSDB_VERSION ${ROCKSDB_VERSION_MAJOR}.${ROCKSDB_VERSION_MINOR}.${ROCKSDB_
 
 
 option(WITH_MD_LIBRARY "build with MD" OFF)
-=======
-set(SH_CMD "sh")
-execute_process(COMMAND
-  ${SH_CMD} -c "build_tools/version.sh full"
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-  OUTPUT_VARIABLE ROCKSDB_VERSION
-)
-string(STRIP "${ROCKSDB_VERSION}" ROCKSDB_VERSION)
-execute_process(COMMAND
-  ${SH_CMD} -c "build_tools/version.sh major"
-  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-  OUTPUT_VARIABLE ROCKSDB_VERSION_MAJOR
-)
-string(STRIP "${ROCKSDB_VERSION_MAJOR}" ROCKSDB_VERSION_MAJOR)
-
-option(WITH_MD_LIBRARY "build with MD" ON)
->>>>>>> blood in blood out
 if(WIN32 AND MSVC)
   if(WITH_MD_LIBRARY)
     set(RUNTIME_LIBRARY "MD")
@@ -236,11 +186,7 @@ else()
   endif()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-<<<<<<< HEAD
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer")
-=======
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -fno-omit-frame-pointer")
->>>>>>> blood in blood out
     include(CheckCXXCompilerFlag)
     if(ENABLE_LEAF_FRAME)
       CHECK_CXX_COMPILER_FLAG("-momit-leaf-frame-pointer" HAVE_OMIT_LEAF_FRAME_POINTER)
@@ -251,15 +197,12 @@ else()
   endif()
 endif()
 
-<<<<<<< HEAD
 if(APPLE AND CMAKE_C_COMPILER_ID STREQUAL "GNU")
     # Need to build against libc++ instead of libstc++ on apple
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -nostdinc++ -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -nodefaultlibs -lc++ -lc++abi -lm -lc -lgcc -lgcc_eh")
 endif()
 
 
-=======
->>>>>>> blood in blood out
 include(CheckCCompilerFlag)
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le")
   CHECK_C_COMPILER_FLAG("-maltivec" HAS_ALTIVEC)
@@ -272,11 +215,7 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le")
   endif(HAS_ALTIVEC)
 endif(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le")
 
-<<<<<<< HEAD
 option(PORTABLE "build a portable binary" ON)
-=======
-option(PORTABLE "build a portable binary" OFF)
->>>>>>> blood in blood out
 option(FORCE_SSE42 "force building with SSE4.2, even when PORTABLE=ON" OFF)
 if(PORTABLE)
   # MSVC does not need a separate compiler flag to enable SSE4.2; if nmmintrin.h
@@ -314,10 +253,7 @@ if(ENABLE_SSE42)
   unset(CMAKE_REQUIRED_FLAGS)
   if(HAVE_SSE42)
     add_definitions(-DHAVE_SSE42)
-<<<<<<< HEAD
     add_definitions(-DHAVE_PCLMUL)
-=======
->>>>>>> blood in blood out
   elseif(FORCE_SSE42)
     message(FATAL_ERROR "FORCE_SSE42=ON but unable to compile with SSE4.2 enabled")
   endif()
@@ -337,11 +273,7 @@ if(ENABLE_THREAD_LOCAL)
   endif()
 endif()
 
-<<<<<<< HEAD
 option(FAIL_ON_WARNINGS "Treat compile warnings as errors" OFF)
-=======
-option(FAIL_ON_WARNINGS "Treat compile warnings as errors" ON)
->>>>>>> blood in blood out
 if(FAIL_ON_WARNINGS)
   if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
@@ -381,7 +313,6 @@ if(WITH_UBSAN)
   endif()
 endif()
 
-<<<<<<< HEAD
 option(WITH_NUMA "build with NUMA policy support" OFF)
 if(WITH_NUMA)
   find_package(NUMA REQUIRED)
@@ -435,39 +366,6 @@ endif()
 option(OPTDBG "Build optimized debug build with MSVC" OFF)
 if(MSVC)
   if(OPTDBG)
-=======
-option(WITH_NUMA "build with NUMA" OFF)
-if(WITH_NUMA)
-  find_package(NUMA)
-  if(NUMA_FOUND)
-    add_definitions(-DNUMA)
-    include_directories(${NUMA_INCLUDE_DIR})
-    list(APPEND THIRDPARTY_LIBS ${NUMA_LIBRARIES})
-  endif()
-endif()
-
-option(WITH_TBB "build with TBB" OFF)
-if(WITH_TBB)
-  find_package(TBB)
-  if(TBB_FOUND)
-    add_definitions(-DTBB)
-    include_directories(${TBB_INCLUDE_DIR})
-    list(APPEND THIRDPARTY_LIBS ${TBB_LIBRARIES})
-  endif()
-endif()
-
-# Used to run CI build and tests so we can run faster
-set(OPTIMIZE_DEBUG_DEFAULT 0)        # Debug build is unoptimized by default use -DOPTDBG=1 to optimize
-
-if(DEFINED OPTDBG)
-   set(OPTIMIZE_DEBUG ${OPTDBG})
-else()
-   set(OPTIMIZE_DEBUG ${OPTIMIZE_DEBUG_DEFAULT})
-endif()
-
-if(MSVC)
-  if((${OPTIMIZE_DEBUG} EQUAL 1))
->>>>>>> blood in blood out
     message(STATUS "Debug optimization is enabled")
     set(CMAKE_CXX_FLAGS_DEBUG "/Oxt /${RUNTIME_LIBRARY}d")
   else()
@@ -613,10 +511,7 @@ set(SOURCES
         db/db_info_dumper.cc
         db/db_iter.cc
         db/dbformat.cc
-<<<<<<< HEAD
         db/error_handler.cc
-=======
->>>>>>> blood in blood out
         db/event_helpers.cc
         db/experimental.cc
         db/external_sst_file_ingestion_job.cc
@@ -625,17 +520,10 @@ set(SOURCES
         db/flush_scheduler.cc
         db/forward_iterator.cc
         db/internal_stats.cc
-<<<<<<< HEAD
         db/logs_with_prep_tracker.cc
         db/log_reader.cc
         db/log_writer.cc
         db/malloc_stats.cc
-=======
-        db/log_reader.cc
-        db/log_writer.cc
-        db/malloc_stats.cc
-        db/managed_iterator.cc
->>>>>>> blood in blood out
         db/memtable.cc
         db/memtable_list.cc
         db/merge_helper.cc
@@ -726,10 +614,7 @@ set(SOURCES
         util/coding.cc
         util/compaction_job_stats_impl.cc
         util/comparator.cc
-<<<<<<< HEAD
         util/compression_context_cache.cc
-=======
->>>>>>> blood in blood out
         util/concurrent_arena.cc
         util/crc32c.cc
         util/delete_scheduler.cc
@@ -750,20 +635,14 @@ set(SOURCES
         util/status_message.cc
         util/string_util.cc
         util/sync_point.cc
-<<<<<<< HEAD
         util/sync_point_impl.cc
-=======
->>>>>>> blood in blood out
         util/testutil.cc
         util/thread_local.cc
         util/threadpool_imp.cc
         util/transaction_test_util.cc
         util/xxhash.cc
         utilities/backupable/backupable_db.cc
-<<<<<<< HEAD
         utilities/blob_db/blob_compaction_filter.cc
-=======
->>>>>>> blood in blood out
         utilities/blob_db/blob_db.cc
         utilities/blob_db/blob_db_impl.cc
         utilities/blob_db/blob_dump_tool.cc
@@ -771,10 +650,6 @@ set(SOURCES
         utilities/blob_db/blob_log_reader.cc
         utilities/blob_db/blob_log_writer.cc
         utilities/blob_db/blob_log_format.cc
-<<<<<<< HEAD
-=======
-        utilities/blob_db/ttl_extractor.cc
->>>>>>> blood in blood out
         utilities/cassandra/cassandra_compaction_filter.cc
         utilities/cassandra/format.cc
         utilities/cassandra/merge_operator.cc
@@ -822,11 +697,8 @@ set(SOURCES
         utilities/transactions/transaction_util.cc
         utilities/transactions/write_prepared_txn.cc
         utilities/transactions/write_prepared_txn_db.cc
-<<<<<<< HEAD
         utilities/transactions/write_unprepared_txn.cc
         utilities/transactions/write_unprepared_txn_db.cc
-=======
->>>>>>> blood in blood out
         utilities/ttl/db_ttl_impl.cc
         utilities/write_batch_with_index/write_batch_with_index.cc
         utilities/write_batch_with_index/write_batch_with_index_internal.cc
@@ -853,17 +725,12 @@ if(WIN32)
     port/win/env_default.cc
     port/win/port_win.cc
     port/win/win_logger.cc
-<<<<<<< HEAD
     port/win/win_thread.cc)
 
 if(WITH_XPRESS)
   list(APPEND SOURCES
     port/win/xpress_win.cc)
 endif()
-=======
-    port/win/win_thread.cc
-    port/win/xpress_win.cc)
->>>>>>> blood in blood out
 
 if(WITH_JEMALLOC)
   list(APPEND SOURCES
@@ -880,7 +747,6 @@ endif()
 set(ROCKSDB_STATIC_LIB rocksdb${ARTIFACT_SUFFIX})
 set(ROCKSDB_SHARED_LIB rocksdb-shared${ARTIFACT_SUFFIX})
 set(ROCKSDB_IMPORT_LIB ${ROCKSDB_SHARED_LIB})
-<<<<<<< HEAD
 
 option(WITH_LIBRADOS "Build with librados" OFF)
 if(WITH_LIBRADOS)
@@ -889,8 +755,6 @@ if(WITH_LIBRADOS)
   list(APPEND THIRDPARTY_LIBS rados)
 endif()
 
-=======
->>>>>>> blood in blood out
 if(WIN32)
   set(SYSTEM_LIBS ${SYSTEM_LIBS} Shlwapi.lib Rpcrt4.lib)
   set(LIBS ${ROCKSDB_STATIC_LIB} ${THIRDPARTY_LIBS} ${SYSTEM_LIBS})
@@ -909,16 +773,6 @@ else()
                         OUTPUT_NAME "rocksdb")
 endif()
 
-<<<<<<< HEAD
-=======
-option(WITH_LIBRADOS "Build with librados" OFF)
-if(WITH_LIBRADOS)
-  list(APPEND SOURCES
-    utilities/env_librados.cc)
-  list(APPEND THIRDPARTY_LIBS rados)
-endif()
-
->>>>>>> blood in blood out
 add_library(${ROCKSDB_STATIC_LIB} STATIC ${SOURCES})
 target_link_libraries(${ROCKSDB_STATIC_LIB}
   ${THIRDPARTY_LIBS} ${SYSTEM_LIBS})
@@ -1008,11 +862,7 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
   )
 endif()
 
-<<<<<<< HEAD
 option(WITH_TESTS "build with tests" OFF)
-=======
-option(WITH_TESTS "build with tests" ON)
->>>>>>> blood in blood out
 if(WITH_TESTS)
   set(TESTS
         cache/cache_test.cc
@@ -1037,10 +887,7 @@ if(WITH_TESTS)
         db/db_inplace_update_test.cc
         db/db_io_failure_test.cc
         db/db_iter_test.cc
-<<<<<<< HEAD
         db/db_iter_stress_test.cc
-=======
->>>>>>> blood in blood out
         db/db_iterator_test.cc
         db/db_log_iter_test.cc
         db/db_memtable_test.cc
@@ -1059,11 +906,8 @@ if(WITH_TESTS)
         db/db_write_test.cc
         db/dbformat_test.cc
         db/deletefile_test.cc
-<<<<<<< HEAD
         db/error_handler_test.cc
         db/obsolete_files_test.cc
-=======
->>>>>>> blood in blood out
         db/external_sst_file_basic_test.cc
         db/external_sst_file_test.cc
         db/fault_injection_test.cc
@@ -1156,10 +1000,7 @@ if(WITH_TESTS)
         utilities/transactions/optimistic_transaction_test.cc
         utilities/transactions/transaction_test.cc
         utilities/transactions/write_prepared_transaction_test.cc
-<<<<<<< HEAD
         utilities/transactions/write_unprepared_transaction_test.cc
-=======
->>>>>>> blood in blood out
         utilities/ttl/ttl_test.cc
         utilities/write_batch_with_index/write_batch_with_index_test.cc
   )
@@ -1244,11 +1085,7 @@ if(WITH_TESTS)
   endforeach(sourcefile ${C_TEST_EXES})
 endif()
 
-<<<<<<< HEAD
 option(WITH_TOOLS "build with tools" OFF)
-=======
-option(WITH_TOOLS "build with tools" ON)
->>>>>>> blood in blood out
 if(WITH_TOOLS)
   add_subdirectory(tools)
 endif()
@@ -1311,8 +1148,4 @@ if(MSVC)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX")
     endif()
   endif()
-<<<<<<< HEAD
 endif()
-=======
-endif()
->>>>>>> blood in blood out

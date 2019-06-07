@@ -141,11 +141,7 @@ Env* NewTimedEnv(Env* base_env) { return new TimedEnv(base_env); }
 
 #else  // ROCKSDB_LITE
 
-<<<<<<< HEAD
 Env* NewTimedEnv(Env* /*base_env*/) { return nullptr; }
-=======
-Env* NewTimedEnv(Env* base_env) { return nullptr; }
->>>>>>> blood in blood out
 
 #endif  // !ROCKSDB_LITE
 

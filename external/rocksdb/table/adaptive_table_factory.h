@@ -44,14 +44,9 @@ class AdaptiveTableFactory : public TableFactory {
       uint32_t column_family_id, WritableFileWriter* file) const override;
 
   // Sanitizes the specified DB Options.
-<<<<<<< HEAD
   Status SanitizeOptions(
       const DBOptions& /*db_opts*/,
       const ColumnFamilyOptions& /*cf_opts*/) const override {
-=======
-  Status SanitizeOptions(const DBOptions& db_opts,
-                         const ColumnFamilyOptions& cf_opts) const override {
->>>>>>> blood in blood out
     return Status::OK();
   }
 

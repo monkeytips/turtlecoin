@@ -14,10 +14,7 @@
 #include "rocksdb/comparator.h"
 #include "rocksdb/db.h"
 #include "rocksdb/merge_operator.h"
-<<<<<<< HEAD
 #include "table/format.h"
-=======
->>>>>>> blood in blood out
 #include "table/internal_iterator.h"
 
 namespace rocksdb {
@@ -240,12 +237,7 @@ Status MergeHelper::MergeUntil(InternalIterator* iter,
       if (filter != CompactionFilter::Decision::kRemoveAndSkipUntil &&
           range_del_agg != nullptr &&
           range_del_agg->ShouldDelete(
-<<<<<<< HEAD
               iter->key(), RangeDelPositioningMode::kForwardTraversal)) {
-=======
-              iter->key(),
-              RangeDelAggregator::RangePositioningMode::kForwardTraversal)) {
->>>>>>> blood in blood out
         filter = CompactionFilter::Decision::kRemove;
       }
       if (filter == CompactionFilter::Decision::kKeep ||
@@ -380,11 +372,7 @@ CompactionFilter::Decision MergeHelper::FilterMerge(const Slice& user_key,
   if (compaction_filter_ == nullptr) {
     return CompactionFilter::Decision::kKeep;
   }
-<<<<<<< HEAD
   if (stats_ != nullptr && ShouldReportDetailedTime(env_, stats_)) {
-=======
-  if (stats_ != nullptr) {
->>>>>>> blood in blood out
     filter_timer_.Start();
   }
   compaction_filter_value_.clear();

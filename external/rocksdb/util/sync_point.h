@@ -5,19 +5,10 @@
 #pragma once
 
 #include <assert.h>
-<<<<<<< HEAD
-=======
-#include <condition_variable>
->>>>>>> blood in blood out
 #include <functional>
 #include <mutex>
 #include <string>
 #include <thread>
-<<<<<<< HEAD
-=======
-#include <unordered_map>
-#include <unordered_set>
->>>>>>> blood in blood out
 #include <vector>
 
 // This is only set from db_stress.cc and for testing only.
@@ -32,11 +23,7 @@ extern std::vector<std::string> rocksdb_kill_prefix_blacklist;
 #else
 
 namespace rocksdb {
-<<<<<<< HEAD
 // Kill the process with probability 1/odds for testing.
-=======
-// Kill the process with probablity 1/odds for testing.
->>>>>>> blood in blood out
 extern void TestKillRandom(std::string kill_point, int odds,
                            const std::string& srcfile, int srcline);
 
@@ -58,10 +45,7 @@ extern void TestKillRandom(std::string kill_point, int odds,
 #define TEST_SYNC_POINT(x)
 #define TEST_IDX_SYNC_POINT(x, index)
 #define TEST_SYNC_POINT_CALLBACK(x, y)
-<<<<<<< HEAD
 #define INIT_SYNC_POINT_SINGLETONS()
-=======
->>>>>>> blood in blood out
 #else
 
 namespace rocksdb {
@@ -79,13 +63,10 @@ class SyncPoint {
  public:
   static SyncPoint* GetInstance();
 
-<<<<<<< HEAD
   SyncPoint(const SyncPoint&) = delete;
   SyncPoint& operator=(const SyncPoint&) = delete;
   ~SyncPoint();
 
-=======
->>>>>>> blood in blood out
   struct SyncPointPair {
     std::string predecessor;
     std::string successor;
@@ -102,7 +83,6 @@ class SyncPoint {
   void LoadDependencyAndMarkers(const std::vector<SyncPointPair>& dependencies,
                                 const std::vector<SyncPointPair>& markers);
 
-<<<<<<< HEAD
   // The argument to the callback is passed through from
   // TEST_SYNC_POINT_CALLBACK(); nullptr if TEST_SYNC_POINT or
   // TEST_IDX_SYNC_POINT was used.
@@ -111,17 +91,6 @@ class SyncPoint {
 
   // Clear callback function by point
   void ClearCallBack(const std::string& point);
-=======
-  // Set up a call back function in sync point.
-  // The argument to the callback is passed through from
-  // TEST_SYNC_POINT_CALLBACK(); nullptr if TEST_SYNC_POINT or
-  // TEST_IDX_SYNC_POINT was used.
-  void SetCallBack(const std::string point,
-                   std::function<void(void*)> callback);
-
-  // Clear callback function by point
-  void ClearCallBack(const std::string point);
->>>>>>> blood in blood out
 
   // Clear all call back functions.
   void ClearAllCallBacks();
@@ -137,17 +106,12 @@ class SyncPoint {
 
   // triggered by TEST_SYNC_POINT, blocking execution until all predecessors
   // are executed.
-<<<<<<< HEAD
   // And/or call registered callback function, with argument `cb_arg`
-=======
-  // And/or call registered callback functionn, with argument `cb_arg`
->>>>>>> blood in blood out
   void Process(const std::string& point, void* cb_arg = nullptr);
 
   // TODO: it might be useful to provide a function that blocks until all
   // sync points are cleared.
 
-<<<<<<< HEAD
   // We want this to be public so we can
   // subclass the implementation
   struct Data;
@@ -156,25 +120,6 @@ class SyncPoint {
    // Singleton
   SyncPoint();
   Data*  impl_;
-=======
- private:
-  bool PredecessorsAllCleared(const std::string& point);
-  bool DisabledByMarker(const std::string& point, std::thread::id thread_id);
-
-  // successor/predecessor map loaded from LoadDependency
-  std::unordered_map<std::string, std::vector<std::string>> successors_;
-  std::unordered_map<std::string, std::vector<std::string>> predecessors_;
-  std::unordered_map<std::string, std::function<void(void*)> > callbacks_;
-  std::unordered_map<std::string, std::vector<std::string> > markers_;
-  std::unordered_map<std::string, std::thread::id> marked_thread_id_;
-
-  std::mutex mutex_;
-  std::condition_variable cv_;
-  // sync points that have been passed through
-  std::unordered_set<std::string> cleared_points_;
-  bool enabled_ = false;
-  int num_callbacks_running_ = 0;
->>>>>>> blood in blood out
 };
 
 }  // namespace rocksdb
@@ -190,9 +135,6 @@ class SyncPoint {
   rocksdb::SyncPoint::GetInstance()->Process(x + std::to_string(index))
 #define TEST_SYNC_POINT_CALLBACK(x, y) \
   rocksdb::SyncPoint::GetInstance()->Process(x, y)
-<<<<<<< HEAD
 #define INIT_SYNC_POINT_SINGLETONS() \
   (void)rocksdb::SyncPoint::GetInstance();
-=======
->>>>>>> blood in blood out
 #endif  // NDEBUG

@@ -1,26 +1,8 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-<<<<<<< HEAD
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
-=======
-//
-// This file is part of Bytecoin.
-//
-// Bytecoin is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Bytecoin is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
->>>>>>> blood in blood out
 
 #pragma once
 
@@ -30,11 +12,7 @@
 // ISerializer-based serialization
 #include "Serialization/ISerializer.h"
 #include "Serialization/SerializationOverloads.h"
-<<<<<<< HEAD
 #include "Serialization/CryptoNoteSerialization.h"
-=======
-#include "CryptoNoteCore/CryptoNoteSerialization.h"
->>>>>>> blood in blood out
 
 namespace CryptoNote
 {
@@ -47,21 +25,13 @@ namespace CryptoNote
 
   //just to keep backward compatibility with BlockCompleteEntry serialization
   struct RawBlockLegacy {
-<<<<<<< HEAD
     BinaryArray blockTemplate;
-=======
-    BinaryArray block;
->>>>>>> blood in blood out
     std::vector<BinaryArray> transactions;
   };
 
   struct NOTIFY_NEW_BLOCK_request
   {
-<<<<<<< HEAD
     RawBlockLegacy block;
-=======
-    RawBlockLegacy b;
->>>>>>> blood in blood out
     uint32_t current_blockchain_height;
     uint32_t hop;
   };
@@ -168,7 +138,6 @@ namespace CryptoNote
     const static int ID = BC_COMMANDS_POOL_BASE + 8;
     typedef NOTIFY_REQUEST_TX_POOL_request request;
   };
-<<<<<<< HEAD
 
   /************************************************************************/
   /*                                                                      */
@@ -194,6 +163,4 @@ namespace CryptoNote
     const static int ID = BC_COMMANDS_POOL_BASE + 10;
     typedef NOTIFY_MISSING_TXS_request request;
   };
-=======
->>>>>>> blood in blood out
 }

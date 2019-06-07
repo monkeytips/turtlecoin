@@ -53,6 +53,8 @@ static_assert(EMISSION_SPEED_FACTOR_V2 <= 8 * sizeof(uint64_t), "Bad EMISSION_SP
 const uint64_t EMISSION_SPEED_V2_HEIGHT                      = 77000;
 
 const uint64_t GENESIS_BLOCK_REWARD                          = UINT64_C(2000000000);
+const uint64_t GENESIS_BLOCK_TIMESTAMP                       = 1530327904;
+const char     GENESIS_COINBASE_TX_HEX[]                     = "012801ff000180a8d6b907022bfdeeee6f2d6ab60a0b67a7d504192a5e851b71174098f719363346697c4f79210115dcc364197ec66ce30c8e6fb1ca237b38162324c904f97eb4d21fc899426e3c";
 
 const size_t   CRYPTONOTE_REWARD_BLOCKS_WINDOW               = 100;
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE     = 100000; //size of block (bytes) after which reward for block calculated using block size
@@ -107,6 +109,15 @@ const size_t   MAX_BLOCK_SIZE_INITIAL                        = 100000;
 const uint64_t MAX_BLOCK_SIZE_GROWTH_SPEED_NUMERATOR         = 100 * 1024;
 const uint64_t MAX_BLOCK_SIZE_GROWTH_SPEED_DENOMINATOR       = 365 * 24 * 60 * 60 / DIFFICULTY_TARGET;
 const uint64_t MAX_EXTRA_SIZE                                = 140000;
+const uint64_t MAX_EXTRA_SIZE_V2                             = 1024;
+const uint64_t MAX_EXTRA_SIZE_V2_HEIGHT                      = 640000;
+
+/* For new projects forked from this code base, the values immediately below
+   should be changed to 0 to prevent issues with transaction processing 
+   and other possible unexpected behavior */
+const uint64_t TRANSACTION_SIGNATURE_COUNT_VALIDATION_HEIGHT = 640000;
+const uint64_t BLOCK_BLOB_SHUFFLE_CHECK_HEIGHT               = 640000;
+const uint64_t TRANSACTION_INPUT_BLOCKTIME_VALIDATION_HEIGHT = 640000;
 
 const uint64_t CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS     = 1;
 const uint64_t CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_SECONDS    = DIFFICULTY_TARGET * CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS;
@@ -175,8 +186,6 @@ const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json"
 } // parameters
 
 const char     CRYPTONOTE_NAME[]                             = "monkeytips";
-const char     GENESIS_COINBASE_TX_HEX[]                     = "012801ff000180a8d6b907022bfdeeee6f2d6ab60a0b67a7d504192a5e851b71174098f719363346697c4f79210115dcc364197ec66ce30c8e6fb1ca237b38162324c904f97eb4d21fc899426e3c";
-const uint64_t GENESIS_BLOCK_TIMESTAMP                       = 1530327904;
 
 const uint8_t  TRANSACTION_VERSION_1                         =  1;
 const uint8_t  TRANSACTION_VERSION_2                         =  2;

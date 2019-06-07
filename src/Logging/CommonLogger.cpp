@@ -78,13 +78,6 @@ void CommonLogger::setPattern(const std::string& pattern) {
   this->pattern = pattern;
 }
 
-<<<<<<< HEAD
-=======
-void CommonLogger::enableCategory(const std::string& category) {
-  disabledCategories.erase(category);
-}
-
->>>>>>> blood in blood out
 void CommonLogger::disableCategory(const std::string& category) {
   disabledCategories.insert(category);
 }

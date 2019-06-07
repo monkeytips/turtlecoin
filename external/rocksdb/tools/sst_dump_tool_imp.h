@@ -74,10 +74,7 @@ class SstFileReader {
   unique_ptr<RandomAccessFileReader> file_;
 
   const ImmutableCFOptions ioptions_;
-<<<<<<< HEAD
   const MutableCFOptions moptions_;
-=======
->>>>>>> blood in blood out
   InternalKeyComparator internal_comparator_;
   unique_ptr<TableProperties> table_properties_;
 };

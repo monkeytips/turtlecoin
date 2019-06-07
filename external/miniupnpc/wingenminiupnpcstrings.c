@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 /* $Id: wingenminiupnpcstrings.c,v 1.4 2015/02/08 08:46:06 nanard Exp $ */
 /* Project: miniupnp
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * Author: Thomas Bernard
  * Copyright (c) 2005-2015 Thomas Bernard
-=======
-/* $Id: wingenminiupnpcstrings.c,v 1.3 2012/03/05 19:42:48 nanard Exp $ */
-/* Project: miniupnp
- * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
- * Author: Thomas Bernard
- * Copyright (c) 2005-2009 Thomas Bernard
->>>>>>> blood in blood out
  * This software is subjects to the conditions detailed
  * in the LICENSE file provided within this distribution */
 #include <stdio.h>
@@ -67,10 +59,7 @@ int main(int argc, char * * argv) {
 		fout = fopen(argv[2], "w");
 		if(!fout) {
 			fprintf(stderr, "Cannot open %s for writing.\n", argv[2]);
-<<<<<<< HEAD
 			fclose(fin);
-=======
->>>>>>> blood in blood out
 			return 1;
 		}
 		n = 0;

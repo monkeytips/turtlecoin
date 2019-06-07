@@ -22,7 +22,6 @@ namespace rocksdb {
 Env::~Env() {
 }
 
-<<<<<<< HEAD
 std::string Env::PriorityToString(Env::Priority priority) {
   switch (priority) {
     case Env::Priority::BOTTOM:
@@ -37,8 +36,6 @@ std::string Env::PriorityToString(Env::Priority priority) {
   return "Invalid";
 }
 
-=======
->>>>>>> blood in blood out
 uint64_t Env::GetThreadID() const {
   std::hash<std::thread::id> hasher;
   return hasher(std::this_thread::get_id());
@@ -90,13 +87,9 @@ RandomAccessFile::~RandomAccessFile() {
 WritableFile::~WritableFile() {
 }
 
-<<<<<<< HEAD
 MemoryMappedFileBuffer::~MemoryMappedFileBuffer() {}
 
 Logger::~Logger() {}
-=======
-Logger::~Logger() { }
->>>>>>> blood in blood out
 
 Status Logger::Close() {
   if (!closed_) {
@@ -118,7 +111,6 @@ void LogFlush(Logger *info_log) {
   }
 }
 
-<<<<<<< HEAD
 static void Logv(Logger *info_log, const char* format, va_list ap) {
   if (info_log && info_log->GetInfoLogLevel() <= InfoLogLevel::INFO_LEVEL) {
     info_log->Logv(InfoLogLevel::INFO_LEVEL, format, ap);
@@ -132,17 +124,6 @@ void Log(Logger* info_log, const char* format, ...) {
   va_end(ap);
 }
 
-=======
-void Log(Logger* info_log, const char* format, ...) {
-  if (info_log && info_log->GetInfoLogLevel() <= InfoLogLevel::INFO_LEVEL) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::INFO_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
->>>>>>> blood in blood out
 void Logger::Logv(const InfoLogLevel log_level, const char* format, va_list ap) {
   static const char* kInfoLogLevelNames[5] = { "DEBUG", "INFO", "WARN",
     "ERROR", "FATAL" };
@@ -165,24 +146,13 @@ void Logger::Logv(const InfoLogLevel log_level, const char* format, va_list ap) 
   }
 }
 
-<<<<<<< HEAD
 static void Logv(const InfoLogLevel log_level, Logger *info_log, const char *format, va_list ap) {
   if (info_log && info_log->GetInfoLogLevel() <= log_level) {
-=======
-
-void Log(const InfoLogLevel log_level, Logger* info_log, const char* format,
-         ...) {
-  if (info_log && info_log->GetInfoLogLevel() <= log_level) {
-    va_list ap;
-    va_start(ap, format);
-
->>>>>>> blood in blood out
     if (log_level == InfoLogLevel::HEADER_LEVEL) {
       info_log->LogHeader(format, ap);
     } else {
       info_log->Logv(log_level, format, ap);
     }
-<<<<<<< HEAD
   }
 }
 
@@ -274,74 +244,10 @@ void Fatal(Logger* info_log, const char* format, ...) {
 
 void LogFlush(const shared_ptr<Logger>& info_log) {
   LogFlush(info_log.get());
-=======
-
-    va_end(ap);
-  }
-}
-
-void Header(Logger* info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->LogHeader(format, ap);
-    va_end(ap);
-  }
-}
-
-void Debug(Logger* info_log, const char* format, ...) {
-  if (info_log && info_log->GetInfoLogLevel() <= InfoLogLevel::DEBUG_LEVEL) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::DEBUG_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void Info(Logger* info_log, const char* format, ...) {
-  if (info_log && info_log->GetInfoLogLevel() <= InfoLogLevel::INFO_LEVEL) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::INFO_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void Warn(Logger* info_log, const char* format, ...) {
-  if (info_log && info_log->GetInfoLogLevel() <= InfoLogLevel::WARN_LEVEL) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::WARN_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-void Error(Logger* info_log, const char* format, ...) {
-  if (info_log && info_log->GetInfoLogLevel() <= InfoLogLevel::ERROR_LEVEL) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::ERROR_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-void Fatal(Logger* info_log, const char* format, ...) {
-  if (info_log && info_log->GetInfoLogLevel() <= InfoLogLevel::FATAL_LEVEL) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::FATAL_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void LogFlush(const shared_ptr<Logger>& info_log) {
-  if (info_log) {
-    info_log->Flush();
-  }
->>>>>>> blood in blood out
 }
 
 void Log(const InfoLogLevel log_level, const shared_ptr<Logger>& info_log,
          const char* format, ...) {
-<<<<<<< HEAD
   va_list ap;
   va_start(ap, format);
   Logv(log_level, info_log.get(), format, ap);
@@ -395,77 +301,6 @@ void Log(const shared_ptr<Logger>& info_log, const char* format, ...) {
   va_start(ap, format);
   Logv(info_log.get(), format, ap);
   va_end(ap);
-=======
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(log_level, format, ap);
-    va_end(ap);
-  }
-}
-
-void Header(const shared_ptr<Logger>& info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->LogHeader(format, ap);
-    va_end(ap);
-  }
-}
-
-void Debug(const shared_ptr<Logger>& info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::DEBUG_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void Info(const shared_ptr<Logger>& info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::INFO_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void Warn(const shared_ptr<Logger>& info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::WARN_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void Error(const shared_ptr<Logger>& info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::ERROR_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void Fatal(const shared_ptr<Logger>& info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::FATAL_LEVEL, format, ap);
-    va_end(ap);
-  }
-}
-
-void Log(const shared_ptr<Logger>& info_log, const char* format, ...) {
-  if (info_log) {
-    va_list ap;
-    va_start(ap, format);
-    info_log->Logv(InfoLogLevel::INFO_LEVEL, format, ap);
-    va_end(ap);
-  }
->>>>>>> blood in blood out
 }
 
 Status WriteStringToFile(Env* env, const Slice& data, const std::string& fname,
@@ -569,12 +404,7 @@ EnvOptions Env::OptimizeForCompactionTableWrite(
 EnvOptions Env::OptimizeForCompactionTableRead(
     const EnvOptions& env_options, const ImmutableDBOptions& db_options) const {
   EnvOptions optimized_env_options(env_options);
-<<<<<<< HEAD
   optimized_env_options.use_direct_reads = db_options.use_direct_reads;
-=======
-  optimized_env_options.use_direct_reads =
-      db_options.use_direct_io_for_flush_and_compaction;
->>>>>>> blood in blood out
   return optimized_env_options;
 }
 

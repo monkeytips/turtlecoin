@@ -53,11 +53,7 @@ DEFINE_int32(value_size, 40, "");
 DEFINE_bool(enable_print, false, "Print options generated to console.");
 
 // Path to the database on file system
-<<<<<<< HEAD
 const std::string kDbName = rocksdb::test::PerThreadDBPath("prefix_test");
-=======
-const std::string kDbName = rocksdb::test::TmpDir() + "/prefix_test";
->>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -130,17 +126,10 @@ class TestKeyComparator : public Comparator {
     return "TestKeyComparator";
   }
 
-<<<<<<< HEAD
   virtual void FindShortestSeparator(std::string* /*start*/,
                                      const Slice& /*limit*/) const override {}
 
   virtual void FindShortSuccessor(std::string* /*key*/) const override {}
-=======
-  virtual void FindShortestSeparator(std::string* start,
-                                     const Slice& limit) const override {}
-
-  virtual void FindShortSuccessor(std::string* key) const override {}
->>>>>>> blood in blood out
 };
 
 namespace {
@@ -223,13 +212,10 @@ class SamePrefixTransform : public SliceTransform {
   virtual bool InRange(const Slice& dst) const override {
     return dst == prefix_;
   }
-<<<<<<< HEAD
 
   virtual bool FullLengthEnabled(size_t* /*len*/) const override {
     return false;
   }
-=======
->>>>>>> blood in blood out
 };
 
 }  // namespace
@@ -905,11 +891,7 @@ int main(int argc, char** argv) {
 #else
 #include <stdio.h>
 
-<<<<<<< HEAD
 int main(int /*argc*/, char** /*argv*/) {
-=======
-int main(int argc, char** argv) {
->>>>>>> blood in blood out
   fprintf(stderr,
           "SKIPPED as HashSkipList and HashLinkList are not supported in "
           "ROCKSDB_LITE\n");

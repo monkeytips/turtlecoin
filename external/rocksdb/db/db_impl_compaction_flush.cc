@@ -14,10 +14,7 @@
 #include <inttypes.h>
 
 #include "db/builder.h"
-<<<<<<< HEAD
 #include "db/error_handler.h"
-=======
->>>>>>> blood in blood out
 #include "db/event_helpers.h"
 #include "monitoring/iostats_context_imp.h"
 #include "monitoring/perf_context_imp.h"
@@ -28,7 +25,6 @@
 
 namespace rocksdb {
 
-<<<<<<< HEAD
 bool DBImpl::EnoughRoomForCompaction(
     const std::vector<CompactionInputFiles>& inputs,
     bool* sfm_reserved_compact_space, LogBuffer* log_buffer) {
@@ -58,8 +54,6 @@ bool DBImpl::EnoughRoomForCompaction(
   return enough_room;
 }
 
-=======
->>>>>>> blood in blood out
 Status DBImpl::SyncClosedLogs(JobContext* job_context) {
   TEST_SYNC_POINT("DBImpl::SyncClosedLogs:Start");
   mutex_.AssertHeld();
@@ -86,12 +80,9 @@ Status DBImpl::SyncClosedLogs(JobContext* job_context) {
                      "[JOB %d] Syncing log #%" PRIu64, job_context->job_id,
                      log->get_log_number());
       s = log->file()->Sync(immutable_db_options_.use_fsync);
-<<<<<<< HEAD
       if (!s.ok()) {
         break;
       }
-=======
->>>>>>> blood in blood out
     }
     if (s.ok()) {
       s = directories_.GetWalDir()->Fsync();
@@ -103,18 +94,7 @@ Status DBImpl::SyncClosedLogs(JobContext* job_context) {
     // "number < current_log_number".
     MarkLogsSynced(current_log_number - 1, true, s);
     if (!s.ok()) {
-<<<<<<< HEAD
       error_handler_.SetBGError(s, BackgroundErrorReason::kFlush);
-=======
-      Status new_bg_error = s;
-      // may temporarily unlock and lock the mutex.
-      EventHelpers::NotifyOnBackgroundError(immutable_db_options_.listeners,
-                                            BackgroundErrorReason::kFlush,
-                                            &new_bg_error, &mutex_);
-      if (!new_bg_error.ok()) {
-        bg_error_ = new_bg_error;
-      }
->>>>>>> blood in blood out
       TEST_SYNC_POINT("DBImpl::SyncClosedLogs:Failed");
       return s;
     }
@@ -141,12 +121,7 @@ Status DBImpl::FlushMemTableToOutputFile(
       dbname_, cfd, immutable_db_options_, mutable_cf_options,
       env_options_for_compaction_, versions_.get(), &mutex_, &shutting_down_,
       snapshot_seqs, earliest_write_conflict_snapshot, snapshot_checker,
-<<<<<<< HEAD
       job_context, log_buffer, directories_.GetDbDir(), GetDataDir(cfd, 0U),
-=======
-      job_context, log_buffer, directories_.GetDbDir(),
-      directories_.GetDataDir(0U),
->>>>>>> blood in blood out
       GetCompressionFlush(*cfd->ioptions(), mutable_cf_options), stats_,
       &event_logger_, mutable_cf_options.report_bg_io_stats);
 
@@ -179,11 +154,7 @@ Status DBImpl::FlushMemTableToOutputFile(
   // and EventListener callback will be called when the db_mutex
   // is unlocked by the current thread.
   if (s.ok()) {
-<<<<<<< HEAD
     s = flush_job.Run(&logs_with_prep_tracker_, &file_meta);
-=======
-    s = flush_job.Run(&file_meta);
->>>>>>> blood in blood out
   } else {
     flush_job.Cancel();
   }
@@ -200,24 +171,9 @@ Status DBImpl::FlushMemTableToOutputFile(
                      cfd->current()->storage_info()->LevelSummary(&tmp));
   }
 
-<<<<<<< HEAD
   if (!s.ok() && !s.IsShutdownInProgress()) {
     Status new_bg_error = s;
     error_handler_.SetBGError(new_bg_error, BackgroundErrorReason::kFlush);
-=======
-  if (!s.ok() && !s.IsShutdownInProgress() &&
-      immutable_db_options_.paranoid_checks && bg_error_.ok()) {
-    Status new_bg_error = s;
-    // may temporarily unlock and lock the mutex.
-    EventHelpers::NotifyOnBackgroundError(immutable_db_options_.listeners,
-                                          BackgroundErrorReason::kFlush,
-                                          &new_bg_error, &mutex_);
-    if (!new_bg_error.ok()) {
-      // if a bad error happened (not ShutdownInProgress), paranoid_checks is
-      // true, and the error isn't handled by callback, mark DB read-only
-      bg_error_ = new_bg_error;
-    }
->>>>>>> blood in blood out
   }
   if (s.ok()) {
 #ifndef ROCKSDB_LITE
@@ -229,7 +185,6 @@ Status DBImpl::FlushMemTableToOutputFile(
     if (sfm) {
       // Notify sst_file_manager that a new file was added
       std::string file_path = MakeTableFileName(
-<<<<<<< HEAD
           cfd->ioptions()->cf_paths[0].path, file_meta.fd.GetNumber());
       sfm->OnAddFile(file_path);
       if (sfm->IsMaxAllowedSpaceReached()) {
@@ -238,22 +193,6 @@ Status DBImpl::FlushMemTableToOutputFile(
             "DBImpl::FlushMemTableToOutputFile:MaxAllowedSpaceReached",
             &new_bg_error);
         error_handler_.SetBGError(new_bg_error, BackgroundErrorReason::kFlush);
-=======
-          immutable_db_options_.db_paths[0].path, file_meta.fd.GetNumber());
-      sfm->OnAddFile(file_path);
-      if (sfm->IsMaxAllowedSpaceReached() && bg_error_.ok()) {
-        Status new_bg_error = Status::IOError("Max allowed space was reached");
-        TEST_SYNC_POINT_CALLBACK(
-            "DBImpl::FlushMemTableToOutputFile:MaxAllowedSpaceReached",
-            &new_bg_error);
-        // may temporarily unlock and lock the mutex.
-        EventHelpers::NotifyOnBackgroundError(immutable_db_options_.listeners,
-                                              BackgroundErrorReason::kFlush,
-                                              &new_bg_error, &mutex_);
-        if (!new_bg_error.ok()) {
-          bg_error_ = new_bg_error;
-        }
->>>>>>> blood in blood out
       }
     }
 #endif  // ROCKSDB_LITE
@@ -285,11 +224,7 @@ void DBImpl::NotifyOnFlushBegin(ColumnFamilyData* cfd, FileMetaData* file_meta,
     info.cf_name = cfd->GetName();
     // TODO(yhchiang): make db_paths dynamic in case flush does not
     //                 go to L0 in the future.
-<<<<<<< HEAD
     info.file_path = MakeTableFileName(cfd->ioptions()->cf_paths[0].path,
-=======
-    info.file_path = MakeTableFileName(immutable_db_options_.db_paths[0].path,
->>>>>>> blood in blood out
                                        file_meta->fd.GetNumber());
     info.thread_id = env_->GetThreadID();
     info.job_id = job_id;
@@ -306,15 +241,12 @@ void DBImpl::NotifyOnFlushBegin(ColumnFamilyData* cfd, FileMetaData* file_meta,
   mutex_.Lock();
 // no need to signal bg_cv_ as it will be signaled at the end of the
 // flush process.
-<<<<<<< HEAD
 #else
   (void)cfd;
   (void)file_meta;
   (void)mutable_cf_options;
   (void)job_id;
   (void)prop;
-=======
->>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
 }
 
@@ -343,11 +275,7 @@ void DBImpl::NotifyOnFlushCompleted(ColumnFamilyData* cfd,
     info.cf_name = cfd->GetName();
     // TODO(yhchiang): make db_paths dynamic in case flush does not
     //                 go to L0 in the future.
-<<<<<<< HEAD
     info.file_path = MakeTableFileName(cfd->ioptions()->cf_paths[0].path,
-=======
-    info.file_path = MakeTableFileName(immutable_db_options_.db_paths[0].path,
->>>>>>> blood in blood out
                                        file_meta->fd.GetNumber());
     info.thread_id = env_->GetThreadID();
     info.job_id = job_id;
@@ -364,22 +292,18 @@ void DBImpl::NotifyOnFlushCompleted(ColumnFamilyData* cfd,
   mutex_.Lock();
   // no need to signal bg_cv_ as it will be signaled at the end of the
   // flush process.
-<<<<<<< HEAD
 #else
   (void)cfd;
   (void)file_meta;
   (void)mutable_cf_options;
   (void)job_id;
   (void)prop;
-=======
->>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
 }
 
 Status DBImpl::CompactRange(const CompactRangeOptions& options,
                             ColumnFamilyHandle* column_family,
                             const Slice* begin, const Slice* end) {
-<<<<<<< HEAD
   auto cfh = reinterpret_cast<ColumnFamilyHandleImpl*>(column_family);
   auto cfd = cfh->cfd();
 
@@ -387,14 +311,6 @@ Status DBImpl::CompactRange(const CompactRangeOptions& options,
     return Status::InvalidArgument("Invalid target path ID");
   }
 
-=======
-  if (options.target_path_id >= immutable_db_options_.db_paths.size()) {
-    return Status::InvalidArgument("Invalid target path ID");
-  }
-
-  auto cfh = reinterpret_cast<ColumnFamilyHandleImpl*>(column_family);
-  auto cfd = cfh->cfd();
->>>>>>> blood in blood out
   bool exclusive = options.exclusive_manual_compaction;
 
   bool flush_needed = true;
@@ -491,11 +407,7 @@ Status DBImpl::CompactRange(const CompactRangeOptions& options,
     }
     s = RunManualCompaction(cfd, ColumnFamilyData::kCompactAllLevels,
                             final_output_level, options.target_path_id,
-<<<<<<< HEAD
                             options.max_subcompactions, begin, end, exclusive);
-=======
-                            begin, end, exclusive);
->>>>>>> blood in blood out
   } else {
     for (int level = 0; level <= max_level_with_files; level++) {
       int output_level;
@@ -529,11 +441,7 @@ Status DBImpl::CompactRange(const CompactRangeOptions& options,
         }
       }
       s = RunManualCompaction(cfd, level, output_level, options.target_path_id,
-<<<<<<< HEAD
                               options.max_subcompactions, begin, end, exclusive);
-=======
-                              begin, end, exclusive);
->>>>>>> blood in blood out
       if (!s.ok()) {
         break;
       }
@@ -572,7 +480,6 @@ Status DBImpl::CompactRange(const CompactRangeOptions& options,
   return s;
 }
 
-<<<<<<< HEAD
 Status DBImpl::CompactFiles(const CompactionOptions& compact_options,
                             ColumnFamilyHandle* column_family,
                             const std::vector<std::string>& input_file_names,
@@ -586,15 +493,6 @@ Status DBImpl::CompactFiles(const CompactionOptions& compact_options,
   (void)output_path_id;
   (void)output_file_names;
   // not supported in lite version
-=======
-Status DBImpl::CompactFiles(
-    const CompactionOptions& compact_options,
-    ColumnFamilyHandle* column_family,
-    const std::vector<std::string>& input_file_names,
-    const int output_level, const int output_path_id) {
-#ifdef ROCKSDB_LITE
-    // not supported in lite version
->>>>>>> blood in blood out
   return Status::NotSupported("Not supported in ROCKSDB LITE");
 #else
   if (column_family == nullptr) {
@@ -618,15 +516,9 @@ Status DBImpl::CompactFiles(
     // IngestExternalFile() calls to finish.
     WaitForIngestFile();
 
-<<<<<<< HEAD
     s = CompactFilesImpl(compact_options, cfd, sv->current, input_file_names,
                          output_file_names, output_level, output_path_id,
                          &job_context, &log_buffer);
-=======
-    s = CompactFilesImpl(compact_options, cfd, sv->current,
-                         input_file_names, output_level,
-                         output_path_id, &job_context, &log_buffer);
->>>>>>> blood in blood out
   }
   if (sv->Unref()) {
     mutex_.Lock();
@@ -669,13 +561,8 @@ Status DBImpl::CompactFiles(
 Status DBImpl::CompactFilesImpl(
     const CompactionOptions& compact_options, ColumnFamilyData* cfd,
     Version* version, const std::vector<std::string>& input_file_names,
-<<<<<<< HEAD
     std::vector<std::string>* const output_file_names, const int output_level,
     int output_path_id, JobContext* job_context, LogBuffer* log_buffer) {
-=======
-    const int output_level, int output_path_id, JobContext* job_context,
-    LogBuffer* log_buffer) {
->>>>>>> blood in blood out
   mutex_.AssertHeld();
 
   if (shutting_down_.load(std::memory_order_acquire)) {
@@ -693,11 +580,7 @@ Status DBImpl::CompactFilesImpl(
   version->GetColumnFamilyMetaData(&cf_meta);
 
   if (output_path_id < 0) {
-<<<<<<< HEAD
     if (cfd->ioptions()->cf_paths.size() == 1U) {
-=======
-    if (immutable_db_options_.db_paths.size() == 1U) {
->>>>>>> blood in blood out
       output_path_id = 0;
     } else {
       return Status::NotSupported(
@@ -726,7 +609,6 @@ Status DBImpl::CompactFilesImpl(
           "files are already being compacted");
     }
   }
-<<<<<<< HEAD
   bool sfm_reserved_compact_space = false;
   // First check if we have enough room to do the compaction
   bool enough_room = EnoughRoomForCompaction(
@@ -737,8 +619,6 @@ Status DBImpl::CompactFilesImpl(
     // as long as status == CompactionTooLarge
     return Status::CompactionTooLarge();
   }
-=======
->>>>>>> blood in blood out
 
   // At this point, CompactFiles will be run.
   bg_compaction_scheduled_++;
@@ -772,15 +652,9 @@ Status DBImpl::CompactFilesImpl(
       job_context->job_id, c.get(), immutable_db_options_,
       env_options_for_compaction_, versions_.get(), &shutting_down_,
       preserve_deletes_seqnum_.load(), log_buffer, directories_.GetDbDir(),
-<<<<<<< HEAD
       GetDataDir(c->column_family_data(), c->output_path_id()), stats_, &mutex_,
       &error_handler_, snapshot_seqs, earliest_write_conflict_snapshot,
       snapshot_checker, table_cache_, &event_logger_,
-=======
-      directories_.GetDataDir(c->output_path_id()), stats_, &mutex_, &bg_error_,
-      snapshot_seqs, earliest_write_conflict_snapshot, snapshot_checker,
-      table_cache_, &event_logger_,
->>>>>>> blood in blood out
       c->mutable_cf_options()->paranoid_file_checks,
       c->mutable_cf_options()->report_bg_io_stats, dbname_,
       nullptr);  // Here we pass a nullptr for CompactionJobStats because
@@ -818,7 +692,6 @@ Status DBImpl::CompactFilesImpl(
   if (status.ok()) {
     InstallSuperVersionAndScheduleWork(
         c->column_family_data(), &job_context->superversion_context,
-<<<<<<< HEAD
         *c->mutable_cf_options(), FlushReason::kManualCompaction);
   }
   c->ReleaseCompactionFiles(s);
@@ -830,11 +703,6 @@ Status DBImpl::CompactFilesImpl(
     sfm->OnCompactionCompletion(c.get());
   }
 #endif  // ROCKSDB_LITE
-=======
-       *c->mutable_cf_options());
-  }
-  c->ReleaseCompactionFiles(s);
->>>>>>> blood in blood out
 
   ReleaseFileNumberFromPendingOutputs(pending_outputs_inserted_elem);
 
@@ -847,7 +715,6 @@ Status DBImpl::CompactFilesImpl(
                    "[%s] [JOB %d] Compaction error: %s",
                    c->column_family_data()->GetName().c_str(),
                    job_context->job_id, status.ToString().c_str());
-<<<<<<< HEAD
     error_handler_.SetBGError(status, BackgroundErrorReason::kCompaction);
   }
 
@@ -857,17 +724,6 @@ Status DBImpl::CompactFilesImpl(
           .push_back(TableFileName(c->immutable_cf_options()->cf_paths,
                                    newf.second.fd.GetNumber(),
                                    newf.second.fd.GetPathId()));
-=======
-    if (immutable_db_options_.paranoid_checks && bg_error_.ok()) {
-      Status new_bg_error = status;
-      // may temporarily unlock and lock the mutex.
-      EventHelpers::NotifyOnBackgroundError(immutable_db_options_.listeners,
-                                            BackgroundErrorReason::kCompaction,
-                                            &new_bg_error, &mutex_);
-      if (!new_bg_error.ok()) {
-        bg_error_ = new_bg_error;
-      }
->>>>>>> blood in blood out
     }
   }
 
@@ -877,10 +733,7 @@ Status DBImpl::CompactFilesImpl(
   if (bg_compaction_scheduled_ == 0) {
     bg_cv_.SignalAll();
   }
-<<<<<<< HEAD
   TEST_SYNC_POINT("CompactFilesImpl:End");
-=======
->>>>>>> blood in blood out
 
   return status;
 }
@@ -915,14 +768,8 @@ Status DBImpl::ContinueBackgroundWork() {
 }
 
 void DBImpl::NotifyOnCompactionCompleted(
-<<<<<<< HEAD
     ColumnFamilyData* cfd, Compaction* c, const Status& st,
     const CompactionJobStats& compaction_job_stats, const int job_id) {
-=======
-    ColumnFamilyData* cfd, Compaction *c, const Status &st,
-    const CompactionJobStats& compaction_job_stats,
-    const int job_id) {
->>>>>>> blood in blood out
 #ifndef ROCKSDB_LITE
   if (immutable_db_options_.listeners.size() == 0U) {
     return;
@@ -950,11 +797,7 @@ void DBImpl::NotifyOnCompactionCompleted(
     info.compression = c->output_compression();
     for (size_t i = 0; i < c->num_input_levels(); ++i) {
       for (const auto fmd : *c->inputs(i)) {
-<<<<<<< HEAD
         auto fn = TableFileName(c->immutable_cf_options()->cf_paths,
-=======
-        auto fn = TableFileName(immutable_db_options_.db_paths,
->>>>>>> blood in blood out
                                 fmd->fd.GetNumber(), fmd->fd.GetPathId());
         info.input_files.push_back(fn);
         if (info.table_properties.count(fn) == 0) {
@@ -967,15 +810,9 @@ void DBImpl::NotifyOnCompactionCompleted(
       }
     }
     for (const auto newf : c->edit()->GetNewFiles()) {
-<<<<<<< HEAD
       info.output_files.push_back(TableFileName(
           c->immutable_cf_options()->cf_paths, newf.second.fd.GetNumber(),
           newf.second.fd.GetPathId()));
-=======
-      info.output_files.push_back(TableFileName(immutable_db_options_.db_paths,
-                                                newf.second.fd.GetNumber(),
-                                                newf.second.fd.GetPathId()));
->>>>>>> blood in blood out
     }
     for (auto listener : immutable_db_options_.listeners) {
       listener->OnCompactionCompleted(this, info);
@@ -985,15 +822,12 @@ void DBImpl::NotifyOnCompactionCompleted(
   current->Unref();
   // no need to signal bg_cv_ as it will be signaled at the end of the
   // flush process.
-<<<<<<< HEAD
 #else
   (void)cfd;
   (void)c;
   (void)st;
   (void)compaction_job_stats;
   (void)job_id;
-=======
->>>>>>> blood in blood out
 #endif  // ROCKSDB_LITE
 }
 
@@ -1083,25 +917,16 @@ int DBImpl::NumberLevels(ColumnFamilyHandle* column_family) {
   return cfh->cfd()->NumberLevels();
 }
 
-<<<<<<< HEAD
 int DBImpl::MaxMemCompactionLevel(ColumnFamilyHandle* /*column_family*/) {
-=======
-int DBImpl::MaxMemCompactionLevel(ColumnFamilyHandle* column_family) {
->>>>>>> blood in blood out
   return 0;
 }
 
 int DBImpl::Level0StopWriteTrigger(ColumnFamilyHandle* column_family) {
   auto cfh = reinterpret_cast<ColumnFamilyHandleImpl*>(column_family);
   InstrumentedMutexLock l(&mutex_);
-<<<<<<< HEAD
   return cfh->cfd()
       ->GetSuperVersion()
       ->mutable_cf_options.level0_stop_writes_trigger;
-=======
-  return cfh->cfd()->GetSuperVersion()->
-      mutable_cf_options.level0_stop_writes_trigger;
->>>>>>> blood in blood out
 }
 
 Status DBImpl::Flush(const FlushOptions& flush_options,
@@ -1110,11 +935,7 @@ Status DBImpl::Flush(const FlushOptions& flush_options,
   ROCKS_LOG_INFO(immutable_db_options_.info_log, "[%s] Manual flush start.",
                  cfh->GetName().c_str());
   Status s =
-<<<<<<< HEAD
       FlushMemTable(cfh->cfd(), flush_options, FlushReason::kManualFlush);
-=======
-      FlushMemTable(cfh->cfd(), flush_options, FlushReason::kManualCompaction);
->>>>>>> blood in blood out
   ROCKS_LOG_INFO(immutable_db_options_.info_log,
                  "[%s] Manual flush finished, status: %s\n",
                  cfh->GetName().c_str(), s.ToString().c_str());
@@ -1123,10 +944,7 @@ Status DBImpl::Flush(const FlushOptions& flush_options,
 
 Status DBImpl::RunManualCompaction(ColumnFamilyData* cfd, int input_level,
                                    int output_level, uint32_t output_path_id,
-<<<<<<< HEAD
                                    uint32_t max_subcompactions,
-=======
->>>>>>> blood in blood out
                                    const Slice* begin, const Slice* end,
                                    bool exclusive, bool disallow_trivial_move) {
   assert(input_level == ColumnFamilyData::kCompactAllLevels ||
@@ -1212,20 +1030,12 @@ Status DBImpl::RunManualCompaction(ColumnFamilyData* cfd, int input_level,
     if (ShouldntRunManualCompaction(&manual) || (manual.in_progress == true) ||
         scheduled ||
         (((manual.manual_end = &manual.tmp_storage1) != nullptr) &&
-<<<<<<< HEAD
          ((compaction = manual.cfd->CompactRange(
                *manual.cfd->GetLatestMutableCFOptions(), manual.input_level,
                manual.output_level, manual.output_path_id, max_subcompactions,
                manual.begin, manual.end, &manual.manual_end,
                &manual_conflict)) == nullptr &&
           manual_conflict))) {
-=======
-             ((compaction = manual.cfd->CompactRange(
-                  *manual.cfd->GetLatestMutableCFOptions(), manual.input_level,
-                  manual.output_level, manual.output_path_id, manual.begin,
-                  manual.end, &manual.manual_end, &manual_conflict)) == nullptr &&
-         manual_conflict))) {
->>>>>>> blood in blood out
       // exclusive manual compactions should not see a conflict during
       // CompactRange
       assert(!exclusive || !manual_conflict);
@@ -1301,10 +1111,7 @@ Status DBImpl::FlushMemTable(ColumnFamilyData* cfd,
     // Wait until the compaction completes
     s = WaitForFlushMemTable(cfd, &flush_memtable_id);
   }
-<<<<<<< HEAD
   TEST_SYNC_POINT("FlushMemTableFinished");
-=======
->>>>>>> blood in blood out
   return s;
 }
 
@@ -1313,11 +1120,7 @@ Status DBImpl::WaitForFlushMemTable(ColumnFamilyData* cfd,
   Status s;
   // Wait until the compaction completes
   InstrumentedMutexLock l(&mutex_);
-<<<<<<< HEAD
   while (cfd->imm()->NumNotFlushed() > 0 && !error_handler_.IsDBStopped() &&
-=======
-  while (cfd->imm()->NumNotFlushed() > 0 && bg_error_.ok() &&
->>>>>>> blood in blood out
          (flush_memtable_id == nullptr ||
           cfd->imm()->GetEarliestMemTableID() <= *flush_memtable_id)) {
     if (shutting_down_.load(std::memory_order_acquire)) {
@@ -1331,13 +1134,8 @@ Status DBImpl::WaitForFlushMemTable(ColumnFamilyData* cfd,
     }
     bg_cv_.Wait();
   }
-<<<<<<< HEAD
   if (error_handler_.IsDBStopped()) {
     s = error_handler_.GetBGError();
-=======
-  if (!bg_error_.ok()) {
-    s = bg_error_;
->>>>>>> blood in blood out
   }
   return s;
 }
@@ -1371,11 +1169,7 @@ void DBImpl::MaybeScheduleFlushOrCompaction() {
   }
   auto bg_job_limits = GetBGJobLimits();
   bool is_flush_pool_empty =
-<<<<<<< HEAD
       env_->GetBackgroundThreads(Env::Priority::HIGH) == 0;
-=======
-    env_->GetBackgroundThreads(Env::Priority::HIGH) == 0;
->>>>>>> blood in blood out
   while (!is_flush_pool_empty && unscheduled_flushes_ > 0 &&
          bg_flush_scheduled_ < bg_job_limits.max_flushes) {
     unscheduled_flushes_--;
@@ -1451,45 +1245,26 @@ DBImpl::BGJobLimits DBImpl::GetBGJobLimits(int max_background_flushes,
 }
 
 void DBImpl::AddToCompactionQueue(ColumnFamilyData* cfd) {
-<<<<<<< HEAD
   assert(!cfd->queued_for_compaction());
   cfd->Ref();
   compaction_queue_.push_back(cfd);
   cfd->set_queued_for_compaction(true);
-=======
-  assert(!cfd->pending_compaction());
-  cfd->Ref();
-  compaction_queue_.push_back(cfd);
-  cfd->set_pending_compaction(true);
->>>>>>> blood in blood out
 }
 
 ColumnFamilyData* DBImpl::PopFirstFromCompactionQueue() {
   assert(!compaction_queue_.empty());
   auto cfd = *compaction_queue_.begin();
   compaction_queue_.pop_front();
-<<<<<<< HEAD
   assert(cfd->queued_for_compaction());
   cfd->set_queued_for_compaction(false);
-=======
-  assert(cfd->pending_compaction());
-  cfd->set_pending_compaction(false);
->>>>>>> blood in blood out
   return cfd;
 }
 
 void DBImpl::AddToFlushQueue(ColumnFamilyData* cfd, FlushReason flush_reason) {
-<<<<<<< HEAD
   assert(!cfd->queued_for_flush());
   cfd->Ref();
   flush_queue_.push_back(cfd);
   cfd->set_queued_for_flush(true);
-=======
-  assert(!cfd->pending_flush());
-  cfd->Ref();
-  flush_queue_.push_back(cfd);
-  cfd->set_pending_flush(true);
->>>>>>> blood in blood out
   cfd->SetFlushReason(flush_reason);
 }
 
@@ -1497,52 +1272,31 @@ ColumnFamilyData* DBImpl::PopFirstFromFlushQueue() {
   assert(!flush_queue_.empty());
   auto cfd = *flush_queue_.begin();
   flush_queue_.pop_front();
-<<<<<<< HEAD
   assert(cfd->queued_for_flush());
   cfd->set_queued_for_flush(false);
-=======
-  assert(cfd->pending_flush());
-  cfd->set_pending_flush(false);
->>>>>>> blood in blood out
   // TODO: need to unset flush reason?
   return cfd;
 }
 
 void DBImpl::SchedulePendingFlush(ColumnFamilyData* cfd,
                                   FlushReason flush_reason) {
-<<<<<<< HEAD
   if (!cfd->queued_for_flush() && cfd->imm()->IsFlushPending()) {
-=======
-  if (!cfd->pending_flush() && cfd->imm()->IsFlushPending()) {
->>>>>>> blood in blood out
     AddToFlushQueue(cfd, flush_reason);
     ++unscheduled_flushes_;
   }
 }
 
 void DBImpl::SchedulePendingCompaction(ColumnFamilyData* cfd) {
-<<<<<<< HEAD
   if (!cfd->queued_for_compaction() && cfd->NeedsCompaction()) {
-=======
-  if (!cfd->pending_compaction() && cfd->NeedsCompaction()) {
->>>>>>> blood in blood out
     AddToCompactionQueue(cfd);
     ++unscheduled_compactions_;
   }
 }
 
-<<<<<<< HEAD
 void DBImpl::SchedulePendingPurge(std::string fname, std::string dir_to_sync,
                                   FileType type, uint64_t number, int job_id) {
   mutex_.AssertHeld();
   PurgeFileInfo file_info(fname, dir_to_sync, type, number, job_id);
-=======
-void DBImpl::SchedulePendingPurge(std::string fname, FileType type,
-                                  uint64_t number, uint32_t path_id,
-                                  int job_id) {
-  mutex_.AssertHeld();
-  PurgeFileInfo file_info(fname, type, number, path_id, job_id);
->>>>>>> blood in blood out
   purge_queue_.push_back(std::move(file_info));
 }
 
@@ -1600,7 +1354,6 @@ Status DBImpl::BackgroundFlush(bool* made_progress, JobContext* job_context,
                                LogBuffer* log_buffer) {
   mutex_.AssertHeld();
 
-<<<<<<< HEAD
   Status status;
   if (!error_handler_.IsBGWorkStopped()) {
     if (shutting_down_.load(std::memory_order_acquire)) {
@@ -1608,11 +1361,6 @@ Status DBImpl::BackgroundFlush(bool* made_progress, JobContext* job_context,
     }
   } else {
     status = error_handler_.GetBGError();
-=======
-  Status status = bg_error_;
-  if (status.ok() && shutting_down_.load(std::memory_order_acquire)) {
-    status = Status::ShutdownInProgress();
->>>>>>> blood in blood out
   }
 
   if (!status.ok()) {
@@ -1681,11 +1429,7 @@ void DBImpl::BackgroundCallFlush() {
       // chew up resources for failed flushes for the duration of
       // the problem.
       uint64_t error_cnt =
-<<<<<<< HEAD
           default_cf_internal_stats_->BumpAndGetBackgroundErrorCount();
-=======
-        default_cf_internal_stats_->BumpAndGetBackgroundErrorCount();
->>>>>>> blood in blood out
       bg_cv_.SignalAll();  // In case a waiter can proceed despite the error
       mutex_.Unlock();
       ROCKS_LOG_ERROR(immutable_db_options_.info_log,
@@ -1785,10 +1529,7 @@ void DBImpl::BackgroundCallCompaction(PrepickedCompaction* prepicked_compaction,
     // have created (they might not be all recorded in job_context in case of a
     // failure). Thus, we force full scan in FindObsoleteFiles()
     FindObsoleteFiles(&job_context, !s.ok() && !s.IsShutdownInProgress());
-<<<<<<< HEAD
     TEST_SYNC_POINT("DBImpl::BackgroundCallCompaction:FoundObsoleteFiles");
-=======
->>>>>>> blood in blood out
 
     // delete unnecessary files if any, this is done outside the mutex
     if (job_context.HaveSomethingToClean() ||
@@ -1802,10 +1543,7 @@ void DBImpl::BackgroundCallCompaction(PrepickedCompaction* prepicked_compaction,
       log_buffer.FlushBufferToLog();
       if (job_context.HaveSomethingToDelete()) {
         PurgeObsoleteFiles(job_context);
-<<<<<<< HEAD
         TEST_SYNC_POINT("DBImpl::BackgroundCallCompaction:PurgedObsoleteFiles");
-=======
->>>>>>> blood in blood out
       }
       job_context.Clean();
       mutex_.Lock();
@@ -1827,11 +1565,7 @@ void DBImpl::BackgroundCallCompaction(PrepickedCompaction* prepicked_compaction,
     if (made_progress ||
         (bg_compaction_scheduled_ == 0 &&
          bg_bottom_compaction_scheduled_ == 0) ||
-<<<<<<< HEAD
         HasPendingManualCompaction() || unscheduled_compactions_ == 0) {
-=======
-        HasPendingManualCompaction()) {
->>>>>>> blood in blood out
       // signal if
       // * made_progress -- need to wakeup DelayWrite
       // * bg_{bottom,}_compaction_scheduled_ == 0 -- need to wakeup ~DBImpl
@@ -1872,7 +1606,6 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
       is_manual && manual_compaction->disallow_trivial_move;
 
   CompactionJobStats compaction_job_stats;
-<<<<<<< HEAD
   Status status;
   if (!error_handler_.IsBGWorkStopped()) {
     if (shutting_down_.load(std::memory_order_acquire)) {
@@ -1880,11 +1613,6 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
     }
   } else {
     status = error_handler_.GetBGError();
-=======
-  Status status = bg_error_;
-  if (status.ok() && shutting_down_.load(std::memory_order_acquire)) {
-    status = Status::ShutdownInProgress();
->>>>>>> blood in blood out
   }
 
   if (!status.ok()) {
@@ -1904,10 +1632,7 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
 
   // InternalKey manual_end_storage;
   // InternalKey* manual_end = &manual_end_storage;
-<<<<<<< HEAD
   bool sfm_reserved_compact_space = false;
-=======
->>>>>>> blood in blood out
   if (is_manual) {
     ManualCompactionState* m = manual_compaction;
     assert(m->in_progress);
@@ -1921,7 +1646,6 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
                        (m->begin ? m->begin->DebugString().c_str() : "(begin)"),
                        (m->end ? m->end->DebugString().c_str() : "(end)"));
     } else {
-<<<<<<< HEAD
       // First check if we have enough room to do the compaction
       bool enough_room = EnoughRoomForCompaction(
           *(c->inputs()), &sfm_reserved_compact_space, log_buffer);
@@ -1945,18 +1669,6 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
                  ? "(end)"
                  : m->manual_end->DebugString().c_str()));
       }
-=======
-      ROCKS_LOG_BUFFER(
-          log_buffer,
-          "[%s] Manual compaction from level-%d to level-%d from %s .. "
-          "%s; will stop at %s\n",
-          m->cfd->GetName().c_str(), m->input_level, c->output_level(),
-          (m->begin ? m->begin->DebugString().c_str() : "(begin)"),
-          (m->end ? m->end->DebugString().c_str() : "(end)"),
-          ((m->done || m->manual_end == nullptr)
-               ? "(end)"
-               : m->manual_end->DebugString().c_str()));
->>>>>>> blood in blood out
     }
   } else if (!is_prepicked && !compaction_queue_.empty()) {
     if (HasExclusiveManualCompaction()) {
@@ -1996,7 +1708,6 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
       TEST_SYNC_POINT("DBImpl::BackgroundCompaction():BeforePickCompaction");
       c.reset(cfd->PickCompaction(*mutable_cf_options, log_buffer));
       TEST_SYNC_POINT("DBImpl::BackgroundCompaction():AfterPickCompaction");
-<<<<<<< HEAD
 
       if (c != nullptr) {
         bool enough_room = EnoughRoomForCompaction(
@@ -2039,29 +1750,6 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
             ++unscheduled_compactions_;
             MaybeScheduleFlushOrCompaction();
           }
-=======
-      if (c != nullptr) {
-        // update statistics
-        MeasureTime(stats_, NUM_FILES_IN_SINGLE_COMPACTION,
-                    c->inputs(0)->size());
-        // There are three things that can change compaction score:
-        // 1) When flush or compaction finish. This case is covered by
-        // InstallSuperVersionAndScheduleWork
-        // 2) When MutableCFOptions changes. This case is also covered by
-        // InstallSuperVersionAndScheduleWork, because this is when the new
-        // options take effect.
-        // 3) When we Pick a new compaction, we "remove" those files being
-        // compacted from the calculation, which then influences compaction
-        // score. Here we check if we need the new compaction even without the
-        // files that are currently being compacted. If we need another
-        // compaction, we might be able to execute it in parallel, so we add it
-        // to the queue and schedule a new thread.
-        if (cfd->NeedsCompaction()) {
-          // Yes, we need more compactions!
-          AddToCompactionQueue(cfd);
-          ++unscheduled_compactions_;
-          MaybeScheduleFlushOrCompaction();
->>>>>>> blood in blood out
         }
       }
     }
@@ -2088,11 +1776,7 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
                                     &mutex_, directories_.GetDbDir());
     InstallSuperVersionAndScheduleWork(
         c->column_family_data(), &job_context->superversion_context,
-<<<<<<< HEAD
         *c->mutable_cf_options(), FlushReason::kAutoCompaction);
-=======
-        *c->mutable_cf_options());
->>>>>>> blood in blood out
     ROCKS_LOG_BUFFER(log_buffer, "[%s] Deleted %d files\n",
                      c->column_family_data()->GetName().c_str(),
                      c->num_input_files(0));
@@ -2123,19 +1807,11 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
                            f->largest, f->smallest_seqno, f->largest_seqno,
                            f->marked_for_compaction);
 
-<<<<<<< HEAD
         ROCKS_LOG_BUFFER(
             log_buffer,
             "[%s] Moving #%" PRIu64 " to level-%d %" PRIu64 " bytes\n",
             c->column_family_data()->GetName().c_str(), f->fd.GetNumber(),
             c->output_level(), f->fd.GetFileSize());
-=======
-        ROCKS_LOG_BUFFER(log_buffer, "[%s] Moving #%" PRIu64
-                                     " to level-%d %" PRIu64 " bytes\n",
-                         c->column_family_data()->GetName().c_str(),
-                         f->fd.GetNumber(), c->output_level(),
-                         f->fd.GetFileSize());
->>>>>>> blood in blood out
         ++moved_files;
         moved_bytes += f->fd.GetFileSize();
       }
@@ -2147,11 +1823,7 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
     // Use latest MutableCFOptions
     InstallSuperVersionAndScheduleWork(
         c->column_family_data(), &job_context->superversion_context,
-<<<<<<< HEAD
         *c->mutable_cf_options(), FlushReason::kAutoCompaction);
-=======
-        *c->mutable_cf_options());
->>>>>>> blood in blood out
 
     VersionStorageInfo::LevelSummaryStorage tmp;
     c->column_family_data()->internal_stats()->IncBytesMoved(c->output_level(),
@@ -2173,13 +1845,7 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
 
     // Clear Instrument
     ThreadStatusUtil::ResetThreadStatus();
-<<<<<<< HEAD
   } else if (!is_prepicked && c->output_level() > 0 &&
-=======
-  } else if (c->column_family_data()->ioptions()->compaction_style ==
-                 kCompactionStyleUniversal &&
-             !is_prepicked && c->output_level() > 0 &&
->>>>>>> blood in blood out
              c->output_level() ==
                  c->column_family_data()
                      ->current()
@@ -2187,15 +1853,9 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
                      ->MaxOutputLevel(
                          immutable_db_options_.allow_ingest_behind) &&
              env_->GetBackgroundThreads(Env::Priority::BOTTOM) > 0) {
-<<<<<<< HEAD
     // Forward compactions involving last level to the bottom pool if it exists,
     // such that compactions unlikely to contribute to write stalls can be
     // delayed or deprioritized.
-=======
-    // Forward universal compactions involving last level to the bottom pool
-    // if it exists, such that long-running compactions can't block short-
-    // lived ones, like L0->L0s.
->>>>>>> blood in blood out
     TEST_SYNC_POINT("DBImpl::BackgroundCompaction:ForwardToBottomPriPool");
     CompactionArg* ca = new CompactionArg;
     ca->db = this;
@@ -2206,11 +1866,7 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
     env_->Schedule(&DBImpl::BGWorkBottomCompaction, ca, Env::Priority::BOTTOM,
                    this, &DBImpl::UnscheduleCallback);
   } else {
-<<<<<<< HEAD
     int output_level __attribute__((__unused__));
-=======
-    int output_level  __attribute__((__unused__));
->>>>>>> blood in blood out
     output_level = c->output_level();
     TEST_SYNC_POINT_CALLBACK("DBImpl::BackgroundCompaction:NonTrivial",
                              &output_level);
@@ -2227,13 +1883,8 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
         job_context->job_id, c.get(), immutable_db_options_,
         env_options_for_compaction_, versions_.get(), &shutting_down_,
         preserve_deletes_seqnum_.load(), log_buffer, directories_.GetDbDir(),
-<<<<<<< HEAD
         GetDataDir(c->column_family_data(), c->output_path_id()), stats_,
         &mutex_, &error_handler_, snapshot_seqs, earliest_write_conflict_snapshot,
-=======
-        directories_.GetDataDir(c->output_path_id()), stats_, &mutex_,
-        &bg_error_, snapshot_seqs, earliest_write_conflict_snapshot,
->>>>>>> blood in blood out
         snapshot_checker, table_cache_, &event_logger_,
         c->mutable_cf_options()->paranoid_file_checks,
         c->mutable_cf_options()->report_bg_io_stats, dbname_,
@@ -2249,18 +1900,13 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
     if (status.ok()) {
       InstallSuperVersionAndScheduleWork(
           c->column_family_data(), &job_context->superversion_context,
-<<<<<<< HEAD
           *c->mutable_cf_options(), FlushReason::kAutoCompaction);
-=======
-          *c->mutable_cf_options());
->>>>>>> blood in blood out
     }
     *made_progress = true;
   }
   if (c != nullptr) {
     c->ReleaseCompactionFiles(status);
     *made_progress = true;
-<<<<<<< HEAD
 
 #ifndef ROCKSDB_LITE
     // Need to make sure SstFileManager does its bookkeeping
@@ -2273,40 +1919,18 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
 
     NotifyOnCompactionCompleted(c->column_family_data(), c.get(), status,
                                 compaction_job_stats, job_context->job_id);
-=======
-    NotifyOnCompactionCompleted(
-        c->column_family_data(), c.get(), status,
-        compaction_job_stats, job_context->job_id);
->>>>>>> blood in blood out
   }
   // this will unref its input_version and column_family_data
   c.reset();
 
-<<<<<<< HEAD
   if (status.ok() || status.IsCompactionTooLarge()) {
-=======
-  if (status.ok()) {
->>>>>>> blood in blood out
     // Done
   } else if (status.IsShutdownInProgress()) {
     // Ignore compaction errors found during shutting down
   } else {
     ROCKS_LOG_WARN(immutable_db_options_.info_log, "Compaction error: %s",
                    status.ToString().c_str());
-<<<<<<< HEAD
     error_handler_.SetBGError(status, BackgroundErrorReason::kCompaction);
-=======
-    if (immutable_db_options_.paranoid_checks && bg_error_.ok()) {
-      Status new_bg_error = status;
-      // may temporarily unlock and lock the mutex.
-      EventHelpers::NotifyOnBackgroundError(immutable_db_options_.listeners,
-                                            BackgroundErrorReason::kCompaction,
-                                            &new_bg_error, &mutex_);
-      if (!new_bg_error.ok()) {
-        bg_error_ = new_bg_error;
-      }
-    }
->>>>>>> blood in blood out
   }
 
   if (is_manual) {
@@ -2343,11 +1967,7 @@ Status DBImpl::BackgroundCompaction(bool* made_progress,
       m->begin = &m->tmp_storage;
       m->incomplete = true;
     }
-<<<<<<< HEAD
     m->in_progress = false;  // not being processed anymore
-=======
-    m->in_progress = false; // not being processed anymore
->>>>>>> blood in blood out
   }
   TEST_SYNC_POINT("DBImpl::BackgroundCompaction:Finish");
   return status;
@@ -2447,12 +2067,7 @@ bool DBImpl::MCOverlap(ManualCompactionState* m, ManualCompactionState* m1) {
 }
 
 // SuperVersionContext gets created and destructed outside of the lock --
-<<<<<<< HEAD
 // we use this conveniently to:
-=======
-// we
-// use this convinently to:
->>>>>>> blood in blood out
 // * malloc one SuperVersion() outside of the lock -- new_superversion
 // * delete SuperVersion()s outside of the lock -- superversions_to_free
 //
@@ -2465,11 +2080,7 @@ bool DBImpl::MCOverlap(ManualCompactionState* m, ManualCompactionState* m1) {
 
 void DBImpl::InstallSuperVersionAndScheduleWork(
     ColumnFamilyData* cfd, SuperVersionContext* sv_context,
-<<<<<<< HEAD
     const MutableCFOptions& mutable_cf_options, FlushReason flush_reason) {
-=======
-    const MutableCFOptions& mutable_cf_options) {
->>>>>>> blood in blood out
   mutex_.AssertHeld();
 
   // Update max_total_in_memory_state_
@@ -2483,25 +2094,15 @@ void DBImpl::InstallSuperVersionAndScheduleWork(
   if (sv_context->new_superversion == nullptr) {
     sv_context->NewSuperVersion();
   }
-<<<<<<< HEAD
   cfd->InstallSuperVersion(sv_context, &mutex_, mutable_cf_options);
 
   // Whenever we install new SuperVersion, we might need to issue new flushes or
   // compactions.
   SchedulePendingFlush(cfd, flush_reason);
-=======
-  cfd->InstallSuperVersion(sv_context, &mutex_,
-                           mutable_cf_options);
-
-  // Whenever we install new SuperVersion, we might need to issue new flushes or
-  // compactions.
-  SchedulePendingFlush(cfd, FlushReason::kSuperVersionChange);
->>>>>>> blood in blood out
   SchedulePendingCompaction(cfd);
   MaybeScheduleFlushOrCompaction();
 
   // Update max_total_in_memory_state_
-<<<<<<< HEAD
   max_total_in_memory_state_ = max_total_in_memory_state_ - old_memtable_size +
                                mutable_cf_options.write_buffer_size *
                                    mutable_cf_options.max_write_buffer_number;
@@ -2536,12 +2137,6 @@ bool DBImpl::ShouldPurge(uint64_t file_number) const {
 // (mutex_) should already be held.
 void DBImpl::MarkAsGrabbedForPurge(uint64_t file_number) {
   files_grabbed_for_purge_.emplace_back(file_number);
-=======
-  max_total_in_memory_state_ =
-      max_total_in_memory_state_ - old_memtable_size +
-      mutable_cf_options.write_buffer_size *
-      mutable_cf_options.max_write_buffer_number;
->>>>>>> blood in blood out
 }
 
 void DBImpl::SetSnapshotChecker(SnapshotChecker* snapshot_checker) {

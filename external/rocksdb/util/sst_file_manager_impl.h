@@ -11,10 +11,7 @@
 
 #include "port/port.h"
 
-<<<<<<< HEAD
 #include "db/compaction.h"
-=======
->>>>>>> blood in blood out
 #include "rocksdb/sst_file_manager.h"
 #include "util/delete_scheduler.h"
 
@@ -30,12 +27,8 @@ class SstFileManagerImpl : public SstFileManager {
  public:
   explicit SstFileManagerImpl(Env* env, std::shared_ptr<Logger> logger,
                               int64_t rate_bytes_per_sec,
-<<<<<<< HEAD
                               double max_trash_db_ratio,
                               uint64_t bytes_max_delete_chunk);
-=======
-                              double max_trash_db_ratio);
->>>>>>> blood in blood out
 
   ~SstFileManagerImpl();
 
@@ -59,18 +52,14 @@ class SstFileManagerImpl : public SstFileManager {
   // thread-safe.
   void SetMaxAllowedSpaceUsage(uint64_t max_allowed_space) override;
 
-<<<<<<< HEAD
   void SetCompactionBufferSize(uint64_t compaction_buffer_size) override;
 
-=======
->>>>>>> blood in blood out
   // Return true if the total size of SST files exceeded the maximum allowed
   // space usage.
   //
   // thread-safe.
   bool IsMaxAllowedSpaceReached() override;
 
-<<<<<<< HEAD
   bool IsMaxAllowedSpaceReachedIncludingCompactions() override;
 
   // Returns true is there is enough (approximate) space for the specified
@@ -86,8 +75,6 @@ class SstFileManagerImpl : public SstFileManager {
 
   uint64_t GetCompactionsReservedSize();
 
-=======
->>>>>>> blood in blood out
   // Return the total size of all tracked files.
   uint64_t GetTotalSize() override;
 
@@ -107,12 +94,8 @@ class SstFileManagerImpl : public SstFileManager {
   virtual void SetMaxTrashDBRatio(double ratio) override;
 
   // Mark file as trash and schedule it's deletion.
-<<<<<<< HEAD
   virtual Status ScheduleFileDeletion(const std::string& file_path,
                                       const std::string& dir_to_sync);
-=======
-  virtual Status ScheduleFileDeletion(const std::string& file_path);
->>>>>>> blood in blood out
 
   // Wait for all files being deleteing in the background to finish or for
   // destructor to be called.
@@ -132,14 +115,11 @@ class SstFileManagerImpl : public SstFileManager {
   port::Mutex mu_;
   // The summation of the sizes of all files in tracked_files_ map
   uint64_t total_files_size_;
-<<<<<<< HEAD
   // Compactions should only execute if they can leave at least
   // this amount of buffer space for logs and flushes
   uint64_t compaction_buffer_size_;
   // Estimated size of the current ongoing compactions
   uint64_t cur_compactions_reserved_size_;
-=======
->>>>>>> blood in blood out
   // A map containing all tracked files and there sizes
   //  file_path => file_size
   std::unordered_map<std::string, uint64_t> tracked_files_;

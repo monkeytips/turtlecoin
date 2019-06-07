@@ -34,7 +34,6 @@ static const int kValueSize = 1000;
 static const int kMaxNumValues = 2000;
 static const size_t kNumIterations = 3;
 
-<<<<<<< HEAD
 enum FaultInjectionOptionConfig {
   kDefault,
   kDifferentDataDir,
@@ -51,21 +50,6 @@ class FaultInjectionTest
  protected:
   int option_config_;
   int non_inclusive_end_range_;  // kEnd or equivalent to that
-=======
-class FaultInjectionTest : public testing::Test,
-                           public testing::WithParamInterface<bool> {
- protected:
-  enum OptionConfig {
-    kDefault,
-    kDifferentDataDir,
-    kWalDir,
-    kSyncWal,
-    kWalDirSyncWal,
-    kMultiLevels,
-    kEnd,
-  };
-  int option_config_;
->>>>>>> blood in blood out
   // When need to make sure data is persistent, sync WAL
   bool sync_use_wal_;
   // When need to make sure data is persistent, call DB::CompactRange()
@@ -91,7 +75,6 @@ class FaultInjectionTest : public testing::Test,
   DB* db_;
 
   FaultInjectionTest()
-<<<<<<< HEAD
       : option_config_(std::get<1>(GetParam())),
         non_inclusive_end_range_(std::get<2>(GetParam())),
         sync_use_wal_(false),
@@ -99,15 +82,6 @@ class FaultInjectionTest : public testing::Test,
         base_env_(nullptr),
         env_(nullptr),
         db_(nullptr) {}
-=======
-      : option_config_(kDefault),
-        sync_use_wal_(false),
-        sync_use_compact_(true),
-        base_env_(nullptr),
-        env_(NULL),
-        db_(NULL) {
-  }
->>>>>>> blood in blood out
 
   ~FaultInjectionTest() {
     rocksdb::SyncPoint::GetInstance()->DisableProcessing();
@@ -116,11 +90,7 @@ class FaultInjectionTest : public testing::Test,
 
   bool ChangeOptions() {
     option_config_++;
-<<<<<<< HEAD
     if (option_config_ >= non_inclusive_end_range_) {
-=======
-    if (option_config_ >= kEnd) {
->>>>>>> blood in blood out
       return false;
     } else {
       if (option_config_ == kMultiLevels) {
@@ -137,30 +107,18 @@ class FaultInjectionTest : public testing::Test,
     Options options;
     switch (option_config_) {
       case kWalDir:
-<<<<<<< HEAD
         options.wal_dir = test::PerThreadDBPath(env_, "fault_test_wal");
         break;
       case kDifferentDataDir:
         options.db_paths.emplace_back(
             test::PerThreadDBPath(env_, "fault_test_data"), 1000000U);
-=======
-        options.wal_dir = test::TmpDir(env_) + "/fault_test_wal";
-        break;
-      case kDifferentDataDir:
-        options.db_paths.emplace_back(test::TmpDir(env_) + "/fault_test_data",
-                                      1000000U);
->>>>>>> blood in blood out
         break;
       case kSyncWal:
         sync_use_wal_ = true;
         sync_use_compact_ = false;
         break;
       case kWalDirSyncWal:
-<<<<<<< HEAD
         options.wal_dir = test::PerThreadDBPath(env_, "/fault_test_wal");
-=======
-        options.wal_dir = test::TmpDir(env_) + "/fault_test_wal";
->>>>>>> blood in blood out
         sync_use_wal_ = true;
         sync_use_compact_ = false;
         break;
@@ -184,15 +142,9 @@ class FaultInjectionTest : public testing::Test,
   }
 
   Status NewDB() {
-<<<<<<< HEAD
     assert(db_ == nullptr);
     assert(tiny_cache_ == nullptr);
     assert(env_ == nullptr);
-=======
-    assert(db_ == NULL);
-    assert(tiny_cache_ == nullptr);
-    assert(env_ == NULL);
->>>>>>> blood in blood out
 
     env_ =
         new FaultInjectionTestEnv(base_env_ ? base_env_.get() : Env::Default());
@@ -206,11 +158,7 @@ class FaultInjectionTest : public testing::Test,
     table_options.block_cache = tiny_cache_;
     options_.table_factory.reset(NewBlockBasedTableFactory(table_options));
 
-<<<<<<< HEAD
     dbname_ = test::PerThreadDBPath("fault_test");
-=======
-    dbname_ = test::TmpDir() + "/fault_test";
->>>>>>> blood in blood out
 
     EXPECT_OK(DestroyDB(dbname_, options_));
 
@@ -221,11 +169,7 @@ class FaultInjectionTest : public testing::Test,
   }
 
   void SetUp() override {
-<<<<<<< HEAD
     sequential_order_ = std::get<0>(GetParam());
-=======
-    sequential_order_ = GetParam();
->>>>>>> blood in blood out
     ASSERT_OK(NewDB());
   }
 
@@ -235,11 +179,7 @@ class FaultInjectionTest : public testing::Test,
     Status s = DestroyDB(dbname_, options_);
 
     delete env_;
-<<<<<<< HEAD
     env_ = nullptr;
-=======
-    env_ = NULL;
->>>>>>> blood in blood out
 
     tiny_cache_.reset();
 
@@ -406,13 +346,9 @@ class FaultInjectionTest : public testing::Test,
   }
 };
 
-<<<<<<< HEAD
 class FaultInjectionTestSplitted : public FaultInjectionTest {};
 
 TEST_P(FaultInjectionTestSplitted, FaultTest) {
-=======
-TEST_P(FaultInjectionTest, FaultTest) {
->>>>>>> blood in blood out
   do {
     Random rnd(301);
 
@@ -525,17 +461,10 @@ TEST_P(FaultInjectionTest, UninstalledCompaction) {
 
   std::atomic<bool> opened(false);
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
-<<<<<<< HEAD
       "DBImpl::Open:Opened", [&](void* /*arg*/) { opened.store(true); });
   rocksdb::SyncPoint::GetInstance()->SetCallBack(
       "DBImpl::BGWorkCompaction",
       [&](void* /*arg*/) { ASSERT_TRUE(opened.load()); });
-=======
-      "DBImpl::Open:Opened", [&](void* arg) { opened.store(true); });
-  rocksdb::SyncPoint::GetInstance()->SetCallBack(
-      "DBImpl::BGWorkCompaction",
-      [&](void* arg) { ASSERT_TRUE(opened.load()); });
->>>>>>> blood in blood out
   rocksdb::SyncPoint::GetInstance()->EnableProcessing();
   ASSERT_OK(OpenDB());
   ASSERT_OK(Verify(0, kNumKeys, FaultInjectionTest::kValExpectFound));
@@ -606,7 +535,6 @@ TEST_P(FaultInjectionTest, WriteBatchWalTerminationTest) {
   ASSERT_EQ(db_->Get(ro, "boys", &val), Status::NotFound());
 }
 
-<<<<<<< HEAD
 INSTANTIATE_TEST_CASE_P(
     FaultTest, FaultInjectionTest,
     ::testing::Values(std::make_tuple(false, kDefault, kEnd),
@@ -618,9 +546,6 @@ INSTANTIATE_TEST_CASE_P(
                       std::make_tuple(true, kDefault, kSyncWal),
                       std::make_tuple(false, kSyncWal, kEnd),
                       std::make_tuple(true, kSyncWal, kEnd)));
-=======
-INSTANTIATE_TEST_CASE_P(FaultTest, FaultInjectionTest, ::testing::Bool());
->>>>>>> blood in blood out
 
 }  // namespace rocksdb
 

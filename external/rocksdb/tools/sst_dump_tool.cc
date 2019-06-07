@@ -43,7 +43,6 @@
 
 namespace rocksdb {
 
-<<<<<<< HEAD
 SstFileReader::SstFileReader(const std::string& file_path, bool verify_checksum,
                              bool output_hex)
     : file_name_(file_path),
@@ -53,14 +52,6 @@ SstFileReader::SstFileReader(const std::string& file_path, bool verify_checksum,
       ioptions_(options_),
       moptions_(ColumnFamilyOptions(options_)),
       internal_comparator_(BytewiseComparator()) {
-=======
-SstFileReader::SstFileReader(const std::string& file_path,
-                             bool verify_checksum,
-                             bool output_hex)
-    :file_name_(file_path), read_num_(0), verify_checksum_(verify_checksum),
-    output_hex_(output_hex), ioptions_(options_),
-    internal_comparator_(BytewiseComparator()) {
->>>>>>> blood in blood out
   fprintf(stdout, "Process %s\n", file_path.c_str());
   init_result_ = GetTableReader(file_name_);
 }
@@ -133,37 +124,22 @@ Status SstFileReader::GetTableReader(const std::string& file_path) {
 }
 
 Status SstFileReader::NewTableReader(
-<<<<<<< HEAD
     const ImmutableCFOptions& /*ioptions*/, const EnvOptions& /*soptions*/,
     const InternalKeyComparator& /*internal_comparator*/, uint64_t file_size,
     unique_ptr<TableReader>* /*table_reader*/) {
-=======
-    const ImmutableCFOptions& ioptions, const EnvOptions& soptions,
-    const InternalKeyComparator& internal_comparator, uint64_t file_size,
-    unique_ptr<TableReader>* table_reader) {
->>>>>>> blood in blood out
   // We need to turn off pre-fetching of index and filter nodes for
   // BlockBasedTable
   if (BlockBasedTableFactory::kName == options_.table_factory->Name()) {
     return options_.table_factory->NewTableReader(
-<<<<<<< HEAD
         TableReaderOptions(ioptions_, moptions_.prefix_extractor.get(),
                            soptions_, internal_comparator_),
-=======
-        TableReaderOptions(ioptions_, soptions_, internal_comparator_,
-                           /*skip_filters=*/false),
->>>>>>> blood in blood out
         std::move(file_), file_size, &table_reader_, /*enable_prefetch=*/false);
   }
 
   // For all other factory implementation
   return options_.table_factory->NewTableReader(
-<<<<<<< HEAD
       TableReaderOptions(ioptions_, moptions_.prefix_extractor.get(), soptions_,
                          internal_comparator_),
-=======
-      TableReaderOptions(ioptions_, soptions_, internal_comparator_),
->>>>>>> blood in blood out
       std::move(file_), file_size, &table_reader_);
 }
 
@@ -175,12 +151,8 @@ Status SstFileReader::DumpTable(const std::string& out_filename) {
   unique_ptr<WritableFile> out_file;
   Env* env = Env::Default();
   env->NewWritableFile(out_filename, &out_file, soptions_);
-<<<<<<< HEAD
   Status s = table_reader_->DumpTable(out_file.get(),
                                       moptions_.prefix_extractor.get());
-=======
-  Status s = table_reader_->DumpTable(out_file.get());
->>>>>>> blood in blood out
   out_file->Close();
   return s;
 }
@@ -200,12 +172,8 @@ uint64_t SstFileReader::CalculateCompressedTableSize(
       tb_options,
       TablePropertiesCollectorFactory::Context::kUnknownColumnFamily,
       dest_writer.get()));
-<<<<<<< HEAD
   unique_ptr<InternalIterator> iter(table_reader_->NewIterator(
       ReadOptions(), moptions_.prefix_extractor.get()));
-=======
-  unique_ptr<InternalIterator> iter(table_reader_->NewIterator(ReadOptions()));
->>>>>>> blood in blood out
   for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
     if (!iter->status().ok()) {
       fputs(iter->status().ToString().c_str(), stderr);
@@ -230,11 +198,8 @@ int SstFileReader::ShowAllCompressionSizes(
   ReadOptions read_options;
   Options opts;
   const ImmutableCFOptions imoptions(opts);
-<<<<<<< HEAD
   const ColumnFamilyOptions cfo(opts);
   const MutableCFOptions moptions(cfo);
-=======
->>>>>>> blood in blood out
   rocksdb::InternalKeyComparator ikc(opts.comparator);
   std::vector<std::unique_ptr<IntTblPropCollectorFactory> >
       block_based_table_factories;
@@ -246,18 +211,10 @@ int SstFileReader::ShowAllCompressionSizes(
       CompressionOptions compress_opt;
       std::string column_family_name;
       int unknown_level = -1;
-<<<<<<< HEAD
       TableBuilderOptions tb_opts(
           imoptions, moptions, ikc, &block_based_table_factories, i.first,
           compress_opt, nullptr /* compression_dict */,
           false /* skip_filters */, column_family_name, unknown_level);
-=======
-      TableBuilderOptions tb_opts(imoptions, ikc, &block_based_table_factories,
-                                  i.first, compress_opt,
-                                  nullptr /* compression_dict */,
-                                  false /* skip_filters */, column_family_name,
-                                  unknown_level);
->>>>>>> blood in blood out
       uint64_t file_size = CalculateCompressedTableSize(tb_opts, block_size);
       fprintf(stdout, "Compression: %s", i.second);
       fprintf(stdout, " Size: %" PRIu64 "\n", file_size);
@@ -341,13 +298,8 @@ Status SstFileReader::ReadSequential(bool print_kv, uint64_t read_num,
     return init_result_;
   }
 
-<<<<<<< HEAD
   InternalIterator* iter = table_reader_->NewIterator(
       ReadOptions(verify_checksum_, false), moptions_.prefix_extractor.get());
-=======
-  InternalIterator* iter =
-      table_reader_->NewIterator(ReadOptions(verify_checksum_, false));
->>>>>>> blood in blood out
   uint64_t i = 0;
   if (has_from) {
     InternalKey ikey;

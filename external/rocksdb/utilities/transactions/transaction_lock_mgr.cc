@@ -372,11 +372,7 @@ Status TransactionLockMgr::AcquireWithTimeout(
       if (wait_ids.size() != 0) {
         if (txn->IsDeadlockDetect()) {
           if (IncrementWaiters(txn, wait_ids, key, column_family_id,
-<<<<<<< HEAD
                                lock_info.exclusive, env)) {
-=======
-                               lock_info.exclusive)) {
->>>>>>> blood in blood out
             result = Status::Busy(Status::SubCode::kDeadlock);
             stripe->stripe_mutex->UnLock();
             return result;
@@ -448,11 +444,7 @@ void TransactionLockMgr::DecrementWaitersImpl(
 bool TransactionLockMgr::IncrementWaiters(
     const PessimisticTransaction* txn,
     const autovector<TransactionID>& wait_ids, const std::string& key,
-<<<<<<< HEAD
     const uint32_t& cf_id, const bool& exclusive, Env* const env) {
-=======
-    const uint32_t& cf_id, const bool& exclusive) {
->>>>>>> blood in blood out
   auto id = txn->GetID();
   std::vector<int> queue_parents(txn->GetDeadlockDetectDepth());
   std::vector<TransactionID> queue_values(txn->GetDeadlockDetectDepth());
@@ -476,10 +468,7 @@ bool TransactionLockMgr::IncrementWaiters(
 
   const auto* next_ids = &wait_ids;
   int parent = -1;
-<<<<<<< HEAD
   int64_t deadlock_time = 0;
-=======
->>>>>>> blood in blood out
   for (int tail = 0, head = 0; head < txn->GetDeadlockDetectDepth(); head++) {
     int i = 0;
     if (next_ids) {
@@ -509,15 +498,10 @@ bool TransactionLockMgr::IncrementWaiters(
                         extracted_info.m_exclusive});
         head = queue_parents[head];
       }
-<<<<<<< HEAD
       env->GetCurrentTime(&deadlock_time);
       std::reverse(path.begin(), path.end());
       dlock_buffer_.AddNewPath(DeadlockPath(path, deadlock_time));
       deadlock_time = 0;
-=======
-      std::reverse(path.begin(), path.end());
-      dlock_buffer_.AddNewPath(DeadlockPath(path));
->>>>>>> blood in blood out
       DecrementWaitersImpl(txn, wait_ids);
       return true;
     } else if (!wait_txn_map_.Contains(next)) {
@@ -530,12 +514,8 @@ bool TransactionLockMgr::IncrementWaiters(
   }
 
   // Wait cycle too big, just assume deadlock.
-<<<<<<< HEAD
   env->GetCurrentTime(&deadlock_time);
   dlock_buffer_.AddNewPath(DeadlockPath(deadlock_time, true));
-=======
-  dlock_buffer_.AddNewPath(DeadlockPath(true));
->>>>>>> blood in blood out
   DecrementWaitersImpl(txn, wait_ids);
   return true;
 }
@@ -615,12 +595,9 @@ void TransactionLockMgr::UnLockKey(const PessimisticTransaction* txn,
                                    const std::string& key,
                                    LockMapStripe* stripe, LockMap* lock_map,
                                    Env* env) {
-<<<<<<< HEAD
 #ifdef NDEBUG
   (void)env;
 #endif
-=======
->>>>>>> blood in blood out
   TransactionID txn_id = txn->GetID();
 
   auto stripe_iter = stripe->keys.find(key);

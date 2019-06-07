@@ -5,7 +5,6 @@
 
 #include "table/full_filter_block.h"
 
-<<<<<<< HEAD
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
 #ifdef OS_FREEBSD
 #include <malloc_np.h>
@@ -14,8 +13,6 @@
 #endif
 #endif
 
-=======
->>>>>>> blood in blood out
 #include "monitoring/perf_context_imp.h"
 #include "port/port.h"
 #include "rocksdb/filter_policy.h"
@@ -28,18 +25,14 @@ FullFilterBlockBuilder::FullFilterBlockBuilder(
     FilterBitsBuilder* filter_bits_builder)
     : prefix_extractor_(prefix_extractor),
       whole_key_filtering_(whole_key_filtering),
-<<<<<<< HEAD
       last_whole_key_recorded_(false),
       last_prefix_recorded_(false),
-=======
->>>>>>> blood in blood out
       num_added_(0) {
   assert(filter_bits_builder != nullptr);
   filter_bits_builder_.reset(filter_bits_builder);
 }
 
 void FullFilterBlockBuilder::Add(const Slice& key) {
-<<<<<<< HEAD
   const bool add_prefix = prefix_extractor_ && prefix_extractor_->InDomain(key);
   if (whole_key_filtering_) {
     if (!add_prefix) {
@@ -58,12 +51,6 @@ void FullFilterBlockBuilder::Add(const Slice& key) {
     }
   }
   if (add_prefix) {
-=======
-  if (whole_key_filtering_) {
-    AddKey(key);
-  }
-  if (prefix_extractor_ && prefix_extractor_->InDomain(key)) {
->>>>>>> blood in blood out
     AddPrefix(key);
   }
 }
@@ -77,7 +64,6 @@ inline void FullFilterBlockBuilder::AddKey(const Slice& key) {
 // Add prefix to filter if needed
 inline void FullFilterBlockBuilder::AddPrefix(const Slice& key) {
   Slice prefix = prefix_extractor_->Transform(key);
-<<<<<<< HEAD
   if (whole_key_filtering_) {
     // if both whole_key and prefix are added to bloom then we will have whole
     // key and prefix addition being interleaved and thus cannot rely on the
@@ -102,12 +88,6 @@ void FullFilterBlockBuilder::Reset() {
 Slice FullFilterBlockBuilder::Finish(const BlockHandle& /*tmp*/,
                                      Status* status) {
   Reset();
-=======
-  AddKey(prefix);
-}
-
-Slice FullFilterBlockBuilder::Finish(const BlockHandle& tmp, Status* status) {
->>>>>>> blood in blood out
   // In this impl we ignore BlockHandle
   *status = Status::OK();
   if (num_added_ != 0) {
@@ -126,13 +106,10 @@ FullFilterBlockReader::FullFilterBlockReader(
       contents_(contents) {
   assert(filter_bits_reader != nullptr);
   filter_bits_reader_.reset(filter_bits_reader);
-<<<<<<< HEAD
   if (prefix_extractor_ != nullptr) {
     full_length_enabled_ =
         prefix_extractor_->FullLengthEnabled(&prefix_extractor_full_length_);
   }
-=======
->>>>>>> blood in blood out
 }
 
 FullFilterBlockReader::FullFilterBlockReader(
@@ -144,7 +121,6 @@ FullFilterBlockReader::FullFilterBlockReader(
   block_contents_ = std::move(contents);
 }
 
-<<<<<<< HEAD
 bool FullFilterBlockReader::KeyMayMatch(
     const Slice& key, const SliceTransform* /*prefix_extractor*/,
     uint64_t block_offset, const bool /*no_io*/,
@@ -152,11 +128,6 @@ bool FullFilterBlockReader::KeyMayMatch(
 #ifdef NDEBUG
   (void)block_offset;
 #endif
-=======
-bool FullFilterBlockReader::KeyMayMatch(const Slice& key, uint64_t block_offset,
-                                        const bool no_io,
-                                        const Slice* const const_ikey_ptr) {
->>>>>>> blood in blood out
   assert(block_offset == kNotValid);
   if (!whole_key_filtering_) {
     return true;
@@ -164,7 +135,6 @@ bool FullFilterBlockReader::KeyMayMatch(const Slice& key, uint64_t block_offset,
   return MayMatch(key);
 }
 
-<<<<<<< HEAD
 bool FullFilterBlockReader::PrefixMayMatch(
     const Slice& prefix, const SliceTransform* /* prefix_extractor */,
     uint64_t block_offset, const bool /*no_io*/,
@@ -173,16 +143,6 @@ bool FullFilterBlockReader::PrefixMayMatch(
   (void)block_offset;
 #endif
   assert(block_offset == kNotValid);
-=======
-bool FullFilterBlockReader::PrefixMayMatch(const Slice& prefix,
-                                           uint64_t block_offset,
-                                           const bool no_io,
-                                           const Slice* const const_ikey_ptr) {
-  assert(block_offset == kNotValid);
-  if (!prefix_extractor_) {
-    return true;
-  }
->>>>>>> blood in blood out
   return MayMatch(prefix);
 }
 
@@ -200,7 +160,6 @@ bool FullFilterBlockReader::MayMatch(const Slice& entry) {
 }
 
 size_t FullFilterBlockReader::ApproximateMemoryUsage() const {
-<<<<<<< HEAD
   size_t usage = block_contents_.usable_size();
 #ifdef ROCKSDB_MALLOC_USABLE_SIZE
   usage += malloc_usable_size((void*)this);
@@ -264,8 +223,4 @@ bool FullFilterBlockReader::IsFilterCompatible(
   }
 }
 
-=======
-  return contents_.size();
-}
->>>>>>> blood in blood out
 }  // namespace rocksdb

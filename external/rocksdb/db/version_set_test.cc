@@ -8,14 +8,10 @@
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
 #include "db/version_set.h"
-<<<<<<< HEAD
 #include "db/log_writer.h"
 #include "table/mock_table.h"
 #include "util/logging.h"
 #include "util/string_util.h"
-=======
-#include "util/logging.h"
->>>>>>> blood in blood out
 #include "util/testharness.h"
 #include "util/testutil.h"
 
@@ -83,13 +79,9 @@ class CountingLogger : public Logger {
  public:
   CountingLogger() : log_count(0) {}
   using Logger::Logv;
-<<<<<<< HEAD
   virtual void Logv(const char* /*format*/, va_list /*ap*/) override {
     log_count++;
   }
-=======
-  virtual void Logv(const char* format, va_list ap) override { log_count++; }
->>>>>>> blood in blood out
   int log_count;
 };
 
@@ -148,7 +140,6 @@ class VersionStorageInfoTest : public testing::Test {
     f->num_deletions = 0;
     vstorage_.AddFile(level, f);
   }
-<<<<<<< HEAD
 
   void Add(int level, uint32_t file_number, const InternalKey& smallest,
            const InternalKey& largest, uint64_t file_size = 0) {
@@ -178,8 +169,6 @@ class VersionStorageInfoTest : public testing::Test {
     }
     return result;
   }
-=======
->>>>>>> blood in blood out
 };
 
 TEST_F(VersionStorageInfoTest, MaxBytesForLevelStatic) {
@@ -302,7 +291,6 @@ TEST_F(VersionStorageInfoTest, EstimateLiveDataSize2) {
   ASSERT_EQ(4U, vstorage_.EstimateLiveDataSize());
 }
 
-<<<<<<< HEAD
 TEST_F(VersionStorageInfoTest, GetOverlappingInputs) {
   // Two files that overlap at the range deletion tombstone sentinel.
   Add(1, 1U, {"a", 0, kTypeValue}, {"b", kMaxSequenceNumber, kTypeRangeDeletion}, 1);
@@ -337,8 +325,6 @@ TEST_F(VersionStorageInfoTest, GetOverlappingInputs) {
 }
 
 
-=======
->>>>>>> blood in blood out
 class FindLevelFileTest : public testing::Test {
  public:
   LevelFilesBrief file_level_;
@@ -532,7 +518,6 @@ TEST_F(FindLevelFileTest, LevelOverlappingFiles) {
   ASSERT_TRUE(Overlaps("600", "700"));
 }
 
-<<<<<<< HEAD
 class ManifestWriterTest : public testing::Test {
  public:
   ManifestWriterTest()
@@ -654,8 +639,6 @@ TEST_F(ManifestWriterTest, SameColumnFamilyGroupCommit) {
   EXPECT_OK(s);
   EXPECT_EQ(kGroupSize - 1, count);
 }
-=======
->>>>>>> blood in blood out
 }  // namespace rocksdb
 
 int main(int argc, char** argv) {

@@ -20,11 +20,7 @@ class TestReadCallback : public ReadCallback {
                    SequenceNumber snapshot_seq)
       : snapshot_checker_(snapshot_checker), snapshot_seq_(snapshot_seq) {}
 
-<<<<<<< HEAD
   bool IsVisible(SequenceNumber seq) override {
-=======
-  bool IsCommitted(SequenceNumber seq) override {
->>>>>>> blood in blood out
     return snapshot_checker_->IsInSnapshot(seq, snapshot_seq_);
   }
 
@@ -288,11 +284,7 @@ TEST_P(MergeOperatorPinningTest, Randomized) {
     Random rnd(301);
     std::map<std::string, std::string> true_data;
 
-<<<<<<< HEAD
     const int kTotalMerges = 5000;
-=======
-    const int kTotalMerges = 10000;
->>>>>>> blood in blood out
     // Every key gets ~10 operands
     const int kKeyRange = kTotalMerges / 10;
     const int kOperandSize = 20;

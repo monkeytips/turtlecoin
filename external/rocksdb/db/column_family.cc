@@ -34,10 +34,7 @@
 #include "table/merging_iterator.h"
 #include "util/autovector.h"
 #include "util/compression.h"
-<<<<<<< HEAD
 #include "util/sst_file_manager_impl.h"
-=======
->>>>>>> blood in blood out
 
 namespace rocksdb {
 
@@ -58,12 +55,9 @@ ColumnFamilyHandleImpl::~ColumnFamilyHandleImpl() {
 #endif  // ROCKSDB_LITE
     // Job id == 0 means that this is not our background process, but rather
     // user thread
-<<<<<<< HEAD
     // Need to hold some shared pointers owned by the initial_cf_options
     // before final cleaning up finishes.
     ColumnFamilyOptions initial_cf_options_copy = cfd_->initial_cf_options();
-=======
->>>>>>> blood in blood out
     JobContext job_context(0);
     mutex_->Lock();
     if (cfd_->Unref()) {
@@ -91,10 +85,7 @@ Status ColumnFamilyHandleImpl::GetDescriptor(ColumnFamilyDescriptor* desc) {
   *desc = ColumnFamilyDescriptor(cfd()->GetName(), cfd()->GetLatestCFOptions());
   return Status::OK();
 #else
-<<<<<<< HEAD
   (void)desc;
-=======
->>>>>>> blood in blood out
   return Status::NotSupported();
 #endif  // !ROCKSDB_LITE
 }
@@ -170,7 +161,6 @@ Status CheckConcurrentWritesSupported(const ColumnFamilyOptions& cf_options) {
   return Status::OK();
 }
 
-<<<<<<< HEAD
 Status CheckCFPathsSupported(const DBOptions& db_options,
                              const ColumnFamilyOptions& cf_options) {
   // More than one cf_paths are supported only in universal
@@ -193,8 +183,6 @@ Status CheckCFPathsSupported(const DBOptions& db_options,
   return Status::OK();
 }
 
-=======
->>>>>>> blood in blood out
 ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
                                     const ColumnFamilyOptions& src) {
   ColumnFamilyOptions result = src;
@@ -313,7 +301,6 @@ ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
         result.hard_pending_compaction_bytes_limit;
   }
 
-<<<<<<< HEAD
 #ifndef ROCKSDB_LITE
   // When the DB is stopped, it's possible that there are some .trash files that
   // were not deleted yet, when we open the DB we will find these .trash files
@@ -332,11 +319,6 @@ ColumnFamilyOptions SanitizeOptions(const ImmutableDBOptions& db_options,
   if (result.level_compaction_dynamic_level_bytes) {
     if (result.compaction_style != kCompactionStyleLevel ||
         result.cf_paths.size() > 1U) {
-=======
-  if (result.level_compaction_dynamic_level_bytes) {
-    if (result.compaction_style != kCompactionStyleLevel ||
-        db_options.db_paths.size() > 1U) {
->>>>>>> blood in blood out
       // 1. level_compaction_dynamic_level_bytes only makes sense for
       //    level-based compaction.
       // 2. we don't yet know how to make both of this feature and multiple
@@ -443,17 +425,10 @@ ColumnFamilyData::ColumnFamilyData(
       next_(nullptr),
       prev_(nullptr),
       log_number_(0),
-<<<<<<< HEAD
       flush_reason_(FlushReason::kOthers),
       column_family_set_(column_family_set),
       queued_for_flush_(false),
       queued_for_compaction_(false),
-=======
-      flush_reason_(FlushReason::kUnknown),
-      column_family_set_(column_family_set),
-      pending_flush_(false),
-      pending_compaction_(false),
->>>>>>> blood in blood out
       prev_compaction_needed_bytes_(0),
       allow_2pc_(db_options.allow_2pc),
       last_memtable_id_(0) {
@@ -529,13 +504,8 @@ ColumnFamilyData::~ColumnFamilyData() {
 
   // It would be wrong if this ColumnFamilyData is in flush_queue_ or
   // compaction_queue_ and we destroyed it
-<<<<<<< HEAD
   assert(!queued_for_flush_);
   assert(!queued_for_compaction_);
-=======
-  assert(!pending_flush_);
-  assert(!pending_compaction_);
->>>>>>> blood in blood out
 
   if (super_version_ != nullptr) {
     // Release SuperVersion reference kept in ThreadLocalPtr.
@@ -588,13 +558,9 @@ uint64_t ColumnFamilyData::OldestLogToKeep() {
   auto current_log = GetLogNumber();
 
   if (allow_2pc_) {
-<<<<<<< HEAD
     autovector<MemTable*> empty_list;
     auto imm_prep_log =
         imm()->PrecomputeMinLogContainingPrepSection(empty_list);
-=======
-    auto imm_prep_log = imm()->GetMinLogContainingPrepSection();
->>>>>>> blood in blood out
     auto mem_prep_log = mem()->GetMinLogContainingPrepSection();
 
     if (imm_prep_log > 0 && imm_prep_log < current_log) {
@@ -924,13 +890,10 @@ uint64_t ColumnFamilyData::GetTotalSstFilesSize() const {
   return VersionSet::GetTotalSstFilesSize(dummy_versions_);
 }
 
-<<<<<<< HEAD
 uint64_t ColumnFamilyData::GetLiveSstFilesSize() const {
   return current_->GetSstFilesSize();
 }
 
-=======
->>>>>>> blood in blood out
 MemTable* ColumnFamilyData::ConstructNewMemtable(
     const MutableCFOptions& mutable_cf_options, SequenceNumber earliest_seq) {
   return new MemTable(internal_comparator_, ioptions_, mutable_cf_options,
@@ -1034,7 +997,6 @@ const int ColumnFamilyData::kCompactToBaseLevel = -2;
 
 Compaction* ColumnFamilyData::CompactRange(
     const MutableCFOptions& mutable_cf_options, int input_level,
-<<<<<<< HEAD
     int output_level, uint32_t output_path_id, uint32_t max_subcompactions,
     const InternalKey* begin, const InternalKey* end,
     InternalKey** compaction_end, bool* conflict) {
@@ -1042,13 +1004,6 @@ Compaction* ColumnFamilyData::CompactRange(
       GetName(), mutable_cf_options, current_->storage_info(), input_level,
       output_level, output_path_id, max_subcompactions, begin, end,
       compaction_end, conflict);
-=======
-    int output_level, uint32_t output_path_id, const InternalKey* begin,
-    const InternalKey* end, InternalKey** compaction_end, bool* conflict) {
-  auto* result = compaction_picker_->CompactRange(
-      GetName(), mutable_cf_options, current_->storage_info(), input_level,
-      output_level, output_path_id, begin, end, compaction_end, conflict);
->>>>>>> blood in blood out
   if (result != nullptr) {
     result->SetInputVersion(current_);
   }
@@ -1198,14 +1153,9 @@ void ColumnFamilyData::ResetThreadLocalSuperVersions() {
 Status ColumnFamilyData::SetOptions(
       const std::unordered_map<std::string, std::string>& options_map) {
   MutableCFOptions new_mutable_cf_options;
-<<<<<<< HEAD
   Status s =
       GetMutableOptionsFromStrings(mutable_cf_options_, options_map,
                                    ioptions_.info_log, &new_mutable_cf_options);
-=======
-  Status s = GetMutableOptionsFromStrings(mutable_cf_options_, options_map,
-                                          &new_mutable_cf_options);
->>>>>>> blood in blood out
   if (s.ok()) {
     mutable_cf_options_ = new_mutable_cf_options;
     mutable_cf_options_.RefreshDerivedOptions(ioptions_);
@@ -1232,7 +1182,6 @@ Env::WriteLifeTimeHint ColumnFamilyData::CalculateSSTWriteHint(int level) {
                             static_cast<int>(Env::WLTH_MEDIUM));
 }
 
-<<<<<<< HEAD
 Status ColumnFamilyData::AddDirectories() {
   Status s;
   assert(data_dirs_.empty());
@@ -1258,8 +1207,6 @@ Directory* ColumnFamilyData::GetDataDir(size_t path_id) const {
   return data_dirs_[path_id].get();
 }
 
-=======
->>>>>>> blood in blood out
 ColumnFamilySet::ColumnFamilySet(const std::string& dbname,
                                  const ImmutableDBOptions* db_options,
                                  const EnvOptions& env_options,
