@@ -80,7 +80,7 @@ const uint64_t MAXIMUM_MIXIN_V3                              = 3;
 
 const uint32_t MIXIN_LIMITS_V1_HEIGHT                        = 40;
 const uint32_t MIXIN_LIMITS_V2_HEIGHT                        = 60;
-const uint32_t MIXIN_LIMITS_V3_HEIGHT                        = 640000;
+const uint32_t MIXIN_LIMITS_V3_HEIGHT                        = 101000;
 
 const uint64_t DEFAULT_MIXIN_V0                              = 3;
 const uint64_t DEFAULT_MIXIN_V1                              = MAXIMUM_MIXIN_V1;
@@ -134,8 +134,8 @@ const uint32_t KEY_IMAGE_CHECKING_BLOCK_INDEX                = 0;
 const uint32_t UPGRADE_HEIGHT_V2                             = 1;
 const uint32_t UPGRADE_HEIGHT_V3                             = 2;
 const uint32_t UPGRADE_HEIGHT_V4                             = 3; //deletd this can't remember what was here nor care
-const uint32_t UPGRADE_HEIGHT_V5                             = 1200000; // Upgrade height for CN-Pico switch. :middle-finger:
-const uint32_t UPGRADE_HEIGHT_CURRENT                        = UPGRADE_HEIGHT_V5;
+const uint32_t UPGRADE_HEIGHT_V5                             = 640000; // Upgrade height for CN-Pico switch. :middle-finger:
+const uint32_t UPGRADE_HEIGHT_CURRENT                        = UPGRADE_HEIGHT_V4;
 
 const unsigned UPGRADE_VOTING_THRESHOLD                      = 90;               // percent
 const uint32_t UPGRADE_VOTING_WINDOW                         = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;  // blocks
@@ -208,11 +208,11 @@ const int      RPC_DEFAULT_PORT                              =  13002;
 const int      SERVICE_DEFAULT_PORT                          =  8420;
 const char     LATEST_VERSION_URL[]                          = "http://monkeytips.top";
 
-const uint8_t  P2P_CURRENT_VERSION                           = 2;
-const uint8_t  P2P_MINIMUM_VERSION                           = 1;
+const uint8_t  P2P_CURRENT_VERSION                           = 4;
+const uint8_t  P2P_MINIMUM_VERSION                           = 2;
 
 // This defines the minimum P2P version required for lite blocks propogation
-const uint8_t P2P_LITE_BLOCKS_PROPOGATION_VERSION            = 6;
+const uint8_t P2P_LITE_BLOCKS_PROPOGATION_VERSION            = 4;
 
 // This defines the number of versions ahead we must see peers before we start displaying
 // warning messages that we need to upgrade our software.
