@@ -57,13 +57,13 @@ const uint64_t GENESIS_BLOCK_TIMESTAMP                       = 1530327904;
 const char     GENESIS_COINBASE_TX_HEX[]                     = "012801ff000180a8d6b907022bfdeeee6f2d6ab60a0b67a7d504192a5e851b71174098f719363346697c4f79210115dcc364197ec66ce30c8e6fb1ca237b38162324c904f97eb4d21fc899426e3c";
 
 const size_t   CRYPTONOTE_REWARD_BLOCKS_WINDOW               = 100;
-const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE     = 100000; //size of block (bytes) after which reward for block calculated using block size
+const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE     = 10000; //size of block (bytes) after which reward for block calculated using block size
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2  = 20000;
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V1  = 10000;
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_CURRENT = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE;
 const size_t   CRYPTONOTE_COINBASE_BLOB_RESERVED_SIZE        = 600;
 const size_t   CRYPTONOTE_DISPLAY_DECIMAL_POINT              = 2;
-const uint64_t MINIMUM_FEE                                   = UINT64_C(10);
+const uint64_t MINIMUM_FEE                                   = UINT64_C(2500);
 
 /* This section defines our minimum and maximum mixin counts required for transactions */
 const uint64_t MINIMUM_MIXIN_V1                              = 0;
@@ -126,7 +126,7 @@ const uint64_t CRYPTONOTE_MEMPOOL_TX_LIVETIME                = 60 * 60 * 24;    
 const uint64_t CRYPTONOTE_MEMPOOL_TX_FROM_ALT_BLOCK_LIVETIME = 60 * 60 * 24 * 7; //seconds, one week
 const uint64_t CRYPTONOTE_NUMBER_OF_PERIODS_TO_FORGET_TX_DELETED_FROM_POOL = 7;  // CRYPTONOTE_NUMBER_OF_PERIODS_TO_FORGET_TX_DELETED_FROM_POOL * CRYPTONOTE_MEMPOOL_TX_LIVETIME = time to forget tx
 
-const size_t   FUSION_TX_MAX_SIZE                            = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_CURRENT * 30 / 100;
+const size_t   FUSION_TX_MAX_SIZE                            = 12000;
 const size_t   FUSION_TX_MIN_INPUT_COUNT                     = 12;
 const size_t   FUSION_TX_MIN_IN_OUT_COUNT_RATIO              = 4;
 
@@ -208,8 +208,8 @@ const int      RPC_DEFAULT_PORT                              =  13002;
 const int      SERVICE_DEFAULT_PORT                          =  8420;
 const char     LATEST_VERSION_URL[]                          = "http://monkeytips.top";
 
-const uint8_t  P2P_CURRENT_VERSION                           = 4;
-const uint8_t  P2P_MINIMUM_VERSION                           = 2;
+const uint8_t  P2P_CURRENT_VERSION                           = 6;
+const uint8_t  P2P_MINIMUM_VERSION                           = 4;
 
 // This defines the minimum P2P version required for lite blocks propogation
 const uint8_t P2P_LITE_BLOCKS_PROPOGATION_VERSION            = 4;
