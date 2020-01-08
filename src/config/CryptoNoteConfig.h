@@ -57,7 +57,7 @@ const uint64_t GENESIS_BLOCK_TIMESTAMP                       = 1530327904;
 const char     GENESIS_COINBASE_TX_HEX[]                     = "012801ff000180a8d6b907022bfdeeee6f2d6ab60a0b67a7d504192a5e851b71174098f719363346697c4f79210115dcc364197ec66ce30c8e6fb1ca237b38162324c904f97eb4d21fc899426e3c";
 
 const size_t   CRYPTONOTE_REWARD_BLOCKS_WINDOW               = 100;
-const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE     = 10000; //size of block (bytes) after which reward for block calculated using block size
+const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE     = 100000; //size of block (bytes) after which reward for block calculated using block size
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2  = 20000;
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V1  = 10000;
 const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_CURRENT = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE;
