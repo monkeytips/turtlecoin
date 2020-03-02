@@ -247,6 +247,6 @@ const static  boost::uuids::uuid CRYPTONOTE_NETWORK          =
 const char* const SEED_NODES[] = {
   "96.30.198.88:13001", //crappy
   "35.226.158.217:13001", //crappy
-  "207.180.227.16:13001" // tipbot exp
+  "144.76.5.24:13001" // tipbot exp
 };
 } // CryptoNote
